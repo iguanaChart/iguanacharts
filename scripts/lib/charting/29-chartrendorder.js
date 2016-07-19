@@ -1,0 +1,976 @@
+﻿/**
+ * @company  Tradernet
+ * @package  iguanaChart
+ */
+
+
+(function ()
+{
+    "use strict";
+
+    iChart.Charting.ChartTrendorder = function (layer)
+    {
+        iChart.Charting.ChartElement.prototype.constructor.call(this, layer);
+
+        this.elementType = "Trendorder";
+        this.drawType = 'manually';
+        this.hoverCursor = "row-resize";
+        this.moveCursor = "row-resize";
+        this.maxPointCount = 2;
+        this.hasSettings = true;
+        this.controlEnable = true;
+        this.storageEnable = false;
+        this.drawSingle = true;
+        this.settings = {
+            text: '',
+            textHeight: 13,
+            fillStyle: '#f44336',
+            textColor: '#FFFFFF',
+            mode: "line", //trend
+        };
+        this.positionAbsolute = true;
+    };
+
+    inheritPrototype(iChart.Charting.ChartTrendorder, iChart.Charting.ChartElement);
+
+    iChart.Charting.ChartTrendorder.prototype.setSettings = function (settings) {
+        this.settings = $.extend(this.settings, settings);
+
+        //points = [{'x':new Date(), 'y':data.price}];
+        if(typeof settings.price2 == "undefined") {
+            this.points[0] = {x: settings.date, y: settings.price};
+            this.points[1] = {x: settings.date, y: settings.price};
+        } else {
+            this.points[0] = {x: settings.date, y: settings.price};
+            this.points[1] = {x: settings.date2, y: settings.price2};
+        }
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.normalizeCoords = function (coords)
+    {
+
+        /*
+         if(this.points.length !== coords.length) {
+         var _this = this,
+         valCoord = {x:'', y:''};
+         console.log('normalizeCoords:', this.points, coords);
+         this.points.forEach(function(value, index, array){
+         valCoord.x = Math.round(_this.layer.area.getXPositionByValue(value.x / 1000));
+         if(isNaN(valCoord.x)) {
+         if(index === 0) {
+         valCoord.x = _this.layer.area.getXValue(100);
+         } else {
+         valCoord.x = _this.layer.area.getXValue(_this.layer.area.innerWidth - 100);
+         }
+         var foundPoint = iChart.getThirdPoint(_this.points[0], _this.points[1], valCoord.x*1000);
+         console.log(foundPoint);
+
+         var foundPoint = iChart.getLineEquation(_this.points[0], _this.points[1], valCoord.x*1000);
+         console.log(foundPoint);
+         value.x = foundPoint.x;
+         value.y = foundPoint.y;
+         }
+         });
+         console.log(valCoord);
+         } else {
+
+         }
+         */
+
+        if(!this.settings.newOrderParams) {
+            var points = $.extend(true, [], this.points);
+        } else {
+            var points = $.extend(true, [], this.settings.newOrderParams.points);
+        }
+
+        points[0].x /= 1000;
+        points[1].x /= 1000;
+
+        var coordsPoints = [
+            {
+                x: this.layer.area.getXPositionByValue(points[0].x),
+                y: points[0].y
+            },
+            {
+                x: this.layer.area.getXPositionByValue(points[1].x),
+                y: points[1].y
+            }
+        ];
+        var alpha = Math.atan((coordsPoints[0].y - coordsPoints[1].y) / (coordsPoints[0].x - coordsPoints[1].x));
+
+        var ctx = this.layer.context;
+        ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        var width = ctx.measureText(this.settings.text).width + 120;
+        var xWidth = width * Math.cos(alpha);
+        var center =  this.layer.area.getXPositionByValue((points[1].x + points[0].x) / 2);
+
+
+        var foundPoint1 = iChart.getLineEquation(coordsPoints[0], coordsPoints[1], center - xWidth / 2);
+        var foundPoint2 = iChart.getLineEquation(coordsPoints[0], coordsPoints[1], center + xWidth / 2);
+
+        this.points[0].x = this.layer.area.getXValue(foundPoint1.x) * 1000;
+        this.points[0].y = foundPoint1.y;
+        this.points[1].x = this.layer.area.getXValue(foundPoint2.x) * 1000;
+        this.points[1].y = foundPoint2.y;
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.lineNormalizeCoords = function (ctx, coords) {
+        coords[1].x = ctx.canvas.width - 80;
+        this.points[1].x = this.layer.area.getXValue(coords[1].x) * 1000;
+
+        ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+
+        var textWidth = ctx.measureText(this.settings.text).width;
+
+        coords[0].x = ctx.canvas.width - 80 - textWidth - 80;
+        this.points[0].x = this.layer.area.getXValue(coords[0].x) * 1000;
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawLineMode = function (ctx, coords) {
+
+        this.settings.fillStyle = this.settings.fillStyle || "#3AAE3E";
+
+        //var point = this.layer.chart.areas[0].xSeries[this.layer.chart.areas[0].xSeries.length-this.layer.chart.futureAmount-1];
+        //this.points[0].x = point * 1000;
+        //coords[0].x = this.layer.area.getXPositionByValue(point);
+
+        var color = this.settings.fillStyle;
+
+        if(this.selected || ctx.inHover) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.moveTo(0, coords[0].y);
+            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.stroke();
+            ctx.restore();
+
+            this.drawLable(ctx, color, this.settings.textColor, coords[0].x, coords[0].y, this.settings.text);
+
+            this.drawPoint(ctx, coords[0].x, coords[0].y, color, 4);
+            this.drawPoint(ctx, coords[1].x, coords[1].y, color, 4);
+        } else {
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            //for (var x = coords[0].x; x <= ctx.canvas.width; x += 20)
+            for (var x = 0; x <= ctx.canvas.width; x += 20)
+            {
+                ctx.moveTo(x, coords[0].y);
+                ctx.lineTo(x + 12, coords[0].y);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawTrendMode = function (ctx, coords) {
+        if (typeof this.markers !== "undefined")
+        {
+            var points = this.markers;
+        } else {
+            var points = this.points;
+        }
+
+
+
+        var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
+        if(foundPoint1.y < 0 ) {
+            foundPoint1.y = 0;
+            foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
+        } else if(foundPoint1.y > ctx.canvas.height ) {
+            foundPoint1.y = ctx.canvas.height;
+            foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
+        }
+
+
+        var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], ctx.canvas.width);
+        if(foundPoint2.y < 0 ) {
+            foundPoint2.y = 0;
+            foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
+        } else if(foundPoint2.y > ctx.canvas.height ) {
+            foundPoint2.y = ctx.canvas.height;
+            foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
+        }
+
+        this.trendLineSettings = {
+            points: [foundPoint1, foundPoint2]
+        };
+
+        var openTime = this.layer.chart.areas[0].xSeries[this.layer.chart.areas[0].xSeries.length - this.layer.chart.chartOptions.futureAmount - 1];
+        var openX = this.layer.area.getXPositionByValue(openTime);
+
+        var expireTime = new Date(openTime *  1000);
+        expireTime.setSeconds(0);
+        expireTime.setMinutes(0);
+        expireTime.setHours(0);
+        expireTime.setTime(expireTime.getTime() + 86400000);
+
+        var expireX = this.layer.area.getXPositionByValue(expireTime / 1000);
+
+        var foundOpenCoords = iChart.getLineEquation(coords[0], coords[1], openX);
+        var foundExpireCoords = iChart.getLineEquation(coords[0], coords[1], expireX);
+
+        ctx.save();
+        ctx.beginPath();
+
+        ctx.setLineDash([8, 3]);
+        var color = this.settings.fillStyle;
+        ctx.strokeStyle = color;
+
+        ctx.moveTo(foundOpenCoords.x, foundOpenCoords.y);
+        ctx.lineTo(foundPoint1.x, foundPoint1.y);
+
+        ctx.stroke();
+
+        ctx.moveTo(foundExpireCoords.x, foundExpireCoords.y);
+        ctx.lineTo(foundPoint2.x, foundPoint2.y);
+
+        ctx.stroke();
+
+        ctx.restore();
+
+
+        ctx.save();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = this.settings.fillStyle;
+        ctx.beginPath();
+        ctx.moveTo(foundOpenCoords.x, foundOpenCoords.y);
+        ctx.lineTo(foundExpireCoords.x, foundExpireCoords.y);
+        ctx.stroke();
+        ctx.restore();
+
+        this.settings.newOrderParams = {
+            points: [
+                {x: this.layer.area.getXValue(foundOpenCoords.x) * 1000, y: this.layer.area.getYValue(foundOpenCoords.y)},
+                {x: this.layer.area.getXValue(foundExpireCoords.x) * 1000, y: this.layer.area.getYValue(foundExpireCoords.y)}
+            ]
+        };
+
+
+        if(this.selected || ctx.inHover) {
+            this.drawPoint(ctx, coords[0].x, coords[0].y, color, 4);
+            this.drawPoint(ctx, coords[1].x, coords[1].y, color, 4);
+            this.drawLableTrend(ctx, coords);
+        }
+
+        /*
+        var point = this.layer.chart.areas[0].xSeries[this.layer.chart.areas[0].xSeries.length - this.layer.chart.chartOptions.futureAmount - 1];
+        var lastX = this.layer.area.getXPositionByValue(point);
+        var foundCoords = iChart.getLineEquation(coords[0], coords[1], lastX);
+
+         var linePoints = [points[0]];
+         linePoints[1] = {x: this.layer.area.getXValue(foundCoords.x) * 1000, y:this.layer.area.getYValue(foundCoords.y)};
+
+         ctx.save();
+         ctx.beginPath();
+         ctx.strokeStyle = '#66FF66';
+         ctx.setLineDash([8, 3]);
+         var step = Math.round(Math.abs(linePoints[1].x - linePoints[0].x) / 150);
+         var foundBaseCoords = this.getCoordinates(ctx, linePoints);
+         foundPoint = iChart.getLineEquation(linePoints[1], points[1], linePoints[0].x);
+         foundCoords = this.getCoordinates(ctx, [foundPoint]);
+         ctx.moveTo(foundCoords[0].x, foundCoords[0].y);
+         for(var i=Math.min(linePoints[0].x, linePoints[1].x); i <= Math.max(linePoints[0].x, linePoints[1].x); i+=step) {
+             var foundPoint = iChart.getLineEquation(linePoints[1], points[1], i);
+             foundCoords = this.getCoordinates(ctx, [foundPoint]);
+             ctx.lineTo(foundCoords[0].x, foundCoords[0].y);
+             this.drawPoint(ctx, foundCoords[0].x, foundCoords[0].y, '#FF6666');
+         }
+
+         //ctx.lineTo(foundBaseCoords[1].x, foundBaseCoords[1].y);
+         ctx.stroke();
+         ctx.restore();
+        */
+
+        //this.pointsForward(ctx);
+        //this.pointsForward2(ctx);
+        //this.pointsBack(ctx);
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.pointsForward = function (ctx) {
+        var startIndex = iChart.Charting.indexOfFirstElementGreaterThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date / 1000);
+        var endIndex = this.layer.chart.areas[0].xSeries.length - 1;
+
+        var timeframe = this.layer.chart.env.dataSource.dataSettings.timeframe * 60;
+        var basePoint1 = {x:this.settings.date, y: this.settings.price},
+            basePoint2 = {x: this.settings.date2, y: this.settings.price2};
+
+        for(var i = startIndex; i <= endIndex; i++) {
+            var foundPoint = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+            var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
+            var y = this.layer.area.getYPosition(foundPoint.y);
+            this.drawPoint(ctx, x, y, '#FF6666',4);
+        }
+
+        var correction = 0;
+        for(var i = startIndex+1; i <= endIndex; i++) {
+            var dt = this.layer.chart.areas[0].xSeries[i] - this.layer.chart.areas[0].xSeries[i - 1];
+            if(dt / timeframe > 1) {
+                var foundPoint1 = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i-1] * 1000);
+                var foundPoint2 = iChart.getLineEquation(basePoint1, basePoint2, (this.layer.chart.areas[0].xSeries[i-1] + dt - timeframe) * 1000);
+                correction += foundPoint1.y - foundPoint2.y;
+            }
+
+            var foundPoint = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+            var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
+            var y = this.layer.area.getYPosition(foundPoint.y + correction);
+
+            this.drawPoint(ctx, x, y, '#66FF66');
+        }
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.pointsForward2 = function (ctx) {
+
+        var startIndex = iChart.Charting.indexOfFirstElementGreaterThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date / 1000);
+        var endIndex = this.layer.chart.areas[0].xSeries.length - 1;
+
+        var timeframe = this.layer.chart.env.dataSource.dataSettings.timeframe * 60;
+        var basePoint1 = {x:this.settings.date, y: this.settings.price},
+            basePoint2 = {x: this.settings.date2, y: this.settings.price2};
+
+        var x = this.layer.area.getXPositionByValue(basePoint1.x / 1000);
+        var y = this.layer.area.getYPosition(basePoint1.y);
+        this.drawPoint(ctx, x, y, '#FFAA66', 3);
+        var x = this.layer.area.getXPositionByValue(basePoint2.x / 1000);
+        var y = this.layer.area.getYPosition(basePoint2.y);
+        this.drawPoint(ctx, x, y, '#FFAA66', 3);
+
+        /*
+        //адоптация с дневного на минутные
+        if(1) {
+            basePoint1.x = this.layer.chart.areas[0].xSeries[startIndex] * 1000;
+            var idx = iChart.Charting.indexOfLastElementLessThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date2 / 1000);
+            basePoint2.x = (this.layer.chart.areas[0].xSeries[idx] + timeframe) * 1000;
+        }*/
+
+
+        /*
+         //адоптация с минутных на дневной
+         if(1) {
+            var idx = iChart.Charting.indexOfLastElementLessThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date / 1000);
+             basePoint1.x = this.layer.chart.areas[0].xSeries[startIndex] * 1000;
+             var idx = iChart.Charting.indexOfFirstElementGreaterThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date2 / 1000);
+             basePoint2.x = (this.layer.chart.areas[0].xSeries[idx] + timeframe) * 1000;
+         }*/
+
+
+        var x = this.layer.area.getXPositionByValue(basePoint1.x / 1000);
+        var y = this.layer.area.getYPosition(basePoint1.y);
+        this.drawPoint(ctx, x, y, '#FF66AA', 3);
+        var x = this.layer.area.getXPositionByValue(basePoint2.x / 1000);
+        var y = this.layer.area.getYPosition(basePoint2.y);
+        this.drawPoint(ctx, x, y, '#FF66AA', 3);
+
+
+        var correction = 0;
+        for(var i = startIndex+1; i <= endIndex; i++) {
+            var d0 = new Date(this.layer.chart.areas[0].xSeries[i-1] * 1000);
+            var d1 = new Date(this.layer.chart.areas[0].xSeries[i] * 1000);
+
+            if(d0.getDate() != d1.getDate()) {
+
+                var p1 = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i-1] * 1000);
+                var p2 = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+
+                //console.log(d0, d1);
+                //console.log(iChart.formatDateTime(d0, "yyyy-MM-ddTHH:mm:ss") + "." + d0.getMilliseconds(),
+                //            iChart.formatDateTime(d1, "yyyy-MM-ddTHH:mm:ss") + "." + d1.getMilliseconds());
+                //console.log(p1, p2);
+
+                var newBasePoint1 = {x: this.layer.chart.areas[0].xSeries[i] * 1000 , y: p1.y};
+
+                var expireTime = new Date(d1);
+                expireTime.setSeconds(0);
+                expireTime.setMinutes(0);
+                expireTime.setHours(0);
+                expireTime.setTime(expireTime.getTime() + 86400000);
+
+                var p = iChart.getLineEquation(basePoint1, basePoint2, expireTime.getTime());
+                p.y = p.y + (p1.y - p2.y);
+                var newBasePoint2 = {x: expireTime.getTime(), y: p.y};
+
+                basePoint1 = newBasePoint1;
+                basePoint2 = newBasePoint2;
+
+                var foundPoint1 = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+                var foundPoint2 = iChart.getLineEquation(basePoint1, basePoint2, (this.layer.chart.areas[0].xSeries[i] - timeframe) * 1000);
+                correction += foundPoint1.y - foundPoint2.y;
+
+            }
+
+            var foundPoint = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+            var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
+            var y = this.layer.area.getYPosition(foundPoint.y + correction);
+
+            this.drawPoint(ctx, x, y, '#6666FF', 1.5);
+
+            //var foundPoint = iChart.getLineEquation({x:this.settings.date, y: this.settings.price}, {x: this.settings.date2, y: this.settings.price2}, this.layer.chart.areas[0].xSeries[i] * 1000);
+            //var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
+            //var y = this.layer.area.getYPosition(foundPoint.y);
+            //this.drawPoint(ctx, x, y, '#FF6666', 1.5);
+
+        }
+    };
+
+
+    iChart.Charting.ChartTrendorder.prototype.pointsBack = function (ctx) {
+        //var startIndex = iChart.Charting.indexOfLastElementLessThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date / 1000);
+        var startIndex = this.layer.chart.areas[0].xSeries.length - 2;
+        var endIndex = this.layer.chart.areas[0].viewport.x.min;
+
+        var timeframe = this.layer.chart.env.dataSource.dataSettings.timeframe * 60;
+        var basePoint1 = {x:this.settings.date, y: this.settings.price},
+            basePoint2 = {x: this.settings.date2, y: this.settings.price2};
+
+        /*
+        for(var i = startIndex; i > endIndex; i--) {
+            var foundPoint = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+            var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
+            var y = this.layer.area.getYPosition(foundPoint.y);
+            this.drawPoint(ctx, x, y, '#FF6666', 4);
+        }*/
+
+        var correction = 0;
+        for(var i = startIndex; i > endIndex; i--) {
+
+            var dt = this.layer.chart.areas[0].xSeries[i+1] - this.layer.chart.areas[0].xSeries[i];
+            if(dt / timeframe > 1) {
+
+                 //выставлялось на дневном смотрим на
+                if(1) {
+                    if(dt / 86400 > 1) {
+                        dt = dt - dt % 86400;
+                        //dt = dt % 86400;
+                    }
+                }
+
+
+                var foundPoint1 = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i-1] * 1000);
+                var foundPoint2 = iChart.getLineEquation(basePoint1, basePoint2, (this.layer.chart.areas[0].xSeries[i-1] + dt - timeframe) * 1000);
+                correction += foundPoint2.y - foundPoint1.y;
+            }
+
+            var foundPoint = iChart.getLineEquation(basePoint1, basePoint2, this.layer.chart.areas[0].xSeries[i] * 1000);
+            var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
+            var y = this.layer.area.getYPosition(foundPoint.y + correction);
+            this.drawPoint(ctx, x, y, '#66FF66');
+        }
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawInternal = function (ctx, coords)
+    {
+        //this.normalizeCoords(coords);
+        if (coords.length < 2)
+        {
+            return;
+        }
+
+
+        if(this.settings.mode == 'line') {
+
+            this.lineNormalizeCoords(ctx, coords);
+            this.drawLineMode(ctx, coords);
+
+        } else {
+            if(!this.settings.newOrderParams) {
+                this.normalizeCoords(coords);
+            }
+            this.drawTrendMode(ctx, coords);
+        }
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawPoint = function (ctx, x, y, color, r) {
+        ctx.save();
+        ctx.beginPath();
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        r = r || 2
+        ctx.arc(x, y, r, 0, 2 * Math.PI, true);
+        ctx.closePath();
+
+        ctx.fill();
+        ctx.restore();
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawExtended = function (ctx) {
+        if (this.selected) {
+            var pointCoords = this.getCoordinates(ctx, this.points);
+
+            if (pointCoords.length < 1) {
+                return;
+            }
+
+            var label = iChart.formatNumber(this.points[0].y, {
+                "decimalPrecision": this.layer.chart.labelPrecision,
+                "scale": 0
+            });
+
+            this.layer.chart.renderer.drawLable(ctx, this.settings.fillStyle, 0, this.layer.area.innerWidth, pointCoords[0].y, label);
+
+            if (typeof this.markers !== "undefined") {
+                var pointCoords = this.getCoordinates(ctx, this.markers);
+
+                var label = iChart.formatNumber(this.markers[0].y, {
+                    "decimalPrecision": this.layer.chart.labelPrecision,
+                    "scale": 0
+                });
+                var color = !ctx.inHover ? this.settings.fillStyle : ( typeof this.settings.fillStyleHover != "undefined" ? this.settings.fillStyleHover : iChart.Charting.ChartTrendorder.lightColor(this.settings.fillStyle));
+                this.layer.chart.renderer.drawLable(ctx, color, 0, this.layer.area.innerWidth, pointCoords[0].y, label);
+            }
+        }
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawLable = function (ctx, fillColor, textColor, x, y, text)
+    {
+        fillColor = fillColor ? fillColor : "#333333";
+        textColor = textColor ? textColor : "#FFFFFF";
+
+        ctx.save();
+
+        ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+
+        ctx.fillStyle = fillColor;
+
+        ctx.lineWidth="2";
+
+        var textWidth = ctx.measureText(text).width;
+
+        var width = textWidth + 5;
+        var x = ctx.canvas.width - 120;
+        ctx.beginPath();
+        ctx.moveTo(x-width-5, y+5);
+        ctx.lineTo(x-width-5, y-5);
+        ctx.quadraticCurveTo(x-width-5, y-10, x-width, y-10);
+        ctx.lineTo(x, y-10);
+        ctx.quadraticCurveTo(x+5, y-10, x+5, y-5);
+        ctx.lineTo(x+5, y+5);
+        ctx.quadraticCurveTo(x+5, y+10, x, y+10);
+        ctx.lineTo(x-width, y+10);
+        ctx.quadraticCurveTo(x-width-5, y+10, x-width-5, y+5);
+
+
+        ctx.closePath();
+
+
+        ctx.save();
+        var shadowColor = this.layer.chart.chartOptions.shadowColor;
+        if (this.selected) {
+
+            ctx.shadowColor = shadowColor;
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 15;
+            ctx.shadowOffsetY = 15;
+
+        } else if (ctx.inHover) {
+
+            ctx.shadowColor = shadowColor;
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 5;
+            ctx.shadowOffsetY = 5;
+
+        }
+        ctx.restore();
+        ctx.fill();
+
+
+        this.drawCancelButton(ctx, x, y-10);
+
+        ctx.fillStyle = textColor;
+        ctx.fillText(text, x-width, y);
+
+
+        ctx.restore();
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawLableTrend = function (ctx, coords) {
+
+        var text = this.settings.text,
+            textColor = this.settings.textColor,
+            textHeight = this.settings.textHeight,
+            h = textHeight * 1.2,
+            center = {
+                x: (coords[0].x + coords[1].x) / 2,
+                y: (coords[0].y + coords[1].y) / 2
+            },
+            labelCoords = {
+                center: {x: '', y: ''},
+                left: {x: '', y: ''},
+                right: {x: '', y: ''}
+            },
+            alpha = Math.atan((coords[0].y - coords[1].y) / (coords[0].x - coords[1].x));
+
+        ctx.save();
+        ctx.font = 'normal ' + textHeight + 'px Arial,Helvetica,sans-serif';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = "1";
+        var textWidth = ctx.measureText(text).width;
+        ctx.restore();
+
+        labelCoords.center.x = center.x - h * Math.cos(Math.PI / 2 + alpha);
+        labelCoords.center.y = center.y - h * Math.sin(Math.PI / 2 + alpha);
+        labelCoords.left.x = labelCoords.center.x - textWidth / 2 * Math.cos(alpha);
+        labelCoords.left.y = labelCoords.center.y - textWidth / 2 * Math.sin(alpha);
+        labelCoords.right.x = labelCoords.center.x + (textWidth / 2 + 20) * Math.cos(alpha);
+        labelCoords.right.y = labelCoords.center.y + (textWidth / 2 + 20) * Math.sin(alpha);
+
+        this.trendLabelSettings = {
+            alpha: alpha,
+            labelCoords: labelCoords
+        };
+
+        ctx.save();
+
+        ctx.font = 'normal ' + textHeight + 'px Arial,Helvetica,sans-serif';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = "1";
+
+        ctx.strokeStyle = this.settings.fillStyle;
+        ctx.fillStyle = this.settings.fillStyle;
+
+        var textHeight2 = Math.round(textHeight / 2);
+        var x = 0, y = 0, padding = 3;
+
+        ctx.translate( labelCoords.left.x, labelCoords.left.y);
+        ctx.rotate(alpha);
+
+        ctx.beginPath();
+        ctx.moveTo(x - padding, y + textHeight2);
+        ctx.lineTo(x - padding, y - textHeight2);
+        ctx.quadraticCurveTo(x - padding, y - textHeight2 - padding, x, y - textHeight2 - padding);
+        ctx.lineTo(x + textWidth, y - textHeight2 - padding);
+        ctx.quadraticCurveTo(x + textWidth + padding, y - textHeight2 - padding, x + textWidth + padding, y - textHeight2);
+        ctx.lineTo(x + textWidth + padding, y + textHeight2);
+        ctx.quadraticCurveTo(x + textWidth + padding, y + textHeight2 + padding, x + textWidth, y + textHeight2 + padding);
+        ctx.lineTo(x, y + textHeight2 + padding);
+        ctx.quadraticCurveTo(x - padding, y + textHeight2 + padding, x - padding, y + textHeight2);
+        ctx.closePath();
+        ctx.fill();
+        //ctx.stroke();
+
+        ctx.fillStyle = textColor;
+        ctx.fillText(text, x, y);
+
+        this.drawCancelButton(ctx, x + textWidth + 3, y - textHeight2 - padding);
+
+        ctx.restore();
+
+/*
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = '#0000FF';
+        ctx.arc(center.x, center.y, 5, 0, 2 * Math.PI, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(labelCoords.center.x, labelCoords.center.y, 5, 0, 2 * Math.PI, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(labelCoords.left.x, labelCoords.left.y, 5, 0, 2 * Math.PI, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(labelCoords.right.x, labelCoords.right.y, 5, 0, 2 * Math.PI, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.restore();
+*/
+
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawCancelButton = function (ctx, x, y) {
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+
+        ctx.lineTo(x, y+20);
+        ctx.stroke();
+
+        ctx.lineTo(x+15, y+20);
+        ctx.quadraticCurveTo(x+20, y+20, x+20, y+15);
+        ctx.lineTo(x+20, y+5);
+        ctx.quadraticCurveTo(x+20, y, x+15, y);
+        ctx.closePath();
+
+        ctx.fillStyle = '#e53935';
+        ctx.fill();
+
+
+        //Рисуем крестик
+        ctx.beginPath();
+        ctx.moveTo(x+5, y+5);
+        ctx.lineTo(x+15, y+15);
+        ctx.moveTo(x+5, y+15);
+        ctx.lineTo(x+15, y+5);
+        ctx.stroke();
+        ctx.closePath();
+    };
+
+
+    iChart.Charting.ChartTrendorder.prototype.drawPoints = function (ctx, pointCoords) {
+        //console.log(pointCoords);
+
+        if(!this.selected) {
+            return 0;
+        }
+
+        function drawArrows (ctx, x, y, radius, alpha, right) {
+            var x = x + (right ? -1 : 1) * radius * Math.cos(alpha),
+                y = y + (right ? -1 : 1) * radius * Math.sin(alpha),
+                h = 10,
+                beta;
+
+            ctx.lineWidth = 1;
+
+            var angleStart = right ? (-0.2 * Math.PI + alpha) : (0.8 * Math.PI + alpha),
+                angleEnd = right ? (0.2 * Math.PI + alpha) : (1.2 * Math.PI + alpha),
+                angleBase = right ? (0 * Math.PI + alpha) : (1 * Math.PI + alpha),
+                x1 = x + (right ? -1 : 1) * h * Math.cos(Math.PI / 2 + alpha),
+                y1 = y + (right ? -1 : 1) * h * Math.sin(Math.PI / 2 + alpha),
+                x2 = x + (right ? 1 : -1) * h * Math.cos(Math.PI / 2 + alpha),
+                y2 = y + (right ? 1 : -1) * h * Math.sin(Math.PI / 2 + alpha);
+
+            ctx.beginPath();
+            ctx.arc(x1, y1, radius, angleStart, angleBase);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x2, y2, radius, angleBase, angleEnd);
+            ctx.stroke();
+
+            var ax = x1 + radius * Math.cos(angleStart),
+                ay = y1 + radius * Math.sin(angleStart),
+                beta = (angleStart) + Math.PI / 16,
+                ax1 = x1 + radius * 0.9 * Math.cos(beta),
+                ay1 = y1 + radius * 0.9 * Math.sin(beta),
+                ax2 = x1 + radius * 1.1 * Math.cos(beta),
+                ay2 = y1 + radius * 1.1 * Math.sin(beta);
+
+            ctx.beginPath();
+            ctx.moveTo(ax1, ay1);
+            ctx.lineTo(ax, ay);
+            ctx.lineTo(ax2, ay2);
+
+            var ax = x2 + radius * Math.cos(angleEnd),
+                ay = y2 + radius * Math.sin(angleEnd),
+                beta = angleEnd - Math.PI / 16,
+                ax1 = x2 + radius * 0.9 * Math.cos(beta),
+                ay1 = y2 + radius * 0.9 * Math.sin(beta),
+                ax2 = x2 + radius * 1.1 * Math.cos(beta),
+                ay2 = y2 + radius * 1.1 * Math.sin(beta);
+
+            ctx.moveTo(ax1, ay1);
+            ctx.lineTo(ax, ay);
+            ctx.lineTo(ax2, ay2);
+
+            ctx.stroke();
+        }
+
+        var alpha = Math.atan((pointCoords[0].y - pointCoords[1].y) / (pointCoords[0].x - pointCoords[1].x)),
+            radius = 30;
+
+        ctx.save();
+
+        ctx.strokeStyle = this.settings.fillStyle;
+        ctx.fillStyle = this.settings.fillStyle;
+
+        drawArrows(ctx, pointCoords[0].x, pointCoords[0].y, radius, alpha, false);
+        drawArrows(ctx, pointCoords[1].x, pointCoords[1].y, radius, alpha, true);
+
+        ctx.restore();
+    };
+
+
+    iChart.Charting.ChartTrendorder.prototype.setTestSegments = function ()
+    {
+        if(this.settings.mode == 'line') {
+            if (this.selected) {
+                var ctx = this.layer.context;
+                ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+                var width = ctx.measureText(this.settings.text).width;
+                var x = ctx.canvas.width - 120;
+                this.testContext.segments = [
+                    [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
+                    [{ "x": x-width, "y": this.testContext.points[0].y+4}, { "x": x, "y": this.testContext.points[0].y+4}],
+                    [{"x": this.layer.area.innerOffset.left, "y": this.testContext.points[0].y},{"x": this.layer.area.innerOffset.left + this.layer.area.innerWidth,"y": this.testContext.points[0].y}]
+                ];
+            } else {
+                if(this.testContext) {
+                    this.testContext.segments = [
+                        [{
+                            "x": this.layer.area.innerOffset.left,
+                            "y": this.testContext.points[0].y
+                        }, {
+                            "x": this.layer.area.innerOffset.left + this.layer.area.innerWidth,
+                            "y": this.testContext.points[0].y
+                        }]
+                    ];
+                }
+            }
+        } else {
+            this.testContext.segments = [];
+
+            if (!this.selected) {
+                this.testContext.segments = [
+                    [{ "x": this.trendLineSettings.points[0].x, "y": this.trendLineSettings.points[0].y}, { "x": this.trendLineSettings.points[1].x, "y": this.trendLineSettings.points[1].y}]
+                ];
+            }
+
+            if(this.trendLabelSettings) {
+                this.testContext.segments.push([{ "x": this.trendLabelSettings.labelCoords.left.x, "y": this.trendLabelSettings.labelCoords.left.y}, { "x": this.trendLabelSettings.labelCoords.right.x, "y": this.trendLabelSettings.labelCoords.right.y}]);
+            }
+
+        }
+    };
+
+
+    iChart.Charting.ChartTrendorder.prototype.onDrag  = function (points)
+    {
+        if(!points[0] || !points[1]) {
+            return false;
+        }
+
+        if(this.settings.mode == 'line') {
+            if (points[0].y != this.points[0].y && this.points[1].y == points[1].y || points[0].y == this.points[0].y && this.points[1].y != points[1].y) {
+                this.settings.mode = 'trend';
+            }
+        } else {
+
+        }
+
+        if (this.points[0].x != points[0].x && points[0].x >= points[1].x - 1000) {
+            points[0].x = points[1].x - 1000;
+        } else if (this.points[1].x != points[1].x && points[1].x <= points[0].x + 1000) {
+            points[1].x = points[0].x + 1000;
+        }
+
+        if(typeof this.settings.restriction == 'function') {
+            this.settings.restriction.call(this, points);
+        }
+
+    };
+    iChart.Charting.ChartTrendorder.prototype.onSelect = function () {
+        this.getTestContext(true);
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.onBlur = function () {
+        if(this.settings.mode == 'trend') {
+            this.normalizeCoords(this.getCoordinates(this.layer.context, this.points));
+        }
+        this.getTestContext(true);
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.onDrop = function () {
+
+        if(this.settings.mode == 'trend') {
+            console.log('newOrderParams', this.settings.newOrderParams);
+        }
+
+        if(typeof this.settings.onDrop == 'function') {
+            console.log(this);
+            this.settings.onDrop.call(this);
+        }
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.onHover = function () {
+        clearTimeout(this.layer.chart.env.timers.orderClose);
+        this.cancelControl(1);
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.onOut = function () {
+        clearTimeout(this.layer.chart.env.timers.orderClose);
+        var self = this;
+        this.layer.chart.env.timers.orderClose = setTimeout(function(){self.cancelControl(0);}, 300);
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.cancelControl = function (state) {
+        if(typeof this.settings.onCancel == 'function') {
+            if(state) {
+                $('#ichartOrderCancelCtrl').hide();
+                var ctx = this.layer.context;
+                var x = ctx.canvas.width - 120;
+                var pointCoords = this.getCoordinates(ctx, this.points);
+                if(!$('#ichartOrderCancelCtrl').length) {
+                    $("<span/>", { id:'ichartOrderCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('2958', 'Снять') }).hide().appendTo(this.layer.chart.container);
+                }
+
+                var self = this;
+                $('#ichartOrderCancelCtrl').unbind('click').bind('click', function(e) {
+                    if(typeof self.settings.onCancel == 'function') {
+
+                        self.settings.onCancel.call(self);
+
+                    }
+                    $('#ichartOrderCancelCtrl').hide();
+                }).bind('mouseover', function () {
+                    clearTimeout(self.layer.chart.env.timers.orderClose);
+                }).bind('mouseleave', function () {
+                    clearTimeout(self.layer.chart.env.timers.orderClose);
+                    self.layer.chart.env.timers.orderClose = setTimeout(function(){self.cancelControl(0);}, 1000);
+                });
+
+                if(this.settings.mode == 'line') {
+                    var top = pointCoords[0].y - 8;
+                    var left = x + 2;
+                } else {
+                    if(this.trendLabelSettings) {
+                        var top = this.trendLabelSettings.labelCoords.right.y - 10 - 10 * Math.sin(this.trendLabelSettings.alpha);
+                        var left = this.trendLabelSettings.labelCoords.right.x - 10  - 10 * Math.cos(this.trendLabelSettings.alpha);
+                    }
+                }
+
+                $('#ichartOrderCancelCtrl').css({top: top, left: left}).show();
+            } else {
+                $('#ichartOrderCancelCtrl').hide();
+            }
+        }
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.onMouseDown = function (e) {
+        if (typeof this.settings.onSelect == 'function') {
+            this.settings.onSelect.call(this, e);
+        }
+    };
+
+
+    iChart.Charting.ChartTrendorder.lightColor = function (rgb)
+    {
+        //rgb = rgb.substring(rgb.indexOf('(') + 1, rgb.lastIndexOf(')')).split(/,\s*/);
+        //for (var i = 0; i < 3; i++) {
+        //    rgb[i] = parseInt(rgb[i]) + 40;
+        //}
+        //return 'rgba(' + rgb.join(", ") + ')';
+
+    };
+
+
+
+
+})();
