@@ -37,7 +37,7 @@
 
             var img = new Image();
 
-            img.src = "/iguanachart/images/" + settings.mark + ".png";
+            img.src = "/iguanachart/images/" + 'icon-' + settings.mark + ".png";
             ctx.drawImage(img,coords[0].x-img.width/2, coords[0].y- img.height/2, img.width, img.height);
             $('.Mark-select').hide();
         }
@@ -45,7 +45,7 @@
 
     iChart.Charting.ChartMark.prototype.drawPopupSettings = function (ctx, coord)
     {
-        $('#elementSettings').remove();
+        $('#elementSettings').remove(); 
         $('<div id="elementSettings" class="mark chartInstrument">'+
             '<div class="popupWrapper">'+
             '<div class="rowTop">'+

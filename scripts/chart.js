@@ -783,22 +783,22 @@
         return _this.viewData.chart.chartOptions.percentMode;
     };
 
-    this.iconsLoad = function () {
+    this.iconsLoad = function () { 
         $(["/i/admin/add.png",
             "/iguanachart/images/buy.png",
             "/iguanachart/images/down.png",
-            "/iguanachart/images/exclamation.png",
-            "/iguanachart/images/left.png",
-            "/iguanachart/images/leftDown.png",
-            "/iguanachart/images/leftUp.png",
-            "/iguanachart/images/question.png",
-            "/iguanachart/images/right.png",
-            "/iguanachart/images/rightDown.png",
-            "/iguanachart/images/rightUp.png",
-            "/iguanachart/images/sell.png",
-            "/iguanachart/images/smileDown.png",
-            "/iguanachart/images/smileUp.png",
-            "/iguanachart/images/up.png",
+            "/iguanachart/images/icon-exclamation.png",
+            "/iguanachart/images/icon-left.png",
+            "/iguanachart/images/icon-leftDown.png",
+            "/iguanachart/images/icon-leftUp.png",
+            "/iguanachart/images/icon-question.png",
+            "/iguanachart/images/icon-right.png",
+            "/iguanachart/images/icon-rightDown.png",
+            "/iguanachart/images/icon-rightUp.png",
+            "/iguanachart/images/icon-sell.png",
+            "/iguanachart/images/icon-smileDown.png",
+            "/iguanachart/images/icon-smileUp.png",
+            "/iguanachart/images/icon-up.png",
             "/i/logo_tradernet_min.png"]).preload();
     };
     this.drawLables = function (legend, context, x, y) {
