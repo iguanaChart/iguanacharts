@@ -6,6 +6,5 @@ You can download our open source library and setup powerful stock chart just in 
 ## Installation
 
 1.
-2.
 
 ## License
