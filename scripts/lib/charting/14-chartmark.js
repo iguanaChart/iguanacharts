@@ -46,25 +46,24 @@
     iChart.Charting.ChartMark.prototype.drawPopupSettings = function (ctx, coord)
     {
         $('#elementSettings').remove(); 
-        $('<div id="elementSettings" class="mark chartInstrument">'+
-            '<div class="popupWrapper">'+
-            '<div class="rowTop">'+
-            '<span class="up" data-mark="up"></span>'+
-            '<span class="left" data-mark="left"></span>'+
-            '<span class="upLeft" data-mark="leftUp"></span>'+
-            '<span class="upRight" data-mark="rightUp"></span>'+
-            '<span class="smileUp" data-mark="smileUp"></span>'+
-            '<span class="exclamation" data-mark="exclamation"></span>'+
-            '<span class="buy" data-mark="buy"></span>'+
-            '<span class="down" data-mark="down"></span>'+
-            '<span class="right" data-mark="right"></span>'+
-            '<span class="downLeft" data-mark="leftDown"></span>'+
-            '<span class="downRight" data-mark="rightDown"></span>'+
-            '<span class="smileDown" data-mark="smileDown"></span>'+
-            '<span class="question" data-mark="question"></span>'+
-            '<span class="sell" data-mark="sell"></span>'+
-            '</div>'+
-            '</div>'+
+        $('<div id="elementSettings" class="chartInstrument">' +
+            '<div class="uk-flex uk-flex-left">' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="up" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-up"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="left" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-left"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="leftUp" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-leftUp"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="rightUp" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-rightUp"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="smileUp" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-smileUp"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="exclamation" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-exclamation"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="buy" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-buy"></i></div></div>' +
+            '<div class="uk-flex uk-flex-left">' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="down" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-down"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="right" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-right"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="leftDown" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-leftDown"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="rightDown" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-rightDown"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="smileDown" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-smileDown"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="question" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-question"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="sell" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-sell"></i></div>' +
+            '</div>' +
             '</div>').appendTo($(this.layer.chart.container));
         var x = coord.x - $('#elementSettings.mark').width()+8;
         $('#elementSettings').css({ "left": this.layer.area.innerOffset.left+x, "top": this.layer.area.innerOffset.top+coord.y + 15 });
