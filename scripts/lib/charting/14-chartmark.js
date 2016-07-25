@@ -46,7 +46,7 @@
     iChart.Charting.ChartMark.prototype.drawPopupSettings = function (ctx, coord)
     {
         $('#elementSettings').remove(); 
-        $('<div id="elementSettings" class="chartInstrument">' +
+        $('<div id="elementSettings" class="mark chartInstrument">' +
             '<div class="uk-flex uk-flex-left">' +
             '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="up" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-up"></i></div>' +
             '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="left" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-left"></i></div>' +
@@ -75,15 +75,14 @@
             self.layer.render();
         };
 
-        $('#elementSettings span').unbind("mousedown").mousedown(function(event){
+        $('#elementSettings .chartTool').off("mousedown").on('mousedown', function(event){
             event.stopPropagation();
             setSettings_onClick($(this).attr('data-mark'));
             $('#elementSettings').remove();
         });
 
         return false;
-    }
-
+    };
 
     iChart.Charting.ChartMark.prototype.setTestSegments = function ()
     {
