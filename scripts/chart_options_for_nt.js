@@ -19,7 +19,7 @@ var iChartDataSource = {
         end: '',
     },
 
-    //this.url = options.url || "/stocks/graphics/get-iis-graphic?";
+    host: "",
     url: "/api/get-hloc?",
 
     getUrl: function (params) {
@@ -42,7 +42,7 @@ var iChartDataSource = {
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
         cachedParams['hash'] = cachedParams.securityId.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
 
-        return iChartDataSource.url + iChart.toQueryString(cachedParams);
+        return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
     },
 
     onRequestCallback: function(callback, params) {
@@ -136,7 +136,7 @@ var iChartDataSource = {
             params.interval = hash.interval;
         }
 
-        $.getJSON('/stocks/securities/get-security-info-json',{id: params.securityId, ticker:params.ticker, f_history: params.f_history}, function(data){
+        $.getJSON(iChartDataSource.host + '/api/get-security-info-json',{id: params.securityId, ticker:params.ticker, f_history: params.f_history}, function(data){
 
             _this.chart.userSettings.currentSecurity = data;
             _this.chart.dataSource.dataSettings.useHash = false;

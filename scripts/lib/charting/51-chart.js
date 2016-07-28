@@ -891,7 +891,7 @@
         switch (mode)
         {
             case "pan":
-                this.container.style.cursor = this.overlay.defaultCursor = "url('/iguanachart/styles/cursors/grab.cur'), move";
+                this.container.style.cursor = this.overlay.defaultCursor = "url('../scripts/iguanachart/styles/cursors/grab.cur'), move";
                 break;
             case "zoom":
                 this.container.style.cursor = this.overlay.defaultCursor = "crosshair";

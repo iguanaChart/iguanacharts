@@ -509,7 +509,7 @@
     width: 16px;
     margin-left: -6px;
     margin-top: 3px;
-    background: url("/iguanachart/images/bullet_wrench.png") no-repeat;
+    background: url("../images/bullet_wrench.png") no-repeat;
 }
 
 .m-chart-instrument-delete:hover {

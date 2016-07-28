@@ -10,6 +10,8 @@
 
     this.wrapper = options.wrapper;
 
+    this.lib_path = options.lib_path || "/iguanachart/";
+
     this.toQueryString = function (params)
     {
         ///	<summary>

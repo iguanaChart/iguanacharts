@@ -145,7 +145,8 @@
                 var name = 'chart' + n + '_' + (new Date().getTime()),
                     containerId = name + '_container',
                     template = $.render.iChart_mainTmpl({id: containerId, name: name}),
-                    chartObj = new IguanaChart({name: name, container: "#" + containerId, wrapper: $wrapper, dataSource: $.extend(true, {}, params.dataSource)});
+                    lib_path = params.lib_path || '',
+                    chartObj = new IguanaChart({name: name, container: "#" + containerId, wrapper: $wrapper, lib_path: lib_path, dataSource: $.extend(true, {}, params.dataSource)});
 
                 //chartObj.userSettings = $.extend(true, {}, chartObj.userSettings, params.settings);
 
