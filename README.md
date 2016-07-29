@@ -3,6 +3,34 @@ IguanaCharts is HTML5 jQuery Stock Charts library
 
 You can download our open source library and setup powerful stock chart just in minutes.
 
+## Demo and docs
+
+http://iguanacharts.com/
+
+### Examples
+
+```html
+<div class="iChart" style="height: 550px; width: 1000px"></div>
+
+<script type="text/javascript">
+    iChartDataSource.host = "https://beta.tradernet.ru";
+
+    $('.iChart').iguanaChart(
+        {
+            ticker: "AAPL.US",
+            date_from: "01.01.2015",
+            date_to: "01.01.2016",
+            lib_path: "/scripts/iguanachart/",
+            chartOptions: {
+                minHeight: 500,
+                uiTools: {top: true}
+            },
+            dataSource: $.extend(true, {}, iChartDataSource)
+        }
+    );
+</script>
+```
+
 ## Installation
 
 Download from 
@@ -13,9 +41,8 @@ Or
 
 > git clone https://github.com/iguanaChart/iguanacharts.git
 
-
  
-```
+```html
     <link rel="stylesheet" href="/iguanachart/iguanachart.min.css" media="all">
     <script type="text/javascript" src="/iguanachart/iguanachart.min.js"></script>
 ```
@@ -34,7 +61,7 @@ https://github.com/uikit/uikit/releases/download/v2.26.4/uikit-2.26.4.zip
 
 ####Including dependencies example
 
-```
+```html
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
     <link rel="stylesheet" href="/scripts/uikit/css/uikit.min.css" media="all">
