@@ -13,8 +13,8 @@
 
         this.elementType = "Visualtrade";
         this.drawType = 'auto';
-        this.hoverCursor = "url('/iguanachart/styles/cursors/red_vertical_cursor.cur'), move";
-        this.moveCursor = "url('/iguanachart/styles/cursors/red_vertical_cursor.cur'), move";
+        this.hoverCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.moveCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
         this.maxPointCount = 5;
         this.hasSettings = true;
         this.controlEnable = true;

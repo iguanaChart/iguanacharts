@@ -891,7 +891,7 @@
         switch (mode)
         {
             case "pan":
-                this.container.style.cursor = this.overlay.defaultCursor = "url('../scripts/iguanachart/styles/cursors/grab.cur'), move";
+                this.container.style.cursor = this.overlay.defaultCursor = "url('" + this.env.lib_path + "/styles/cursors/grab.cur'), move";
                 break;
             case "zoom":
                 this.container.style.cursor = this.overlay.defaultCursor = "crosshair";
@@ -1755,7 +1755,7 @@
                 }
                 else
                 {
-                    this.container.style.cursor = this.overlay.defaultCursor = "url('/iguanachart/styles/cursors/grabbing.cur'), move";
+                    this.container.style.cursor = this.overlay.defaultCursor = "url('" + this.env.lib_path + "/styles/cursors/grabbing.cur'), move";
                 }
 
                 break;
@@ -1881,7 +1881,7 @@
 
         if (selection.mode === "pan")
         {
-            this.container.style.cursor = this.overlay.defaultCursor = "url('/iguanachart/styles/cursors/grab.cur'), move";
+            this.container.style.cursor = this.overlay.defaultCursor = "url('" + this.env.lib_path + "/styles/cursors/grab.cur'), move";
         }
         else
         {

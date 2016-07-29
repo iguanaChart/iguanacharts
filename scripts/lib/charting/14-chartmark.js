@@ -37,7 +37,7 @@
 
             var img = new Image();
 
-            img.src = "/iguanachart/images/" + 'icon-' + settings.mark + ".png";
+            img.src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + settings.mark + ".png";
             ctx.drawImage(img,coords[0].x-img.width/2, coords[0].y- img.height/2, img.width, img.height);
             $('.Mark-select').hide();
         }
