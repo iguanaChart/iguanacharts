@@ -65,7 +65,7 @@ $.templates("indicatorsListTmpl", '' +
 );
 
 $.templates("indicatorsDropdownTmpl",
-    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+    '<div class="js-iChartTools-indicators uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button">' + _t('3101', 'Индикаторы') + '<i class="uk-icon-caret-down"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
             '<div class="uk-grid uk-dropdown-grid">' +
@@ -421,7 +421,7 @@ $.templates("themeConfigOptionsTmpl", '' +
 );
 
 $.templates("iChart_optionsTmpl",
-    '<div class="js-iChartTools-options uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+    '<div class="js-iChartTools-options uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button">' + _t('', 'Настройки') + '<i class="uk-icon-caret-down"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-optionsList">' +
@@ -442,7 +442,7 @@ $.templates("iChart_optionsTmpl",
 );
 
 $.templates("iChart_instrumentsTmpl",
-    '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+    '<div class="js-iChartTools-instruments uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-instrumentsList">' +
@@ -505,6 +505,27 @@ $.templates("iChart_instrumentsTmpl",
                 '</div>' +
             '</div>' +
         '</div>' +
+    '</div>'
+);
+
+$.templates("iChart_intervalsTmpl2", '' +
+    '<div class="js-iChartTools-intervals uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+        '<button class="uk-button">' + _t('5421', 'Интервал') + '<i class="uk-icon-caret-down"></i></button>' +
+        '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
+            '<ul class="uk-nav uk-nav-dropdown js-chart-intervals">' +
+                '{{for intervals}}' +
+                '<li><a href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a></li>' +
+                '{{/for}}' +
+            '</ul>' +
+        '</div>' +
+    '</div>'
+);
+
+$.templates("iChart_intervalsTmpl", '' +
+    '<div class="uk-margin-small-left js-iChartTools-intervals" style="display: inline-block">' +
+                '{{for intervals}}' +
+                '<a class="uk-button js-chart-interval" href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a>' +
+                '{{/for}}' +
     '</div>'
 );
 

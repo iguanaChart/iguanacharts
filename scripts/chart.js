@@ -950,6 +950,14 @@
         }
     };
 
+    this.getLastPointX = function () {
+        if(typeof this.viewData.chart != "undefined" && !!this.viewData.chart.areas && this.viewData.chart.canvas) {
+            var lastPointIndex = this.viewData.chart.areas[0].ySeries[0].points.length-this.viewData.chart.chartOptions.futureAmount-1;
+            return this.viewData.chart.areas[0].xSeries[lastPointIndex];
+        }
+        return false;
+    };
+
     this.addTransactions = function (data, mode) {
         if(typeof this.viewData.chart != "undefined") {
             DataLoop:
@@ -1249,32 +1257,26 @@
     this.checkPeriod = function (period) {
 
         var date_to = iChart.parseDateTime(this.dataSource.dataSettings.date_to);
-        var date_from = iChart.parseDateTime(this.dataSource.dataSettings.date_to);
+        var date_from = new Date(date_to);
 
         // задание начальной даты
-        switch (period) {
-            case "D1":
-                break;
-            case "D7":
-                date_from.setDate(date_to.getDate() - 7);
-                break;
-            case "M1":
-                date_from.setMonth(date_to.getMonth() - 1);
-                break;
-            case "M3":
-                date_from.setMonth(date_to.getMonth() - 3);
-                break;
-            case "M6":
-                date_from.setMonth(date_to.getMonth() - 6);
-                break;
-            case "Y1":
-                date_from.setFullYear(date_to.getFullYear() - 1);
-                break;
-            case "Y5":
-                date_from.setFullYear(date_to.getFullYear() - 5);
-                break;
-            default:
-                date_from.setMonth(date_to.getMonth() - 3);
+
+        var periodRegs = period.match(/([D,M,Y])(\d+)/);
+
+        if(periodRegs) {
+            switch (periodRegs[1]) {
+                case "D":
+                    date_from.setDate(date_to.getDate() - +(periodRegs[2]));
+                    break;
+                case "M":
+                    date_from.setMonth(date_to.getMonth() - +(periodRegs[2]));
+                    break;
+                case "Y":
+                    date_from.setFullYear(date_to.getFullYear() - +(periodRegs[2]));
+                    break;
+            }
+        } else {
+            period = "D1";
         }
 
         if (period) {
@@ -1289,6 +1291,43 @@
             }
         }
         this.checkDateInterval(iChart.parseDateTime(this.dataSource.dataSettings.date_from), iChart.parseDateTime(this.dataSource.dataSettings.date_to));
+    };
+
+    this.setInterval = function (interval) {
+
+        var period = "M1";
+        switch (interval) {
+            case "I1":
+                period = "D1";
+                break;
+            case "I5":
+                period = "D3";
+                break;
+            case "I15":
+                period = "D7";
+                break;
+            case "H1":
+                period = "D14";
+                break;
+            case "D1":
+                period = "M6";
+                break;
+            case "D7":
+                period = "Y1";
+                break;
+        }
+
+        var date_to = new Date(this.getLastPointX() * 1000);
+        date_to.setHours(0);
+        date_to.setMinutes(0);
+        date_to.setSeconds(0);
+        date_to.setDate(date_to.getDate()+1);
+
+        this.dataSource.dataSettings.date_to = date_to;
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
+        this.checkPeriod(period);
+        this.updateForce();
     };
 
     this.setHashValue = function (key, value)

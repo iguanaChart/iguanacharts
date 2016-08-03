@@ -18,6 +18,7 @@
 
         this.renderTopBar = function () {
             this.$topToolsBarContainer.empty();
+            this.renderIntervals();
             this.renderIndicators();
             this.renderOptionsList();
             this.renderInstrumentsList();
@@ -669,6 +670,28 @@
             });
 
             this.$topToolsBarContainer.append($instrumentsHtml);
+        };
+
+        this.renderIntervals = function () {
+
+            var data = {
+                intervals: [
+                    {value: 'I1', name : intervalShortNames('I1')},
+                    {value: 'I5', name : intervalShortNames('I5')},
+                    {value: 'I15', name : intervalShortNames('I15')},
+                    {value: 'H1', name : intervalShortNames('H1')},
+                    {value: 'D1', name : intervalShortNames('D1')},
+                    {value: 'D7', name : intervalShortNames('D7')}
+                ]
+            };
+
+            var $intervalsHtml = $($.render.iChart_intervalsTmpl(data));
+
+            $intervalsHtml.on('click touchend', '.js-chart-interval', function(){
+                _this.chart.setInterval($(this).data('value'));
+            });
+
+            this.$topToolsBarContainer.append($intervalsHtml);
         };
 
     };
