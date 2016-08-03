@@ -737,7 +737,8 @@
             }
         }
     };
-}));/**
+}));
+/**
  * Created by gti on 05.07.16.
  */
 (function ($){
@@ -861,7 +862,8 @@ $.fn.palette = function (options) {
     }
 
 };
-})(jQuery);﻿/**
+})(jQuery);
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -1673,7 +1675,346 @@ function intervalShortNames(interval) {
     };
 
 })(window);
-﻿/**
+
+/**
+ * Created by gti on 14.10.15.
+ */
+
+iChart.indicators = {
+    "AD":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('428', 'AD (Распределение накопления)'),
+        "value": "AD",
+        "outputRegion": "self",
+        "description": _t('4789', 'Формула распределения накопления использует отношение между объемом и ценами, чтобы оценить интенсивность изменения цен; если объем увеличивается, весьма вероятно, что цены поднимутся.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5400">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[]
+    },
+    "ADOSC":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('429', 'ADOSC (Осциллятор Чайкина)'),
+        "value": "ADOSC",
+        "outputRegion": "self",
+        "description":_t('4790', 'Индикатор осциллятора Чайкина – это разница между трехдневным экспоненциальным скользящим средним и десятидневным экспоненциальным скользящим средним, примененная к распределению накопления.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5425">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"FastPeriod", "Name":_t('4791', 'Краткосрочный интервал'), "Value":3},
+            {"Code":"SlowPeriod", "Name":_t('4792', 'Долгосрочный интервал'), "Value":10}
+        ]
+    },
+    "ADX":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('430', 'ADX (Индекс направленного движения)'),
+        "value": "ADX",
+        "outputRegion": "self",
+        "description":_t('4793', 'Индикатор среднего направленного движения служит для определения вероятного направления основного тренда.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
+        ]
+    },
+    "ADXDI":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "outputNames": ['ADX','PLUS_DI','MINUS_DI'],
+        "name": _t('431', 'ADXDI (Индекс направленного движения (с индикаторами направления))'),
+        "value": "ADXDI",
+        "outputRegion": "self",
+        "description":_t('4793', 'Индикатор среднего направленного движения служит для определения вероятного направления основного тренда.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5421">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
+        ]
+    },
+    "AROON":{
+        "type": 'TA_LIB',
+        "output": 2,
+        "outputNames": ['AroonDown','AroonUp'],
+        "name": _t('432', 'AROON (Арун)'),
+        "value": "AROON",
+        "outputRegion": "self",
+        "description":_t('4797', 'Индикатор Арун применяется для изучения силы и направления трендов.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":25}
+        ]
+    },
+    "ATR":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('433', 'ATR (Средний истинный диапазон)'),
+        "value": "ATR",
+        "outputRegion": "self",
+        "description":_t('4799', 'Индикатор среднего истинного диапазона измеряет фиксацию и сравнивает диапазоны между высокими и низкими ценами и ценами закрытия.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
+        ]
+    },
+    "BBANDS":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "outputNames": ['UpperBand','MiddleBand','LowerBand'],
+        "name": _t('434', 'BBANDS (Уровни Боллинджера)'),
+        "value": "BBANDS",
+        "outputRegion": "price",
+        "description":_t('4801', 'Индикаторы с линиями Боллинджера наносятся на график как уровни стандартного отклонения выше и ниже скользящего среднего.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5397">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":7},
+            {"Code":"DeviationsUp", "Name":_t('4803', 'Верхнее число станд. отклонения'), "Value":2},
+            {"Code":"DeviationsDown", "Name":_t('4804', 'Нижнее число станд. отклонения'), "Value":2}
+        ]
+    },
+    "CCI":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('435', 'CCI (Индекс товарного канала)'),
+        "value": "CCI",
+        "outputRegion": "self",
+        "description":_t('4805', 'Индикатор ценовых моментов сравнивает цены с их скользящими средними.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5424">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "CHV":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('436', 'CHV (Волатильность Чайкина)'),
+        "value": "CHV",
+        "outputRegion": "self",
+        "description":_t('4807', 'Индикатор волатильности Чайкина показывает разницу между максимальными и минимальными ценами и используется для обозначения верхних и нижних частей рынка.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('4808', 'Период EMA'), "Value":10},
+            {"Code":"PeriodROC", "Name":_t('4809', 'Период ROC'), "Value":10}
+        ]
+    },
+    "DPO":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('437', 'DPO (Осциллятор цен с исключенным трендом)'),
+        "value": "DPO",
+        "outputRegion": "self",
+        "description":_t('4810', 'Осциллятор цен с исключенным трендом пытается исключить из цен тренды.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5432">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
+        ]
+    },
+    "EMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('438', 'EMA (Экспоненциальное скользящее среднее)'),
+        "value": "EMA",
+        "outputRegion": "price",
+        "description":_t('4812', 'Экспоненциальное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние дни имеют в вычислении больший вес.') + ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5396">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
+        ]
+    },
+    "ENV":{
+        "type": 'TA_LIB',
+        "output": 2,
+        "outputNames": ['Upper','Lower'],
+        "name": _t('439', 'ENV (Конверты)'),
+        "value": "ENV",
+        "outputRegion": "price",
+        "description":_t('4815', 'Конверты наносятся над и под скользящим средним; смещение определяется указанным процентом.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5431">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20},
+            {"Code":"shift", "Name":_t('4817', 'Сдвиг, %'), "Value":1}
+        ]
+    },
+    "MACD":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "outputNames": ['MACD','MACDSignal','MACDHist'],
+        "name": _t('441', 'MACD (Конвергенция и дивергенция скользящих средних)'),
+        "value": "MACD",
+        "outputRegion": "self",
+        "description":_t('4818', 'Индикатор конвергенции и дивергенции скользящих средних сравнивает два скользящих средних цен и используется вместе с девятидневным экспоненциальным скользящим средним в качестве сигнала для моментов покупки и продажи.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5428">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"FastPeriod", "Name":_t('4819', 'Краткосрочный период'), "Value":12},
+            {"Code":"SlowPeriod", "Name":_t('4820', 'Долгосрочный период'), "Value":26},
+            {"Code":"SignalPeriod", "Name":_t('4821', 'Период сигнальной линии'), "Value":9}
+        ]
+    },
+    "MEDPRICE":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('443', 'MEDPRICE (Медианная цена)'),
+        "value": "MEDPRICE",
+        "outputRegion": "price",
+        "description":_t('4822', 'Медианные цены – это средние значения цен за день, которые могут использоваться как фильтр для индикаторов трендов.'),
+        "parameters":[]
+    },
+    "MFI":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('444', 'MFI (Денежный поток)'),
+        "value": "MFI",
+        "outputRegion": "self",
+        "description":_t('4823', 'Индикатор денежных потоков сравнивает восходящие и нисходящие изменения типичных цен, приведенных к объему.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":14}
+        ]
+    },
+    "OBV":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('445', 'OBV (Балансовый объём)'),
+        "value": "OBV",
+        "outputRegion": "self",
+        "description":_t('4828', 'Индикатор балансового объема измеряет положительный и отрицательный поток объема.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[]
+    },
+    "PSAR":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('447', 'PSAR (Параболик)'),
+        "value": "PSAR",
+        "outputRegion": "price",
+        "description":_t('4833', 'Индикатор Параболик помогает определять точки разворота тренда.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5399">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"Acceleration", "Name":_t('860', 'Шаг'), "Value":0.02},
+            {"Code":"Maximum", "Name":_t('4835', 'Максимальный шаг'), "Value":0.2}
+        ]
+    },
+    "ROC":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('449', 'ROC (Темп изменения)'),
+        "value": "ROC",
+        "outputRegion": "self",
+        "description":_t('4840', 'Индикатор темпов изменений сравнивает указанную цену закрытия с текущей ценой.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5430">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "RSI":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('450', 'RSI (Индекс относительной силы)'),
+        "value": "RSI",
+        "outputRegion": "self",
+        "description":_t('4842', 'Индекс относительной силы – это осциллятор момента, сравнивающий восходящие изменения цены закрытия с нисходящими изменениями и выдающий значения в диапазоне от 0 до 100.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5411">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "SMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('451', 'SMA (Простое скользящее среднее)'),
+        "value": "SMA",
+        "outputRegion": "price",
+        "description":_t('4844', 'Простое скользящее среднее – это среднее значение данных, рассчитанное за некий период времени. Скользящее среднее – самый распространенный индикатор цен в техническом анализе, который можно использовать с любой ценой, например высокой, низкой, ценами открытия и закрытия, а также применять к другим индикаторам.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "STDDEV":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('452', 'STDDEV (Стандартное отклонение)'),
+        "value": "STDDEV",
+        "outputRegion": "self",
+        "description":_t('4846', 'Стандартное отклонение используется для обозначения волатильности и показывает, например, разницу между значениями цены закрытия и ее скользящего среднего.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "TEMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('454', 'TEMA (Тройное экспоненциальное скользящее среднее)'),
+        "value": "TEMA",
+        "outputRegion": "price",
+        "description":_t('4852', 'Тройное экспоненциальное скользящее среднее основано на тройном скользящем среднем цены закрытия. Его назначение – исключить короткие циклы. Этот индикатор сохраняет цену закрытия в трендах, которые короче указанного периода.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
+        ]
+    },
+    "TRIMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('455', 'TRIMA (Треугольное скользящее среднее)'),
+        "value": "TRIMA",
+        "outputRegion": "price",
+        "description":_t('4854', 'Треугольное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем средняя часть данных имеет в вычислении больший вес.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
+        ]
+    },
+    "TYPPRICE":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('456', 'TYPPRICE (Типичная цена)'),
+        "value": "TYPPRICE",
+        "outputRegion": "price",
+        "description":_t('4856', 'Типичная цена – это среднее значение цен за день, которое может использоваться как фильтр для индикаторов трендов.'),
+        "parameters":[]
+    },
+    "VPT":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('457', 'VPT (Тренд объёма цен)'),
+        "value": "VPT",
+        "outputRegion": "self",
+        "description":_t('4857', 'Тренд объема цен – это совокупное значение объема, рассчитываемое на основе относительных изменений цены закрытия; его следует использовать с другими индикаторами.'),
+        "parameters":[]
+    },
+    "WCLPRICE":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('458', 'WCLPRICE (Взвешенная цена закрытия)'),
+        "value": "WCLPRICE",
+        "outputRegion": "price",
+        "description":_t('4858', 'Формула взвешенной цены закрытия вычисляет среднее значение цен за день. Единственное отличие взвешенной цены закрытия и типичной цены в том, что у цены закрытия больший вес и она считается самой важной ценой.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5433">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[]
+    },
+    "WILLR":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('459', 'WILLR (Процентный диапазон Уильямса)'),
+        "value": "WILLR",
+        "outputRegion": "self",
+        "description":_t('4859', 'Процентный диапазон Уильямса – это индикатор момента, который показывает уровни перекупленности и перепроданности.') +
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5410">' + _t('15833', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":14}
+        ]
+    },
+    "WMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('460', 'WMA (Взвешенное скользящее среднее)'),
+        "value": "WMA",
+        "outputRegion": "price",
+        "description":_t('4861', 'Взвешенное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние данные имеют в вычислении больший вес.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":9}
+        ]
+    },
+    "TRPLN":{
+        "type": 'TA_LIB',
+        "output": 0,
+        "name": _t('13838', 'TRPLN (Тенденциальная планиметрия)'),
+        "value": "TRPLN",
+        "outputRegion": "price",
+        "description": _t('13843', 'Тенденциальная планиметрия'),
+        "parameters":[]
+    }
+};
+/**
 * @company  Tradernet
 * @package  iguanaChart
 */
@@ -1925,7 +2266,286 @@ function intervalShortNames(interval) {
 
         return iChart.Charting.pointToPointDistanceSquared(point, intersection);
     };
-})();﻿/**
+})();
+/**
+ * @company  Tradernet
+ * @package  iguanaChart
+ */
+
+(function ()
+{
+    "use strict";
+
+    iChart.Charting.ChartWidgetLayer = function (chart, settings)
+    {
+
+        this.canvas = null;
+        this.chart = chart;
+        this.widget = {
+            widgetCurPrice: {
+                enable: false,
+                width: 200,
+                height: 44,
+                valign: 'top',
+                halign: 'left',
+                vspace: 0,
+                hspace: 50
+            }
+        };
+
+        if(typeof settings != "undefined") {
+            for (var widget in settings) {
+                this.widget[widget] = $.extend(this.widget[widget], settings[widget]);
+            }
+        }
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.clear = function ()
+    {
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.render = function (context)
+    {
+        /// <summary>
+        /// Redraws the layer.
+        /// </summary>
+
+        if (!context)
+        {
+            if(!this.context) {
+                console.log("ERROR: No context for render");
+                return 0;
+            }
+            context = this.context;
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        }
+
+        context.save();
+        this.drawWidgets(context);
+        context.restore();
+
+        if (typeof FlashCanvas !== "undefined")
+        {
+            // Flush and execute commands.
+            context.e();
+        }
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.update = function ()
+    {
+        /// <summary>
+        /// Updates drawing layer.
+        /// </summary>
+
+        if (!this.chart.areas)
+        {
+            return;
+        }
+
+        this.area = this.chart.areas[0];
+
+        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+        this.render();
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype._initCanvas = function (width, height)
+    {
+        /// <summary>
+        /// Initializes the canvas.
+        /// </summary>
+        /// <param name="width" type="Number">Canvas width in pixels.</param>
+        /// <param name="height" type="Number">Canvas height in pixels.</param>
+
+        this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
+        if (this.canvas)
+        {
+            this.context = this.canvas.getContext("2d");
+            this.offset = this.chart._containerSize.offset;
+        }
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawWidgets = function (ctx)
+    {
+        //ctx.save();
+        //ctx.strokeStyle="#FF0000";
+        //ctx.strokeRect(0, 0, ctx.canvas.width-1, ctx.canvas.height-1);
+        //ctx.restore();
+
+        for (var widget in this.widget) {
+            if(this.widget[widget].enable) {
+                this[widget](ctx, this.widget[widget]);
+            }
+        }
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.widgetCurPrice = function (ctx, options)
+    {
+        var width = options.width,
+            height = options.height;
+
+
+        if(options.valign == 'top') {
+            var yT = this.area.innerOffset.top+options.vspace;
+        } else {
+            var yT = this.area.innerHeight+this.area.innerOffset.top-height-options.vspace;
+        }
+
+        if(options.halign == 'left') {
+            var xT = this.area.innerOffset.left+options.hspace;
+        } else {
+            var xT = this.area.innerWidth+this.area.innerOffset.left-width-options.hspace;
+        }
+
+        ctx.save();
+        ctx.translate(xT, yT);
+        ctx.beginPath();
+        ctx.moveTo(0, height);
+        ctx.lineTo(width, height);
+        ctx.lineTo(width, 0);
+        ctx.lineTo(0, 0);
+        ctx.closePath();
+        ctx.clip();
+
+        ctx.fillStyle = "rgba(214,218,225,0.75)";
+        ctx.strokeStyle = "rgba(171,177,192,1)";
+        ctx.fillRect(0,0,width,height);
+        ctx.rect(0,0,width,height);
+        ctx.stroke();
+
+
+        var q = this.chart.env.userSettings.currentSecurity.q;
+        ctx.fillStyle = '#20232a';
+        ctx.font = 'normal 26px Arial,Helvetica,sans-serif';
+        ctx.textBaseline = "middle";
+
+        if(!this.chart.areas[0].ySeries[0]) { return;}
+        var lastIndex = this.chart.areas[0].ySeries[0].points.length-this.chart.chartOptions.futureAmount-1;
+        var pointX = this.chart.areas[0].xSeries[lastIndex];
+        var pointY = this.chart.areas[0].ySeries[0].points[lastIndex];
+
+        var price = pointY[3];
+        var deg = (1/this.chart.env.userSettings.currentSecurity.min_step > 1) ? (Math.round(1/this.chart.env.userSettings.currentSecurity.min_step)).toString().length-1 : 0;
+        price = price.toFormat(deg,'.',' ');
+        ctx.fillText(price, 10, 30);
+
+        ctx.textBaseline = "top";
+        var dataLabel = iChart.formatDateTime(new Date(pointX * 1000), "dd MMMM HH:mm");
+
+        ctx.font = 'normal 11px Arial,Helvetica,sans-serif';
+        ctx.fillText(dataLabel, 10, 5);
+
+        /*
+        if(q.chg >= 0) {
+            ctx.fillStyle = '#228B22';
+        } else {
+            ctx.fillStyle = '#b7333b';
+        }
+        var chg = parseFloat(q.chg);
+        var sign = (chg > 0) ? "▲+":"▼";
+        var diff = q.chg=='0'?'0.00': sign + chg.toFormat(Math.max(chg.getDegree(),2),'.',' ');
+        ctx.fillText(diff, 140, 13);
+
+        if(q.pcp) {
+            if(q.pcp >= 0) {
+                ctx.fillStyle = '#228B22';
+            } else {
+                ctx.fillStyle = '#b7333b';
+            }
+            var sign = (parseFloat(q.pcp) > 0) ? "▲+" : "▼";
+            var diffpc = sign + q.pcp + '%';
+            ctx.fillText(diffpc, 140, 28);
+        }
+        */
+
+        ctx.restore();
+
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.widgetCurPrice2 = function (ctx, options)
+    {
+        var width = options.width,
+            height = options.height;
+
+        if(typeof this.chart.env.userSettings.currentSecurity.q != "undefined") {
+
+            if(options.valign == 'top') {
+                var yT = this.area.innerOffset.top+options.vspace;
+            } else {
+                var yT = this.area.innerHeight+this.area.innerOffset.top-height-options.vspace;
+            }
+
+            if(options.halign == 'left') {
+                var xT = this.area.innerOffset.left+options.hspace;
+            } else {
+                var xT = this.area.innerWidth+this.area.innerOffset.left-width-options.hspace;
+            }
+
+            ctx.save();
+            ctx.translate(xT, yT);
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(width, height);
+            ctx.lineTo(width, 0);
+            ctx.lineTo(0, 0);
+            ctx.closePath();
+            ctx.clip();
+
+            ctx.fillStyle = "rgba(214,218,225,0.75)";
+            ctx.strokeStyle = "rgba(171,177,192,1)";
+            ctx.fillRect(0,0,width,height);
+            ctx.rect(0,0,width,height);
+            ctx.stroke();
+
+
+            var q = this.chart.env.userSettings.currentSecurity.q;
+            ctx.fillStyle = '#20232a';
+            ctx.font = 'normal 26px Arial,Helvetica,sans-serif';
+            ctx.textBaseline = "middle";
+            var price = parseFloat(q.ltp);
+            var deg = (1/this.chart.env.userSettings.currentSecurity.min_step > 1) ? (Math.round(1/this.chart.env.userSettings.currentSecurity.min_step)).toString().length-1 : 0;
+            price = price.toFormat(deg,'.',' ');
+            ctx.fillText(price, 10, 30);
+
+            ctx.textBaseline = "top";
+            if(new Date(q.ltt).toString() != "Invalid Date") {
+                var ltt = q.ltt;
+                ltt = ltt.replace(/^[\d-]{10}T?/, '');
+                var dataLabel = iChart.formatDateTime(new Date(q.ltt), "dd MMMM") + " " + ltt;
+
+                ctx.font = 'normal 11px Arial,Helvetica,sans-serif';
+                ctx.fillText(dataLabel, 10, 5);
+            }
+
+            if(q.chg >= 0) {
+                ctx.fillStyle = '#228B22';
+            } else {
+                ctx.fillStyle = '#b7333b';
+            }
+            var chg = parseFloat(q.chg);
+            var sign = (chg > 0) ? "▲+":"▼";
+            var diff = q.chg=='0'?'0.00': sign + chg.toFormat(Math.max(chg.getDegree(),2),'.',' ');
+            ctx.fillText(diff, 140, 13);
+
+            if(q.pcp) {
+                if(q.pcp >= 0) {
+                    ctx.fillStyle = '#228B22';
+                } else {
+                    ctx.fillStyle = '#b7333b';
+                }
+                var sign = (parseFloat(q.pcp) > 0) ? "▲+" : "▼";
+                var diffpc = sign + q.pcp + '%';
+                ctx.fillText(diffpc, 140, 28);
+            }
+
+        }
+
+        ctx.restore();
+
+    }
+
+})();
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -2848,284 +3468,8 @@ function intervalShortNames(interval) {
         }
     };
 })();
-﻿/**
- * @company  Tradernet
- * @package  iguanaChart
- */
 
-(function ()
-{
-    "use strict";
-
-    iChart.Charting.ChartWidgetLayer = function (chart, settings)
-    {
-
-        this.canvas = null;
-        this.chart = chart;
-        this.widget = {
-            widgetCurPrice: {
-                enable: false,
-                width: 200,
-                height: 44,
-                valign: 'top',
-                halign: 'left',
-                vspace: 0,
-                hspace: 50
-            }
-        };
-
-        if(typeof settings != "undefined") {
-            for (var widget in settings) {
-                this.widget[widget] = $.extend(this.widget[widget], settings[widget]);
-            }
-        }
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype.clear = function ()
-    {
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype.render = function (context)
-    {
-        /// <summary>
-        /// Redraws the layer.
-        /// </summary>
-
-        if (!context)
-        {
-            if(!this.context) {
-                console.log("ERROR: No context for render");
-                return 0;
-            }
-            context = this.context;
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        }
-
-        context.save();
-        this.drawWidgets(context);
-        context.restore();
-
-        if (typeof FlashCanvas !== "undefined")
-        {
-            // Flush and execute commands.
-            context.e();
-        }
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype.update = function ()
-    {
-        /// <summary>
-        /// Updates drawing layer.
-        /// </summary>
-
-        if (!this.chart.areas)
-        {
-            return;
-        }
-
-        this.area = this.chart.areas[0];
-
-        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
-        this.render();
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype._initCanvas = function (width, height)
-    {
-        /// <summary>
-        /// Initializes the canvas.
-        /// </summary>
-        /// <param name="width" type="Number">Canvas width in pixels.</param>
-        /// <param name="height" type="Number">Canvas height in pixels.</param>
-
-        this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
-        if (this.canvas)
-        {
-            this.context = this.canvas.getContext("2d");
-            this.offset = this.chart._containerSize.offset;
-        }
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype.drawWidgets = function (ctx)
-    {
-        //ctx.save();
-        //ctx.strokeStyle="#FF0000";
-        //ctx.strokeRect(0, 0, ctx.canvas.width-1, ctx.canvas.height-1);
-        //ctx.restore();
-
-        for (var widget in this.widget) {
-            if(this.widget[widget].enable) {
-                this[widget](ctx, this.widget[widget]);
-            }
-        }
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype.widgetCurPrice = function (ctx, options)
-    {
-        var width = options.width,
-            height = options.height;
-
-
-        if(options.valign == 'top') {
-            var yT = this.area.innerOffset.top+options.vspace;
-        } else {
-            var yT = this.area.innerHeight+this.area.innerOffset.top-height-options.vspace;
-        }
-
-        if(options.halign == 'left') {
-            var xT = this.area.innerOffset.left+options.hspace;
-        } else {
-            var xT = this.area.innerWidth+this.area.innerOffset.left-width-options.hspace;
-        }
-
-        ctx.save();
-        ctx.translate(xT, yT);
-        ctx.beginPath();
-        ctx.moveTo(0, height);
-        ctx.lineTo(width, height);
-        ctx.lineTo(width, 0);
-        ctx.lineTo(0, 0);
-        ctx.closePath();
-        ctx.clip();
-
-        ctx.fillStyle = "rgba(214,218,225,0.75)";
-        ctx.strokeStyle = "rgba(171,177,192,1)";
-        ctx.fillRect(0,0,width,height);
-        ctx.rect(0,0,width,height);
-        ctx.stroke();
-
-
-        var q = this.chart.env.userSettings.currentSecurity.q;
-        ctx.fillStyle = '#20232a';
-        ctx.font = 'normal 26px Arial,Helvetica,sans-serif';
-        ctx.textBaseline = "middle";
-
-        if(!this.chart.areas[0].ySeries[0]) { return;}
-        var lastIndex = this.chart.areas[0].ySeries[0].points.length-this.chart.chartOptions.futureAmount-1;
-        var pointX = this.chart.areas[0].xSeries[lastIndex];
-        var pointY = this.chart.areas[0].ySeries[0].points[lastIndex];
-
-        var price = pointY[3];
-        var deg = (1/this.chart.env.userSettings.currentSecurity.min_step > 1) ? (Math.round(1/this.chart.env.userSettings.currentSecurity.min_step)).toString().length-1 : 0;
-        price = price.toFormat(deg,'.',' ');
-        ctx.fillText(price, 10, 30);
-
-        ctx.textBaseline = "top";
-        var dataLabel = iChart.formatDateTime(new Date(pointX * 1000), "dd MMMM HH:mm");
-
-        ctx.font = 'normal 11px Arial,Helvetica,sans-serif';
-        ctx.fillText(dataLabel, 10, 5);
-
-        /*
-        if(q.chg >= 0) {
-            ctx.fillStyle = '#228B22';
-        } else {
-            ctx.fillStyle = '#b7333b';
-        }
-        var chg = parseFloat(q.chg);
-        var sign = (chg > 0) ? "▲+":"▼";
-        var diff = q.chg=='0'?'0.00': sign + chg.toFormat(Math.max(chg.getDegree(),2),'.',' ');
-        ctx.fillText(diff, 140, 13);
-
-        if(q.pcp) {
-            if(q.pcp >= 0) {
-                ctx.fillStyle = '#228B22';
-            } else {
-                ctx.fillStyle = '#b7333b';
-            }
-            var sign = (parseFloat(q.pcp) > 0) ? "▲+" : "▼";
-            var diffpc = sign + q.pcp + '%';
-            ctx.fillText(diffpc, 140, 28);
-        }
-        */
-
-        ctx.restore();
-
-    };
-
-    iChart.Charting.ChartWidgetLayer.prototype.widgetCurPrice2 = function (ctx, options)
-    {
-        var width = options.width,
-            height = options.height;
-
-        if(typeof this.chart.env.userSettings.currentSecurity.q != "undefined") {
-
-            if(options.valign == 'top') {
-                var yT = this.area.innerOffset.top+options.vspace;
-            } else {
-                var yT = this.area.innerHeight+this.area.innerOffset.top-height-options.vspace;
-            }
-
-            if(options.halign == 'left') {
-                var xT = this.area.innerOffset.left+options.hspace;
-            } else {
-                var xT = this.area.innerWidth+this.area.innerOffset.left-width-options.hspace;
-            }
-
-            ctx.save();
-            ctx.translate(xT, yT);
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.lineTo(width, height);
-            ctx.lineTo(width, 0);
-            ctx.lineTo(0, 0);
-            ctx.closePath();
-            ctx.clip();
-
-            ctx.fillStyle = "rgba(214,218,225,0.75)";
-            ctx.strokeStyle = "rgba(171,177,192,1)";
-            ctx.fillRect(0,0,width,height);
-            ctx.rect(0,0,width,height);
-            ctx.stroke();
-
-
-            var q = this.chart.env.userSettings.currentSecurity.q;
-            ctx.fillStyle = '#20232a';
-            ctx.font = 'normal 26px Arial,Helvetica,sans-serif';
-            ctx.textBaseline = "middle";
-            var price = parseFloat(q.ltp);
-            var deg = (1/this.chart.env.userSettings.currentSecurity.min_step > 1) ? (Math.round(1/this.chart.env.userSettings.currentSecurity.min_step)).toString().length-1 : 0;
-            price = price.toFormat(deg,'.',' ');
-            ctx.fillText(price, 10, 30);
-
-            ctx.textBaseline = "top";
-            if(new Date(q.ltt).toString() != "Invalid Date") {
-                var ltt = q.ltt;
-                ltt = ltt.replace(/^[\d-]{10}T?/, '');
-                var dataLabel = iChart.formatDateTime(new Date(q.ltt), "dd MMMM") + " " + ltt;
-
-                ctx.font = 'normal 11px Arial,Helvetica,sans-serif';
-                ctx.fillText(dataLabel, 10, 5);
-            }
-
-            if(q.chg >= 0) {
-                ctx.fillStyle = '#228B22';
-            } else {
-                ctx.fillStyle = '#b7333b';
-            }
-            var chg = parseFloat(q.chg);
-            var sign = (chg > 0) ? "▲+":"▼";
-            var diff = q.chg=='0'?'0.00': sign + chg.toFormat(Math.max(chg.getDegree(),2),'.',' ');
-            ctx.fillText(diff, 140, 13);
-
-            if(q.pcp) {
-                if(q.pcp >= 0) {
-                    ctx.fillStyle = '#228B22';
-                } else {
-                    ctx.fillStyle = '#b7333b';
-                }
-                var sign = (parseFloat(q.pcp) > 0) ? "▲+" : "▼";
-                var diffpc = sign + q.pcp + '%';
-                ctx.fillText(diffpc, 140, 28);
-            }
-
-        }
-
-        ctx.restore();
-
-    }
-
-})();
-﻿/**
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3561,7 +3905,8 @@ function intervalShortNames(interval) {
 
         this.testContext.controls = [];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3622,7 +3967,8 @@ function intervalShortNames(interval) {
             [this.testContext.points[2], { "x": this.testContext.points[1].x + (this.testContext.points[2].x - this.testContext.points[0].x), "y": this.testContext.points[1].y + (this.testContext.points[2].y - this.testContext.points[0].y)}]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3680,7 +4026,8 @@ function intervalShortNames(interval) {
             [{ "x": this.testContext.points[1].x, "y": this.testContext.points[0].y }, this.testContext.points[0]]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3729,7 +4076,8 @@ function intervalShortNames(interval) {
             ctx.stroke();
         }
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3792,7 +4140,8 @@ function intervalShortNames(interval) {
         }
         ctx.restore();
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3843,7 +4192,8 @@ function intervalShortNames(interval) {
             ctx.stroke();
         }
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3913,7 +4263,8 @@ function intervalShortNames(interval) {
             ]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -3952,7 +4303,8 @@ function intervalShortNames(interval) {
         ctx.stroke();
         ctx.restore();
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4014,7 +4366,8 @@ function intervalShortNames(interval) {
             [{ "x": this.testContext.points[1].x, "y": this.testContext.points[0].y }, this.testContext.points[0]]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4098,7 +4451,8 @@ function intervalShortNames(interval) {
             [this.testContext.points[0], { "x": this.testContext.points[0].x + d, "y": this.testContext.points[0].y}]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4157,7 +4511,8 @@ function intervalShortNames(interval) {
             [this.testContext.points[2], this.testContext.points[0]]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4206,7 +4561,8 @@ function intervalShortNames(interval) {
         ];
     };
 })();
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4300,7 +4656,8 @@ function intervalShortNames(interval) {
         ];
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4469,7 +4826,8 @@ function intervalShortNames(interval) {
         ];
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4531,7 +4889,8 @@ function intervalShortNames(interval) {
 
         ctx.restore();
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4611,7 +4970,8 @@ function intervalShortNames(interval) {
             [this.testContext.points[2], this.testContext.points[3]]
         ];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -4819,7 +5179,8 @@ function intervalShortNames(interval) {
         ];
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -5214,7 +5575,8 @@ function intervalShortNames(interval) {
         ];
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -5500,7 +5862,8 @@ function intervalShortNames(interval) {
         ];
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -5834,7 +6197,8 @@ function intervalShortNames(interval) {
 
 })();
 
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -6688,7 +7052,8 @@ function intervalShortNames(interval) {
     };
 })();
 
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -6854,7 +7219,8 @@ function intervalShortNames(interval) {
 
 })();
 
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -7046,7 +7412,8 @@ function intervalShortNames(interval) {
         ];
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -7420,7 +7787,8 @@ function intervalShortNames(interval) {
     };
 })();
 
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -7499,7 +7867,8 @@ function intervalShortNames(interval) {
         //    [{ "x": this.testContext.points[1].x, "y": 0}, { "x": this.testContext.points[1].x, "y": 10e+10}]
         //];
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -7881,7 +8250,8 @@ function intervalShortNames(interval) {
 
 })();
 
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -8201,7 +8571,8 @@ function intervalShortNames(interval) {
 
 })();
 
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -9176,7 +9547,8 @@ function intervalShortNames(interval) {
 
 
 
-})();/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -9928,7 +10300,8 @@ function intervalShortNames(interval) {
         crosshair.update(data, container);
         return this;
     };
-})(jQuery);﻿/**
+})(jQuery);
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -10155,7 +10528,8 @@ function intervalShortNames(interval) {
         return chartData;
     };
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -10353,7 +10727,8 @@ function intervalShortNames(interval) {
         }
     });
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -12983,7 +13358,8 @@ function intervalShortNames(interval) {
         this.loadMissingData();
     };
 })();
-﻿/**
+
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -13701,7 +14077,8 @@ function intervalShortNames(interval) {
         areaViewport = this.onCalculateViewport.call(this, areaViewport) || areaViewport;
         return areaViewport;
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -14638,7 +15015,8 @@ function intervalShortNames(interval) {
 
         context.restore();
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -14844,7 +15222,8 @@ function intervalShortNames(interval) {
         this.containerWidth = this.$container.width();
         this.containerHeight = this.$container.height();
     };
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -14972,7 +15351,8 @@ function intervalShortNames(interval) {
     iChart.Charting.ChartTouches.prototype.startTouchIndexes = [];
     iChart.Charting.ChartTouches.prototype.lastGesture = null;
 
-})();﻿/**
+})();
+/**
  * @company  Tradernet
  * @package  iguanaChart
  */
@@ -15500,344 +15880,8 @@ function intervalShortNames(interval) {
     }
 
 })();
-/**
- * Created by gti on 14.10.15.
- */
 
-iChart.indicators = {
-    "AD":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('428', 'AD (Распределение накопления)'),
-        "value": "AD",
-        "outputRegion": "self",
-        "description": _t('4789', 'Формула распределения накопления использует отношение между объемом и ценами, чтобы оценить интенсивность изменения цен; если объем увеличивается, весьма вероятно, что цены поднимутся.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5400">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[]
-    },
-    "ADOSC":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('429', 'ADOSC (Осциллятор Чайкина)'),
-        "value": "ADOSC",
-        "outputRegion": "self",
-        "description":_t('4790', 'Индикатор осциллятора Чайкина – это разница между трехдневным экспоненциальным скользящим средним и десятидневным экспоненциальным скользящим средним, примененная к распределению накопления.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5425">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"FastPeriod", "Name":_t('4791', 'Краткосрочный интервал'), "Value":3},
-            {"Code":"SlowPeriod", "Name":_t('4792', 'Долгосрочный интервал'), "Value":10}
-        ]
-    },
-    "ADX":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('430', 'ADX (Индекс направленного движения)'),
-        "value": "ADX",
-        "outputRegion": "self",
-        "description":_t('4793', 'Индикатор среднего направленного движения служит для определения вероятного направления основного тренда.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
-        ]
-    },
-    "ADXDI":{
-        "type": 'TA_LIB',
-        "output": 3,
-        "outputNames": ['ADX','PLUS_DI','MINUS_DI'],
-        "name": _t('431', 'ADXDI (Индекс направленного движения (с индикаторами направления))'),
-        "value": "ADXDI",
-        "outputRegion": "self",
-        "description":_t('4793', 'Индикатор среднего направленного движения служит для определения вероятного направления основного тренда.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5421">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
-        ]
-    },
-    "AROON":{
-        "type": 'TA_LIB',
-        "output": 2,
-        "outputNames": ['AroonDown','AroonUp'],
-        "name": _t('432', 'AROON (Арун)'),
-        "value": "AROON",
-        "outputRegion": "self",
-        "description":_t('4797', 'Индикатор Арун применяется для изучения силы и направления трендов.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":25}
-        ]
-    },
-    "ATR":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('433', 'ATR (Средний истинный диапазон)'),
-        "value": "ATR",
-        "outputRegion": "self",
-        "description":_t('4799', 'Индикатор среднего истинного диапазона измеряет фиксацию и сравнивает диапазоны между высокими и низкими ценами и ценами закрытия.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
-        ]
-    },
-    "BBANDS":{
-        "type": 'TA_LIB',
-        "output": 3,
-        "outputNames": ['UpperBand','MiddleBand','LowerBand'],
-        "name": _t('434', 'BBANDS (Уровни Боллинджера)'),
-        "value": "BBANDS",
-        "outputRegion": "price",
-        "description":_t('4801', 'Индикаторы с линиями Боллинджера наносятся на график как уровни стандартного отклонения выше и ниже скользящего среднего.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5397">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":7},
-            {"Code":"DeviationsUp", "Name":_t('4803', 'Верхнее число станд. отклонения'), "Value":2},
-            {"Code":"DeviationsDown", "Name":_t('4804', 'Нижнее число станд. отклонения'), "Value":2}
-        ]
-    },
-    "CCI":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('435', 'CCI (Индекс товарного канала)'),
-        "value": "CCI",
-        "outputRegion": "self",
-        "description":_t('4805', 'Индикатор ценовых моментов сравнивает цены с их скользящими средними.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5424">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
-        ]
-    },
-    "CHV":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('436', 'CHV (Волатильность Чайкина)'),
-        "value": "CHV",
-        "outputRegion": "self",
-        "description":_t('4807', 'Индикатор волатильности Чайкина показывает разницу между максимальными и минимальными ценами и используется для обозначения верхних и нижних частей рынка.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('4808', 'Период EMA'), "Value":10},
-            {"Code":"PeriodROC", "Name":_t('4809', 'Период ROC'), "Value":10}
-        ]
-    },
-    "DPO":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('437', 'DPO (Осциллятор цен с исключенным трендом)'),
-        "value": "DPO",
-        "outputRegion": "self",
-        "description":_t('4810', 'Осциллятор цен с исключенным трендом пытается исключить из цен тренды.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5432">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
-        ]
-    },
-    "EMA":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('438', 'EMA (Экспоненциальное скользящее среднее)'),
-        "value": "EMA",
-        "outputRegion": "price",
-        "description":_t('4812', 'Экспоненциальное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние дни имеют в вычислении больший вес.') + ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5396">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
-        ]
-    },
-    "ENV":{
-        "type": 'TA_LIB',
-        "output": 2,
-        "outputNames": ['Upper','Lower'],
-        "name": _t('439', 'ENV (Конверты)'),
-        "value": "ENV",
-        "outputRegion": "price",
-        "description":_t('4815', 'Конверты наносятся над и под скользящим средним; смещение определяется указанным процентом.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5431">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20},
-            {"Code":"shift", "Name":_t('4817', 'Сдвиг, %'), "Value":1}
-        ]
-    },
-    "MACD":{
-        "type": 'TA_LIB',
-        "output": 3,
-        "outputNames": ['MACD','MACDSignal','MACDHist'],
-        "name": _t('441', 'MACD (Конвергенция и дивергенция скользящих средних)'),
-        "value": "MACD",
-        "outputRegion": "self",
-        "description":_t('4818', 'Индикатор конвергенции и дивергенции скользящих средних сравнивает два скользящих средних цен и используется вместе с девятидневным экспоненциальным скользящим средним в качестве сигнала для моментов покупки и продажи.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5428">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"FastPeriod", "Name":_t('4819', 'Краткосрочный период'), "Value":12},
-            {"Code":"SlowPeriod", "Name":_t('4820', 'Долгосрочный период'), "Value":26},
-            {"Code":"SignalPeriod", "Name":_t('4821', 'Период сигнальной линии'), "Value":9}
-        ]
-    },
-    "MEDPRICE":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('443', 'MEDPRICE (Медианная цена)'),
-        "value": "MEDPRICE",
-        "outputRegion": "price",
-        "description":_t('4822', 'Медианные цены – это средние значения цен за день, которые могут использоваться как фильтр для индикаторов трендов.'),
-        "parameters":[]
-    },
-    "MFI":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('444', 'MFI (Денежный поток)'),
-        "value": "MFI",
-        "outputRegion": "self",
-        "description":_t('4823', 'Индикатор денежных потоков сравнивает восходящие и нисходящие изменения типичных цен, приведенных к объему.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":14}
-        ]
-    },
-    "OBV":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('445', 'OBV (Балансовый объём)'),
-        "value": "OBV",
-        "outputRegion": "self",
-        "description":_t('4828', 'Индикатор балансового объема измеряет положительный и отрицательный поток объема.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[]
-    },
-    "PSAR":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('447', 'PSAR (Параболик)'),
-        "value": "PSAR",
-        "outputRegion": "price",
-        "description":_t('4833', 'Индикатор Параболик помогает определять точки разворота тренда.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5399">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"Acceleration", "Name":_t('860', 'Шаг'), "Value":0.02},
-            {"Code":"Maximum", "Name":_t('4835', 'Максимальный шаг'), "Value":0.2}
-        ]
-    },
-    "ROC":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('449', 'ROC (Темп изменения)'),
-        "value": "ROC",
-        "outputRegion": "self",
-        "description":_t('4840', 'Индикатор темпов изменений сравнивает указанную цену закрытия с текущей ценой.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5430">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
-        ]
-    },
-    "RSI":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('450', 'RSI (Индекс относительной силы)'),
-        "value": "RSI",
-        "outputRegion": "self",
-        "description":_t('4842', 'Индекс относительной силы – это осциллятор момента, сравнивающий восходящие изменения цены закрытия с нисходящими изменениями и выдающий значения в диапазоне от 0 до 100.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5411">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
-        ]
-    },
-    "SMA":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('451', 'SMA (Простое скользящее среднее)'),
-        "value": "SMA",
-        "outputRegion": "price",
-        "description":_t('4844', 'Простое скользящее среднее – это среднее значение данных, рассчитанное за некий период времени. Скользящее среднее – самый распространенный индикатор цен в техническом анализе, который можно использовать с любой ценой, например высокой, низкой, ценами открытия и закрытия, а также применять к другим индикаторам.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
-        ]
-    },
-    "STDDEV":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('452', 'STDDEV (Стандартное отклонение)'),
-        "value": "STDDEV",
-        "outputRegion": "self",
-        "description":_t('4846', 'Стандартное отклонение используется для обозначения волатильности и показывает, например, разницу между значениями цены закрытия и ее скользящего среднего.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
-        ]
-    },
-    "TEMA":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('454', 'TEMA (Тройное экспоненциальное скользящее среднее)'),
-        "value": "TEMA",
-        "outputRegion": "price",
-        "description":_t('4852', 'Тройное экспоненциальное скользящее среднее основано на тройном скользящем среднем цены закрытия. Его назначение – исключить короткие циклы. Этот индикатор сохраняет цену закрытия в трендах, которые короче указанного периода.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
-        ]
-    },
-    "TRIMA":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('455', 'TRIMA (Треугольное скользящее среднее)'),
-        "value": "TRIMA",
-        "outputRegion": "price",
-        "description":_t('4854', 'Треугольное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем средняя часть данных имеет в вычислении больший вес.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
-        ]
-    },
-    "TYPPRICE":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('456', 'TYPPRICE (Типичная цена)'),
-        "value": "TYPPRICE",
-        "outputRegion": "price",
-        "description":_t('4856', 'Типичная цена – это среднее значение цен за день, которое может использоваться как фильтр для индикаторов трендов.'),
-        "parameters":[]
-    },
-    "VPT":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('457', 'VPT (Тренд объёма цен)'),
-        "value": "VPT",
-        "outputRegion": "self",
-        "description":_t('4857', 'Тренд объема цен – это совокупное значение объема, рассчитываемое на основе относительных изменений цены закрытия; его следует использовать с другими индикаторами.'),
-        "parameters":[]
-    },
-    "WCLPRICE":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('458', 'WCLPRICE (Взвешенная цена закрытия)'),
-        "value": "WCLPRICE",
-        "outputRegion": "price",
-        "description":_t('4858', 'Формула взвешенной цены закрытия вычисляет среднее значение цен за день. Единственное отличие взвешенной цены закрытия и типичной цены в том, что у цены закрытия больший вес и она считается самой важной ценой.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5433">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[]
-    },
-    "WILLR":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('459', 'WILLR (Процентный диапазон Уильямса)'),
-        "value": "WILLR",
-        "outputRegion": "self",
-        "description":_t('4859', 'Процентный диапазон Уильямса – это индикатор момента, который показывает уровни перекупленности и перепроданности.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5410">' + _t('15833', 'Подробнее.') + '</a>',
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":14}
-        ]
-    },
-    "WMA":{
-        "type": 'TA_LIB',
-        "output": 1,
-        "name": _t('460', 'WMA (Взвешенное скользящее среднее)'),
-        "value": "WMA",
-        "outputRegion": "price",
-        "description":_t('4861', 'Взвешенное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние данные имеют в вычислении больший вес.'),
-        "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":9}
-        ]
-    },
-    "TRPLN":{
-        "type": 'TA_LIB',
-        "output": 0,
-        "name": _t('13838', 'TRPLN (Тенденциальная планиметрия)'),
-        "value": "TRPLN",
-        "outputRegion": "price",
-        "description": _t('13843', 'Тенденциальная планиметрия'),
-        "parameters":[]
-    }
-};/**
+/**
  * Created by gti on 28.06.16.
  */
 
@@ -15904,7 +15948,7 @@ $.templates("indicatorsListTmpl", '' +
 );
 
 $.templates("indicatorsDropdownTmpl",
-    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+    '<div class="js-iChartTools-indicators uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button">' + _t('3101', 'Индикаторы') + '<i class="uk-icon-caret-down"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
             '<div class="uk-grid uk-dropdown-grid">' +
@@ -16260,7 +16304,7 @@ $.templates("themeConfigOptionsTmpl", '' +
 );
 
 $.templates("iChart_optionsTmpl",
-    '<div class="js-iChartTools-options uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+    '<div class="js-iChartTools-options uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button">' + _t('', 'Настройки') + '<i class="uk-icon-caret-down"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-optionsList">' +
@@ -16281,7 +16325,7 @@ $.templates("iChart_optionsTmpl",
 );
 
 $.templates("iChart_instrumentsTmpl",
-    '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+    '<div class="js-iChartTools-instruments uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-instrumentsList">' +
@@ -16346,6 +16390,28 @@ $.templates("iChart_instrumentsTmpl",
         '</div>' +
     '</div>'
 );
+
+$.templates("iChart_intervalsTmpl2", '' +
+    '<div class="js-iChartTools-intervals uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+        '<button class="uk-button">' + _t('5421', 'Интервал') + '<i class="uk-icon-caret-down"></i></button>' +
+        '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
+            '<ul class="uk-nav uk-nav-dropdown js-chart-intervals">' +
+                '{{for intervals}}' +
+                '<li><a href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a></li>' +
+                '{{/for}}' +
+            '</ul>' +
+        '</div>' +
+    '</div>'
+);
+
+$.templates("iChart_intervalsTmpl", '' +
+    '<div class="uk-margin-small-left js-iChartTools-intervals" style="display: inline-block">' +
+                '{{for intervals}}' +
+                '<a class="uk-button js-chart-interval" href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a>' +
+                '{{/for}}' +
+    '</div>'
+);
+
 
 var iChartDataSource = {
     data: {},
@@ -16506,7 +16572,8 @@ var iChartDataSource = {
 
     }
 };
-﻿IguanaChart = function (options) {
+
+IguanaChart = function (options) {
 
     "use strict";
 
@@ -17458,6 +17525,14 @@ var iChartDataSource = {
         }
     };
 
+    this.getLastPointX = function () {
+        if(typeof this.viewData.chart != "undefined" && !!this.viewData.chart.areas && this.viewData.chart.canvas) {
+            var lastPointIndex = this.viewData.chart.areas[0].ySeries[0].points.length-this.viewData.chart.chartOptions.futureAmount-1;
+            return this.viewData.chart.areas[0].xSeries[lastPointIndex];
+        }
+        return false;
+    };
+
     this.addTransactions = function (data, mode) {
         if(typeof this.viewData.chart != "undefined") {
             DataLoop:
@@ -17757,32 +17832,26 @@ var iChartDataSource = {
     this.checkPeriod = function (period) {
 
         var date_to = iChart.parseDateTime(this.dataSource.dataSettings.date_to);
-        var date_from = iChart.parseDateTime(this.dataSource.dataSettings.date_to);
+        var date_from = new Date(date_to);
 
         // задание начальной даты
-        switch (period) {
-            case "D1":
-                break;
-            case "D7":
-                date_from.setDate(date_to.getDate() - 7);
-                break;
-            case "M1":
-                date_from.setMonth(date_to.getMonth() - 1);
-                break;
-            case "M3":
-                date_from.setMonth(date_to.getMonth() - 3);
-                break;
-            case "M6":
-                date_from.setMonth(date_to.getMonth() - 6);
-                break;
-            case "Y1":
-                date_from.setFullYear(date_to.getFullYear() - 1);
-                break;
-            case "Y5":
-                date_from.setFullYear(date_to.getFullYear() - 5);
-                break;
-            default:
-                date_from.setMonth(date_to.getMonth() - 3);
+
+        var periodRegs = period.match(/([D,M,Y])(\d+)/);
+
+        if(periodRegs) {
+            switch (periodRegs[1]) {
+                case "D":
+                    date_from.setDate(date_to.getDate() - +(periodRegs[2]));
+                    break;
+                case "M":
+                    date_from.setMonth(date_to.getMonth() - +(periodRegs[2]));
+                    break;
+                case "Y":
+                    date_from.setFullYear(date_to.getFullYear() - +(periodRegs[2]));
+                    break;
+            }
+        } else {
+            period = "D1";
         }
 
         if (period) {
@@ -17797,6 +17866,43 @@ var iChartDataSource = {
             }
         }
         this.checkDateInterval(iChart.parseDateTime(this.dataSource.dataSettings.date_from), iChart.parseDateTime(this.dataSource.dataSettings.date_to));
+    };
+
+    this.setInterval = function (interval) {
+
+        var period = "M1";
+        switch (interval) {
+            case "I1":
+                period = "D1";
+                break;
+            case "I5":
+                period = "D3";
+                break;
+            case "I15":
+                period = "D7";
+                break;
+            case "H1":
+                period = "D14";
+                break;
+            case "D1":
+                period = "M6";
+                break;
+            case "D7":
+                period = "Y1";
+                break;
+        }
+
+        var date_to = new Date(this.getLastPointX() * 1000);
+        date_to.setHours(0);
+        date_to.setMinutes(0);
+        date_to.setSeconds(0);
+        date_to.setDate(date_to.getDate()+1);
+
+        this.dataSource.dataSettings.date_to = date_to;
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
+        this.checkPeriod(period);
+        this.updateForce();
     };
 
     this.setHashValue = function (key, value)
@@ -18194,6 +18300,7 @@ var iChartDataSource = {
     $(document).on("click touchend", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
 
 };
+
 (function ()
 {
     "use strict";
@@ -18214,6 +18321,7 @@ var iChartDataSource = {
 
         this.renderTopBar = function () {
             this.$topToolsBarContainer.empty();
+            this.renderIntervals();
             this.renderIndicators();
             this.renderOptionsList();
             this.renderInstrumentsList();
@@ -18867,8 +18975,31 @@ var iChartDataSource = {
             this.$topToolsBarContainer.append($instrumentsHtml);
         };
 
+        this.renderIntervals = function () {
+
+            var data = {
+                intervals: [
+                    {value: 'I1', name : intervalShortNames('I1')},
+                    {value: 'I5', name : intervalShortNames('I5')},
+                    {value: 'I15', name : intervalShortNames('I15')},
+                    {value: 'H1', name : intervalShortNames('H1')},
+                    {value: 'D1', name : intervalShortNames('D1')},
+                    {value: 'D7', name : intervalShortNames('D7')}
+                ]
+            };
+
+            var $intervalsHtml = $($.render.iChart_intervalsTmpl(data));
+
+            $intervalsHtml.on('click touchend', '.js-chart-interval', function(){
+                _this.chart.setInterval($(this).data('value'));
+            });
+
+            this.$topToolsBarContainer.append($intervalsHtml);
+        };
+
     };
-})();(function ($){
+})();
+(function ($){
 
     $iguanaChart =  {};
 
@@ -19174,7 +19305,8 @@ var iChartDataSource = {
 
     };
 
-})(jQuery);TA = {
+})(jQuery);
+TA = {
     TICKER: 0,
     PER: 1,
     DATE: 2,
@@ -19592,1433 +19724,7 @@ TA.CONTROLLER_TEMPLATE.update = function (data) {
  */
 TA.CONTROLLER_TEMPLATE.isEmpty = function () {
 	return !this._data.length;
-};if (!!TA.INDICATOR_TEMPLATE)
-	TA.SMA = TA.INDICATOR_TEMPLATE.Create();
-else
-	TA.SMA = {};
-
-TA.SMA.name = 'SMA';
-TA.SMA.type = 'line';
-
-TA.SMA.DefaultSettings = {
-	TimePeriod: 30,
-	CandleValueIdx: TA.CLOSE
 };
-
-TA.SMA.Settings = {};
-
-TA.SMA.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTotalArray) {
-	var periodTotal, tempReal;
-	var i, outIdx, trailingIdx, lookbackTotal;
-	var outReal = [];
-
-	this.SetSettings(settings);
-	
-	if(!startIdx)
-		startIdx = 0;
-	
-	if(!endIdx)
-		endIdx = dataShape.length - 1;
-		
-	/* Identify the minimum number of price bar needed
-	 * to calculate at least one output.
-	 */
-	lookbackTotal = (this.Settings.TimePeriod - 1);
-
-	/* Move up the start index if there is not
-	 * enough initial data.
-	 */
-	if (startIdx < lookbackTotal)
-		startIdx = lookbackTotal;
-
-	/* Make sure there is still something to evaluate. */
-	if (startIdx > endIdx) {
-		return outReal;
-	}
-
-	/* Do the MA calculation using tight loops. */
-	/* Add-up the initial period, except for the last value. */
-	periodTotal = 0;
-	trailingIdx = startIdx - lookbackTotal;
-
-	i = trailingIdx;
-	if (this.Settings.TimePeriod > 1) {
-		while (i < startIdx)
-			periodTotal += dataShape[i++][this.Settings.CandleValueIdx];
-	}
-
-	/* Proceed with the calculation for the requested range.
-	 * Note that this algorithm allows the inReal and
-	 * outReal to be the same buffer.
-	 */
-	outIdx = 0;
-	do {
-		periodTotal += dataShape[i++][this.Settings.CandleValueIdx];
-		tempReal = periodTotal;
-		periodTotal -= dataShape[trailingIdx++][this.Settings.CandleValueIdx];
-		outReal[outIdx++] = tempReal / this.Settings.TimePeriod;
-	} while (i <= endIdx);
-
-    /*
-	if(!dontFillTotalArray) {
-		if(outReal.length >= dataShape.length)
-			throw 'Ошибка расчета ADX';
-		else if(outReal.length <= dataShape.length)
-			while(outReal.length != dataShape.length){
-				outReal.unshift(0);
-			}
-	}
-	*/
-	return outReal;
-};
-
-TA.SMA.getValue = function(dataShape, itemIdx, settings) {
-	
-};
-
-TA.SMA._lookback = function(optInTimePeriod) {
-    
-    if( !optInTimePeriod )
-       optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if( (optInTimePeriod < 2) || (optInTimePeriod > 100000) )
-       return -1;
- 
- 	return optInTimePeriod - 1;
-};
-
-TA.SMA._S = function(startIdx, endIdx, dataShape, settings){
-	
-};
-
-TA.SMA.initChart = function (dataShape, hcOptions, ticker) {
-	if(!!INDICATOR_TEMPLATE)
-		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-	
-	
-};
-
-TA.SMA.SetSettings(TA.SMA.DefaultSettings);
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.EMA = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.EMA = {};
-
-TA.EMA.name = 'EMA';
-TA.EMA.type = 'line';
-
-TA.EMA.DefaultSettings = {
-    TimePeriod: 30,
-    CandleValueIdx: TA.CLOSE
-};
-
-TA.EMA.Settings = {};
-
-TA.EMA.calculate = function(startIdx, endIdx, dataShape, settings){
-     
-    var outReal = [];
-    
-    this.SetSettings(settings);
-
-    if (!startIdx)
-        startIdx = 0;
-
-    if (!endIdx)
-        endIdx = dataShape.length - 1;
-
-    if (startIdx < 0)
-        throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if ((endIdx < 0) || (endIdx < startIdx))
-        throw 'TA_OUT_OF_RANGE_END_INDEX';
-
-    if (!dataShape || !dataShape.length)
-        throw 'TA_BAD_PARAM';
-
-    if (!this.Settings.TimePeriod)
-        this.Settings.TimePeriod = 30;
-    else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
-        throw 'TA_BAD_PARAM';
-
-    return this._int_ema(startIdx, endIdx, dataShape,
-        this.Settings.TimePeriod,
-        TA.PER_TO_K(this.Settings.TimePeriod),
-        outReal);
-};
-
-TA.EMA._int_ema = function ( startIdx, endIdx, dataShape, optInTimePeriod, optInK_1, outReal ) {
-   var tempReal, prevMA;
-   var i, today, outIdx, lookbackTotal;
-
-   /* Ususally, optInK_1 = 2 / (optInTimePeriod + 1),
-    * but sometime there is exception. This
-    * is why both value are parameters.
-    */
-
-   /* Identify the minimum number of price bar needed
-    * to calculate at least one output.
-    */
-   lookbackTotal = this._lookback( optInTimePeriod );
-
-   /* Move up the start index if there is not
-    * enough initial data.
-    */
-   if( startIdx < lookbackTotal )
-      startIdx = lookbackTotal;
-
-   /* Make sure there is still something to evaluate. */
-   if( startIdx > endIdx )
-   {
-      return outReal;
-   }
-
-   /* Do the EMA calculation using tight loops. */
-   
-   /* The first EMA is calculated differently. It
-    * then become the seed for subsequent TA.EMA.
-    *
-    * The algorithm for this seed vary widely.
-    * Only 3 are implemented here:
-    *
-    * TA_MA_CLASSIC:
-    *    Use a simple MA of the first 'period'.
-    *    This is the approach most widely documented.
-    *
-    * TA_MA_METASTOCK:
-    *    Use first price bar value as a seed
-    *    from the begining of all the available
-    *    data.
-    *
-    * TA_MA_TRADESTATION:
-    *    Use 4th price bar as a seed, except when
-    *    period is 1 who use 2th price bar or something
-    *    like that... (not an obvious one...).
-    */
-   if( TA.TA_GLOBALS_COMPATIBILITY == TA.TA_COMPATIBILITY_DEFAULT )
-   {
-      today = startIdx-lookbackTotal;
-      i = optInTimePeriod;
-      tempReal = 0.0;
-      while( i-- > 0 )
-         tempReal += dataShape[today++][this.Settings.CandleValueIdx];
-
-      prevMA = tempReal / optInTimePeriod;
-   }
-   else
-   {
-      prevMA = dataShape[0][this.Settings.CandleValueIdx];
-      today = 1;
-
-      /* !!! Tradestation not supported yet.
-      case TA_MA_TRADESTATION:
-         prevMA = inReal[startIdx-1];
-         if( optInTimePeriod == 1 )
-            VALUE_HANDLE_DEREF(outBegIdx)_0 = 1;
-         else
-            VALUE_HANDLE_DEREF(outBegIdx)_0 = 3;
-       */
-   }
-
-   /* At this point, prevMA is the first EMA (the seed for
-    * the rest).
-    * 'today' keep track of where the processing is within the
-    * input.
-    */
-
-   /* Skip the unstable period. Do the processing 
-    * but do not write it in the output.
-    */   
-   while( today <= startIdx )
-      prevMA = ((dataShape[today++][this.Settings.CandleValueIdx]-prevMA)*optInK_1) + prevMA;
-
-   /* Write the first value. */
-   outReal[0] = prevMA;
-   outIdx = 1;
-
-   /* Calculate the remaining range. */
-   while( today <= endIdx ) {
-      prevMA = ((dataShape[today++][this.Settings.CandleValueIdx]-prevMA)*optInK_1) + prevMA;
-      outReal[outIdx++] = prevMA;
-   }
-
-   return outReal;
-};
-
-TA.EMA.getValue = function(dataShape, itemIdx, settings) {
-    
-};
-
-TA.EMA._lookback = function(optInTimePeriod) {
-    if ( !optInTimePeriod )
-        optInTimePeriod = this.Settings.TimePeriod || this.DefaultSettings.TimePeriod;
-    else if (( optInTimePeriod < 2) || ( optInTimePeriod > 100000))
-        return -1;
-
-
-    return optInTimePeriod - 1; // + TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_EMA, Ema);
-};
-
-TA.EMA._S = function(startIdx, endIdx, dataShape, settings) {
-    var tempReal, prevMA;
-    var i, today, outIdx, lookbackTotal;
-
-    lookbackTotal = this._lookback(this.Settings.TimePeriod);
-    if (startIdx < lookbackTotal)
-        startIdx = lookbackTotal;
-    if (startIdx > endIdx) {
-        return outReal;
-    }
-    
-    if (TA_GLOBALS_COMPATIBILITY == TA_COMPATIBILITY_DEFAULT) {
-        today = startIdx - lookbackTotal;
-        i = this.Settings.TimePeriod;
-        tempReal = 0.0;
-        while (i-- > 0)
-            tempReal += dataShape[today++][this.Settings.CandleValueIdx];
-        prevMA = tempReal / this.Settings.TimePeriod;
-    } else {
-        prevMA = dataShape[0][this.Settings.CandleValueIdx];
-        today = 1;
-    }
-    while (today <= startIdx)
-        prevMA = ((dataShape[today++][this.Settings.CandleValueIdx] - prevMA) * optInK_1) + prevMA;
-    outReal[0] = prevMA;
-    outIdx = 1;
-    while (today <= endIdx) {
-        prevMA = ((inReal[today++] - prevMA) * optInK_1) + prevMA;
-        outReal[outIdx++] = prevMA;
-    }
-    
-    return outReal;
-};
-
-TA.EMA.initChart = function (dataShape, hcOptions, ticker) {
-    INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-    
-    
-};
-
-TA.EMA.SetSettings(TA.EMA.DefaultSettings);
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.RSI = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.RSI = {};
-
-TA.RSI.name = 'RSI';
-TA.RSI.type = 'line';
-
-TA.RSI.DefaultSettings = {
-	TimePeriod: 14,
-    CandleValueIdx: TA.CLOSE
-};
-
-TA.RSI.Settings = {};
-
-
-TA.RSI.calculate = function (startIdx, endIdx, dataShape, settings) {
-
-    this.SetSettings(settings);
-
-	var outIdx;
-
-	var today, lookbackTotal, unstablePeriod, i;
-	var prevGain, prevLoss, prevValue, savePrevValue;
-	var tempValue1, tempValue2;
-
-	var outReal = [];
-
-	if (!startIdx)
-		startIdx = 0;
-
-	if (!endIdx)
-		endIdx = dataShape.length - 1;
-
-	if (startIdx < 0)
-		throw 'TA_OUT_OF_RANGE_START_INDEX';
-	if ((endIdx < 0) || (endIdx < startIdx))
-		throw 'TA_OUT_OF_RANGE_END_INDEX';
-
-	if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.TimePeriod)
-		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
-		throw 'TA_BAD_PARAM';
-
-	/* Insert TA function code here. */
-
-	/* The following algorithm is base on the original 
-	 * work from Wilder's and shall represent the
-	 * original idea behind the classic RSI.
-	 *
-	 * Metastock is starting the calculation one price
-	 * bar earlier. To make this possible, they assume
-	 * that the very first bar will be identical to the
-	 * previous one (no gain or loss).
-	 */
-
-	/* If changing this function, please check also CMO 
-	 * which is mostly identical (just different in one step
-	 * of calculation).
-	 */
-
-	/* Adjust startIdx to account for the lookback period. */
-	lookbackTotal = this._lookback(this.Settings.TimePeriod);
-
-	if (startIdx < lookbackTotal)
-		startIdx = lookbackTotal;
-
-	/* Make sure there is still something to evaluate. */
-	if (startIdx > endIdx)
-		return outReal;
-
-	outIdx = 0; /* Index into the output. */
-
-	/* Trap special case where the period is '1'.
-	 * In that case, just copy the input into the
-	 * output for the requested range (as-is !)
-	 */
-	if (this.Settings.TimePeriod == 1) {
-
-		outReal = dataShape.slice(startIdx);
-		
-		return outReal;
-	}
-
-	/* Accumulate Wilder's "Average Gain" and "Average Loss" 
-	 * among the initial period.
-	 */
-	today = startIdx - lookbackTotal;
-	prevValue = dataShape[today][this.Settings.CandleValueIdx];
-
-	unstablePeriod = 0; //TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_RSI, Rsi);
-
-	
-//	/* If there is no unstable period,
-//	 * calculate the 'additional' initial
-//	 * price bar who is particuliar to
-//	 * metastock.
-//	 * If there is an unstable period,
-//	 * no need to calculate since this
-//	 * first value will be surely skip.
-//	 */
-//	if ((unstablePeriod == 0) &&
-//		(TA_GLOBALS_COMPATIBILITY == ENUM_VALUE(Compatibility, TA_COMPATIBILITY_METASTOCK, Metastock))) {
-//		/* Preserve prevValue because it may get 
-//		 * overwritten by the output.
-//		 *(because output ptr could be the same as input ptr).
-//		 */
-//		savePrevValue = prevValue;
-//
-//		/* No unstable period, so must calculate first output
-//		 * particular to Metastock.
-//		 * (Metastock re-use the first price bar, so there
-//		 *  is no loss/gain at first. Beats me why they
-//		 *  are doing all this).
-//		 */
-//		prevGain = 0.0;
-//		prevLoss = 0.0;
-//		for (i = optInTimePeriod; i > 0; i--) {
-//			tempValue1 = inReal[today++];
-//			tempValue2 = tempValue1 - prevValue;
-//			prevValue = tempValue1;
-//			if (tempValue2 < 0)
-//				prevLoss -= tempValue2;
-//			else
-//				prevGain += tempValue2;
-//		}
-//
-//
-//		tempValue1 = prevLoss / optInTimePeriod;
-//		tempValue2 = prevGain / optInTimePeriod;
-//
-//		/* Write the output. */
-//		tempValue1 = tempValue2 + tempValue1;
-//		if (!TA_IS_ZERO(tempValue1))
-//			outReal[outIdx++] = 100 * (tempValue2 / tempValue1);
-//		else
-//			outReal[outIdx++] = 0.0;
-//
-//		/* Are we done? */
-//		if (today > endIdx) {
-//			VALUE_HANDLE_DEREF(outBegIdx) = startIdx;
-//			VALUE_HANDLE_DEREF(outNBElement) = outIdx;
-//			return ENUM_VALUE(RetCode, TA_SUCCESS, Success);
-//		}
-//
-//		/* Start over for the next price bar. */
-//		today -= optInTimePeriod;
-//		prevValue = savePrevValue;
-//	}
-
-
-	/* Remaining of the processing is identical
-	 * for both Classic calculation and Metastock.
-	 */
-	prevGain = 0.0;
-	prevLoss = 0.0;
-	today++;
-	for (i = this.Settings.TimePeriod; i > 0; i--) {
-		tempValue1 = dataShape[today++][this.Settings.CandleValueIdx];
-		tempValue2 = tempValue1 - prevValue;
-		prevValue = tempValue1;
-        if (tempValue2 < 0)
-			prevLoss -= tempValue2;
-		else
-			prevGain += tempValue2;
-	}
-
-
-	/* Subsequent prevLoss and prevGain are smoothed
-	 * using the previous values (Wilder's approach).
-	 *  1) Multiply the previous by 'period-1'.
-	 *  2) Add today value.
-	 *  3) Divide by 'period'.
-	 */
-	prevLoss /= this.Settings.TimePeriod;
-	prevGain /= this.Settings.TimePeriod;
-
-	/* Often documentation present the RSI calculation as follow:
-	 *    RSI = 100 - (100 / 1 + (prevGain/prevLoss))
-	 *
-	 * The following is equivalent:
-	 *    RSI = 100 * (prevGain/(prevGain+prevLoss))
-	 *
-	 * The second equation is used here for speed optimization.
-	 */
-
-	if (today > startIdx) {
-		tempValue1 = prevGain + prevLoss;
-		if (!TA.TA_IS_ZERO(tempValue1))
-			outReal[outIdx++] = 100.0 * (prevGain / tempValue1);
-		else
-			outReal[outIdx++] = 0.0;
-	} else {
-		/* Skip the unstable period. Do the processing 
-		 * but do not write it in the output.
-		 */
-		while (today < startIdx) {
-			tempValue1 = dataShape[today][this.Settings.CandleValueIdx];
-			tempValue2 = tempValue1 - prevValue;
-			prevValue = tempValue1;
-
-			prevLoss *= (this.Settings.TimePeriod - 1);
-			prevGain *= (this.Settings.TimePeriod - 1);
-			if (tempValue2 < 0)
-				prevLoss -= tempValue2;
-			else
-				prevGain += tempValue2;
-
-			prevLoss /= this.Settings.TimePeriod;
-			prevGain /= this.Settings.TimePeriod;
-
-			today++;
-		}
-	}
-
-	/* Unstable period skipped... now continue
-	 * processing if needed.
-	 */
-	while (today <= endIdx) {
-		tempValue1 = dataShape[today++][this.Settings.CandleValueIdx];
-		tempValue2 = tempValue1 - prevValue;
-		prevValue = tempValue1;
-
-		prevLoss *= (this.Settings.TimePeriod - 1);
-		prevGain *= (this.Settings.TimePeriod - 1);
-		if (tempValue2 < 0)
-			prevLoss -= tempValue2;
-		else
-			prevGain += tempValue2;
-
-		prevLoss /= this.Settings.TimePeriod;
-		prevGain /= this.Settings.TimePeriod;
-		tempValue1 = prevGain + prevLoss;
-		if (!TA.TA_IS_ZERO(tempValue1))
-			outReal[outIdx++] = 100.0 * (prevGain / tempValue1);
-		else
-			outReal[outIdx++] = 0.0;
-	}
-
-	return outReal;
-
-};
-
-TA.RSI.getValue = function (dataShape, itemIdx, settings) {
-
-};
-
-TA.RSI._lookback = function (optInTimePeriod) {
-	if (!optInTimePeriod)
-		optInTimePeriod = this.Settings.TimePeriod || this.DefaultSettings.TimePeriod;
-	else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
-		return -1;
-
-	return optInTimePeriod;
-};
-
-TA.RSI._S = function (startIdx, endIdx, dataShape, settings) {
-
-};
-
-TA.RSI.initChart = function (dataShape, hcOptions, ticker) {
-	if (!!TA.INDICATOR_TEMPLATE)
-		TA.INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-};
-
-TA.RSI.SetSettings(TA.RSI.DefaultSettings);
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.MA = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.MA = {};
-
-TA.MA.name = 'MA';
-TA.MA.type = 'line';
-
-TA.MA.DefaultSettings = {
-	TimePeriod: 30,
-	CandleValueIdx: TA.CLOSE,
-	MAType: TA.MATypes.SMA
-};
-
-TA.MA.Settings = {};
-
-TA.MA.calculate = function (startIdx, endIdx, dataShape, settings) {
-	
-	this.SetSettings(settings);
-
-	var dummyBuffer = [];
-	//ENUM_DECLARATION(RetCode) retCode;
-
-	var outIdx, todayIdx;
-	var outReal = [];
-
-	if (startIdx < 0)
-		throw 'TA_OUT_OF_RANGE_START_INDEX';
-	if ((endIdx < 0) || (endIdx < startIdx))
-		throw 'TA_OUT_OF_RANGE_END_INDEX';
-
-
-	if (!dataShape || !dataShape.length)
-		throw 'TA_BAD_PARAM';
-
-
-	if (!this.Settings.TimePeriod)
-		this.Settings.TimePeriod = 30;
-	else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.MAType)
-		this.Settings.MAType = TA.MATypes.SMA;
-	else if ((this.Settings.MAType < 0) || (this.Settings.MAType > 8))
-		throw 'TA_BAD_PARAM';
-
-	if (this.Settings.TimePeriod == 1) {
-		nbElement = endIdx - startIdx + 1;
-		for (todayIdx = startIdx, outIdx = 0; outIdx < nbElement; outIdx++, todayIdx++)
-			outReal[outIdx] = dataShape[todayIdx][this.Settings.CandleValueIdx];
-
-		return outReal;
-	}
-	/* Simply forward the job to the corresponding TA function. */
-	switch (this.Settings.MAType) {
-	case TA.MATypes.SMA:
-		outReal = TA.SMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.EMA:
-		outReal = TA.EMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.WMA:
-		outReal = TA.WMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.DEMA:
-		outReal = DEMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.TEMA:
-		outReal = TEMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.TRIMA:
-		outReal = TRIMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.KAMA:
-		outReal = KAMA.calculate(startIdx, endIdx, dataShape, this.Settings);
-		break;
-
-	case TA.MATypes.MAMA:
-		/* The optInTimePeriod is ignored and the FAMA output of the MAMA
-		 * is ignored.
-		 */
-		/*ARRAY_ALLOC(dummyBuffer, (endIdx - startIdx + 1));
-
-
-		if (!dummyBuffer)
-			return ENUM_VALUE(RetCode, TA_ALLOC_ERR, AllocErr);*/
-
-
-		outReal = MAMA.calculate(startIdx, endIdx, dataShape, {FastLimit: 0.5, SlowLimit: 0.05});
-		break;
-
-	case TA.MATypes.T3:
-		outReal = T3.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, VFactor: 0.7});
-		break;
-
-	default:
-		throw 'TA_BAD_PARAM';
-		break;
-	}
-
-	return outReal;
-};
-
-TA.MA.getValue = function(dataShape, itemIdx, settings) {
-	
-};
-
-TA.MA._lookback = function (optInTimePeriod, optInMAType) {
-	var retValue;
-
-	if (!optInTimePeriod)
-		optInTimePeriod = this.DefaultSettings.TimePeriod;
-	else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
-		return -1;
-
-	if (!optInMAType)
-		optInMAType = this.DefaultSettings.MAType;
-	else if ((optInMAType < 0) || (optInMAType > 8))
-		return -1;
-
-	if (optInTimePeriod <= 1)
-		return 0;
-
-	switch (optInMAType) {
-	case TA.MATypes.SMA:
-		retValue = TA.SMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.EMA:
-		retValue = TA.EMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.WMA:
-		retValue = TA.WMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.DEMA:
-		retValue = DEMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.TEMA:
-		retValue = TEMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.TRIMA:
-		retValue = TRIMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.KAMA:
-		retValue = KAMA._lookback(optInTimePeriod);
-		break;
-
-	case TA.MATypes.MAMA:
-		retValue = MAMA._lookback(0.5, 0.05);
-		break;
-
-	case TA.MATypes.T3:
-		retValue = T3._lookback(optInTimePeriod, 0.7);
-		break;
-
-	default:
-		retValue = 0;
-	}
-
-	return retValue;
-};
-
-TA.MA._S = function(startIdx, endIdx, dataShape, settings){
-	
-};
-
-TA.MA.initChart = function (dataShape, hcOptions, ticker) {
-	if(!!INDICATOR_TEMPLATE)
-		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-	
-	
-};
-
-TA.MA.SetSettings(TA.MA.DefaultSettings);
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.STDDEV = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.STDDEV = {};
-
-TA.STDDEV.name = 'STDDEV';
-TA.STDDEV.type = 'line';
-
-TA.STDDEV.DefaultSettings = {
-	TimePeriod: 10,
-	Deviations: 1,
-	CandleValueIdx: TA.CLOSE
-};
-
-TA.STDDEV.Settings = {};
-
-TA.STDDEV.calculate = function (startIdx, endIdx, dataShape, settings) {
-	var i;
-	var tempReal;
-	var outReal = [];
-	var outNBElement;
-
-    this.SetSettings(settings);
-
-	if (!startIdx)
-		startIdx = 0;
-
-	if (!endIdx)
-		endIdx = dataShape.length - 1;
-
-	if (startIdx < 0)
-		throw 'TA_OUT_OF_RANGE_START_INDEX';
-	if ((endIdx < 0) || (endIdx < startIdx))
-		throw 'TA_OUT_OF_RANGE_END_INDEX';
-
-	if (!dataShape || !dataShape.length)
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.TimePeriod)
-		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.Deviations)
-		this.Settings.Deviations = this.DefaultSettings.Deviations;
-	else if ((this.Settings.Deviations < -3.000000e+37) || (this.Settings.Deviations > 3.000000e+37))
-		throw 'TA_BAD_PARAM';
-
-	/* Insert TA function code here. */
-
-	/* Calculate the variance. */
-	var localINTVAR = TA.INT_VAR.Create({
-		TimePeriod: this.Settings.TimePeriod,
-		CandleValueIdx: this.Settings.CandleValueIdx
-	});
-	outReal = localINTVAR.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod,CandleValueIdx: this.Settings.CandleValueIdx});
-
-	if (!outReal || !outReal.length)
-		return outReal;
-
-	/* Calculate the square root of each variance, this
-	 * is the standard deviation.
-	 *
-	 * Multiply also by the ratio specified.
-	 */
-	if (this.Settings.Deviations != 1.0) {
-		for (i = 0; i < outNBElement; i++) {
-			tempReal = outReal[i];
-			if (!!tempReal)
-				outReal[i] = Math.sqrt(tempReal) * this.Settings.Deviations;
-			else
-				outReal[i] = 0.0;
-		}
-	} else {
-		for (i = 0; i < outReal.length; i++) {
-			tempReal = outReal[i];
-			if (!!tempReal)
-				outReal[i] = Math.sqrt(tempReal);
-			else
-				outReal[i] = 0.0;
-		}
-	}
-
-	return outReal;
-
-};
-
-TA.STDDEV.getValue = function(dataShape, itemIdx, settings) {
-	
-};
-
-TA.STDDEV._lookback = function (optInTimePeriod, optInNbDev) {
-
-	if ( !optInTimePeriod )
-		optInTimePeriod = this.DefaultSettings.TimePeriod;
-	else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
-		return -1;
-
-	if ( !optInNbDev)
-		optInNbDev = this.DefaultSettings.Deviations;
-	else if ((optInNbDev < -3.000000e+37) || (optInNbDev > 3.000000e+37))
-		return -1;
-
-
-	return TA.VAR._lookback(optInTimePeriod, optInNbDev);
-};
-
-TA.STDDEV._S = function(startIdx, endIdx, dataShape, settings){
-	
-};
-
-TA.STDDEV.initChart = function (dataShape, hcOptions, ticker) {
-	if(!!TA.INDICATOR_TEMPLATE)
-		TA.INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-	
-	
-};
-
-TA.STDDEV.SetSettings(TA.STDDEV.DefaultSettings);
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.VAR = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.VAR = {};
-
-TA.VAR.name = 'VAR';
-TA.VAR.type = 'line';
-
-TA.VAR.DefaultSettings = {
-	TimePeriod: 2,
-	Deviations: 1,
-	CandleValueIdx: TA.CLOSE
-};
-
-TA.VAR.Settings = {};
-
-TA.VAR.calculate = function (startIdx, endIdx, dataShape, settings) {
-	var tempReal, periodTotal1, periodTotal2, meanValue1, meanValue2;
-	var i, outIdx, trailingIdx, nbInitialElementNeeded;
-	var outReal = [];
-
-    this.SetSettings(settings);
-
-	if (!startIdx)
-		startIdx = 0;
-
-	if (!endIdx)
-		endIdx = dataShape.length - 1;
-
-	nbInitialElementNeeded = (this.Settings.TimePeriod - 1);
-
-	if (startIdx < nbInitialElementNeeded)
-		startIdx = nbInitialElementNeeded;
-
-	if (startIdx > endIdx) {
-		return outReal;
-	}
-
-	/* Do the MA calculation using tight loops. */
-	/* Add-up the initial periods, except for the last value. */
-	periodTotal1 = 0;
-	periodTotal2 = 0;
-	trailingIdx = startIdx - nbInitialElementNeeded;
-
-	i = trailingIdx;
-	if (this.Settings.TimePeriod > 1) {
-		while (i < startIdx) {
-			tempReal = dataShape[i++][this.Settings.CandleValueIdx];
-			periodTotal1 += tempReal;
-			tempReal *= tempReal;
-			periodTotal2 += tempReal;
-		}
-	}
-
-	/* Proceed with the calculation for the requested range.
-	 * Note that this algorithm allows the inReal and
-	 * outReal to be the same buffer.
-	 */
-	outIdx = 0;
-	do {
-		tempReal = dataShape[i++][this.Settings.CandleValueIdx];
-
-		/* Square and add all the deviation over
-		 * the same periods.
-		 */
-
-		periodTotal1 += tempReal;
-		tempReal *= tempReal;
-		periodTotal2 += tempReal;
-
-		/* Square and add all the deviation over
-		 * the same period.
-		 */
-
-		meanValue1 = periodTotal1 / this.Settings.CandleValueIdx;
-		meanValue2 = periodTotal2 / this.Settings.CandleValueIdx;
-
-		tempReal = dataShape[trailingIdx++][this.Settings.CandleValueIdx];
-		periodTotal1 -= tempReal;
-		tempReal *= tempReal;
-		periodTotal2 -= tempReal;
-
-		outReal[outIdx++] = meanValue2 - meanValue1 * meanValue1;
-	} while (i <= endIdx);
-
-	return outReal;
-};
-
-TA.VAR.getValue = function(dataShape, itemIdx, settings) {
-	
-};
-
-TA.VAR._lookback = function(optInTimePeriod, optInNbDev) {
-    
-    if( !optInTimePeriod )
-       optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if( (optInTimePeriod < 1) || (optInTimePeriod > 100000) )
-       return -1;
- 
-    if( !optInNbDev )
-       optInNbDev = this.DefaultSettings.Deviations;
-    else if( (optInNbDev < -3.000000e+37) ||  (optInNbDev > 3.000000e+37) )
-       return -1;
- 
-   return optInTimePeriod-1;
-};
-
-TA.VAR._S = function(startIdx, endIdx, dataShape, settings){
-	
-};
-
-TA.VAR.initChart = function (dataShape, hcOptions, ticker) {
-	if(!!INDICATOR_TEMPLATE)
-		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-	
-	
-};
-
-TA.VAR.SetSettings(TA.VAR.DefaultSettings);
-
-
-TA.INT_VAR = TA.VAR.Create();
-
-TA.INT_VAR.calculate = function (startIdx, endIdx, dataShape, settings) {
-	
-	var tempReal, periodTotal1, periodTotal2, meanValue1, meanValue2;
-	var i, outIdx, trailingIdx, nbInitialElementNeeded;
-	var outReal = [];
-
-    this.SetSettings(settings);
-
-	if (!startIdx)
-		startIdx = 0;
-
-	if (!endIdx)
-		endIdx = dataShape.length - 1;
-	
-	nbInitialElementNeeded = (this.Settings.TimePeriod - 1);
-	if (startIdx < nbInitialElementNeeded)
-		startIdx = nbInitialElementNeeded;
-	if (startIdx > endIdx) {
-		return outReal;
-	}
-	
-	periodTotal1 = 0;
-	periodTotal2 = 0;
-	trailingIdx = startIdx - nbInitialElementNeeded;
-	i = trailingIdx;
-	if (this.Settings.TimePeriod > 1) {
-		while (i < startIdx) {
-			tempReal = dataShape[i++][this.Settings.CandleValueIdx];
-			periodTotal1 += tempReal;
-			tempReal *= tempReal;
-			periodTotal2 += tempReal;
-		}
-	}
-	outIdx = 0;
-	do {
-		tempReal = dataShape[i++][this.Settings.CandleValueIdx];
-		periodTotal1 += tempReal;
-		tempReal *= tempReal;
-		periodTotal2 += tempReal;
-		meanValue1 = periodTotal1 / this.Settings.TimePeriod;
-		meanValue2 = periodTotal2 / this.Settings.TimePeriod;
-		tempReal = dataShape[trailingIdx++][this.Settings.CandleValueIdx];
-		periodTotal1 -= tempReal;
-		tempReal *= tempReal;
-		periodTotal2 -= tempReal;
-		outReal[outIdx++] = meanValue2 - meanValue1 * meanValue1;
-	} while (i <= endIdx);
-	
-	return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
-    TA.BBANDS = TA.INDICATOR_TEMPLATE.Create();
-else
-	TA.BBANDS = {};
-
-TA.BBANDS.name = 'BBANDS';
-TA.BBANDS.type = 'line';
-
-TA.BBANDS.DefaultSettings = {
-	TimePeriod:		7,
-	DeviationsUp:	2,
-	DeviationsDown:	2,
-	MAType:			TA.MATypes.SMA,
-	CandleValueIdx: TA.CLOSE
-};
-
-TA.BBANDS.Settings = {};
-
-TA.BBANDS.calculate = function (startIdx, endIdx, dataShape, settings) {
-
-	var i;
-	var tempReal, tempReal2;
-	var tempBuffer1 = [];
-	var tempBuffer2 = [];
-
-	var outRealUpperBand = [];
-	var outRealMiddleBand = [];
-	var outRealLowerBand = [];
-	
-	var outNBElement;
-
-    this.SetSettings(settings);
-
-	if (!startIdx)
-		startIdx = 0;
-
-	if (!endIdx)
-		endIdx = dataShape.length - 1;
-
-	if (startIdx < 0)
-		throw 'TA_OUT_OF_RANGE_START_INDEX';
-	if ((endIdx < 0) || (endIdx < startIdx))
-		throw 'TA_OUT_OF_RANGE_END_INDEX';
-
-
-	if (!dataShape || !dataShape.length)
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.TimePeriod)
-		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.DeviationsUp)
-		this.Settings.DeviationsUp = this.DefaultSettings.DeviationsUp;
-	else if ((this.Settings.DeviationsUp < -3.000000e+37) || (this.Settings.DeviationsUp > 3.000000e+37))
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.DeviationsDown)
-		this.Settings.DeviationsDown = this.DefaultSettings.DeviationsDown;
-	else if ((this.Settings.DeviationsDown < -3.000000e+37) || (this.Settings.DeviationsDown > 3.000000e+37))
-		throw 'TA_BAD_PARAM';
-
-	if (this.Settings.MAType)
-		this.Settings.MAType = this.DefaultSettings.MAType;
-	else if ((this.Settings.MAType < 0) || (this.Settings.MAType > 8))
-		throw 'TA_BAD_PARAM';
-
-	if (!outRealUpperBand)
-		throw 'TA_BAD_PARAM';
-
-	if (!outRealMiddleBand)
-		throw 'TA_BAD_PARAM';
-
-	if (!outRealLowerBand)
-		throw 'TA_BAD_PARAM';
-
-	tempBuffer1 = outRealMiddleBand;
-	tempBuffer2 = outRealUpperBand;
-
-	/* Calculate the middle band, which is a moving average.
-	 * The other two bands will simply add/substract the
-	 * standard deviation from this middle band.
-	 */
-
-	var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
-	tempBuffer1 = localMA.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
-
-	if (!tempBuffer1 || !tempBuffer1.length) {
-		return {UpperBand: [], LowerBand: [], MiddleBand: []};
-	}
-
-	
-	/* Calculate the Standard Deviation */
-	var localSTDDEV = TA.STDDEV.Create({TimePeriod: this.Settings.TimePeriod, Deviations: 1});
-
-	tempBuffer2 = localSTDDEV.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, Deviations: 1});
-
-	if ( !tempBuffer2 || !tempBuffer2.length ) {
-		return {UpperBand: [], LowerBand: [], MiddleBand: []};
-	}
-
-	/* Copy the MA calculation into the middle band ouput, unless
-	 * the calculation was done into it already!
-	 */
-	outRealMiddleBand = tempBuffer1.slice();
-
-	//outNBElement = outRealMiddleBand.length - 1;
-	outNBElement = outRealMiddleBand.length;
-	/* Now do a tight loop to calculate the upper/lower band at
-	 * the same time.
-	 *
-	 * All the following 5 loops are doing the same, except there
-	 * is an attempt to speed optimize by eliminating uneeded
-	 * multiplication.
-	 */
-	if (this.Settings.DeviationsUp == this.Settings.DeviationsDown) {
-		if (this.Settings.DeviationsUp == 1.0) {
-			/* No standard deviation multiplier needed. */
-			for (i = 0; i < outNBElement; i++) {
-				tempReal			= tempBuffer2[i];
-				tempReal2			= outRealMiddleBand[i];
-				outRealUpperBand[i] = tempReal2 + tempReal;
-				outRealLowerBand[i] = tempReal2 - tempReal;
-			}
-		} else {
-			/* Upper/lower band use the same standard deviation multiplier. */
-			for (i = 0; i < outNBElement; i++) {
-				tempReal = tempBuffer2[i] * this.Settings.DeviationsUp;
-				tempReal2 = outRealMiddleBand[i];
-				outRealUpperBand[i] = tempReal2 + tempReal;
-				outRealLowerBand[i] = tempReal2 - tempReal;
-			}
-		}
-	} else if (this.Settings.DeviationsUp == 1.0) {
-		/* Only lower band has a standard deviation multiplier. */
-		for (i = 0; i < outNBElement; i++) {
-			tempReal = tempBuffer2[i];
-			tempReal2 = outRealMiddleBand[i];
-			outRealUpperBand[i] = tempReal2 + tempReal;
-			outRealLowerBand[i] = tempReal2 - (tempReal * this.Settings.DeviationsDown);
-		}
-	} else if (this.Settings.DeviationsDown == 1.0) {
-		/* Only upper band has a standard deviation multiplier. */
-		for (i = 0; i < outNBElement; i++) {
-			tempReal = tempBuffer2[i];
-			tempReal2 = outRealMiddleBand[i];
-			outRealLowerBand[i] = tempReal2 - tempReal;
-			outRealUpperBand[i] = tempReal2 + (tempReal * this.Settings.DeviationsUp);
-		}
-	} else {
-		/* Upper/lower band have distinctive standard deviation multiplier. */
-		for (i = 0; i < outNBElement; i++) {
-			tempReal = tempBuffer2[i];
-			tempReal2 = outRealMiddleBand[i];
-			outRealUpperBand[i] = tempReal2 + (tempReal * this.Settings.DeviationsUp);
-			outRealLowerBand[i] = tempReal2 - (tempReal * this.Settings.DeviationsDown);
-		}
-	}
-
-	return {UpperBand: outRealUpperBand, LowerBand: outRealLowerBand, MiddleBand: outRealMiddleBand};
-};
-
-TA.BBANDS.getValue = function(dataShape, itemIdx, settings) {
-	
-};
-
-TA.BBANDS._lookback = function( optInTimePeriod, optInNbDevUp, optInNbDevDn, optInMAType ) {
-    if( !optInTimePeriod )
-       optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if( (optInTimePeriod < 2) || (optInTimePeriod > 100000) )
-       return -1;
- 
-    if( !optInNbDevUp )
-       optInNbDevUp = this.DefaultSettings.DeviationsUp;
-    else if( (optInNbDevUp < -3.000000e+37) ||  (optInNbDevUp > 3.000000e+37) )
-       return -1;
- 
-    if( !optInNbDevDn )
-       optInNbDevDn = this.DefaultSettings.DeviationsDown;
-    else if( (optInNbDevDn < -3.000000e+37) ||  (optInNbDevDn > 3.000000e+37) )
-       return -1;
- 
-    if( !optInMAType)
-       optInMAType = this.DefaultSettings.MAType;
-    else if( (optInMAType < 0) || (optInMAType > 8) )
-       return -1;
-
-	return TA.MA._lookback( optInTimePeriod, optInMAType );
-};
-
-TA.BBANDS.SetSettings(TA.BBANDS.DefaultSettings);
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.WMA = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.WMA = {};
-
-TA.WMA.name = 'WMA';
-TA.WMA.type = 'line';
-
-TA.WMA.DefaultSettings = {
-	TimePeriod: 30,
-	CandleValueIdx: TA.CLOSE
-};
-
-TA.WMA.Settings = {};
-
-TA.WMA.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTotalArray) {
-	var inIdx, outIdx, i, trailingIdx, divider;
-	var periodSum, periodSub, tempReal, trailingValue;
-	var lookbackTotal;
-
-
-	var outReal = [];
-
-    this.SetSettings(settings);
-
-	if(!startIdx)
-		startIdx = 0;
-	
-	if(!endIdx)
-		endIdx = dataShape.length - 1;
-
-	if (startIdx < 0)
-		throw 'TA_OUT_OF_RANGE_START_INDEX';
-	if ((endIdx < 0) || (endIdx < startIdx))
-		throw 'TA_OUT_OF_RANGE_END_INDEX';
-
-	if (!dataShape || !dataShape.length)
-		throw 'TA_BAD_PARAM';
-
-	if (!this.Settings.TimePeriod)
-		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
-		throw 'TA_BAD_PARAM';
-
-	if (!outReal)
-		throw 'TA_BAD_PARAM';
-
-	lookbackTotal = this.Settings.TimePeriod - 1;
-
-/* Move up the start index if there is not
-    * enough initial data.
-    */
-   if( startIdx < lookbackTotal )
-      startIdx = lookbackTotal;
-
-   /* Make sure there is still something to evaluate. */
-   if( startIdx > endIdx ) {
-      return outReal;
-   }
-
-   /* To make the rest more efficient, handle exception
-    * case where the user is asking for a period of '1'.
-    * In that case outputs equals inputs for the requested
-    * range.
-    */
-   if( this.Settings.TimePeriod == 1 ) 
-   {      
-      return outReal;
-   }
-
-   /* Calculate the divider (always an integer value).
-    * By induction: 1+2+3+4+'n' = n(n+1)/2
-    * '>>1' is usually faster than '/2' for unsigned.
-    */
-
-   divider = (this.Settings.TimePeriod*( +(this.Settings.TimePeriod) + 1))/2;
-
-   /* The algo used here use a very basic property of
-    * multiplication/addition: (x*2) = x+x
-    *   
-    * As an example, a 3 period weighted can be 
-    * interpreted in two way:
-    *  (x1*1)+(x2*2)+(x3*3)
-    *      OR
-    *  x1+x2+x2+x3+x3+x3 (this is the periodSum)
-    *   
-    * When you move forward in the time serie
-    * you can quickly adjust the periodSum for the
-    * period by substracting:
-    *   x1+x2+x3 (This is the periodSub)
-    * Making the new periodSum equals to:
-    *   x2+x3+x3
-    *
-    * You can then add the new price bar
-    * which is x4+x4+x4 giving:
-    *   x2+x3+x3+x4+x4+x4
-    *
-    * At this point one iteration is completed and you can
-    * see that we are back to the step 1 of this example.
-    *
-    * Why making it so un-intuitive? The number of memory
-    * access and floating point operations are kept to a
-    * minimum with this algo.
-    */
-   outIdx      = 0;
-   trailingIdx = startIdx - lookbackTotal;
-
-   /* Evaluate the initial periodSum/periodSub and trailingValue. */
-   periodSum = periodSub = 0.0;
-   inIdx=trailingIdx;
-   i = 1;
-   while( inIdx < startIdx )
-   {
-      tempReal = dataShape[inIdx++][this.Settings.CandleValueIdx];
-      periodSub += tempReal;
-      periodSum += tempReal*i;
-      i++;
-   }
-   trailingValue = 0.0;
-
-   /* Tight loop for the requested range. */
-   while( inIdx <= endIdx )
-   {
-      /* Add the current price bar to the sum
-       * who are carried through the iterations.
-       */
-      tempReal = dataShape[inIdx++][this.Settings.CandleValueIdx];
-      periodSub += tempReal;
-      periodSub -= trailingValue;
-      periodSum += tempReal*this.Settings.TimePeriod;
-
-      /* Save the trailing value for being substract at
-       * the next iteration.
-       * (must be saved here just in case outReal and
-       *  inReal are the same buffer).
-       */
-      trailingValue = dataShape[trailingIdx++][this.Settings.CandleValueIdx];
-
-      /* Calculate the WMA for this price bar. */
-      outReal[outIdx++] = periodSum / divider;
-
-      /* Prepare the periodSum for the next iteration. */
-      periodSum -= periodSub;
-   }
-
-   /* Set output limits. */
-    /*
-   if(!dontFillTotalArray) {
-		if(outReal.length >= dataShape.length)
-			throw 'Ошибка расчета ADX';
-		else if(outReal.length <= dataShape.length)
-			while(outReal.length != dataShape.length){
-				outReal.unshift(0);
-			}
-	}
-	*/
-
-   return outReal;
-};
-
-TA.WMA.getValue = function (dataShape, itemIdx, settings) {
-
-};
-
-TA.WMA._lookback = function (optInTimePeriod) {
-
-	if (!optInTimePeriod)
-		optInTimePeriod = 30;
-	else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
-		return -1;
-
-	return optInTimePeriod - 1;
-};
-
-TA.WMA._S = function (startIdx, endIdx, dataShape, settings) {
-
-};
-
-TA.WMA.initChart = function (dataShape, hcOptions, ticker) {
-	if (!!INDICATOR_TEMPLATE)
-		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-
-
-};
-
-TA.WMA.SetSettings(TA.WMA.DefaultSettings);
 if (!!TA.INDICATOR_TEMPLATE)
     TA.AD = TA.INDICATOR_TEMPLATE.Create();
 else
@@ -21142,246 +19848,8 @@ TA.AD._S = function(startIdx, endIdx, dataShape) {
     
 	return outReal;
 };
+
 if (!!TA.INDICATOR_TEMPLATE)
-    var APO = TA.INDICATOR_TEMPLATE.Create();
-else
-    var APO = {};
-
-APO.name = 'APO';
-APO.type = 'line';
-
-APO.DefaultSettings = {
-	FastPeriod: 12,
-	SlowPeriod: 26,
-	MAType: TA.MATypes.SMA,
-	CandleValueIdx: TA.CLOSE
-};
-
-APO.Settings = {};
-
-APO._S = function(startIdx, endIdx, dataShape, settings){
-	
-};
-
-APO.initChart = function (dataShape, hcOptions, ticker) {
-	if(!!INDICATOR_TEMPLATE)
-		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
-	
-	
-};
-
-APO.SetSettings(APO.DefaultSettings);
-
-APO._lookback = function ( optInFastPeriod, optInSlowPeriod, optInMAType ) {
-
-    if( !optInFastPeriod )
-       optInFastPeriod = this.DefaultSettings.FastPeriod;
-    else if( (optInFastPeriod < 2) || (optInFastPeriod > 100000) )
-       return -1;
- 
-    /* min/max are checked for optInSlowPeriod. */
-    if( !optInSlowPeriod )
-       optInSlowPeriod = this.DefaultSettings.SlowPeriod;
-    else if( (optInSlowPeriod < 2) || (optInSlowPeriod > 100000) )
-       return -1;
- 
-    if( !optInMAType )
-       optInMAType = this.DefaultSettings.MAType;
-    else if( (optInMAType < 0) || (optInMAType > 8) )
-       return -1;
-
-   /* insert lookback code here. */
-
-   /* The slow MA is the key factor determining the lookback period. */
-   return MA._lookback( Math.max(optInSlowPeriod,optInFastPeriod), optInMAType );
-}
-
-
-
- APO.calculate = function( startIdx, endIdx, dataShape, settings ) {
-	 var tempBuffer = [],
-		 outReal = [];
-	 
- 
-	 if(!!settings)
-		 this.SetSettings(settings);
-	 
-	 if(!startIdx)
-		 startIdx = 0;
-	 
-	 if(!endIdx)
-		 endIdx = dataShape.length - 1;
- 
-    /* Validate the requested output range. */
-    if( startIdx < 0 )
-       throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if( (endIdx < 0) || (endIdx < startIdx))
-       throw 'TA_OUT_OF_RANGE_END_INDEX';
- 
-    if( !dataShape || !dataShape.length )
-		throw 'TA_BAD_PARAM';
-
-    /* min/max are checked for optInFastPeriod. */
-    if( !this.Settings.FastPeriod )
-       this.Settings.FastPeriod = this.DefaultSettings.FastPeriod;
-    else if( (this.Settings.FastPeriod < 2) || (this.Settings.FastPeriod > 100000) )
-       throw 'TA_BAD_PARAM';
- 
-    /* min/max are checked for optInSlowPeriod. */
-    if( !this.Settings.SlowPeriod )
-       this.Settings.SlowPeriod = this.DefaultSettings.SlowPeriod;
-    else if( (this.Settings.SlowPeriod < 2) || (this.Settings.SlowPeriod > 100000) )
-       throw 'TA_BAD_PARAM';
- 
-    if( this.Settings.MAType )
-       this.Settings.MAType = this.DefaultSettings.MAType;
-    else if( (this.Settings.MAType < 0) || (this.Settings.MAType > 8) )
-       throw 'TA_BAD_PARAM';
- 
-    if( !outReal )
-       throw 'TA_BAD_PARAM';
- 
-
-
-   outReal = this.INT_PO( startIdx, endIdx, dataShape,
-                                    this.Settings.FastPeriod, 
-                                    this.Settings.SlowPeriod, 
-                                    this.Settings.MAType,
-                                    outReal,
-                                    tempBuffer,
-                                    0 /* No percentage. */ );
-	 
-	return outReal;
-};
-
-
-APO.INT_PO  = function( startIdx, endIdx, dataShape, optInFastPeriod, optInSlowPeriod, optInMethod_2, outReal, tempBuffer, doPercentageOutput )
-{
-   var tempReal,
-	   tempInteger,
-	   outBegIdx1 = 0,
-	   outNbElement1 = 0,
-	   outBegIdx2 = 0,
-	   outNbElement2 = 0,
-	   i = 0, j = 0;
-
-   /* Make sure slow is really slower than
-    * the fast period! if not, swap...
-    */
-   if( optInSlowPeriod < optInFastPeriod )
-   {
-       /* swap */
-       tempInteger     = optInSlowPeriod;
-       optInSlowPeriod = optInFastPeriod;
-       optInFastPeriod = tempInteger;
-   }
-
-	/* Calculate the fast MA into the tempBuffer. */
-
-	var MA_local = MA.Create({TimePeriod: optInFastPeriod, MAType: optInMethod_2, CandleValueIdx: this.Settings.CandleValueIdx});
-	tempBuffer = MA_local.calculate( startIdx, endIdx, dataShape);
-
-   if( !!tempBuffer && !!tempBuffer.length )
-   {
-      /* Calculate the slow MA into the output. */
-      outReal = MA_local.calculate( startIdx, endIdx, dataShape, {TimePeriod: optInSlowPeriod} );
-
-      if( !!outReal && !!outReal.length )
-      {
-         tempInteger = (tempBuffer.length - 1) - (outReal.length - 1);
-         if( doPercentageOutput != 0 )
-         {
-            /* Calculate ((fast MA)-(slow MA))/(slow MA) in the output. */   
-            for( i=0,j=tempInteger; i < tempBuffer.length - 1; i++, j++ )
-            {
-               tempReal = outReal[i];
-               if( !TA.TA_IS_ZERO(tempReal) )
-                  outReal[i] = ((tempBuffer[j]-tempReal)/tempReal)*100.0;
-               else
-                  outReal[i] = 0.0;
-            }
-         }
-         else
-         {
-            /* Calculate (fast MA)-(slow MA) in the output. */   
-            for( i=0,j=tempInteger; i < tempBuffer.length - 1; i++, j++ )
-               outReal[i] = tempBuffer[j]-outReal[i];
-         }
-
-         //VALUE_HANDLE_DEREF(outBegIdx)     = VALUE_HANDLE_GET(outBegIdx1);
-         //VALUE_HANDLE_DEREF(outNBElement)  = VALUE_HANDLE_GET(outNbElement1);
-      }
-   }
-
-   return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
-    var PPO = TA.INDICATOR_TEMPLATE.Create();
-else
-    var PPO = {};
-
-
-PPO.DefaultSettings = {
-    "CandleValueIdx": TA.CLOSE,
-    "FastPeriod": 12,
-    "SlowPeriod": 26,
-    "MAType": TA.MATypes.SMA
-};
-
-PPO.Settings = {};
-
-PPO.name = 'PPO';
-PPO.type = 'line';
-
-PPO._lookback = function (optInFastPeriod, optInSlowPeriod, optInMAType) {
-    if (!optInFastPeriod)
-        optInFastPeriod = this.DefaultSettings.FastPeriod;
-    else if ((optInFastPeriod < 2) || (optInFastPeriod > 100000))
-        return -1;
-    if (!optInSlowPeriod)
-        optInSlowPeriod = this.DefaultSettings.SlowPeriod;
-    else if ((optInSlowPeriod < 2) || (optInSlowPeriod > 100000))
-        return -1;
-    if (!optInMAType)
-        optInMAType = this.DefaultSettings.MAType;
-    else if ((optInMAType < 0) || (optInMAType > 8))
-        return -1;
-    return MA._lookback(Math.max(optInSlowPeriod, optInFastPeriod), optInMAType);
-};
-
-PPO.calculate = function (startIdx, endIdx, dataShape, settings) {
-        var outBegIdx, outNBElement,
-            tempBuffer = [],
-            retCode, outReal = [];
-
-        this.SetSettings(settings);
-
-        if (startIdx < 0)
-            throw 'TA_OUT_OF_RANGE_START_INDEX';
-        if ((endIdx < 0) || (endIdx < startIdx))
-            throw 'TA_OUT_OF_RANGE_END_INDEX';
-        if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
-        if (!this.Settings.FastPeriod)
-            this.Settings.FastPeriod = this.DefaultSettings.FastPeriod;
-        else if ((this.Settings.FastPeriod < 2) || (this.Settings.FastPeriod > 100000))
-            throw 'TA_BAD_PARAM';
-        if (!this.Settings.SlowPeriod)
-            this.Settings.SlowPeriod = this.DefaultSettings.SlowPeriod;
-        else if ((this.Settings.SlowPeriod < 2) || (this.Settings.SlowPeriod > 100000))
-            throw 'TA_BAD_PARAM';
-        if (!this.Settings.MAType)
-            this.Settings.MAType = this.DefaultSettings.MAType;
-        else if ((this.Settings.MAType < 0) || (this.Settings.MAType > 8))
-            throw 'TA_BAD_PARAM';
-        if (!outReal)
-            throw 'TA_BAD_PARAM';
-
-
-        outReal = APO.INT_PO(startIdx, endIdx, dataShape, this.Settings.FastPeriod, this.Settings.SlowPeriod, this.Settings.MAType, outReal, tempBuffer, 1);
-
-        return outReal;
-};
-
-PPO.SetSettings(PPO.DefaultSettings);if (!!TA.INDICATOR_TEMPLATE)
     TA.ADOSC = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.ADOSC = {};
@@ -21539,6 +20007,7 @@ TA.ADOSC.initChart = function (dataShape, hcOptions, ticker) {
 };
 
 TA.ADOSC.SetSettings(TA.ADOSC.DefaultSettings);
+
 if (!!TA.INDICATOR_TEMPLATE)
     TA.ADX = TA.INDICATOR_TEMPLATE.Create();
 else
@@ -21937,6 +20406,180 @@ TA.ADX.initChart = function (dataShape, hcOptions, ticker) {
 };
 
 TA.ADX.SetSettings(TA.ADX.DefaultSettings);
+
+if (!!TA.INDICATOR_TEMPLATE)
+    var APO = TA.INDICATOR_TEMPLATE.Create();
+else
+    var APO = {};
+
+APO.name = 'APO';
+APO.type = 'line';
+
+APO.DefaultSettings = {
+	FastPeriod: 12,
+	SlowPeriod: 26,
+	MAType: TA.MATypes.SMA,
+	CandleValueIdx: TA.CLOSE
+};
+
+APO.Settings = {};
+
+APO._S = function(startIdx, endIdx, dataShape, settings){
+	
+};
+
+APO.initChart = function (dataShape, hcOptions, ticker) {
+	if(!!INDICATOR_TEMPLATE)
+		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+	
+	
+};
+
+APO.SetSettings(APO.DefaultSettings);
+
+APO._lookback = function ( optInFastPeriod, optInSlowPeriod, optInMAType ) {
+
+    if( !optInFastPeriod )
+       optInFastPeriod = this.DefaultSettings.FastPeriod;
+    else if( (optInFastPeriod < 2) || (optInFastPeriod > 100000) )
+       return -1;
+ 
+    /* min/max are checked for optInSlowPeriod. */
+    if( !optInSlowPeriod )
+       optInSlowPeriod = this.DefaultSettings.SlowPeriod;
+    else if( (optInSlowPeriod < 2) || (optInSlowPeriod > 100000) )
+       return -1;
+ 
+    if( !optInMAType )
+       optInMAType = this.DefaultSettings.MAType;
+    else if( (optInMAType < 0) || (optInMAType > 8) )
+       return -1;
+
+   /* insert lookback code here. */
+
+   /* The slow MA is the key factor determining the lookback period. */
+   return MA._lookback( Math.max(optInSlowPeriod,optInFastPeriod), optInMAType );
+}
+
+
+
+ APO.calculate = function( startIdx, endIdx, dataShape, settings ) {
+	 var tempBuffer = [],
+		 outReal = [];
+	 
+ 
+	 if(!!settings)
+		 this.SetSettings(settings);
+	 
+	 if(!startIdx)
+		 startIdx = 0;
+	 
+	 if(!endIdx)
+		 endIdx = dataShape.length - 1;
+ 
+    /* Validate the requested output range. */
+    if( startIdx < 0 )
+       throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if( (endIdx < 0) || (endIdx < startIdx))
+       throw 'TA_OUT_OF_RANGE_END_INDEX';
+ 
+    if( !dataShape || !dataShape.length )
+		throw 'TA_BAD_PARAM';
+
+    /* min/max are checked for optInFastPeriod. */
+    if( !this.Settings.FastPeriod )
+       this.Settings.FastPeriod = this.DefaultSettings.FastPeriod;
+    else if( (this.Settings.FastPeriod < 2) || (this.Settings.FastPeriod > 100000) )
+       throw 'TA_BAD_PARAM';
+ 
+    /* min/max are checked for optInSlowPeriod. */
+    if( !this.Settings.SlowPeriod )
+       this.Settings.SlowPeriod = this.DefaultSettings.SlowPeriod;
+    else if( (this.Settings.SlowPeriod < 2) || (this.Settings.SlowPeriod > 100000) )
+       throw 'TA_BAD_PARAM';
+ 
+    if( this.Settings.MAType )
+       this.Settings.MAType = this.DefaultSettings.MAType;
+    else if( (this.Settings.MAType < 0) || (this.Settings.MAType > 8) )
+       throw 'TA_BAD_PARAM';
+ 
+    if( !outReal )
+       throw 'TA_BAD_PARAM';
+ 
+
+
+   outReal = this.INT_PO( startIdx, endIdx, dataShape,
+                                    this.Settings.FastPeriod, 
+                                    this.Settings.SlowPeriod, 
+                                    this.Settings.MAType,
+                                    outReal,
+                                    tempBuffer,
+                                    0 /* No percentage. */ );
+	 
+	return outReal;
+};
+
+
+APO.INT_PO  = function( startIdx, endIdx, dataShape, optInFastPeriod, optInSlowPeriod, optInMethod_2, outReal, tempBuffer, doPercentageOutput )
+{
+   var tempReal,
+	   tempInteger,
+	   outBegIdx1 = 0,
+	   outNbElement1 = 0,
+	   outBegIdx2 = 0,
+	   outNbElement2 = 0,
+	   i = 0, j = 0;
+
+   /* Make sure slow is really slower than
+    * the fast period! if not, swap...
+    */
+   if( optInSlowPeriod < optInFastPeriod )
+   {
+       /* swap */
+       tempInteger     = optInSlowPeriod;
+       optInSlowPeriod = optInFastPeriod;
+       optInFastPeriod = tempInteger;
+   }
+
+	/* Calculate the fast MA into the tempBuffer. */
+
+	var MA_local = MA.Create({TimePeriod: optInFastPeriod, MAType: optInMethod_2, CandleValueIdx: this.Settings.CandleValueIdx});
+	tempBuffer = MA_local.calculate( startIdx, endIdx, dataShape);
+
+   if( !!tempBuffer && !!tempBuffer.length )
+   {
+      /* Calculate the slow MA into the output. */
+      outReal = MA_local.calculate( startIdx, endIdx, dataShape, {TimePeriod: optInSlowPeriod} );
+
+      if( !!outReal && !!outReal.length )
+      {
+         tempInteger = (tempBuffer.length - 1) - (outReal.length - 1);
+         if( doPercentageOutput != 0 )
+         {
+            /* Calculate ((fast MA)-(slow MA))/(slow MA) in the output. */   
+            for( i=0,j=tempInteger; i < tempBuffer.length - 1; i++, j++ )
+            {
+               tempReal = outReal[i];
+               if( !TA.TA_IS_ZERO(tempReal) )
+                  outReal[i] = ((tempBuffer[j]-tempReal)/tempReal)*100.0;
+               else
+                  outReal[i] = 0.0;
+            }
+         }
+         else
+         {
+            /* Calculate (fast MA)-(slow MA) in the output. */   
+            for( i=0,j=tempInteger; i < tempBuffer.length - 1; i++, j++ )
+               outReal[i] = tempBuffer[j]-outReal[i];
+         }
+
+         //VALUE_HANDLE_DEREF(outBegIdx)     = VALUE_HANDLE_GET(outBegIdx1);
+         //VALUE_HANDLE_DEREF(outNBElement)  = VALUE_HANDLE_GET(outNbElement1);
+      }
+   }
+
+   return outReal;
+};
 if (!!TA.INDICATOR_TEMPLATE)
     TA.AROON = TA.INDICATOR_TEMPLATE.Create();
 else
@@ -22083,7 +20726,301 @@ TA.AROON._lookback = function (optInTimePeriod) {
 		return -1;
 
 	return optInTimePeriod;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.ATR = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.ATR = {};
+
+TA.ATR.name = 'ATR';
+TA.ATR.type = 'line';
+
+TA.ATR.DefaultSettings = {
+    TimePeriod: 14
+};
+
+TA.ATR.Settings = {};
+
+
+TA.ATR._lookback = function(optInTimePeriod) {
+    if (!optInTimePeriod)
+        optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
+        return -1;
+    if (optInTimePeriod > 1)
+        return optInTimePeriod;
+    else
+        return 1;
+};
+
+
+TA.ATR.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var outIdx, today, lookbackTotal,
+        nbATR,
+        prevATR,
+        tempBuffer = [],
+        prevATRTemp,
+        outReal = [];
+
+    this.SetSettings(settings);
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
+
+    lookbackTotal = this._lookback(this.Settings.TimePeriod);
+
+    if (startIdx < lookbackTotal)
+        startIdx = lookbackTotal;
+    if (startIdx > endIdx)
+        return outReal;
+    if (this.Settings.TimePeriod <= 1) {
+        return TA.TRANGE.calculate(startIdx, endIdx, dataShape, {});
+    }
+
+    tempBuffer = TA.TRANGE.calculate((startIdx - lookbackTotal + 1), endIdx, dataShape, {});
+
+    if( !tempBuffer || !tempBuffer.length )
+    {
+        return outReal;
+    }
+
+    var tempBufferArr = [];
+    for(var i=0;i<tempBuffer.length-1;i++){
+        tempBufferArr.push([tempBuffer[i]]);
+    }
+
+    var prevATRTemp = TA.SMA.calculate( this.Settings.TimePeriod-1,
+        this.Settings.TimePeriod-1,
+        tempBufferArr, {TimePeriod: this.Settings.TimePeriod, CandleValueIdx: 0});
+
+    if( !prevATRTemp || !prevATRTemp.length )
+    {
+        return outReal;
+    }
+
+    prevATR = prevATRTemp[0];
+
+    today = this.Settings.TimePeriod;
+
+    outIdx = 0;
+
+    while (outIdx != 0) {
+        prevATR *= this.Settings.TimePeriod - 1;
+        prevATR += tempBuffer[today++];
+        prevATR /= this.Settings.TimePeriod;
+        outIdx--;
+    }
+    outIdx = 1;
+    outReal[0] = prevATR;
+    nbATR = (endIdx - startIdx) + 1;
+    while (--nbATR != 0) {
+        prevATR *= this.Settings.TimePeriod - 1;
+        prevATR += tempBuffer[today++];
+        prevATR /= this.Settings.TimePeriod;
+        outReal[outIdx++] = prevATR;
+    }
+    return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.BBANDS = TA.INDICATOR_TEMPLATE.Create();
+else
+	TA.BBANDS = {};
+
+TA.BBANDS.name = 'BBANDS';
+TA.BBANDS.type = 'line';
+
+TA.BBANDS.DefaultSettings = {
+	TimePeriod:		7,
+	DeviationsUp:	2,
+	DeviationsDown:	2,
+	MAType:			TA.MATypes.SMA,
+	CandleValueIdx: TA.CLOSE
+};
+
+TA.BBANDS.Settings = {};
+
+TA.BBANDS.calculate = function (startIdx, endIdx, dataShape, settings) {
+
+	var i;
+	var tempReal, tempReal2;
+	var tempBuffer1 = [];
+	var tempBuffer2 = [];
+
+	var outRealUpperBand = [];
+	var outRealMiddleBand = [];
+	var outRealLowerBand = [];
+	
+	var outNBElement;
+
+    this.SetSettings(settings);
+
+	if (!startIdx)
+		startIdx = 0;
+
+	if (!endIdx)
+		endIdx = dataShape.length - 1;
+
+	if (startIdx < 0)
+		throw 'TA_OUT_OF_RANGE_START_INDEX';
+	if ((endIdx < 0) || (endIdx < startIdx))
+		throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+
+	if (!dataShape || !dataShape.length)
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.TimePeriod)
+		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.DeviationsUp)
+		this.Settings.DeviationsUp = this.DefaultSettings.DeviationsUp;
+	else if ((this.Settings.DeviationsUp < -3.000000e+37) || (this.Settings.DeviationsUp > 3.000000e+37))
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.DeviationsDown)
+		this.Settings.DeviationsDown = this.DefaultSettings.DeviationsDown;
+	else if ((this.Settings.DeviationsDown < -3.000000e+37) || (this.Settings.DeviationsDown > 3.000000e+37))
+		throw 'TA_BAD_PARAM';
+
+	if (this.Settings.MAType)
+		this.Settings.MAType = this.DefaultSettings.MAType;
+	else if ((this.Settings.MAType < 0) || (this.Settings.MAType > 8))
+		throw 'TA_BAD_PARAM';
+
+	if (!outRealUpperBand)
+		throw 'TA_BAD_PARAM';
+
+	if (!outRealMiddleBand)
+		throw 'TA_BAD_PARAM';
+
+	if (!outRealLowerBand)
+		throw 'TA_BAD_PARAM';
+
+	tempBuffer1 = outRealMiddleBand;
+	tempBuffer2 = outRealUpperBand;
+
+	/* Calculate the middle band, which is a moving average.
+	 * The other two bands will simply add/substract the
+	 * standard deviation from this middle band.
+	 */
+
+	var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+	tempBuffer1 = localMA.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+
+	if (!tempBuffer1 || !tempBuffer1.length) {
+		return {UpperBand: [], LowerBand: [], MiddleBand: []};
+	}
+
+	
+	/* Calculate the Standard Deviation */
+	var localSTDDEV = TA.STDDEV.Create({TimePeriod: this.Settings.TimePeriod, Deviations: 1});
+
+	tempBuffer2 = localSTDDEV.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, Deviations: 1});
+
+	if ( !tempBuffer2 || !tempBuffer2.length ) {
+		return {UpperBand: [], LowerBand: [], MiddleBand: []};
+	}
+
+	/* Copy the MA calculation into the middle band ouput, unless
+	 * the calculation was done into it already!
+	 */
+	outRealMiddleBand = tempBuffer1.slice();
+
+	//outNBElement = outRealMiddleBand.length - 1;
+	outNBElement = outRealMiddleBand.length;
+	/* Now do a tight loop to calculate the upper/lower band at
+	 * the same time.
+	 *
+	 * All the following 5 loops are doing the same, except there
+	 * is an attempt to speed optimize by eliminating uneeded
+	 * multiplication.
+	 */
+	if (this.Settings.DeviationsUp == this.Settings.DeviationsDown) {
+		if (this.Settings.DeviationsUp == 1.0) {
+			/* No standard deviation multiplier needed. */
+			for (i = 0; i < outNBElement; i++) {
+				tempReal			= tempBuffer2[i];
+				tempReal2			= outRealMiddleBand[i];
+				outRealUpperBand[i] = tempReal2 + tempReal;
+				outRealLowerBand[i] = tempReal2 - tempReal;
+			}
+		} else {
+			/* Upper/lower band use the same standard deviation multiplier. */
+			for (i = 0; i < outNBElement; i++) {
+				tempReal = tempBuffer2[i] * this.Settings.DeviationsUp;
+				tempReal2 = outRealMiddleBand[i];
+				outRealUpperBand[i] = tempReal2 + tempReal;
+				outRealLowerBand[i] = tempReal2 - tempReal;
+			}
+		}
+	} else if (this.Settings.DeviationsUp == 1.0) {
+		/* Only lower band has a standard deviation multiplier. */
+		for (i = 0; i < outNBElement; i++) {
+			tempReal = tempBuffer2[i];
+			tempReal2 = outRealMiddleBand[i];
+			outRealUpperBand[i] = tempReal2 + tempReal;
+			outRealLowerBand[i] = tempReal2 - (tempReal * this.Settings.DeviationsDown);
+		}
+	} else if (this.Settings.DeviationsDown == 1.0) {
+		/* Only upper band has a standard deviation multiplier. */
+		for (i = 0; i < outNBElement; i++) {
+			tempReal = tempBuffer2[i];
+			tempReal2 = outRealMiddleBand[i];
+			outRealLowerBand[i] = tempReal2 - tempReal;
+			outRealUpperBand[i] = tempReal2 + (tempReal * this.Settings.DeviationsUp);
+		}
+	} else {
+		/* Upper/lower band have distinctive standard deviation multiplier. */
+		for (i = 0; i < outNBElement; i++) {
+			tempReal = tempBuffer2[i];
+			tempReal2 = outRealMiddleBand[i];
+			outRealUpperBand[i] = tempReal2 + (tempReal * this.Settings.DeviationsUp);
+			outRealLowerBand[i] = tempReal2 - (tempReal * this.Settings.DeviationsDown);
+		}
+	}
+
+	return {UpperBand: outRealUpperBand, LowerBand: outRealLowerBand, MiddleBand: outRealMiddleBand};
+};
+
+TA.BBANDS.getValue = function(dataShape, itemIdx, settings) {
+	
+};
+
+TA.BBANDS._lookback = function( optInTimePeriod, optInNbDevUp, optInNbDevDn, optInMAType ) {
+    if( !optInTimePeriod )
+       optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if( (optInTimePeriod < 2) || (optInTimePeriod > 100000) )
+       return -1;
+ 
+    if( !optInNbDevUp )
+       optInNbDevUp = this.DefaultSettings.DeviationsUp;
+    else if( (optInNbDevUp < -3.000000e+37) ||  (optInNbDevUp > 3.000000e+37) )
+       return -1;
+ 
+    if( !optInNbDevDn )
+       optInNbDevDn = this.DefaultSettings.DeviationsDown;
+    else if( (optInNbDevDn < -3.000000e+37) ||  (optInNbDevDn > 3.000000e+37) )
+       return -1;
+ 
+    if( !optInMAType)
+       optInMAType = this.DefaultSettings.MAType;
+    else if( (optInMAType < 0) || (optInMAType > 8) )
+       return -1;
+
+	return TA.MA._lookback( optInTimePeriod, optInMAType );
+};
+
+TA.BBANDS.SetSettings(TA.BBANDS.DefaultSettings);
+
+if (!!TA.INDICATOR_TEMPLATE)
     TA.CCI = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.CCI = {};
@@ -22266,499 +21203,8 @@ TA.CCI.initChart = function (dataShape, hcOptions, ticker) {
 
 TA.CCI.SetSettings(TA.CCI.DefaultSettings);
 
+
 if (!!TA.INDICATOR_TEMPLATE)
-    TA.PLUS_DI = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.PLUS_DI = {};
-
-TA.PLUS_DI.name = 'PLUS_DI';
-TA.PLUS_DI.type = 'line';
-
-TA.PLUS_DI.DefaultSettings = {
-    TimePeriod: 14
-};
-
-TA.PLUS_DI.Settings = {};
-
-TA.PLUS_DI._lookback = function(optInTimePeriod) {
-    if (!optInTimePeriod)
-        optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
-        return -1;
-    if (optInTimePeriod > 1)
-        return optInTimePeriod;
-    else
-        return 1;
-};
-
-TA.PLUS_DI.calculate = function(startIdx, endIdx, dataShape, settings) {
-    var today, lookbackTotal, outIdx;
-    var prevHigh, prevLow, prevClose;
-    var prevPlusDM, prevTR;
-    var tempReal, tempReal2, diffP, diffM;
-    var i;
-
-    var outReal = [];
-    this.SetSettings(settings);
-
-    function TRUE_RANGE(TH, TL, YC, OUT) {
-        return '\
-              ' + OUT + ' = ' + TH + '-' + TL + '; \
-              tempReal2 = Math.abs(' + TH + '-' + YC + '); \
-              if( tempReal2 > ' + OUT + ' ) \
-                 ' + OUT + ' = tempReal2; \
-              tempReal2 = Math.abs(' + TL + '-' + YC + '); \
-              if( tempReal2 > ' + OUT + ' ) \
-                 ' + OUT + ' = tempReal2;';
-    }
-
-    if (startIdx < 0)
-        throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if ((endIdx < 0) || (endIdx < startIdx))
-        throw 'TA_OUT_OF_RANGE_END_INDEX';
-    if (!this.Settings.TimePeriod)
-        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
-        throw 'TA_BAD_PARAM';
-
-    function round_pos(x) {
-        return x;
-    };
-
-    if (this.Settings.TimePeriod > 1)
-        lookbackTotal = this.Settings.TimePeriod;
-    else
-        lookbackTotal = 1;
-
-    if (startIdx < lookbackTotal)
-        startIdx = lookbackTotal;
-    if (startIdx > endIdx) {
-        var outBegIdx = 0;
-        var outNBElement = 0;
-        return outReal;
-    }
-    outIdx = 0;
-    if (this.Settings.TimePeriod <= 1) {
-        var outBegIdx = startIdx;
-        today = startIdx - 1;
-        prevHigh = dataShape[today][TA.HIGH];
-        prevLow = dataShape[today][TA.LOW];
-        prevClose = dataShape[today][TA.CLOSE];
-        while (today < endIdx) {
-            today++;
-            tempReal = dataShape[today][TA.HIGH];
-            diffP = tempReal - prevHigh;
-            prevHigh = tempReal;
-            tempReal = dataShape[today][TA.LOW];
-            diffM = prevLow - tempReal;
-            prevLow = tempReal;
-            if ((diffP > 0) && (diffP > diffM)) {
-                eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-                if (TA.TA_IS_ZERO(tempReal))
-                    outReal[outIdx++] = 0.0;
-                else
-                    outReal[outIdx++] = diffP / tempReal;
-            } else
-                outReal[outIdx++] = 0.0;
-            prevClose = dataShape[today][TA.CLOSE];
-        }
-        outNBElement = outIdx;
-        return outReal;
-    }
-    outBegIdx = today = startIdx;
-    prevPlusDM = 0.0;
-    prevTR = 0.0;
-    today = startIdx - lookbackTotal;
-    prevHigh = dataShape[today][TA.HIGH];
-    prevLow = dataShape[today][TA.LOW];
-    prevClose = dataShape[today][TA.CLOSE];
-    i = this.Settings.TimePeriod - 1;
-    while (i-- > 0) {
-        today++;
-        tempReal = dataShape[today][TA.HIGH];
-        diffP = tempReal - prevHigh;
-        prevHigh = tempReal;
-        tempReal = dataShape[today][TA.LOW];
-        diffM = prevLow - tempReal;
-        prevLow = tempReal;
-        if ((diffP > 0) && (diffP > diffM)) {
-            prevPlusDM += diffP;
-        }
-        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-        prevTR += tempReal;
-        prevClose = dataShape[today][TA.CLOSE];
-    }
-    i = /*TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_PLUS_DI, PlusDI) +*/ 1;
-    while (i-- != 0) {
-        today++;
-        tempReal = dataShape[today][TA.HIGH];
-        diffP = tempReal - prevHigh;
-        prevHigh = tempReal;
-        tempReal = dataShape[today][TA.LOW];
-        diffM = prevLow - tempReal;
-        prevLow = tempReal;
-        if ((diffP > 0) && (diffP > diffM)) {
-            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod) + diffP;
-        } else {
-            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod);
-        }
-        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
-        prevClose = dataShape[today][TA.CLOSE];
-    }
-    if (!TA.TA_IS_ZERO(prevTR)) {
-        outReal[0] = round_pos(100.0 * (prevPlusDM / prevTR));
-    } else {
-        outReal[0] = 0.0;
-    }
-    outIdx = 1;
-    while (today < endIdx) {
-        today++;
-        tempReal = dataShape[today][TA.HIGH];
-        diffP = tempReal - prevHigh;
-        prevHigh = tempReal;
-        tempReal = dataShape[today][TA.LOW];
-        diffM = prevLow - tempReal;
-        prevLow = tempReal;
-        if ((diffP > 0) && (diffP > diffM)) {
-            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod) + diffP;
-        } else {
-            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod);
-        }
-        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
-        prevClose = dataShape[today][TA.CLOSE];
-        if (!TA.TA_IS_ZERO(prevTR)) {
-            outReal[outIdx++] = round_pos(100.0 * (prevPlusDM / prevTR));
-        } else {
-            outReal[outIdx++] = 0.0;
-        }
-    }
-    outNBElement = outIdx;
-    return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
-    TA.MINUS_DI = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.MINUS_DI = {};
-
-TA.MINUS_DI.name = 'MINUS_DI';
-TA.MINUS_DI.type = 'line';
-
-TA.MINUS_DI.DefaultSettings = {
-    TimePeriod: 14
-};
-
-TA.MINUS_DI.Settings = {};
-
-TA.MINUS_DI._lookback = function(optInTimePeriod) {
-    if (!optInTimePeriod)
-        optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
-        return -1;
-    if (optInTimePeriod > 1)
-        return optInTimePeriod;
-    else
-        return 1;
-};
-
-
-TA.MINUS_DI.calculate = function(startIdx, endIdx, dataShape, settings) {
-    var today, lookbackTotal, outIdx;
-    var prevHigh, prevLow, prevClose;
-    var prevMinusDM, prevTR;
-    var tempReal, tempReal2, diffP, diffM;
-    var i;
-
-    var outReal = [];
-    this.SetSettings(settings);
-
-    function TRUE_RANGE(TH, TL, YC, OUT) {
-        return '\
-              ' + OUT + ' = ' + TH + '-' + TL + '; \
-              tempReal2 = Math.abs(' + TH + '-' + YC + '); \
-              if( tempReal2 > ' + OUT + ' ) \
-                 ' + OUT + ' = tempReal2; \
-              tempReal2 = Math.abs(' + TL + '-' + YC + '); \
-              if( tempReal2 > ' + OUT + ' ) \
-                 ' + OUT + ' = tempReal2;';
-    }
-
-    if (startIdx < 0)
-        throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if ((endIdx < 0) || (endIdx < startIdx))
-        throw 'TA_OUT_OF_RANGE_END_INDEX';
-    if (!this.Settings.TimePeriod)
-        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
-        throw 'TA_BAD_PARAM';
-
-    function round_pos(x) {
-        return x;
-    };
-
-    if (this.Settings.TimePeriod > 1)
-        lookbackTotal = this.Settings.TimePeriod;
-    else
-        lookbackTotal = 1;
-
-    if (startIdx < lookbackTotal)
-        startIdx = lookbackTotal;
-    if (startIdx > endIdx) {
-        var outBegIdx;
-        var outNBElement;
-        return outReal;
-    }
-    outIdx = 0;
-    if (this.Settings.TimePeriod <= 1) {
-        var outBegIdx = startIdx;
-        today = startIdx - 1;
-        prevHigh = dataShape[today][TA.HIGH];
-        prevLow = dataShape[today][TA.LOW];
-        prevClose = dataShape[today][TA.CLOSE];
-        while (today < endIdx) {
-            today++;
-            tempReal = dataShape[today][TA.HIGH];
-            diffP = tempReal - prevHigh;
-            prevHigh = tempReal;
-            tempReal = dataShape[today][TA.LOW];
-            diffM = prevLow - tempReal;
-            prevLow = tempReal;
-            if ((diffM > 0) && (diffP < diffM)) {
-                eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-                if (TA.TA_IS_ZERO(tempReal))
-                    outReal[outIdx++] = 0.0;
-                else
-                    outReal[outIdx++] = diffM / tempReal;
-            } else
-                outReal[outIdx++] = 0.0;
-            prevClose = dataShape[today][TA.CLOSE];
-        }
-        outNBElement = outIdx;
-        return outReal;
-    }
-    outBegIdx = today = startIdx;
-    prevMinusDM = 0.0;
-    prevTR = 0.0;
-    today = startIdx - lookbackTotal;
-    prevHigh = dataShape[today][TA.HIGH];
-    prevLow = dataShape[today][TA.LOW];
-    prevClose = dataShape[today][TA.CLOSE];
-    i = this.Settings.TimePeriod - 1;
-    while (i-- > 0) {
-        today++;
-        tempReal = dataShape[today][TA.HIGH];
-        diffP = tempReal - prevHigh;
-        prevHigh = tempReal;
-        tempReal = dataShape[today][TA.LOW];
-        diffM = prevLow - tempReal;
-        prevLow = tempReal;
-        if ((diffM > 0) && (diffP < diffM)) {
-            prevMinusDM += diffM;
-        }
-        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-        prevTR += tempReal;
-        prevClose = dataShape[today][TA.CLOSE];
-    }
-    i = 1;
-    while (i-- != 0) {
-        today++;
-        tempReal = dataShape[today][TA.HIGH];
-        diffP = tempReal - prevHigh;
-        prevHigh = tempReal;
-        tempReal = dataShape[today][TA.LOW];
-        diffM = prevLow - tempReal;
-        prevLow = tempReal;
-        if ((diffM > 0) && (diffP < diffM)) {
-            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod) + diffM;
-        } else {
-            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod);
-        }
-        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
-        prevClose = dataShape[today][TA.CLOSE];
-    }
-    if (!TA.TA_IS_ZERO(prevTR))
-        outReal[0] = round_pos(100.0 * (prevMinusDM / prevTR));
-    else
-        outReal[0] = 0.0;
-    outIdx = 1;
-    while (today < endIdx) {
-        today++;
-        tempReal = dataShape[today][TA.HIGH];
-        diffP = tempReal - prevHigh;
-        prevHigh = tempReal;
-        tempReal = dataShape[today][TA.LOW];
-        diffM = prevLow - tempReal;
-        prevLow = tempReal;
-        if ((diffM > 0) && (diffP < diffM)) {
-            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod) + diffM;
-        } else {
-            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod);
-        }
-        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
-        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
-        prevClose = dataShape[today][TA.CLOSE];
-        if (!TA.TA_IS_ZERO(prevTR))
-            outReal[outIdx++] = round_pos(100.0 * (prevMinusDM / prevTR));
-        else
-            outReal[outIdx++] = 0.0;
-    }
-    outNBElement = outIdx;
-    return outReal;
-};
-if (!!TA.INDICATOR_TEMPLATE)
-    TA.TRANGE = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.TRANGE = {};
-
-TA.TRANGE.name = 'AROON';
-TA.TRANGE.type = 'line';
-
-TA.TRANGE.DefaultSettings = {
-};
-
-TA.TRANGE.Settings = {};
-
-TA.TRANGE._lookback = function() {
-    return 1;
-};
-TA.TRANGE.calculate = function(startIdx, endIdx, dataShape, settings) {
-    var outBegIdx, outNBElement,
-        today, outIdx,
-        val2, val3, greatest,
-        tempCY, tempLT, tempHT,
-        outReal = [];
-
-    this.SetSettings(settings);
-
-    if (startIdx < 0)
-        throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if ((endIdx < 0) || (endIdx < startIdx))
-        throw 'TA_OUT_OF_RANGE_END_INDEX';
-    if (startIdx < 1)
-        startIdx = 1;
-    if (startIdx > endIdx) {
-        return outReal;
-    }
-    outIdx = 0;
-    today = startIdx;
-    while (today <= endIdx) {
-        tempLT = dataShape[today][TA.LOW];
-        tempHT = dataShape[today][TA.HIGH];
-        tempCY = dataShape[today][TA.CLOSE];
-        greatest = tempHT - tempLT;
-        val2 = Math.abs(tempCY - tempHT);
-        if (val2 > greatest)
-            greatest = val2;
-        val3 = Math.abs(tempCY - tempLT);
-        if (val3 > greatest)
-            greatest = val3;
-        outReal[outIdx++] = greatest;
-        today++;
-    }
-    outNBElement = outIdx;
-    outBegIdx = startIdx;
-    return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
-    TA.ATR = TA.INDICATOR_TEMPLATE.Create();
-else
-    TA.ATR = {};
-
-TA.ATR.name = 'ATR';
-TA.ATR.type = 'line';
-
-TA.ATR.DefaultSettings = {
-    TimePeriod: 14
-};
-
-TA.ATR.Settings = {};
-
-
-TA.ATR._lookback = function(optInTimePeriod) {
-    if (!optInTimePeriod)
-        optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
-        return -1;
-    if (optInTimePeriod > 1)
-        return optInTimePeriod;
-    else
-        return 1;
-};
-
-
-TA.ATR.calculate = function(startIdx, endIdx, dataShape, settings) {
-    var outIdx, today, lookbackTotal,
-        nbATR,
-        prevATR,
-        tempBuffer = [],
-        prevATRTemp,
-        outReal = [];
-
-    this.SetSettings(settings);
-
-    if (startIdx < 0)
-        throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if ((endIdx < 0) || (endIdx < startIdx))
-        throw 'TA_OUT_OF_RANGE_END_INDEX';
-    if (!this.Settings.TimePeriod)
-        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
-        throw 'TA_BAD_PARAM';
-
-    lookbackTotal = this._lookback(this.Settings.TimePeriod);
-
-    if (startIdx < lookbackTotal)
-        startIdx = lookbackTotal;
-    if (startIdx > endIdx)
-        return outReal;
-    if (this.Settings.TimePeriod <= 1) {
-        return TA.TRANGE.calculate(startIdx, endIdx, dataShape, {});
-    }
-
-    tempBuffer = TA.TRANGE.calculate((startIdx - lookbackTotal + 1), endIdx, dataShape, {});
-
-    if( !tempBuffer || !tempBuffer.length )
-    {
-        return outReal;
-    }
-
-    var tempBufferArr = [];
-    for(var i=0;i<tempBuffer.length-1;i++){
-        tempBufferArr.push([tempBuffer[i]]);
-    }
-
-    var prevATRTemp = TA.SMA.calculate( this.Settings.TimePeriod-1,
-        this.Settings.TimePeriod-1,
-        tempBufferArr, {TimePeriod: this.Settings.TimePeriod, CandleValueIdx: 0});
-
-    if( !prevATRTemp || !prevATRTemp.length )
-    {
-        return outReal;
-    }
-
-    prevATR = prevATRTemp[0];
-
-    today = this.Settings.TimePeriod;
-
-    outIdx = 0;
-
-    while (outIdx != 0) {
-        prevATR *= this.Settings.TimePeriod - 1;
-        prevATR += tempBuffer[today++];
-        prevATR /= this.Settings.TimePeriod;
-        outIdx--;
-    }
-    outIdx = 1;
-    outReal[0] = prevATR;
-    nbATR = (endIdx - startIdx) + 1;
-    while (--nbATR != 0) {
-        prevATR *= this.Settings.TimePeriod - 1;
-        prevATR += tempBuffer[today++];
-        prevATR /= this.Settings.TimePeriod;
-        outReal[outIdx++] = prevATR;
-    }
-    return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
     TA.CHV = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.CHV = {};
@@ -22802,6 +21248,7 @@ TA.CHV._lookback = function(optInTimePeriod) {
     return TA.EMA._lookback(optInTimePeriod) + this.Settings.TimePeriodRoc;
 };
 
+
 if (!!TA.INDICATOR_TEMPLATE)
     TA.DPO = TA.INDICATOR_TEMPLATE.Create();
 else
@@ -22843,6 +21290,207 @@ TA.DPO._lookback = function(optInTimePeriod) {
     return TA.SMA._lookback(optInTimePeriod) + ((optInTimePeriod / 2) | 0) + 1;
 };
 
+
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.EMA = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.EMA = {};
+
+TA.EMA.name = 'EMA';
+TA.EMA.type = 'line';
+
+TA.EMA.DefaultSettings = {
+    TimePeriod: 30,
+    CandleValueIdx: TA.CLOSE
+};
+
+TA.EMA.Settings = {};
+
+TA.EMA.calculate = function(startIdx, endIdx, dataShape, settings){
+     
+    var outReal = [];
+    
+    this.SetSettings(settings);
+
+    if (!startIdx)
+        startIdx = 0;
+
+    if (!endIdx)
+        endIdx = dataShape.length - 1;
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+    if (!dataShape || !dataShape.length)
+        throw 'TA_BAD_PARAM';
+
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = 30;
+    else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
+
+    return this._int_ema(startIdx, endIdx, dataShape,
+        this.Settings.TimePeriod,
+        TA.PER_TO_K(this.Settings.TimePeriod),
+        outReal);
+};
+
+TA.EMA._int_ema = function ( startIdx, endIdx, dataShape, optInTimePeriod, optInK_1, outReal ) {
+   var tempReal, prevMA;
+   var i, today, outIdx, lookbackTotal;
+
+   /* Ususally, optInK_1 = 2 / (optInTimePeriod + 1),
+    * but sometime there is exception. This
+    * is why both value are parameters.
+    */
+
+   /* Identify the minimum number of price bar needed
+    * to calculate at least one output.
+    */
+   lookbackTotal = this._lookback( optInTimePeriod );
+
+   /* Move up the start index if there is not
+    * enough initial data.
+    */
+   if( startIdx < lookbackTotal )
+      startIdx = lookbackTotal;
+
+   /* Make sure there is still something to evaluate. */
+   if( startIdx > endIdx )
+   {
+      return outReal;
+   }
+
+   /* Do the EMA calculation using tight loops. */
+   
+   /* The first EMA is calculated differently. It
+    * then become the seed for subsequent TA.EMA.
+    *
+    * The algorithm for this seed vary widely.
+    * Only 3 are implemented here:
+    *
+    * TA_MA_CLASSIC:
+    *    Use a simple MA of the first 'period'.
+    *    This is the approach most widely documented.
+    *
+    * TA_MA_METASTOCK:
+    *    Use first price bar value as a seed
+    *    from the begining of all the available
+    *    data.
+    *
+    * TA_MA_TRADESTATION:
+    *    Use 4th price bar as a seed, except when
+    *    period is 1 who use 2th price bar or something
+    *    like that... (not an obvious one...).
+    */
+   if( TA.TA_GLOBALS_COMPATIBILITY == TA.TA_COMPATIBILITY_DEFAULT )
+   {
+      today = startIdx-lookbackTotal;
+      i = optInTimePeriod;
+      tempReal = 0.0;
+      while( i-- > 0 )
+         tempReal += dataShape[today++][this.Settings.CandleValueIdx];
+
+      prevMA = tempReal / optInTimePeriod;
+   }
+   else
+   {
+      prevMA = dataShape[0][this.Settings.CandleValueIdx];
+      today = 1;
+
+      /* !!! Tradestation not supported yet.
+      case TA_MA_TRADESTATION:
+         prevMA = inReal[startIdx-1];
+         if( optInTimePeriod == 1 )
+            VALUE_HANDLE_DEREF(outBegIdx)_0 = 1;
+         else
+            VALUE_HANDLE_DEREF(outBegIdx)_0 = 3;
+       */
+   }
+
+   /* At this point, prevMA is the first EMA (the seed for
+    * the rest).
+    * 'today' keep track of where the processing is within the
+    * input.
+    */
+
+   /* Skip the unstable period. Do the processing 
+    * but do not write it in the output.
+    */   
+   while( today <= startIdx )
+      prevMA = ((dataShape[today++][this.Settings.CandleValueIdx]-prevMA)*optInK_1) + prevMA;
+
+   /* Write the first value. */
+   outReal[0] = prevMA;
+   outIdx = 1;
+
+   /* Calculate the remaining range. */
+   while( today <= endIdx ) {
+      prevMA = ((dataShape[today++][this.Settings.CandleValueIdx]-prevMA)*optInK_1) + prevMA;
+      outReal[outIdx++] = prevMA;
+   }
+
+   return outReal;
+};
+
+TA.EMA.getValue = function(dataShape, itemIdx, settings) {
+    
+};
+
+TA.EMA._lookback = function(optInTimePeriod) {
+    if ( !optInTimePeriod )
+        optInTimePeriod = this.Settings.TimePeriod || this.DefaultSettings.TimePeriod;
+    else if (( optInTimePeriod < 2) || ( optInTimePeriod > 100000))
+        return -1;
+
+
+    return optInTimePeriod - 1; // + TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_EMA, Ema);
+};
+
+TA.EMA._S = function(startIdx, endIdx, dataShape, settings) {
+    var tempReal, prevMA;
+    var i, today, outIdx, lookbackTotal;
+
+    lookbackTotal = this._lookback(this.Settings.TimePeriod);
+    if (startIdx < lookbackTotal)
+        startIdx = lookbackTotal;
+    if (startIdx > endIdx) {
+        return outReal;
+    }
+    
+    if (TA_GLOBALS_COMPATIBILITY == TA_COMPATIBILITY_DEFAULT) {
+        today = startIdx - lookbackTotal;
+        i = this.Settings.TimePeriod;
+        tempReal = 0.0;
+        while (i-- > 0)
+            tempReal += dataShape[today++][this.Settings.CandleValueIdx];
+        prevMA = tempReal / this.Settings.TimePeriod;
+    } else {
+        prevMA = dataShape[0][this.Settings.CandleValueIdx];
+        today = 1;
+    }
+    while (today <= startIdx)
+        prevMA = ((dataShape[today++][this.Settings.CandleValueIdx] - prevMA) * optInK_1) + prevMA;
+    outReal[0] = prevMA;
+    outIdx = 1;
+    while (today <= endIdx) {
+        prevMA = ((inReal[today++] - prevMA) * optInK_1) + prevMA;
+        outReal[outIdx++] = prevMA;
+    }
+    
+    return outReal;
+};
+
+TA.EMA.initChart = function (dataShape, hcOptions, ticker) {
+    INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+    
+    
+};
+
+TA.EMA.SetSettings(TA.EMA.DefaultSettings);
+
 if (!!TA.INDICATOR_TEMPLATE)
     TA.ENV = TA.INDICATOR_TEMPLATE.Create();
 else
@@ -22883,6 +21531,193 @@ TA.ENV.calculate = function(startIdx, endIdx, dataShape, settings){
 TA.ENV._lookback = function(optInTimePeriod) {
     return TA.SMA._lookback(optInTimePeriod);
 };
+
+
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.MA = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.MA = {};
+
+TA.MA.name = 'MA';
+TA.MA.type = 'line';
+
+TA.MA.DefaultSettings = {
+	TimePeriod: 30,
+	CandleValueIdx: TA.CLOSE,
+	MAType: TA.MATypes.SMA
+};
+
+TA.MA.Settings = {};
+
+TA.MA.calculate = function (startIdx, endIdx, dataShape, settings) {
+	
+	this.SetSettings(settings);
+
+	var dummyBuffer = [];
+	//ENUM_DECLARATION(RetCode) retCode;
+
+	var outIdx, todayIdx;
+	var outReal = [];
+
+	if (startIdx < 0)
+		throw 'TA_OUT_OF_RANGE_START_INDEX';
+	if ((endIdx < 0) || (endIdx < startIdx))
+		throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+
+	if (!dataShape || !dataShape.length)
+		throw 'TA_BAD_PARAM';
+
+
+	if (!this.Settings.TimePeriod)
+		this.Settings.TimePeriod = 30;
+	else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.MAType)
+		this.Settings.MAType = TA.MATypes.SMA;
+	else if ((this.Settings.MAType < 0) || (this.Settings.MAType > 8))
+		throw 'TA_BAD_PARAM';
+
+	if (this.Settings.TimePeriod == 1) {
+		nbElement = endIdx - startIdx + 1;
+		for (todayIdx = startIdx, outIdx = 0; outIdx < nbElement; outIdx++, todayIdx++)
+			outReal[outIdx] = dataShape[todayIdx][this.Settings.CandleValueIdx];
+
+		return outReal;
+	}
+	/* Simply forward the job to the corresponding TA function. */
+	switch (this.Settings.MAType) {
+	case TA.MATypes.SMA:
+		outReal = TA.SMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.EMA:
+		outReal = TA.EMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.WMA:
+		outReal = TA.WMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.DEMA:
+		outReal = DEMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.TEMA:
+		outReal = TEMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.TRIMA:
+		outReal = TRIMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.KAMA:
+		outReal = KAMA.calculate(startIdx, endIdx, dataShape, this.Settings);
+		break;
+
+	case TA.MATypes.MAMA:
+		/* The optInTimePeriod is ignored and the FAMA output of the MAMA
+		 * is ignored.
+		 */
+		/*ARRAY_ALLOC(dummyBuffer, (endIdx - startIdx + 1));
+
+
+		if (!dummyBuffer)
+			return ENUM_VALUE(RetCode, TA_ALLOC_ERR, AllocErr);*/
+
+
+		outReal = MAMA.calculate(startIdx, endIdx, dataShape, {FastLimit: 0.5, SlowLimit: 0.05});
+		break;
+
+	case TA.MATypes.T3:
+		outReal = T3.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, VFactor: 0.7});
+		break;
+
+	default:
+		throw 'TA_BAD_PARAM';
+		break;
+	}
+
+	return outReal;
+};
+
+TA.MA.getValue = function(dataShape, itemIdx, settings) {
+	
+};
+
+TA.MA._lookback = function (optInTimePeriod, optInMAType) {
+	var retValue;
+
+	if (!optInTimePeriod)
+		optInTimePeriod = this.DefaultSettings.TimePeriod;
+	else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
+		return -1;
+
+	if (!optInMAType)
+		optInMAType = this.DefaultSettings.MAType;
+	else if ((optInMAType < 0) || (optInMAType > 8))
+		return -1;
+
+	if (optInTimePeriod <= 1)
+		return 0;
+
+	switch (optInMAType) {
+	case TA.MATypes.SMA:
+		retValue = TA.SMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.EMA:
+		retValue = TA.EMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.WMA:
+		retValue = TA.WMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.DEMA:
+		retValue = DEMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.TEMA:
+		retValue = TEMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.TRIMA:
+		retValue = TRIMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.KAMA:
+		retValue = KAMA._lookback(optInTimePeriod);
+		break;
+
+	case TA.MATypes.MAMA:
+		retValue = MAMA._lookback(0.5, 0.05);
+		break;
+
+	case TA.MATypes.T3:
+		retValue = T3._lookback(optInTimePeriod, 0.7);
+		break;
+
+	default:
+		retValue = 0;
+	}
+
+	return retValue;
+};
+
+TA.MA._S = function(startIdx, endIdx, dataShape, settings){
+	
+};
+
+TA.MA.initChart = function (dataShape, hcOptions, ticker) {
+	if(!!INDICATOR_TEMPLATE)
+		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+	
+	
+};
+
+TA.MA.SetSettings(TA.MA.DefaultSettings);
 
 if (!!TA.INDICATOR_TEMPLATE)
     TA.MACD = TA.INDICATOR_TEMPLATE.Create();
@@ -23133,6 +21968,7 @@ TA.INT_MACD._lookback = function(optInTimePeriod) {
 };
 
 TA.INT_MACD.SetSettings(TA.INT_MACD.DefaultSettings);
+
 if (!!TA.INDICATOR_TEMPLATE)
     TA.MEDPRICE = TA.INDICATOR_TEMPLATE.Create();
 else
@@ -23162,7 +21998,8 @@ TA.MEDPRICE.calculate = function(startIdx, endIdx, dataShape, settings) {
         outReal[outIdx++] = (dataShape[i][TA.HIGH] + dataShape[i][TA.LOW]) / 2.0;
     }
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.MFI = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.MFI = {};
@@ -23315,53 +22152,179 @@ TA.MFI.calculate = function (startIdx, endIdx, dataShape, settings) {
     }
     return outReal;
 };
+
 if (!!TA.INDICATOR_TEMPLATE)
-    TA.OBV = TA.INDICATOR_TEMPLATE.Create();
+    TA.MINUS_DI = TA.INDICATOR_TEMPLATE.Create();
 else
-    TA.OBV = {};
+    TA.MINUS_DI = {};
 
-TA.OBV.name = 'OBV';
-TA.OBV.type = 'line';
+TA.MINUS_DI.name = 'MINUS_DI';
+TA.MINUS_DI.type = 'line';
 
-TA.OBV.DefaultSettings = {
-    CandleValueIdx: TA.CLOSE
+TA.MINUS_DI.DefaultSettings = {
+    TimePeriod: 14
 };
 
-TA.OBV.Settings = {};
+TA.MINUS_DI.Settings = {};
 
-
-TA.OBV._lookback = function() {
-    return 0;
+TA.MINUS_DI._lookback = function(optInTimePeriod) {
+    if (!optInTimePeriod)
+        optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
+        return -1;
+    if (optInTimePeriod > 1)
+        return optInTimePeriod;
+    else
+        return 1;
 };
 
-TA.OBV.calculate = function(startIdx, endIdx, dataShape, settings) {
+
+TA.MINUS_DI.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var today, lookbackTotal, outIdx;
+    var prevHigh, prevLow, prevClose;
+    var prevMinusDM, prevTR;
+    var tempReal, tempReal2, diffP, diffM;
     var i;
-    var outIdx;
-    var prevReal, tempReal, prevOBV;
-    var outReal = [];
 
+    var outReal = [];
     this.SetSettings(settings);
+
+    function TRUE_RANGE(TH, TL, YC, OUT) {
+        return '\
+              ' + OUT + ' = ' + TH + '-' + TL + '; \
+              tempReal2 = Math.abs(' + TH + '-' + YC + '); \
+              if( tempReal2 > ' + OUT + ' ) \
+                 ' + OUT + ' = tempReal2; \
+              tempReal2 = Math.abs(' + TL + '-' + YC + '); \
+              if( tempReal2 > ' + OUT + ' ) \
+                 ' + OUT + ' = tempReal2;';
+    }
 
     if (startIdx < 0)
         throw 'TA_OUT_OF_RANGE_START_INDEX';
     if ((endIdx < 0) || (endIdx < startIdx))
         throw 'TA_OUT_OF_RANGE_END_INDEX';
-    if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
 
-    prevOBV = dataShape[startIdx][TA.VOL];
-    prevReal = dataShape[startIdx][this.Settings.CandleValueIdx];
-    outIdx = 0;
-    for (i = startIdx; i <= endIdx; i++) {
-        tempReal = dataShape[i][this.Settings.CandleValueIdx];
-        if (tempReal > prevReal)
-            prevOBV += dataShape[i][TA.VOL];
-        else if (tempReal < prevReal)
-            prevOBV -= dataShape[i][TA.VOL];
-        outReal[outIdx++] = prevOBV;
-        prevReal = tempReal;
+    function round_pos(x) {
+        return x;
+    };
+
+    if (this.Settings.TimePeriod > 1)
+        lookbackTotal = this.Settings.TimePeriod;
+    else
+        lookbackTotal = 1;
+
+    if (startIdx < lookbackTotal)
+        startIdx = lookbackTotal;
+    if (startIdx > endIdx) {
+        var outBegIdx;
+        var outNBElement;
+        return outReal;
     }
+    outIdx = 0;
+    if (this.Settings.TimePeriod <= 1) {
+        var outBegIdx = startIdx;
+        today = startIdx - 1;
+        prevHigh = dataShape[today][TA.HIGH];
+        prevLow = dataShape[today][TA.LOW];
+        prevClose = dataShape[today][TA.CLOSE];
+        while (today < endIdx) {
+            today++;
+            tempReal = dataShape[today][TA.HIGH];
+            diffP = tempReal - prevHigh;
+            prevHigh = tempReal;
+            tempReal = dataShape[today][TA.LOW];
+            diffM = prevLow - tempReal;
+            prevLow = tempReal;
+            if ((diffM > 0) && (diffP < diffM)) {
+                eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+                if (TA.TA_IS_ZERO(tempReal))
+                    outReal[outIdx++] = 0.0;
+                else
+                    outReal[outIdx++] = diffM / tempReal;
+            } else
+                outReal[outIdx++] = 0.0;
+            prevClose = dataShape[today][TA.CLOSE];
+        }
+        outNBElement = outIdx;
+        return outReal;
+    }
+    outBegIdx = today = startIdx;
+    prevMinusDM = 0.0;
+    prevTR = 0.0;
+    today = startIdx - lookbackTotal;
+    prevHigh = dataShape[today][TA.HIGH];
+    prevLow = dataShape[today][TA.LOW];
+    prevClose = dataShape[today][TA.CLOSE];
+    i = this.Settings.TimePeriod - 1;
+    while (i-- > 0) {
+        today++;
+        tempReal = dataShape[today][TA.HIGH];
+        diffP = tempReal - prevHigh;
+        prevHigh = tempReal;
+        tempReal = dataShape[today][TA.LOW];
+        diffM = prevLow - tempReal;
+        prevLow = tempReal;
+        if ((diffM > 0) && (diffP < diffM)) {
+            prevMinusDM += diffM;
+        }
+        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+        prevTR += tempReal;
+        prevClose = dataShape[today][TA.CLOSE];
+    }
+    i = 1;
+    while (i-- != 0) {
+        today++;
+        tempReal = dataShape[today][TA.HIGH];
+        diffP = tempReal - prevHigh;
+        prevHigh = tempReal;
+        tempReal = dataShape[today][TA.LOW];
+        diffM = prevLow - tempReal;
+        prevLow = tempReal;
+        if ((diffM > 0) && (diffP < diffM)) {
+            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod) + diffM;
+        } else {
+            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod);
+        }
+        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
+        prevClose = dataShape[today][TA.CLOSE];
+    }
+    if (!TA.TA_IS_ZERO(prevTR))
+        outReal[0] = round_pos(100.0 * (prevMinusDM / prevTR));
+    else
+        outReal[0] = 0.0;
+    outIdx = 1;
+    while (today < endIdx) {
+        today++;
+        tempReal = dataShape[today][TA.HIGH];
+        diffP = tempReal - prevHigh;
+        prevHigh = tempReal;
+        tempReal = dataShape[today][TA.LOW];
+        diffM = prevLow - tempReal;
+        prevLow = tempReal;
+        if ((diffM > 0) && (diffP < diffM)) {
+            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod) + diffM;
+        } else {
+            prevMinusDM = prevMinusDM - (prevMinusDM / this.Settings.TimePeriod);
+        }
+        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
+        prevClose = dataShape[today][TA.CLOSE];
+        if (!TA.TA_IS_ZERO(prevTR))
+            outReal[outIdx++] = round_pos(100.0 * (prevMinusDM / prevTR));
+        else
+            outReal[outIdx++] = 0.0;
+    }
+    outNBElement = outIdx;
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+
+if (!!TA.INDICATOR_TEMPLATE)
     TA.MINUS_DM = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.MINUS_DM = {};
@@ -23485,7 +22448,624 @@ TA.MINUS_DM.calculate = function(startIdx, endIdx, dataShape, settings) {
         outReal[outIdx++] = prevMinusDM;
     }
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.OBV = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.OBV = {};
+
+TA.OBV.name = 'OBV';
+TA.OBV.type = 'line';
+
+TA.OBV.DefaultSettings = {
+    CandleValueIdx: TA.CLOSE
+};
+
+TA.OBV.Settings = {};
+
+
+TA.OBV._lookback = function() {
+    return 0;
+};
+
+TA.OBV.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var i;
+    var outIdx;
+    var prevReal, tempReal, prevOBV;
+    var outReal = [];
+
+    this.SetSettings(settings);
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+
+    prevOBV = dataShape[startIdx][TA.VOL];
+    prevReal = dataShape[startIdx][this.Settings.CandleValueIdx];
+    outIdx = 0;
+    for (i = startIdx; i <= endIdx; i++) {
+        tempReal = dataShape[i][this.Settings.CandleValueIdx];
+        if (tempReal > prevReal)
+            prevOBV += dataShape[i][TA.VOL];
+        else if (tempReal < prevReal)
+            prevOBV -= dataShape[i][TA.VOL];
+        outReal[outIdx++] = prevOBV;
+        prevReal = tempReal;
+    }
+    return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.PLUS_DI = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.PLUS_DI = {};
+
+TA.PLUS_DI.name = 'PLUS_DI';
+TA.PLUS_DI.type = 'line';
+
+TA.PLUS_DI.DefaultSettings = {
+    TimePeriod: 14
+};
+
+TA.PLUS_DI.Settings = {};
+
+TA.PLUS_DI._lookback = function(optInTimePeriod) {
+    if (!optInTimePeriod)
+        optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
+        return -1;
+    if (optInTimePeriod > 1)
+        return optInTimePeriod;
+    else
+        return 1;
+};
+
+TA.PLUS_DI.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var today, lookbackTotal, outIdx;
+    var prevHigh, prevLow, prevClose;
+    var prevPlusDM, prevTR;
+    var tempReal, tempReal2, diffP, diffM;
+    var i;
+
+    var outReal = [];
+    this.SetSettings(settings);
+
+    function TRUE_RANGE(TH, TL, YC, OUT) {
+        return '\
+              ' + OUT + ' = ' + TH + '-' + TL + '; \
+              tempReal2 = Math.abs(' + TH + '-' + YC + '); \
+              if( tempReal2 > ' + OUT + ' ) \
+                 ' + OUT + ' = tempReal2; \
+              tempReal2 = Math.abs(' + TL + '-' + YC + '); \
+              if( tempReal2 > ' + OUT + ' ) \
+                 ' + OUT + ' = tempReal2;';
+    }
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
+
+    function round_pos(x) {
+        return x;
+    };
+
+    if (this.Settings.TimePeriod > 1)
+        lookbackTotal = this.Settings.TimePeriod;
+    else
+        lookbackTotal = 1;
+
+    if (startIdx < lookbackTotal)
+        startIdx = lookbackTotal;
+    if (startIdx > endIdx) {
+        var outBegIdx = 0;
+        var outNBElement = 0;
+        return outReal;
+    }
+    outIdx = 0;
+    if (this.Settings.TimePeriod <= 1) {
+        var outBegIdx = startIdx;
+        today = startIdx - 1;
+        prevHigh = dataShape[today][TA.HIGH];
+        prevLow = dataShape[today][TA.LOW];
+        prevClose = dataShape[today][TA.CLOSE];
+        while (today < endIdx) {
+            today++;
+            tempReal = dataShape[today][TA.HIGH];
+            diffP = tempReal - prevHigh;
+            prevHigh = tempReal;
+            tempReal = dataShape[today][TA.LOW];
+            diffM = prevLow - tempReal;
+            prevLow = tempReal;
+            if ((diffP > 0) && (diffP > diffM)) {
+                eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+                if (TA.TA_IS_ZERO(tempReal))
+                    outReal[outIdx++] = 0.0;
+                else
+                    outReal[outIdx++] = diffP / tempReal;
+            } else
+                outReal[outIdx++] = 0.0;
+            prevClose = dataShape[today][TA.CLOSE];
+        }
+        outNBElement = outIdx;
+        return outReal;
+    }
+    outBegIdx = today = startIdx;
+    prevPlusDM = 0.0;
+    prevTR = 0.0;
+    today = startIdx - lookbackTotal;
+    prevHigh = dataShape[today][TA.HIGH];
+    prevLow = dataShape[today][TA.LOW];
+    prevClose = dataShape[today][TA.CLOSE];
+    i = this.Settings.TimePeriod - 1;
+    while (i-- > 0) {
+        today++;
+        tempReal = dataShape[today][TA.HIGH];
+        diffP = tempReal - prevHigh;
+        prevHigh = tempReal;
+        tempReal = dataShape[today][TA.LOW];
+        diffM = prevLow - tempReal;
+        prevLow = tempReal;
+        if ((diffP > 0) && (diffP > diffM)) {
+            prevPlusDM += diffP;
+        }
+        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+        prevTR += tempReal;
+        prevClose = dataShape[today][TA.CLOSE];
+    }
+    i = /*TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_PLUS_DI, PlusDI) +*/ 1;
+    while (i-- != 0) {
+        today++;
+        tempReal = dataShape[today][TA.HIGH];
+        diffP = tempReal - prevHigh;
+        prevHigh = tempReal;
+        tempReal = dataShape[today][TA.LOW];
+        diffM = prevLow - tempReal;
+        prevLow = tempReal;
+        if ((diffP > 0) && (diffP > diffM)) {
+            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod) + diffP;
+        } else {
+            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod);
+        }
+        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
+        prevClose = dataShape[today][TA.CLOSE];
+    }
+    if (!TA.TA_IS_ZERO(prevTR)) {
+        outReal[0] = round_pos(100.0 * (prevPlusDM / prevTR));
+    } else {
+        outReal[0] = 0.0;
+    }
+    outIdx = 1;
+    while (today < endIdx) {
+        today++;
+        tempReal = dataShape[today][TA.HIGH];
+        diffP = tempReal - prevHigh;
+        prevHigh = tempReal;
+        tempReal = dataShape[today][TA.LOW];
+        diffM = prevLow - tempReal;
+        prevLow = tempReal;
+        if ((diffP > 0) && (diffP > diffM)) {
+            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod) + diffP;
+        } else {
+            prevPlusDM = prevPlusDM - (prevPlusDM / this.Settings.TimePeriod);
+        }
+        eval(TRUE_RANGE('prevHigh', 'prevLow', 'prevClose', 'tempReal'));
+        prevTR = prevTR - (prevTR / this.Settings.TimePeriod) + tempReal;
+        prevClose = dataShape[today][TA.CLOSE];
+        if (!TA.TA_IS_ZERO(prevTR)) {
+            outReal[outIdx++] = round_pos(100.0 * (prevPlusDM / prevTR));
+        } else {
+            outReal[outIdx++] = 0.0;
+        }
+    }
+    outNBElement = outIdx;
+    return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    var PPO = TA.INDICATOR_TEMPLATE.Create();
+else
+    var PPO = {};
+
+
+PPO.DefaultSettings = {
+    "CandleValueIdx": TA.CLOSE,
+    "FastPeriod": 12,
+    "SlowPeriod": 26,
+    "MAType": TA.MATypes.SMA
+};
+
+PPO.Settings = {};
+
+PPO.name = 'PPO';
+PPO.type = 'line';
+
+PPO._lookback = function (optInFastPeriod, optInSlowPeriod, optInMAType) {
+    if (!optInFastPeriod)
+        optInFastPeriod = this.DefaultSettings.FastPeriod;
+    else if ((optInFastPeriod < 2) || (optInFastPeriod > 100000))
+        return -1;
+    if (!optInSlowPeriod)
+        optInSlowPeriod = this.DefaultSettings.SlowPeriod;
+    else if ((optInSlowPeriod < 2) || (optInSlowPeriod > 100000))
+        return -1;
+    if (!optInMAType)
+        optInMAType = this.DefaultSettings.MAType;
+    else if ((optInMAType < 0) || (optInMAType > 8))
+        return -1;
+    return MA._lookback(Math.max(optInSlowPeriod, optInFastPeriod), optInMAType);
+};
+
+PPO.calculate = function (startIdx, endIdx, dataShape, settings) {
+        var outBegIdx, outNBElement,
+            tempBuffer = [],
+            retCode, outReal = [];
+
+        this.SetSettings(settings);
+
+        if (startIdx < 0)
+            throw 'TA_OUT_OF_RANGE_START_INDEX';
+        if ((endIdx < 0) || (endIdx < startIdx))
+            throw 'TA_OUT_OF_RANGE_END_INDEX';
+        if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+        if (!this.Settings.FastPeriod)
+            this.Settings.FastPeriod = this.DefaultSettings.FastPeriod;
+        else if ((this.Settings.FastPeriod < 2) || (this.Settings.FastPeriod > 100000))
+            throw 'TA_BAD_PARAM';
+        if (!this.Settings.SlowPeriod)
+            this.Settings.SlowPeriod = this.DefaultSettings.SlowPeriod;
+        else if ((this.Settings.SlowPeriod < 2) || (this.Settings.SlowPeriod > 100000))
+            throw 'TA_BAD_PARAM';
+        if (!this.Settings.MAType)
+            this.Settings.MAType = this.DefaultSettings.MAType;
+        else if ((this.Settings.MAType < 0) || (this.Settings.MAType > 8))
+            throw 'TA_BAD_PARAM';
+        if (!outReal)
+            throw 'TA_BAD_PARAM';
+
+
+        outReal = APO.INT_PO(startIdx, endIdx, dataShape, this.Settings.FastPeriod, this.Settings.SlowPeriod, this.Settings.MAType, outReal, tempBuffer, 1);
+
+        return outReal;
+};
+
+PPO.SetSettings(PPO.DefaultSettings);
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.ROC = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.ROC = {};
+
+TA.ROC.name = 'ROC';
+TA.ROC.type = 'line';
+
+TA.ROC.DefaultSettings = {
+    CandleValueIdx: TA.CLOSE,
+    TimePeriod: 10
+};
+
+TA.ROC.Settings = {};
+
+TA.ROC._lookback = function(optInTimePeriod) {
+    if (!optInTimePeriod)
+        optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
+        return -1;
+    return optInTimePeriod;
+};
+
+TA.ROC.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var inIdx, outIdx, trailingIdx,
+        tempReal, outReal = [];
+
+    this.SetSettings(settings);
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
+    if (!outReal)
+        throw 'TA_BAD_PARAM';
+
+    if (startIdx < this.Settings.TimePeriod)
+        startIdx = this.Settings.TimePeriod;
+    if (startIdx > endIdx) {
+        return outReal;
+    }
+
+    outIdx = 0;
+    inIdx = startIdx;
+    trailingIdx = startIdx - this.Settings.TimePeriod;
+    while (inIdx <= endIdx) {
+        tempReal = dataShape[trailingIdx++][TA.CLOSE];
+        if (tempReal != 0.0) {
+            outReal[outIdx++] = ((dataShape[inIdx][TA.CLOSE] / tempReal) - 1.0) * 100.0;
+        } else {
+            outReal[outIdx++] = 0.0;
+        }
+        inIdx++;
+    }
+    return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.RSI = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.RSI = {};
+
+TA.RSI.name = 'RSI';
+TA.RSI.type = 'line';
+
+TA.RSI.DefaultSettings = {
+	TimePeriod: 14,
+    CandleValueIdx: TA.CLOSE
+};
+
+TA.RSI.Settings = {};
+
+
+TA.RSI.calculate = function (startIdx, endIdx, dataShape, settings) {
+
+    this.SetSettings(settings);
+
+	var outIdx;
+
+	var today, lookbackTotal, unstablePeriod, i;
+	var prevGain, prevLoss, prevValue, savePrevValue;
+	var tempValue1, tempValue2;
+
+	var outReal = [];
+
+	if (!startIdx)
+		startIdx = 0;
+
+	if (!endIdx)
+		endIdx = dataShape.length - 1;
+
+	if (startIdx < 0)
+		throw 'TA_OUT_OF_RANGE_START_INDEX';
+	if ((endIdx < 0) || (endIdx < startIdx))
+		throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+	if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.TimePeriod)
+		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+		throw 'TA_BAD_PARAM';
+
+	/* Insert TA function code here. */
+
+	/* The following algorithm is base on the original 
+	 * work from Wilder's and shall represent the
+	 * original idea behind the classic RSI.
+	 *
+	 * Metastock is starting the calculation one price
+	 * bar earlier. To make this possible, they assume
+	 * that the very first bar will be identical to the
+	 * previous one (no gain or loss).
+	 */
+
+	/* If changing this function, please check also CMO 
+	 * which is mostly identical (just different in one step
+	 * of calculation).
+	 */
+
+	/* Adjust startIdx to account for the lookback period. */
+	lookbackTotal = this._lookback(this.Settings.TimePeriod);
+
+	if (startIdx < lookbackTotal)
+		startIdx = lookbackTotal;
+
+	/* Make sure there is still something to evaluate. */
+	if (startIdx > endIdx)
+		return outReal;
+
+	outIdx = 0; /* Index into the output. */
+
+	/* Trap special case where the period is '1'.
+	 * In that case, just copy the input into the
+	 * output for the requested range (as-is !)
+	 */
+	if (this.Settings.TimePeriod == 1) {
+
+		outReal = dataShape.slice(startIdx);
+		
+		return outReal;
+	}
+
+	/* Accumulate Wilder's "Average Gain" and "Average Loss" 
+	 * among the initial period.
+	 */
+	today = startIdx - lookbackTotal;
+	prevValue = dataShape[today][this.Settings.CandleValueIdx];
+
+	unstablePeriod = 0; //TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_RSI, Rsi);
+
+	
+//	/* If there is no unstable period,
+//	 * calculate the 'additional' initial
+//	 * price bar who is particuliar to
+//	 * metastock.
+//	 * If there is an unstable period,
+//	 * no need to calculate since this
+//	 * first value will be surely skip.
+//	 */
+//	if ((unstablePeriod == 0) &&
+//		(TA_GLOBALS_COMPATIBILITY == ENUM_VALUE(Compatibility, TA_COMPATIBILITY_METASTOCK, Metastock))) {
+//		/* Preserve prevValue because it may get 
+//		 * overwritten by the output.
+//		 *(because output ptr could be the same as input ptr).
+//		 */
+//		savePrevValue = prevValue;
+//
+//		/* No unstable period, so must calculate first output
+//		 * particular to Metastock.
+//		 * (Metastock re-use the first price bar, so there
+//		 *  is no loss/gain at first. Beats me why they
+//		 *  are doing all this).
+//		 */
+//		prevGain = 0.0;
+//		prevLoss = 0.0;
+//		for (i = optInTimePeriod; i > 0; i--) {
+//			tempValue1 = inReal[today++];
+//			tempValue2 = tempValue1 - prevValue;
+//			prevValue = tempValue1;
+//			if (tempValue2 < 0)
+//				prevLoss -= tempValue2;
+//			else
+//				prevGain += tempValue2;
+//		}
+//
+//
+//		tempValue1 = prevLoss / optInTimePeriod;
+//		tempValue2 = prevGain / optInTimePeriod;
+//
+//		/* Write the output. */
+//		tempValue1 = tempValue2 + tempValue1;
+//		if (!TA_IS_ZERO(tempValue1))
+//			outReal[outIdx++] = 100 * (tempValue2 / tempValue1);
+//		else
+//			outReal[outIdx++] = 0.0;
+//
+//		/* Are we done? */
+//		if (today > endIdx) {
+//			VALUE_HANDLE_DEREF(outBegIdx) = startIdx;
+//			VALUE_HANDLE_DEREF(outNBElement) = outIdx;
+//			return ENUM_VALUE(RetCode, TA_SUCCESS, Success);
+//		}
+//
+//		/* Start over for the next price bar. */
+//		today -= optInTimePeriod;
+//		prevValue = savePrevValue;
+//	}
+
+
+	/* Remaining of the processing is identical
+	 * for both Classic calculation and Metastock.
+	 */
+	prevGain = 0.0;
+	prevLoss = 0.0;
+	today++;
+	for (i = this.Settings.TimePeriod; i > 0; i--) {
+		tempValue1 = dataShape[today++][this.Settings.CandleValueIdx];
+		tempValue2 = tempValue1 - prevValue;
+		prevValue = tempValue1;
+        if (tempValue2 < 0)
+			prevLoss -= tempValue2;
+		else
+			prevGain += tempValue2;
+	}
+
+
+	/* Subsequent prevLoss and prevGain are smoothed
+	 * using the previous values (Wilder's approach).
+	 *  1) Multiply the previous by 'period-1'.
+	 *  2) Add today value.
+	 *  3) Divide by 'period'.
+	 */
+	prevLoss /= this.Settings.TimePeriod;
+	prevGain /= this.Settings.TimePeriod;
+
+	/* Often documentation present the RSI calculation as follow:
+	 *    RSI = 100 - (100 / 1 + (prevGain/prevLoss))
+	 *
+	 * The following is equivalent:
+	 *    RSI = 100 * (prevGain/(prevGain+prevLoss))
+	 *
+	 * The second equation is used here for speed optimization.
+	 */
+
+	if (today > startIdx) {
+		tempValue1 = prevGain + prevLoss;
+		if (!TA.TA_IS_ZERO(tempValue1))
+			outReal[outIdx++] = 100.0 * (prevGain / tempValue1);
+		else
+			outReal[outIdx++] = 0.0;
+	} else {
+		/* Skip the unstable period. Do the processing 
+		 * but do not write it in the output.
+		 */
+		while (today < startIdx) {
+			tempValue1 = dataShape[today][this.Settings.CandleValueIdx];
+			tempValue2 = tempValue1 - prevValue;
+			prevValue = tempValue1;
+
+			prevLoss *= (this.Settings.TimePeriod - 1);
+			prevGain *= (this.Settings.TimePeriod - 1);
+			if (tempValue2 < 0)
+				prevLoss -= tempValue2;
+			else
+				prevGain += tempValue2;
+
+			prevLoss /= this.Settings.TimePeriod;
+			prevGain /= this.Settings.TimePeriod;
+
+			today++;
+		}
+	}
+
+	/* Unstable period skipped... now continue
+	 * processing if needed.
+	 */
+	while (today <= endIdx) {
+		tempValue1 = dataShape[today++][this.Settings.CandleValueIdx];
+		tempValue2 = tempValue1 - prevValue;
+		prevValue = tempValue1;
+
+		prevLoss *= (this.Settings.TimePeriod - 1);
+		prevGain *= (this.Settings.TimePeriod - 1);
+		if (tempValue2 < 0)
+			prevLoss -= tempValue2;
+		else
+			prevGain += tempValue2;
+
+		prevLoss /= this.Settings.TimePeriod;
+		prevGain /= this.Settings.TimePeriod;
+		tempValue1 = prevGain + prevLoss;
+		if (!TA.TA_IS_ZERO(tempValue1))
+			outReal[outIdx++] = 100.0 * (prevGain / tempValue1);
+		else
+			outReal[outIdx++] = 0.0;
+	}
+
+	return outReal;
+
+};
+
+TA.RSI.getValue = function (dataShape, itemIdx, settings) {
+
+};
+
+TA.RSI._lookback = function (optInTimePeriod) {
+	if (!optInTimePeriod)
+		optInTimePeriod = this.Settings.TimePeriod || this.DefaultSettings.TimePeriod;
+	else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
+		return -1;
+
+	return optInTimePeriod;
+};
+
+TA.RSI._S = function (startIdx, endIdx, dataShape, settings) {
+
+};
+
+TA.RSI.initChart = function (dataShape, hcOptions, ticker) {
+	if (!!TA.INDICATOR_TEMPLATE)
+		TA.INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+};
+
+TA.RSI.SetSettings(TA.RSI.DefaultSettings);
+
+if (!!TA.INDICATOR_TEMPLATE)
     TA.SAR = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.SAR = {};
@@ -23636,67 +23216,235 @@ TA.SAR.calculate = function(startIdx, endIdx, dataShape, settings) {
         }
     }
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
-    TA.ROC = TA.INDICATOR_TEMPLATE.Create();
+};
+if (!!TA.INDICATOR_TEMPLATE)
+	TA.SMA = TA.INDICATOR_TEMPLATE.Create();
 else
-    TA.ROC = {};
+	TA.SMA = {};
 
-TA.ROC.name = 'ROC';
-TA.ROC.type = 'line';
+TA.SMA.name = 'SMA';
+TA.SMA.type = 'line';
 
-TA.ROC.DefaultSettings = {
-    CandleValueIdx: TA.CLOSE,
-    TimePeriod: 10
+TA.SMA.DefaultSettings = {
+	TimePeriod: 30,
+	CandleValueIdx: TA.CLOSE
 };
 
-TA.ROC.Settings = {};
+TA.SMA.Settings = {};
 
-TA.ROC._lookback = function(optInTimePeriod) {
-    if (!optInTimePeriod)
-        optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
-        return -1;
-    return optInTimePeriod;
+TA.SMA.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTotalArray) {
+	var periodTotal, tempReal;
+	var i, outIdx, trailingIdx, lookbackTotal;
+	var outReal = [];
+
+	this.SetSettings(settings);
+	
+	if(!startIdx)
+		startIdx = 0;
+	
+	if(!endIdx)
+		endIdx = dataShape.length - 1;
+		
+	/* Identify the minimum number of price bar needed
+	 * to calculate at least one output.
+	 */
+	lookbackTotal = (this.Settings.TimePeriod - 1);
+
+	/* Move up the start index if there is not
+	 * enough initial data.
+	 */
+	if (startIdx < lookbackTotal)
+		startIdx = lookbackTotal;
+
+	/* Make sure there is still something to evaluate. */
+	if (startIdx > endIdx) {
+		return outReal;
+	}
+
+	/* Do the MA calculation using tight loops. */
+	/* Add-up the initial period, except for the last value. */
+	periodTotal = 0;
+	trailingIdx = startIdx - lookbackTotal;
+
+	i = trailingIdx;
+	if (this.Settings.TimePeriod > 1) {
+		while (i < startIdx)
+			periodTotal += dataShape[i++][this.Settings.CandleValueIdx];
+	}
+
+	/* Proceed with the calculation for the requested range.
+	 * Note that this algorithm allows the inReal and
+	 * outReal to be the same buffer.
+	 */
+	outIdx = 0;
+	do {
+		periodTotal += dataShape[i++][this.Settings.CandleValueIdx];
+		tempReal = periodTotal;
+		periodTotal -= dataShape[trailingIdx++][this.Settings.CandleValueIdx];
+		outReal[outIdx++] = tempReal / this.Settings.TimePeriod;
+	} while (i <= endIdx);
+
+    /*
+	if(!dontFillTotalArray) {
+		if(outReal.length >= dataShape.length)
+			throw 'Ошибка расчета ADX';
+		else if(outReal.length <= dataShape.length)
+			while(outReal.length != dataShape.length){
+				outReal.unshift(0);
+			}
+	}
+	*/
+	return outReal;
 };
 
-TA.ROC.calculate = function(startIdx, endIdx, dataShape, settings) {
-    var inIdx, outIdx, trailingIdx,
-        tempReal, outReal = [];
+TA.SMA.getValue = function(dataShape, itemIdx, settings) {
+	
+};
+
+TA.SMA._lookback = function(optInTimePeriod) {
+    
+    if( !optInTimePeriod )
+       optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if( (optInTimePeriod < 2) || (optInTimePeriod > 100000) )
+       return -1;
+ 
+ 	return optInTimePeriod - 1;
+};
+
+TA.SMA._S = function(startIdx, endIdx, dataShape, settings){
+	
+};
+
+TA.SMA.initChart = function (dataShape, hcOptions, ticker) {
+	if(!!INDICATOR_TEMPLATE)
+		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+	
+	
+};
+
+TA.SMA.SetSettings(TA.SMA.DefaultSettings);
+
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.STDDEV = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.STDDEV = {};
+
+TA.STDDEV.name = 'STDDEV';
+TA.STDDEV.type = 'line';
+
+TA.STDDEV.DefaultSettings = {
+	TimePeriod: 10,
+	Deviations: 1,
+	CandleValueIdx: TA.CLOSE
+};
+
+TA.STDDEV.Settings = {};
+
+TA.STDDEV.calculate = function (startIdx, endIdx, dataShape, settings) {
+	var i;
+	var tempReal;
+	var outReal = [];
+	var outNBElement;
 
     this.SetSettings(settings);
 
-    if (startIdx < 0)
-        throw 'TA_OUT_OF_RANGE_START_INDEX';
-    if ((endIdx < 0) || (endIdx < startIdx))
-        throw 'TA_OUT_OF_RANGE_END_INDEX';
-    if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
-    if (!this.Settings.TimePeriod)
-        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((this.Settings.TimePeriod < 1) || (this.Settings.TimePeriod > 100000))
-        throw 'TA_BAD_PARAM';
-    if (!outReal)
-        throw 'TA_BAD_PARAM';
+	if (!startIdx)
+		startIdx = 0;
 
-    if (startIdx < this.Settings.TimePeriod)
-        startIdx = this.Settings.TimePeriod;
-    if (startIdx > endIdx) {
-        return outReal;
-    }
+	if (!endIdx)
+		endIdx = dataShape.length - 1;
 
-    outIdx = 0;
-    inIdx = startIdx;
-    trailingIdx = startIdx - this.Settings.TimePeriod;
-    while (inIdx <= endIdx) {
-        tempReal = dataShape[trailingIdx++][TA.CLOSE];
-        if (tempReal != 0.0) {
-            outReal[outIdx++] = ((dataShape[inIdx][TA.CLOSE] / tempReal) - 1.0) * 100.0;
-        } else {
-            outReal[outIdx++] = 0.0;
-        }
-        inIdx++;
-    }
-    return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+	if (startIdx < 0)
+		throw 'TA_OUT_OF_RANGE_START_INDEX';
+	if ((endIdx < 0) || (endIdx < startIdx))
+		throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+	if (!dataShape || !dataShape.length)
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.TimePeriod)
+		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.Deviations)
+		this.Settings.Deviations = this.DefaultSettings.Deviations;
+	else if ((this.Settings.Deviations < -3.000000e+37) || (this.Settings.Deviations > 3.000000e+37))
+		throw 'TA_BAD_PARAM';
+
+	/* Insert TA function code here. */
+
+	/* Calculate the variance. */
+	var localINTVAR = TA.INT_VAR.Create({
+		TimePeriod: this.Settings.TimePeriod,
+		CandleValueIdx: this.Settings.CandleValueIdx
+	});
+	outReal = localINTVAR.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod,CandleValueIdx: this.Settings.CandleValueIdx});
+
+	if (!outReal || !outReal.length)
+		return outReal;
+
+	/* Calculate the square root of each variance, this
+	 * is the standard deviation.
+	 *
+	 * Multiply also by the ratio specified.
+	 */
+	if (this.Settings.Deviations != 1.0) {
+		for (i = 0; i < outNBElement; i++) {
+			tempReal = outReal[i];
+			if (!!tempReal)
+				outReal[i] = Math.sqrt(tempReal) * this.Settings.Deviations;
+			else
+				outReal[i] = 0.0;
+		}
+	} else {
+		for (i = 0; i < outReal.length; i++) {
+			tempReal = outReal[i];
+			if (!!tempReal)
+				outReal[i] = Math.sqrt(tempReal);
+			else
+				outReal[i] = 0.0;
+		}
+	}
+
+	return outReal;
+
+};
+
+TA.STDDEV.getValue = function(dataShape, itemIdx, settings) {
+	
+};
+
+TA.STDDEV._lookback = function (optInTimePeriod, optInNbDev) {
+
+	if ( !optInTimePeriod )
+		optInTimePeriod = this.DefaultSettings.TimePeriod;
+	else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
+		return -1;
+
+	if ( !optInNbDev)
+		optInNbDev = this.DefaultSettings.Deviations;
+	else if ((optInNbDev < -3.000000e+37) || (optInNbDev > 3.000000e+37))
+		return -1;
+
+
+	return TA.VAR._lookback(optInTimePeriod, optInNbDev);
+};
+
+TA.STDDEV._S = function(startIdx, endIdx, dataShape, settings){
+	
+};
+
+TA.STDDEV.initChart = function (dataShape, hcOptions, ticker) {
+	if(!!TA.INDICATOR_TEMPLATE)
+		TA.INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+	
+	
+};
+
+TA.STDDEV.SetSettings(TA.STDDEV.DefaultSettings);
+
+if (!!TA.INDICATOR_TEMPLATE)
     TA.TEMA = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.TEMA = {};
@@ -23806,7 +23554,62 @@ TA.TEMA.calculate = function(startIdx, endIdx, dataShape, settings) {
 
     return outReal;
 
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.TRANGE = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.TRANGE = {};
+
+TA.TRANGE.name = 'AROON';
+TA.TRANGE.type = 'line';
+
+TA.TRANGE.DefaultSettings = {
+};
+
+TA.TRANGE.Settings = {};
+
+TA.TRANGE._lookback = function() {
+    return 1;
+};
+TA.TRANGE.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var outBegIdx, outNBElement,
+        today, outIdx,
+        val2, val3, greatest,
+        tempCY, tempLT, tempHT,
+        outReal = [];
+
+    this.SetSettings(settings);
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (startIdx < 1)
+        startIdx = 1;
+    if (startIdx > endIdx) {
+        return outReal;
+    }
+    outIdx = 0;
+    today = startIdx;
+    while (today <= endIdx) {
+        tempLT = dataShape[today][TA.LOW];
+        tempHT = dataShape[today][TA.HIGH];
+        tempCY = dataShape[today][TA.CLOSE];
+        greatest = tempHT - tempLT;
+        val2 = Math.abs(tempCY - tempHT);
+        if (val2 > greatest)
+            greatest = val2;
+        val3 = Math.abs(tempCY - tempLT);
+        if (val3 > greatest)
+            greatest = val3;
+        outReal[outIdx++] = greatest;
+        today++;
+    }
+    outNBElement = outIdx;
+    outBegIdx = startIdx;
+    return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.TRIMA = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.TRIMA = {};
@@ -23937,7 +23740,8 @@ TA.TRIMA.calculate = function(startIdx, endIdx, dataShape, settings) {
         }
     }
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.TYPPRICE = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.TYPPRICE = {};
@@ -23969,7 +23773,181 @@ TA.TYPPRICE.calculate = function(startIdx, endIdx, dataShape, settings) {
             dataShape[i][TA.CLOSE]) / 3.0;
     }
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.VAR = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.VAR = {};
+
+TA.VAR.name = 'VAR';
+TA.VAR.type = 'line';
+
+TA.VAR.DefaultSettings = {
+	TimePeriod: 2,
+	Deviations: 1,
+	CandleValueIdx: TA.CLOSE
+};
+
+TA.VAR.Settings = {};
+
+TA.VAR.calculate = function (startIdx, endIdx, dataShape, settings) {
+	var tempReal, periodTotal1, periodTotal2, meanValue1, meanValue2;
+	var i, outIdx, trailingIdx, nbInitialElementNeeded;
+	var outReal = [];
+
+    this.SetSettings(settings);
+
+	if (!startIdx)
+		startIdx = 0;
+
+	if (!endIdx)
+		endIdx = dataShape.length - 1;
+
+	nbInitialElementNeeded = (this.Settings.TimePeriod - 1);
+
+	if (startIdx < nbInitialElementNeeded)
+		startIdx = nbInitialElementNeeded;
+
+	if (startIdx > endIdx) {
+		return outReal;
+	}
+
+	/* Do the MA calculation using tight loops. */
+	/* Add-up the initial periods, except for the last value. */
+	periodTotal1 = 0;
+	periodTotal2 = 0;
+	trailingIdx = startIdx - nbInitialElementNeeded;
+
+	i = trailingIdx;
+	if (this.Settings.TimePeriod > 1) {
+		while (i < startIdx) {
+			tempReal = dataShape[i++][this.Settings.CandleValueIdx];
+			periodTotal1 += tempReal;
+			tempReal *= tempReal;
+			periodTotal2 += tempReal;
+		}
+	}
+
+	/* Proceed with the calculation for the requested range.
+	 * Note that this algorithm allows the inReal and
+	 * outReal to be the same buffer.
+	 */
+	outIdx = 0;
+	do {
+		tempReal = dataShape[i++][this.Settings.CandleValueIdx];
+
+		/* Square and add all the deviation over
+		 * the same periods.
+		 */
+
+		periodTotal1 += tempReal;
+		tempReal *= tempReal;
+		periodTotal2 += tempReal;
+
+		/* Square and add all the deviation over
+		 * the same period.
+		 */
+
+		meanValue1 = periodTotal1 / this.Settings.CandleValueIdx;
+		meanValue2 = periodTotal2 / this.Settings.CandleValueIdx;
+
+		tempReal = dataShape[trailingIdx++][this.Settings.CandleValueIdx];
+		periodTotal1 -= tempReal;
+		tempReal *= tempReal;
+		periodTotal2 -= tempReal;
+
+		outReal[outIdx++] = meanValue2 - meanValue1 * meanValue1;
+	} while (i <= endIdx);
+
+	return outReal;
+};
+
+TA.VAR.getValue = function(dataShape, itemIdx, settings) {
+	
+};
+
+TA.VAR._lookback = function(optInTimePeriod, optInNbDev) {
+    
+    if( !optInTimePeriod )
+       optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if( (optInTimePeriod < 1) || (optInTimePeriod > 100000) )
+       return -1;
+ 
+    if( !optInNbDev )
+       optInNbDev = this.DefaultSettings.Deviations;
+    else if( (optInNbDev < -3.000000e+37) ||  (optInNbDev > 3.000000e+37) )
+       return -1;
+ 
+   return optInTimePeriod-1;
+};
+
+TA.VAR._S = function(startIdx, endIdx, dataShape, settings){
+	
+};
+
+TA.VAR.initChart = function (dataShape, hcOptions, ticker) {
+	if(!!INDICATOR_TEMPLATE)
+		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+	
+	
+};
+
+TA.VAR.SetSettings(TA.VAR.DefaultSettings);
+
+
+TA.INT_VAR = TA.VAR.Create();
+
+TA.INT_VAR.calculate = function (startIdx, endIdx, dataShape, settings) {
+	
+	var tempReal, periodTotal1, periodTotal2, meanValue1, meanValue2;
+	var i, outIdx, trailingIdx, nbInitialElementNeeded;
+	var outReal = [];
+
+    this.SetSettings(settings);
+
+	if (!startIdx)
+		startIdx = 0;
+
+	if (!endIdx)
+		endIdx = dataShape.length - 1;
+	
+	nbInitialElementNeeded = (this.Settings.TimePeriod - 1);
+	if (startIdx < nbInitialElementNeeded)
+		startIdx = nbInitialElementNeeded;
+	if (startIdx > endIdx) {
+		return outReal;
+	}
+	
+	periodTotal1 = 0;
+	periodTotal2 = 0;
+	trailingIdx = startIdx - nbInitialElementNeeded;
+	i = trailingIdx;
+	if (this.Settings.TimePeriod > 1) {
+		while (i < startIdx) {
+			tempReal = dataShape[i++][this.Settings.CandleValueIdx];
+			periodTotal1 += tempReal;
+			tempReal *= tempReal;
+			periodTotal2 += tempReal;
+		}
+	}
+	outIdx = 0;
+	do {
+		tempReal = dataShape[i++][this.Settings.CandleValueIdx];
+		periodTotal1 += tempReal;
+		tempReal *= tempReal;
+		periodTotal2 += tempReal;
+		meanValue1 = periodTotal1 / this.Settings.TimePeriod;
+		meanValue2 = periodTotal2 / this.Settings.TimePeriod;
+		tempReal = dataShape[trailingIdx++][this.Settings.CandleValueIdx];
+		periodTotal1 -= tempReal;
+		tempReal *= tempReal;
+		periodTotal2 -= tempReal;
+		outReal[outIdx++] = meanValue2 - meanValue1 * meanValue1;
+	} while (i <= endIdx);
+	
+	return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.VPT = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.VPT = {};
@@ -24003,7 +23981,8 @@ TA.VPT.calculate = function(startIdx, endIdx, dataShape, settings) {
     }
 
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.WCLPRICE = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.WCLPRICE = {};
@@ -24033,7 +24012,8 @@ TA.WCLPRICE.calculate = function(startIdx, endIdx, dataShape, settings) {
             (dataShape[i][TA.CLOSE] * 2.0)) / 4.0;
     }
     return outReal;
-};if (!!TA.INDICATOR_TEMPLATE)
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.WILLR = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.WILLR = {};
@@ -24135,6 +24115,194 @@ TA.WILLR.calculate = function(startIdx, endIdx, dataShape, settings) {
     }
     return outReal;
 };
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.WMA = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.WMA = {};
+
+TA.WMA.name = 'WMA';
+TA.WMA.type = 'line';
+
+TA.WMA.DefaultSettings = {
+	TimePeriod: 30,
+	CandleValueIdx: TA.CLOSE
+};
+
+TA.WMA.Settings = {};
+
+TA.WMA.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTotalArray) {
+	var inIdx, outIdx, i, trailingIdx, divider;
+	var periodSum, periodSub, tempReal, trailingValue;
+	var lookbackTotal;
+
+
+	var outReal = [];
+
+    this.SetSettings(settings);
+
+	if(!startIdx)
+		startIdx = 0;
+	
+	if(!endIdx)
+		endIdx = dataShape.length - 1;
+
+	if (startIdx < 0)
+		throw 'TA_OUT_OF_RANGE_START_INDEX';
+	if ((endIdx < 0) || (endIdx < startIdx))
+		throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+	if (!dataShape || !dataShape.length)
+		throw 'TA_BAD_PARAM';
+
+	if (!this.Settings.TimePeriod)
+		this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+	else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+		throw 'TA_BAD_PARAM';
+
+	if (!outReal)
+		throw 'TA_BAD_PARAM';
+
+	lookbackTotal = this.Settings.TimePeriod - 1;
+
+/* Move up the start index if there is not
+    * enough initial data.
+    */
+   if( startIdx < lookbackTotal )
+      startIdx = lookbackTotal;
+
+   /* Make sure there is still something to evaluate. */
+   if( startIdx > endIdx ) {
+      return outReal;
+   }
+
+   /* To make the rest more efficient, handle exception
+    * case where the user is asking for a period of '1'.
+    * In that case outputs equals inputs for the requested
+    * range.
+    */
+   if( this.Settings.TimePeriod == 1 ) 
+   {      
+      return outReal;
+   }
+
+   /* Calculate the divider (always an integer value).
+    * By induction: 1+2+3+4+'n' = n(n+1)/2
+    * '>>1' is usually faster than '/2' for unsigned.
+    */
+
+   divider = (this.Settings.TimePeriod*( +(this.Settings.TimePeriod) + 1))/2;
+
+   /* The algo used here use a very basic property of
+    * multiplication/addition: (x*2) = x+x
+    *   
+    * As an example, a 3 period weighted can be 
+    * interpreted in two way:
+    *  (x1*1)+(x2*2)+(x3*3)
+    *      OR
+    *  x1+x2+x2+x3+x3+x3 (this is the periodSum)
+    *   
+    * When you move forward in the time serie
+    * you can quickly adjust the periodSum for the
+    * period by substracting:
+    *   x1+x2+x3 (This is the periodSub)
+    * Making the new periodSum equals to:
+    *   x2+x3+x3
+    *
+    * You can then add the new price bar
+    * which is x4+x4+x4 giving:
+    *   x2+x3+x3+x4+x4+x4
+    *
+    * At this point one iteration is completed and you can
+    * see that we are back to the step 1 of this example.
+    *
+    * Why making it so un-intuitive? The number of memory
+    * access and floating point operations are kept to a
+    * minimum with this algo.
+    */
+   outIdx      = 0;
+   trailingIdx = startIdx - lookbackTotal;
+
+   /* Evaluate the initial periodSum/periodSub and trailingValue. */
+   periodSum = periodSub = 0.0;
+   inIdx=trailingIdx;
+   i = 1;
+   while( inIdx < startIdx )
+   {
+      tempReal = dataShape[inIdx++][this.Settings.CandleValueIdx];
+      periodSub += tempReal;
+      periodSum += tempReal*i;
+      i++;
+   }
+   trailingValue = 0.0;
+
+   /* Tight loop for the requested range. */
+   while( inIdx <= endIdx )
+   {
+      /* Add the current price bar to the sum
+       * who are carried through the iterations.
+       */
+      tempReal = dataShape[inIdx++][this.Settings.CandleValueIdx];
+      periodSub += tempReal;
+      periodSub -= trailingValue;
+      periodSum += tempReal*this.Settings.TimePeriod;
+
+      /* Save the trailing value for being substract at
+       * the next iteration.
+       * (must be saved here just in case outReal and
+       *  inReal are the same buffer).
+       */
+      trailingValue = dataShape[trailingIdx++][this.Settings.CandleValueIdx];
+
+      /* Calculate the WMA for this price bar. */
+      outReal[outIdx++] = periodSum / divider;
+
+      /* Prepare the periodSum for the next iteration. */
+      periodSum -= periodSub;
+   }
+
+   /* Set output limits. */
+    /*
+   if(!dontFillTotalArray) {
+		if(outReal.length >= dataShape.length)
+			throw 'Ошибка расчета ADX';
+		else if(outReal.length <= dataShape.length)
+			while(outReal.length != dataShape.length){
+				outReal.unshift(0);
+			}
+	}
+	*/
+
+   return outReal;
+};
+
+TA.WMA.getValue = function (dataShape, itemIdx, settings) {
+
+};
+
+TA.WMA._lookback = function (optInTimePeriod) {
+
+	if (!optInTimePeriod)
+		optInTimePeriod = 30;
+	else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
+		return -1;
+
+	return optInTimePeriod - 1;
+};
+
+TA.WMA._S = function (startIdx, endIdx, dataShape, settings) {
+
+};
+
+TA.WMA.initChart = function (dataShape, hcOptions, ticker) {
+	if (!!INDICATOR_TEMPLATE)
+		INDICATOR_TEMPLATE.initChart.apply(this, arguments);
+
+
+};
+
+TA.WMA.SetSettings(TA.WMA.DefaultSettings);
+
+
 
 /*
 TA.INDICATOR_TEMPLATE = function() {
