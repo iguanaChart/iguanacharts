@@ -1,21 +1,182 @@
-The MIT License (MIT)
+IGUANACHARTS SOFTWARE SINGLE WEBSITE LICENSE AGREEMENT
 
-Copyright (c) 2016 iguanaChart
+PLEASE READ CAREFULLY BEFORE USING THIS PRODUCT: This license agreement (hereinafter, the “License”) is a binding legal
+agreement between (a) you (either in your capacity as an individual or as a single entity) and (b) Tradernet Ltd
+(hereinafter, “iguanaCharts”) that governs your use of the iguanaCharts JavaScript Charts software, together with any
+electronic documentation that may be provided therewith (collectively, “the Software”) through the Software.
+Other software provided by third parties and used with the Software may be subject to a separate license agreement.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+BY INSTALLING OR OTHERWISE USING THE SOFTWARE YOU AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. IF YOU DO NOT ACCEPT
+THESE LICENSE TERMS, YOUR SOLE REMEDY IS TO REQUEST A REFUND BY CONTACTING iguanaCharts AT info@tradernet.com.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+YOU HEREBY AGREE, BOTH ON YOUR OWN BEHALF AND AS AN AUTHORIZED REPRESENTATIVE OF ANY ORGANIZATION FOR WHICH YOU ARE
+USING THE SOFTWARE (hereinafter, the “EMPLOYER”), THAT YOU AND THE EMPLOYER WILL USE THE SOFTWARE ONLY IN ACCORDANCE
+WITH AND SUBJECT TO THE FOLLOWING TERMS:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+0. SUMMARY OF WHAT YOU CAN AND CAN’T DO WITH THE SOFTWARE IN HUMAN LANGUAGE
+
+CAN
+Use on 1 (one) public website.
+Use on 1 (one) copy of the same website for testing and development.
+Use on 1 (one) physical or virtual server.
+Use on any number of web pages within the same website.
+Use by any number of users.
+Use by any number of individual developers.
+Use on any number of sub-domains or alias domains used to access the same website.
+Disable visual iguanaCharts branding.
+Modify the core functionality of the library.
+
+CANNOT
+Use in websites that require some sort of user authentication.
+Use in re-distributable web, mobile, or desktop applications.
+Include in other software development tools.
+Transfer the software to anyone or allow others to use it (even to the other group companies).
+Distribute the library on its own, not as part of other application.
+
+1. GRANT OF LICENSE
+
+iguanaCharts grants you the following non-exclusive rights provided you agree to and comply with all terms and
+conditions of this License and upon your full payment of the applicable fees: a personal, nonexclusive, nontransferable
+license to install and use the Software on a Single Website. You can also modify the Software for the sole purpose of
+adaptation and customization for your own purposes as long as the modified Software is subject to the terms of
+this License. Hereinafter the term “Software” shall also include a modified version of the Software where applicable.
+For the purposes of this License the “Single Website” shall mean (a) a website accessible by one domain name and its
+sub-domains or (b) an identical website accessible by another domain name, or (c) a translation of the same website into
+another language, or (d) a development, testing, staging or quality assurance version of the same website.
+
+2. UPGRADES AND SUPPORT
+
+This License shall entitle you to version updates and upgrades of the Software for the period of three months from the
+date of your purchase. For the purpose of this License, an “update” of the Software is defined as that which adds minor
+functionality enhancements or any bug fix to the current version (and may be identified by the change of the revision to
+the right of the decimal point, i.e. 3.1 to 3.2) and an “upgrade” is a major release of the Software and is defined as
+that which incorporates major new features or enhancement that increase the core functionality of the Software (and may
+be identified by the change of the revision to the left of the decimal point, i.e. 4.X to 5.X). Whether a version
+release is an update or an upgrade is determined by iguanaCharts in its sole discretion.
+
+This License shall entitle you to complimentary technical support of the Software via email for twelve months from the
+date of your purchase. This technical support shall not include support related to hardware of any kind, including
+without limitation servers that you use to deploy the Software or clients that users use to access your implementation
+of the software.
+
+3. ADDITIONAL SOFTWARE
+
+This License applies only to the Software and updates or supplements to the Software provided by iguanaCharts. Depending
+on how you choose to deploy the Software, you may need to acquire licenses to other, third-party software. iguanaCharts
+shall not be liable or otherwise responsible for your failure to obtain such licenses.
+
+4. TRANSFER
+
+The Software may only be transferred to another party in the event that you are entering into this agreement on behalf
+of the Employer, and the Employer is acquired by another company or in the event of merger of two or more companies that
+involves the Employer. Any transfer must include all component parts, media, printed materials and this License. You may
+not rent, lease or lend the Software or use the Software for “timeshare” use. You may not sublicense, assign or transfer
+the license or Software except as expressly provided in this License.
+
+5. PROPRIETARY RIGHTS
+
+All intellectual property rights in the Software are owned by iguanaCharts or its suppliers, as applicable, and are
+protected by law, including but not limited to copyright, trade secret, and trademark law, as well as other applicable
+laws and international treaty provisions. You shall not remove any product identification, copyright notices or
+proprietary restrictions from the Software (except for the branding link on the chart itself which you can remove).
+
+6. LICENSE RESTRICTIONS
+
+You agree that you may not and shall not and that if applicable, the Employer may not and shall not (a) defeat, disable,
+or circumvent any protection mechanism related to the Software; (b) use the Software or any parts of it to develop a
+product directly competing with the Software; (c) use the Software in a website which requires users’ subscription
+(paid or free) to access that part of the website which uses the Software, (d) use the Software in a distributable
+product (e.g. an application, script, theme, plugin, add-on, etc.), (e) distribute the modified version of the Software
+and/or derivative works based on the Software.
+
+Nothing contained herein shall be construed, expressly or implicitly, as transferring any right, license or title to you
+other than those explicitly granted under this License. Unauthorized copying of the Software or failure to comply with
+the restrictions herein will result in automatic termination of this License and will constitute immediate, irreparable
+harm to iguanaCharts for which monetary damages would be an inadequate remedy, in which case injunctive relief will be
+an appropriate remedy for such breach.
+
+7. TERM
+
+This License is effective unless terminated or rejected. You may terminate this License by destroying the Software and
+any copies of the Software in your possession. This License will also terminate upon conditions set forth elsewhere in
+this License or if you or an Employer fail to comply with any term or condition of this License.
+
+8. USE OF DATA
+
+The Software will not collect and transmit to iguanaCharts any data or information.
+
+You agree that iguanaCharts and its affiliates or suppliers may collect and use technical information you provide in
+relation to support services related to the Software. iguanaCharts and its suppliers agree not to use this information
+in a form that personally identifies you except to the extent necessary to provide such services.
+
+9. DISCLAIMER OF WARRANTIES
+
+You acknowledge that the Software is offered on an “AS-IS,” “AS-AVAILABLE” basis and iguanaCharts does not warrant that
+the functions contained in the Software will meet your requirements or that the operation of the Software will be
+uninterrupted or error free. Computer software is inherently subject to bugs and potential incompatibility with other
+computer software and hardware exists and cannot reasonably be eliminated. You should not use the Software for any
+applications in which failure could cause any significant damage or injury to persons or tangible or intangible
+property.
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, iguanaCharts AND ITS SUPPLIERS PROVIDE THE SOFTWARE PRODUCT “AS IS”
+AND WITH ALL FAULTS, AND HEREBY DISCLAIM ALL OTHER WARRANTIES AND CONDITIONS, EITHER EXPRESS, IMPLIED, OR STATUTORY,
+INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF TITLE AND NON-INFRINGEMENT, ANY IMPLIED WARRANTIES, DUTIES OR CONDITIONS OF
+MERCHANTABILITY, OF FITNESS FOR A PARTICULAR PURPOSE, AND OF LACK OF VIRUSES ALL WITH REGARD TO THE SOFTWARE PRODUCT.
+NO ORAL OR WRITTEN INFORMATION OR ADVICE GIVEN BY iguanaCharts OR AN iguanaCharts AUTHORIZED REPRESENTATIVE SHALL CREATE
+A WARRANTY.
+
+Some jurisdictions do not allow exclusion of implied warranties or limitations on the duration of implied warranties, so
+the above disclaimer may not apply to you in its entirety. IN NO EVENT DOES iguanaCharts PROVIDE ANY WARRANTY OR
+REPRESENTATIONS WITH RESPECT TO ANY THIRD PARTY HARDWARE OR SOFTWARE WITH WHICH THE SOFTWARE IS DESIGNED TO BE USED, AND
+iguanaCharts DISCLAIMS ALL LIABILITY WITH RESPECT TO ANY FAILURES THEREOF.
+
+10. INFRINGEMENT REMEDIES
+
+If the Software, or any component thereof, is found to be infringing or if any use of the Software or any component
+thereof is enjoined, threatened to be enjoined or otherwise the subject of an infringement claim, iguanaCharts shall, at
+its option and sole cost and expense: either (i) procure for you the right to continue to use the Software, (ii) modify
+or replace such Software in a manner that retains its functionality and quality so that it is no longer infringing,
+misappropriating or violating such right or (iii) require you to terminate the use of and return the Software and refund
+all license fees paid by you with respect thereto.
+
+This Section 10 states the indemnifying party’s sole liability to, and the indemnified party’s exclusive remedy against,
+the other party for any type of claim described in this Section.
+
+11. LIMITATION OF LIABILITY
+
+Notwithstanding any damages that you might incur, the entire liability of iguanaCharts and any of its suppliers under
+any provision of this License and your exclusive remedy for all of the foregoing shall be limited to the greater of the
+amount actually paid by you for the Software or US$100.00. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO
+EVENT SHALL iguanaCharts OR ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR CONSEQUENTIAL DAMAGES
+WHATSOEVER (INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF PROFITS, FOR LOSS OF DATA OR OTHER INFORMATION, FOR
+BUSINESS INTERRUPTION, FOR PERSONAL INJURY, FOR LOSS OF PRIVACY ARISING OUT OF OR IN ANY WAY RELATED TO THE USE OF OR
+INABILITY TO USE THE SOFTWARE PRODUCT, OR OTHERWISE IN CONNECTION WITH ANY PROVISION OF THIS LICENSE), EVEN IF
+iguanaCharts OR ANY SUPPLIER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND EVEN IF THE REMEDY FAILS OF ITS
+ESSENTIAL PURPOSE. Some jurisdictions do not allow the exclusion or limitation of incidental or consequential damages,
+so the above limitation or exclusion may not apply to you.
+
+12. CAPACITY AND AUTHORITY TO CONTRACT
+
+You represent that you are of the legal age of majority in your jurisdiction of residence and, if applicable, you are
+duly authorized by the Employer to enter into this contract.
+
+13. APPLICABLE LAW AND SEVERABILITY
+
+If you are a resident of or a company which place of business is in the US or EU, this License shall be governed by the
+laws of the jurisdiction of your place of residence. Additionally, if you are a company which place of business is in the US, you agree that this License shall
+not be governed by the United Nations Convention on Contracts for the International Sale of Goods, the application of
+which is expressly excluded. You irrevocably submit to the jurisdiction of the state courts sitting in, and any action
+or proceeding arising out of this License will be heard and determined in such court. If for any reason a court of
+competent jurisdiction finds any provision, or portion thereof, to be unenforceable, such provision will be interpreted
+in order to give effect to such provision to the maximum extent permitted by law, and the remainder of this License will
+continue in full force and effect.
+
+14. ENTIRE AGREEMENT
+
+This License (including any addendum or amendment to this License or as included with the Software) contains the entire
+agreement between you and iguanaCharts relating to the Software, and the License supersedes all prior or contemporaneous
+oral or written communications, proposals and representations with respect to the Software or any other subject matter
+covered by this License. To the extent the terms of any iguanaCharts policies or programs for support services conflict
+with the terms of this License, the terms of this License shall control.
+
+Copyright (c) 2016 iguanaCharts

@@ -84,4 +84,4 @@ https://github.com/uikit/uikit/releases/download/v2.26.4/uikit-2.26.4.zip
 
 ## License
 
-<a href ="./LICENSE">The MIT License (MIT)</a>
+<a href ="./LICENSE">License</a>
