@@ -13472,7 +13472,7 @@ iChart.indicators = {
             this.$scrollerOverlayLeft = $("<div class='js-scrollerOverlay m-chart-scrollerOverlayLeft'/>").hide().css({}).appendTo(this.$scrollerOverlay);
             $(this.chart.container).find('div.m-chart-scrollforward').remove();
             var $thisArea = this;
-            this.$scrollForward = $("<div class='m-chart-scrollforward md-btn md-btn-primary' style='min-width: 40px; width:40px; background: #777777; transition: all 0ms'; ><span class='uk-icon-step-forward'></span></div>").hide().appendTo(this.$scrollerOverlay).click(function(){
+            this.$scrollForward = $("<div class='m-chart-scrollforward m-chart-btn' style='min-width: 40px; width:40px; background: #777777; transition: all 0ms'; ><span class='uk-icon-step-forward'></span></div>").hide().appendTo(this.$scrollerOverlay).click(function(){
                 $thisArea.chart.env.scrollForward();
             });
         }
@@ -15890,7 +15890,7 @@ $.views.settings.allowCode(true);
 $.templates("iChart_mainTmpl", '' +
     '<div class="iChart-control-form" style="min-height: 200px">' +
         '<div class="js-chartContainerWrapper">' +
-            '<div class="iChartToolsContainer"><div class="iChartToolsTop" style="display: none;"></div></div>' +
+            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: none;"></div></div>' +
             '<div id="{{:id}}" class="m-chart-container" style="height: 100%;">' +
             '</div>' +
         '</div>' +
@@ -15948,8 +15948,8 @@ $.templates("indicatorsListTmpl", '' +
 );
 
 $.templates("indicatorsDropdownTmpl",
-    '<div class="js-iChartTools-indicators uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button">' + _t('3101', 'Индикаторы') + '<i class="uk-icon-caret-down"></i></button>' +
+    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+        '<button class="uk-button uk-margin-small-left">' + _t('3101', 'Индикаторы') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
             '<div class="uk-grid uk-dropdown-grid">' +
                 '<div class="uk-width-1-1">' +
@@ -16304,8 +16304,8 @@ $.templates("themeConfigOptionsTmpl", '' +
 );
 
 $.templates("iChart_optionsTmpl",
-    '<div class="js-iChartTools-options uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button">' + _t('', 'Настройки') + '<i class="uk-icon-caret-down"></i></button>' +
+    '<div class="js-iChartTools-options uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+        '<button class="uk-button uk-margin-small-left">' + _t('', 'Настройки') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-optionsList">' +
                 '<ul class="uk-nav uk-nav-dropdown">' +
@@ -16325,8 +16325,8 @@ $.templates("iChart_optionsTmpl",
 );
 
 $.templates("iChart_instrumentsTmpl",
-    '<div class="js-iChartTools-instruments uk-button-dropdown uk-margin-small-left" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down"></i></button>' +
+    '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
+        '<button class="uk-button uk-margin-small-left">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-instrumentsList">' +
                 '<div class="js-colorSelector" data-option="fillStyle" style="background-color: #778899" data-title="' + _t('3014', 'Цвет заливки') + '">' +

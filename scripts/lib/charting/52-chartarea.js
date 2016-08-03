@@ -111,7 +111,7 @@
             this.$scrollerOverlayLeft = $("<div class='js-scrollerOverlay m-chart-scrollerOverlayLeft'/>").hide().css({}).appendTo(this.$scrollerOverlay);
             $(this.chart.container).find('div.m-chart-scrollforward').remove();
             var $thisArea = this;
-            this.$scrollForward = $("<div class='m-chart-scrollforward md-btn md-btn-primary' style='min-width: 40px; width:40px; background: #777777; transition: all 0ms'; ><span class='uk-icon-step-forward'></span></div>").hide().appendTo(this.$scrollerOverlay).click(function(){
+            this.$scrollForward = $("<div class='m-chart-scrollforward m-chart-btn' style='min-width: 40px; width:40px; background: #777777; transition: all 0ms'; ><span class='uk-icon-step-forward'></span></div>").hide().appendTo(this.$scrollerOverlay).click(function(){
                 $thisArea.chart.env.scrollForward();
             });
         }
