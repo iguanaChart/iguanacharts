@@ -23,6 +23,10 @@
                 return;
             }
 
+            if(!_this.chart.areas) {
+                return;
+            }
+
             var area = _this.chart.areas[0],
                 offset = _this.$container.offset();
 
