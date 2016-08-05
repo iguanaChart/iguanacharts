@@ -382,10 +382,10 @@ function extendIChartWithOrders(){
         orderData.id = order.id;
 
         //Нельзя таскать и выбирать- просто линия рисуется
-        orderData.controlEnable = !(order.id == 'placing' || order.id == 'cancelling');
+        orderData.controlEnable = !(order.uiState == 'placing' || order.uiState == 'cancelling');
 
         //Немного прозрачности для выставляемых и отправляемых приказов, которые нельзя двигать
-        var opacity = (order.id == 'placing' || order.id == 'cancelling') ? 0.1 : 0.75;
+        var opacity = (order.uiState == 'placing' || order.uiState == 'cancelling') ? 0.1 : 0.75;
 
         orderData = this.getOrderDataParams(order, orderData, opacity);
 
@@ -393,13 +393,13 @@ function extendIChartWithOrders(){
         if (order.type == 6) orderData.type = 'tp';
 
         //Для приказов в промежуточном статусе поменяем текст
-        if (order.id == 'cancelling') {
+        if (order.uiState == 'cancelling') {
 
             orderData.text = sprintf(_t('15683', 'Отменяем...'));
             orderData.fillStyle = "rgba(119,119,119,1)" /*темно серый*/;
             orderData.selected = true;
 
-        } else if (order.id == 'placing') {
+        } else if (order.uiState == 'placing') {
 
             orderData.text = sprintf(_t('15684', 'Выставляем...'));
             orderData.fillStyle = "rgba(119,119,119,1)" /*темно серый*/;
@@ -678,12 +678,12 @@ function extendIChartWithOrders(){
 
         //Создаем фейковый приказ, который будет висеть, пока не появится новый приказ
         _this.drawnOrders['fake'] = $.extend(true, {}, order);
-        _this.drawnOrders['fake'].id = 'cancelling';
+        _this.drawnOrders['fake'].uiState = 'cancelling';
 
         //Канселим старый приказ
         _this.removeOrder(order, function(){
 
-            _this.drawnOrders['fake'].id = 'placing';
+            _this.drawnOrders['fake'].uiState = 'placing';
             _this.redrawOrders();
 
             //Выставляем новый приказ, кроме стоп-лосов и тейк профитов
