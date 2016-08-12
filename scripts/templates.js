@@ -7,7 +7,8 @@ $.views.settings.allowCode(true);
 $.templates("iChart_mainTmpl", '' +
     '<div class="iChart-control-form" style="min-height: 200px">' +
         '<div class="js-chartContainerWrapper">' +
-            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: none;"></div></div>' +
+            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: block;">' +
+            '</div></div>' +
             '<div id="{{:id}}" class="m-chart-container" style="height: 100%;">' +
             '</div>' +
         '</div>' +
@@ -31,6 +32,231 @@ $.templates("iChart_mainTmpl", '' +
         '<div class="chart-loader-wrapper" style="top: 0; width: 100%; height: 100%;"><div class="chart-loader"></div></div>' +
     '</div>'
 );
+
+$.templates("iChart_topToolBarTmpl", '' +
+
+    '<div class="tm-tool-bar uk-flex uk-flex-space-between">' +
+        '<div class="uk-flex uk-flex-left uk-position-relative">' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button active uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="">' +
+                    '<i class="sprite sprite-icon-line js-chart-ui-control-state" data-property="chartType"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Line chart') + '">' +
+                            '<i class="sprite sprite-icon-line js-chart-ui-control" data-property="chartType" data-value="Line"></i>' +
+                        '</div>' +
+
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Candlestick chart') + '">' +
+                            '<i class="sprite sprite-icon-candle js-chart-ui-control" data-property="chartType" data-value="Candlestick"></i>' +
+                        '</div>' +
+
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Bar chart') + '">' +
+                            '<i class="sprite sprite-icon-bars js-chart-ui-control" data-property="chartType" data-value="Stock"></i>' +
+                        '</div>' +
+
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume horizontally') + '">' +
+                '<i class="sprite sprite-icon-h-volume"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume vertically') + '">' +
+                '<i class="sprite sprite-icon-v-volume"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Relative price') + '">' +
+                '<i class="sprite sprite-icon-price"></i>' +
+            '</div>' +
+
+            '<i class="sprite sprite-icon-divider"></i>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Visual Settings') + '">' +
+                '<i class="sprite sprite-icon-palette"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Text') + '">' +
+                '<i class="sprite sprite-icon-font"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Tooltip') + '">' +
+                '<i class="sprite sprite-icon-f-comment"></i>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Line') + '">' +
+                    '<i class="sprite sprite-icon-free-line"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Free Line') + '">' +
+                            '<i class="sprite sprite-icon-free-line"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Horizontal line') + '">' +
+                            '<i class="sprite sprite-icon-h-line"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Vertical line') + '">' +
+                            '<i class="sprite sprite-icon-v-line"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Channel') + '">' +
+                            '<i class="sprite sprite-icon-channel"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Corner Trend') + '">' +
+                            '<i class="sprite sprite-icon-angle-trend"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Arrow') + '">' +
+                            '<i class="sprite sprite-icon-arrow-line"></i>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Form') + '">' +
+                    '<i class="sprite sprite sprite-icon-f-square"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Poligon') + '">' +
+                            '<i class="sprite sprite-icon-f-poligon"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Rectangle') + '">' +
+                            '<i class="sprite sprite-icon-f-square"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Triangle') + '">' +
+                            '<i class="sprite sprite-icon-f-triangle"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Ellipse') + '">' +
+                            '<i class="sprite sprite-icon-f-ellipse"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Archs') + '">' +
+                            '<i class="sprite sprite-icon-f-fibonacci-arcs"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Fan') + '">' +
+                            '<i class="sprite sprite-icon-f-fibonacci-fan"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Retracement') + '">' +
+                            '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="">' +
+                    '<i class="sprite sprite-icon-1px js-chart-ui-control-state" data-property="lineWidthSelector"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="1" data-uk-tooltip="{pos:\'top\'}" title="Line 1px">' +
+                            '<i class="sprite sprite-icon-1px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="2" data-uk-tooltip="{pos:\'top\'}" title="Line 2px">' +
+                            '<i class="sprite sprite-icon-2px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="3" data-uk-tooltip="{pos:\'top\'}" title="Line 3px">' +
+                            '<i class="sprite sprite-icon-3px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="4" data-uk-tooltip="{pos:\'top\'}" title="Line 4px">' +
+                            '<i class="sprite sprite-icon-4px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="5" data-uk-tooltip="{pos:\'top\'}" title="Line 5px">' +
+                            '<i class="sprite sprite-icon-5px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="8" data-uk-tooltip="{pos:\'top\'}" title="Line 8px">' +
+                            '<i class="sprite sprite-icon-8px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="10" data-uk-tooltip="{pos:\'top\'}" title="Line 10px">' +
+                            '<i class="sprite sprite-icon-10px"></i>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative js-chart-ui-control" data-property="fillStyle">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Fill Color">' +
+                    '<div class="tm-fill-color js-chart-ui-control-state" data-property="fillStyle" style="background-color: rgba(82, 175, 201, 0.5);"></div>' +
+                    '<i class="sprite sprite-icon-fill-color"></i>' +
+                 '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow js-chart-ui-control-holder">' +
+                        '<div class="js-colorPalette" data-option="fillStyle"></div>' +
+                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fillStyle" data-element="canvas" value="" size="10"/>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative js-chart-ui-control" data-property="strokeStyle">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Line Color">' +
+                    '<div class="tm-line-color js-chart-ui-control-state" data-property="strokeStyle" style="background-color: rgb(82, 175, 201);"></div>' +
+                    '<i class="sprite sprite-icon-line-color"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow js-chart-ui-control-holder">' +
+                        '<div class="js-colorPalette" data-option="strokeStyle"></div>' +
+                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="strokeStyle" data-element="canvas" value="" size="10"/>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<i class="sprite sprite-icon-divider"></i>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Clear Chart') + '">' +
+                '<i class="sprite sprite-icon-trash"></i>' +
+            '</div>' +
+
+        '</div>' +
+
+    '<div class="uk-flex uk-flex-left">' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
+    '<i class="sprite sprite-icon-1m"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button active uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
+    '<i class="sprite sprite-icon-5m"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
+    '<i class="sprite sprite-icon-15m"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
+    '<i class="sprite sprite-icon-h"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
+    '<i class="sprite sprite-icon-d"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
+    '<i class="sprite sprite-icon-w"></i>' +
+    '</div>' +
+
+    '<i class="sprite sprite-icon-divider"></i>' +
+
+    '<div data-uk-dropdown="{\'pos:\'bottom-right\'}" class="uk-position-relative">' +
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Add Indicator" style="min-width: 100px">' +
+    '<i class="sprite sprite-icon-text-indicators"></i>' +
+    '</div>' +
+    '<div class="uk-dropdown-blank" style="width: auto">' +
+    '<div class="tm-shadow">' +
+    '<ul class="uk-list uk-list-line">' +
+    '<li>AD (Accumulation Distribution)</li>' +
+    '<li>ADOSC (Chaikin Oscillator)</li>' +
+    '<li>ADX (Average Directional Index)</li>' +
+    '</ul>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>'
+);
+
 
 $.templates("indicatorsCurrentTmpl", '' +
     '{{for userData}}' +
@@ -416,107 +642,6 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
             '</div>' +
-        '</div>' +
-    '</div>'
-);
-
-$.templates("iChart_optionsTmpl",
-    '<div class="js-iChartTools-options uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('', 'Настройки') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
-        '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
-            '<div class="js-iChartTools-optionsList">' +
-                '<ul class="uk-nav uk-nav-dropdown">' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-chartType" data-value="Candlestick">' + _t('1366', 'Свечи') +' <i class="uk-float-right {{if chartType == "Candlestick"}}uk-icon-circle{{else}}uk-icon-circle-o{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-chartType" data-value="Line">' + _t('1365', 'Линия') + ' <i class="uk-float-right  {{if chartType == "Line"}}uk-icon-circle{{else}}uk-icon-circle-o{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-chartType" data-value="Stock">' + _t('1367', 'Бары') + ' <i class="uk-float-right  {{if chartType == "Stock"}}uk-icon-circle{{else}}uk-icon-circle-o{{/if}}"></i></a></li>' +
-                    '<li class="uk-nav-divider"></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-percentMode">' + _t('2995', 'Относительная цена') + ' <i class="uk-float-right  {{if percentMode}}uk-icon-toggle-on{{else}}uk-icon-toggle-off{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-volumeByPrice">' + _t('', 'V по горизонтали') + ' <i class="uk-float-right  {{if showVolumeByPrice}}uk-icon-toggle-on{{else}}uk-icon-toggle-off{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-volumeByDate">' + _t('', 'V по вертикали') + ' <i class="uk-float-right  {{if showVolume=="inside" || showVolume == "outside"}}uk-icon-toggle-on{{else}}uk-icon-toggle-off{{/if}}"></i></a></li>' +
-                    '<li class="uk-nav-divider"></li>' +
-                    '<li class="uk-dropdown-close"><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-themeDialog" data-value="">' + _t('', 'Визуальные настройки') + '</a></li>' +
-                '</ul>' +
-            '</div>' +
-        '</div>' +
-    '</div>'
-);
-
-$.templates("iChart_instrumentsTmpl",
-    '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
-        '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
-            '<div class="js-iChartTools-instrumentsList">' +
-                '<div class="js-colorSelector" data-option="fillStyle" style="background-color: #778899" data-title="' + _t('3014', 'Цвет заливки') + '">' +
-                    '<div class="menuHolder" style="display: none; padding: 10px;">' +
-                        '<div class="js-colorPalette" data-option="fillStyle"></div>' +
-                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fillStyle" data-element="canvas" value="#778899" size="10"/>' +
-                    '</div>' +
-                '</div>' +
-                ' ' +
-                '<div class="js-colorSelector" data-option="strokeStyle" style="background-color: #778899" data-title="' + _t('3016', 'Цвет линий') + '">' +
-                    '<div class="menuHolder" style="display: none; padding: 10px;">' +
-                        '<div class="js-colorPalette" data-option="strokeStyle"></div>' +
-                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="strokeStyle" data-element="canvas" value="#778899" size="10"/>' +
-                    '</div>' +
-                '</div>' +
-                ' ' +
-                '<div class="js-colorSelector" data-option="fontSettingsColor" style="background-color: #778899" data-title="' + _t('', 'Цвет текста') + '">' +
-                    '<div class="menuHolder" style="display: none; padding: 10px;">' +
-                        '<div class="js-colorPalette" data-option="fontSettingsColor"></div>' +
-                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fontSettingsColor" data-element="canvas" value="#778899" size="10"/>' +
-                    '</div>' +
-                '</div>' +
-                ' ' +
-                '<div class="js-lineWidthSelector" data-option="fontSettingsColor" data-title="' + _t('3017', 'Толщина линий') + '">' +
-                    '<span class="lineWidth js-currentLineWidth" data-style="1"></span>' +
-                    '<div class="menuHolder" style="display: none">' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="1" title="' + _t('3901', '1px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="2" title="' + _t('3902', '2px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="3" title="' + _t('3903', '3px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="4" title="' + _t('3904', '4px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="5" title="' + _t('3905', '5px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="8" title="' + _t('3906', '8px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="10" title="' + _t('3907', '10px') + '"></span>' +
-                    '</div>' +
-                '</div>' +
-                '<div>' +
-                    '<ul class="uk-nav uk-nav-dropdown">' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Line">' + _t('51', 'Свободная линия') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="HorizontalLine">' + _t('52', 'Горизонтальная линия') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="VerticalLine">' + _t('53', 'Вертикальная линия') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Channel">' + _t('54', 'Канал') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Trend">' + _t('55', 'Угловой тренд') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Arrow">' + _t('62', 'Стрелка') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Polygon">' + _t('3012', 'Полигон') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Rectangle">' + _t('3013', 'Прямоугольник') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Triangle">' + _t('56', 'Треугольник') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Ellipse">' + _t('58', 'Эллипс') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="FibonacciArc">' + _t('59', 'Арки Фибоначчи') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="FibonacciFan">' + _t('60', 'Веер Фибоначчи') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="FibonacciCorrection">' + _t('61', 'Коррекция Фибоначчи') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Text">' + _t('64', 'Вставить текст') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Bubble">' + _t('3008', 'Текст c указателем') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-removeInstrument">' + _t('15227', 'Очистить график') +' <i class="uk-float-right"></i></a></li>' +
-                    '</ul>' +
-                '</div>' +
-            '</div>' +
-        '</div>' +
-    '</div>'
-);
-
-$.templates("iChart_intervalsTmpl2", '' +
-    '<div class="js-iChartTools-intervals uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button">' + _t('5421', 'Интервал') + '<i class="uk-icon-caret-down"></i></button>' +
-        '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
-            '<ul class="uk-nav uk-nav-dropdown js-chart-intervals">' +
-                '{{for intervals}}' +
-                '<li><a href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a></li>' +
-                '{{/for}}' +
-            '</ul>' +
         '</div>' +
     '</div>'
 );

@@ -254,6 +254,7 @@
     };
 
     iChart.Charting.ChartOrder.prototype.onSelect = function () {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.setTestSegments();
     };
 

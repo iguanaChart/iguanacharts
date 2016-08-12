@@ -648,8 +648,8 @@
         }
 
         context.save();
-        // context.translate(this.area.innerOffset.left + 0.5, this.area.innerOffset.top + 0.5);
-        context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
+        context.translate(this.area.innerOffset.left + 0.5, this.area.innerOffset.top + 0.5);
+        //context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
 
         context.beginPath();
         context.moveTo(0, this.area.innerHeight);
@@ -855,7 +855,7 @@
             } else {
                 this.$deleteButton.removeClass('on');
                 this.selected.selected = true;
-                this.selected.onSelect(this.context);
+                this.selected.onSelect.call(this.selected, this.context);
             }
         }
     };

@@ -89,6 +89,7 @@ var iChartDataSource = {
                 _chart.response = data.d;
 
                 _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
+                _chart.dataRequestCounter++;
 
                 _chart.fixViewport();
                 _chart.updateUnlocked = true;

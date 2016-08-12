@@ -2,27 +2,32 @@
 {
     "use strict";
 
+    /**
+     * @param {IguanaChart} chart
+     */
+
     iChart.ui = function (chart) {
 
         this.chart = chart;
         var _this = this;
 
-        this.$topToolsBarContainer = this.chart.wrapper.find('.iChartToolsTop');
+        this.$uiContainer = this.chart.wrapper;
+        this.$topToolBarContainer = this.chart.wrapper.find('.iChartToolsTop');
 
         this.render = function () {
             var chartOptionsUiTools = this.chart.viewData.chart.chartOptions.uiTools;
             if(chartOptionsUiTools.top) {
                 this.renderTopBar();
             }
+            this.bindUiControls();
         };
 
         this.renderTopBar = function () {
-            this.$topToolsBarContainer.empty();
-            this.renderIntervals();
-            this.renderIndicators();
-            this.renderOptionsList();
-            this.renderInstrumentsList();
-            this.$topToolsBarContainer.show();
+            this.$topToolBarContainer.empty();
+            // this.renderIntervals();
+            // this.renderIndicators();
+            this.renderTopToolBar();
+            this.$topToolBarContainer.show();
         };
 
         /**
@@ -36,7 +41,7 @@
 
             var indicatorsDropdownHtml = $.render.indicatorsDropdownTmpl(data);
 
-            this.$topToolsBarContainer.append(indicatorsDropdownHtml);
+            this.$topToolBarContainer.append(indicatorsDropdownHtml);
 
             $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
@@ -85,7 +90,7 @@
 
             var indicatorsListHtml = $.render.indicatorsListTmpl(data);
 
-            this.$topToolsBarContainer.find('.js-iChartTools-indicators-list').html(indicatorsListHtml);
+            this.$topToolBarContainer.find('.js-iChartTools-indicators-list').html(indicatorsListHtml);
         };
 
         /**
@@ -98,7 +103,7 @@
 
             var indicatorsCurrentHtml = $.render.indicatorsCurrentTmpl(data);
 
-            this.$topToolsBarContainer.find('.js-iChartTools-indicators-current').html(indicatorsCurrentHtml);
+            this.$topToolBarContainer.find('.js-iChartTools-indicators-current').html(indicatorsCurrentHtml);
 
         };
 
@@ -216,6 +221,7 @@
 
             var onCloseModal = function() {
                 _this.chart.wrapper.iguanaChart('chartOptions', $windowContent.data("chartOptions"));
+                _this.setUiStateForThemeConfig(false);
                 if($.modal.impl.d.data) {
                     $.modal.impl.close();
                 }
@@ -236,6 +242,7 @@
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
                         _this.chart.userSettings.chartSettings.defaultTheme = 0;
+                        _this.setUiStateForThemeConfig(false);
                         if($.modal.impl.d.data) {
                             $.modal.impl.close(false);
                         }
@@ -340,9 +347,12 @@
 
             var onMinicolorsChange = function(){
                 var color = $(this).val(),
-                    opacity = $(this).attr('data-opacity'),
-                    colorRGBA = iChart.hexToRGB(color, opacity),
+                    colorRGBA = color,
                     option = $(this).attr('data-option');
+
+                if(!color.match(/^rgb.*/)) {
+                    colorRGBA = iChart.hexToRGB(color, opacity)
+                }
 
                 _this.chart.wrapper.iguanaChart('chartOptions', option, colorRGBA);
                 $(".js-colorSelector[data-option='" + option + "']").css({'background-color': colorRGBA});
@@ -413,15 +423,16 @@
 
             onMinicolorsChange = typeof onMinicolorsChange == "function" ? onMinicolorsChange : function(){};
 
-            var $input = $(element),
-                opacityTrue = ($input.first().attr('data-opacity'))?true:false,
-                opacity = $input.first().attr('data-opacity'),
-                color = $input.first().val();
+            var $input = $(element);
+            var opacityTrue = ($input.first().attr('data-opacity'))?true:false;
+            var opacity = $input.first().attr('data-opacity');
+            var color = $input.first().val();
+            color = color ? color : 'rgba(82, 175, 201, 0.5)';
 
             $(element).minicolors({
                 animationSpeed: 50,
                 animationEasing: 'swing',
-                change: null,
+                change: onMinicolorsChange,
                 changeDelay: 0,
                 control: 'hue',
                 defaultValue: color,
@@ -429,19 +440,13 @@
                 hideSpeed: 100,
                 inline: true,
                 letterCase: 'lowercase',
-                opacity: true,
+                opacity: opacityTrue,
                 position: 'bottom left',
                 show: null,
                 showSpeed: 100,
                 theme: 'default'
-            }).change(onMinicolorsChange);
-            if(color.match(/^rgb.*/)) {
-                opacity = iChart.rgbaGetAlfa(color);
-                color = iChart.rgbToHex(color);
-            }
+            });
             $(element).minicolors('value', color);
-            $(element).minicolors('opacity', opacity);
-
         };
 
         this.initColorPalette = function (holder, onPaletteChange) {
@@ -461,215 +466,11 @@
         this.addMinicolors = function (element, holder, onMinicolorsChange, onPaletteChange) {
             if($(element).hasClass('minicolors-input')) {
                 var color = $(element).val();
-                var opacity = $(element).attr('data-opacity');
-                if(color.match(/^rgb.*/)) {
-                    opacity = iChart.rgbaGetAlfa(color);
-                    color = iChart.rgbToHex(color);
-                }
                 $(element).minicolors('value', color);
-                $(element).minicolors('opacity', opacity);
                 return;
             }
             this.initMinicolors(element, onMinicolorsChange);
             this.initColorPalette(holder, onPaletteChange);
-        };
-
-
-        this.renderOptionsList = function () {
-
-            var chartOptions = this.chart.viewData.chart.chartOptions;
-
-            var options = {
-                chartType: chartOptions.chartType,
-                percentMode: chartOptions.percentMode,
-                showVolume: chartOptions.showVolume,
-                showVolumeByPrice: chartOptions.showVolumeByPrice
-            };
-
-            var $optionsHtml = $($.render.iChart_optionsTmpl(options));
-
-            $optionsHtml.on('click touchend', '.js-iChartTools-themeDialog', function(){
-                _this.renderThemeConfigDialog();
-            }).on('click touchend', '.js-iChartTools-chartType', function(){
-                var $this = $(this);
-                $optionsHtml.find('.js-iChartTools-chartType i').removeClass('uk-icon-circle').addClass('uk-icon-circle-o');
-                $this.find('i').addClass('uk-icon-circle');
-                _this.chart.viewData.chart.setChartType($this.data("value"));
-            }).on('click touchend', '.js-iChartTools-percentMode', function(){
-                if(_this.chart.percentMode_onClick()) {
-                    $optionsHtml.find('.js-iChartTools-percentMode i').removeClass('uk-icon-toggle-off').addClass('uk-icon-toggle-on');
-                } else {
-                    $optionsHtml.find('.js-iChartTools-percentMode i').removeClass('uk-icon-toggle-on').addClass('uk-icon-toggle-off');
-                }
-            }).on('click touchend', '.js-iChartTools-volumeByPrice', function(){
-                _this.chart.VolumeByPrice_onClick();
-                if(_this.chart.viewData.chart.chartOptions.showVolumeByPrice) {
-                    $optionsHtml.find('.js-iChartTools-volumeByPrice i').removeClass('uk-icon-toggle-off').addClass('uk-icon-toggle-on');
-                } else {
-                    $optionsHtml.find('.js-iChartTools-volumeByPrice i').removeClass('uk-icon-toggle-on').addClass('uk-icon-toggle-off');
-                }
-            }).on('click touchend', '.js-iChartTools-volumeByDate', function(){
-                _this.chart.VolumeByDate_onClick();
-                var showVolume = _this.chart.viewData.chart.chartOptions.showVolume;
-                if(showVolume == "inside" || showVolume == "outside") {
-                    $optionsHtml.find('.js-iChartTools-volumeByDate i').removeClass('uk-icon-toggle-off').addClass('uk-icon-toggle-on');
-                } else {
-                    $optionsHtml.find('.js-iChartTools-volumeByDate i').removeClass('uk-icon-toggle-on').addClass('uk-icon-toggle-off');
-                }
-            });
-
-
-
-            this.$topToolsBarContainer.append($optionsHtml);
-
-        };
-
-
-        this.renderInstrumentsList = function () {
-            var $instrumentsHtml = $($.render.iChart_instrumentsTmpl());
-
-            var onMinicolorsChange = function(){
-                var color = $(this).val(),
-                    opacity = $(this).attr('data-opacity'),
-                    colorRGBA = iChart.hexToRGB(color, opacity),
-                    option = $(this).attr('data-option');
-
-                _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
-
-                $(".js-colorSelector[data-option='" + option + "']").css({'background-color': colorRGBA});
-
-                $(this).minicolors('value', color);
-                $(this).minicolors('opacity', opacity);
-                _this.chart.setStyleToCanvas(colorRGBA, option);
-            };
-            var onPaletteChange = function(){
-                var color = this.value,
-                    colorRGBA = iChart.hexToRGB(color, 1),
-                    option = this.element.attr('data-option');
-
-                _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
-                $(".js-colorSelector[data-option='" + option + "']").css({'background-color': colorRGBA});
-                this.element.parent().find('.js-colorPicker').minicolors('value', color);
-                _this.chart.setStyleToCanvas(colorRGBA, option);
-            };
-
-            $instrumentsHtml.find('.js-colorSelector[data-option="strokeStyle"]').css('background-color', _this.chart.userSettings.chartSettings.contextSettings.strokeStyle);
-            if(_this.chart.userSettings.chartSettings.contextSettings.strokeStyle) {
-                $instrumentsHtml.find('.js-colorPicker[data-option="strokeStyle"]').val(_this.chart.userSettings.chartSettings.contextSettings.strokeStyle);
-            }
-            $instrumentsHtml.find('.js-colorSelector[data-option="fillStyle"]').css('background-color', _this.chart.userSettings.chartSettings.contextSettings.fillStyle);
-            if(_this.chart.userSettings.chartSettings.contextSettings.fillStyle) {
-                $instrumentsHtml.find('.js-colorPicker[data-option="fillStyle"]').val(_this.chart.userSettings.chartSettings.contextSettings.fillStyle);
-            }
-            $instrumentsHtml.find('.js-colorSelector[data-option="fontSettingsColor"]').css('background-color', _this.chart.userSettings.chartSettings.fontSettings.color);
-            if(_this.chart.userSettings.chartSettings.fontSettings.color) {
-                $instrumentsHtml.find('.js-colorPicker[data-option="fontSettingsColor"]').val(_this.chart.userSettings.chartSettings.fontSettings.color);
-            }
-            //if(iguanaChart.userSettings.chartSettings.fontSettings.size) {
-            //    $('#fontSettingsSize').val(iguanaChart.userSettings.chartSettings.fontSettings.size);
-            //}
-
-
-
-            $instrumentsHtml.find('.js-colorSelector').each(function(){
-
-                var $this = $(this),
-                    menu = $this.find('.menuHolder').html();
-
-                $this.qtip({
-                    style: {
-                        classes: 'qtip-light'
-                    },
-                    position: {
-                        at: 'center right',
-                        my: 'left top',
-                        effect: false,
-                        viewport: $instrumentsHtml,
-                        adjust: {
-                            method: 'shift none'
-                        }
-                    },
-                    content: {
-                        title: $this.data('title'),
-                        text: menu
-                    },
-                    hide: {
-                        fixed: true,
-                        delay: 300
-                    },
-                    show: {
-                        solo: true
-                    },
-                    events: {
-                        show: function(event, api) {
-                            $(event.currentTarget).find('.js-colorPicker').each(function(){
-                                _this.addMinicolors(this, event.currentTarget, onMinicolorsChange, onPaletteChange);
-                            });
-                        }
-                    }
-                });
-            });
-
-            $instrumentsHtml.find('.js-lineWidthSelector').each(function(){
-
-                var $this = $(this),
-                    menu = $this.find('.menuHolder').html();
-
-                $this.qtip({
-                    style: {
-                        classes: 'qtip-light'
-                    },
-                    position: {
-                        at: 'center right',
-                        my: 'left top',
-                        effect: false,
-                        viewport: $instrumentsHtml,
-                        adjust: {
-                            method: 'shift none'
-                        }
-                    },
-                    content: {
-                        title: $this.data('title'),
-                        text: menu
-                    },
-                    hide: {
-                        fixed: true,
-                        delay: 300
-                    },
-                    show: {
-                        solo: true
-                    },
-                    events: {
-                        show: function(event, api) {
-                            $(event.currentTarget).find('[data-option="fontSettingsColor"]').each(function(){
-                                var $wrapper = $(this);
-                                $wrapper.off().on('click touchend', function(){
-                                    var value = $(this).attr('data-style'),
-                                        option = $(this).data('option');
-                                    $(".js-lineWidthSelector[data-option='" + option + "'] .js-currentLineWidth").attr('data-style', value);
-                                    _this.chart.setLineWidthToCanvas(value);
-                                });
-                            });
-
-                        }
-                    }
-                });
-            });
-
-            $instrumentsHtml.on('click touchend', '.js-iChartTools-instrument', function(){
-                var $this = $(this);
-
-                var settings = {
-                    fillStyle: _this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                    strokeStyle: _this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-                };
-
-                _this.chart.wrapper.iguanaChart("toolStart", $this.data("instrument"), settings);
-            }).on('click touchend', '.js-iChartTools-removeInstrument', function(){
-                _this.chart.removeAllInstruments_onClick();
-            });
-
-            this.$topToolsBarContainer.append($instrumentsHtml);
         };
 
         this.renderIntervals = function () {
@@ -691,8 +492,354 @@
                 _this.chart.setInterval($(this).data('value'));
             });
 
-            this.$topToolsBarContainer.append($intervalsHtml);
+            this.$topToolBarContainer.append($intervalsHtml);
         };
 
+/* ================================================================================================================== */
+        
+        this.renderTopToolBar = function () {
+            var $topToolBarHtml = $($.render.iChart_topToolBarTmpl());
+
+            this.$topToolBarContainer.append($topToolBarHtml);
+        };
+
+        /**
+         * init states control elements
+         */
+        this.initStatesControls = function () {
+            var type = this.chart.viewData.chart.chartOptions.chartType;
+            this.setUiStateForChartType(type);
+
+            var state = !!this.chart.viewData.chart.chartOptions.showVolumeByPrice;
+            this.setUiStateForShowVolumeByPrice(state);
+
+            var state = _this.chart.viewData.chart.chartOptions.showVolume;
+            this.setUiStateForShowVolume(state);
+
+            var state = _this.chart.viewData.chart.chartOptions.percentMode;
+            this.setUiStateForPercentMode(state);
+        };
+
+        this.bindUiControls = function () {
+            this.$uiContainer.off('click touchend', '.js-chart-ui-control').on('click touchend', '.js-chart-ui-control', function (e) {
+                var $this = $(this);
+
+                var property  = $this.data('property');
+                var value = $this.data('value');
+
+                var method = 'uiSet_' + property;
+
+                if(typeof _this[method] === 'function') {
+                    _this[method](value);
+                }
+            });
+
+            this.$uiContainer.on('show.uk.dropdown', '.js-chart-ui-control[data-property="fillStyle"]', function(){
+                var $this = $(this);
+                $(this).find('.js-colorPicker').each(function(){
+                    _this.addMinicolors(this, $this.find('.js-chart-ui-control-holder'), _this.onMinicolorsChange, _this.onPaletteChange);
+                });
+            });
+
+            this.$uiContainer.on('show.uk.dropdown', '.js-chart-ui-control[data-property="strokeStyle"]', function(){
+                var $this = $(this);
+                $(this).find('.js-colorPicker').each(function(){
+                    _this.addMinicolors(this, $this.find('.js-chart-ui-control-holder'), _this.onMinicolorsChange, _this.onPaletteChange);
+                });
+            });
+
+        };
+
+        this.uiSet_chartType = function (value) {
+            this.chart.viewData.chart.setChartType(value);
+            this.setUiStateForChartType(value);
+        };
+
+        this.uiSet_showVolumeByPrice = function (value) {
+            this.chart.VolumeByPrice_onClick();
+            var state = !!this.chart.viewData.chart.chartOptions.showVolumeByPrice;
+            this.setUiStateForShowVolumeByPrice(state);
+        };
+
+        this.uiSet_showVolume = function (value) {
+            this.chart.VolumeByDate_onClick();
+            var state = _this.chart.viewData.chart.chartOptions.showVolume;
+            this.setUiStateForShowVolume(state);
+        };
+
+        this.uiSet_percentMode = function (value) {
+            var percentMode = this.chart.percentMode_onClick();
+            this.setUiStateForPercentMode(percentMode);
+        };
+
+        this.uiSet_themeConfig = function () {
+
+            if($.modal.impl.d.data) {
+                $.modal.impl.close();
+                this.setUiStateForThemeConfig(false);
+            } else {
+                this.renderThemeConfigDialog();
+                this.setUiStateForThemeConfig(true);
+            }
+        };
+
+        this.uiSet_instrumentLine = function (value) {
+            var settings = {
+                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
+                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
+            };
+
+            this.chart.wrapper.iguanaChart("toolStart", value, settings);
+            this.setUiStateForInstrumentLine(value, 1);
+        };
+
+        this.uiSet_instrumentForm = function (value) {
+            var settings = {
+                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
+                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
+            };
+
+            this.chart.wrapper.iguanaChart("toolStart", value, settings);
+            this.setUiStateForInstrumentForm(value, 1);
+        };
+
+        this.uiSet_instrumentText = function (value) {
+            var settings = {
+                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
+                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
+            };
+
+            this.chart.wrapper.iguanaChart("toolStart", value, settings);
+            this.setUiStateForInstrumentText(value, 1);
+        };
+
+        this.uiSet_clearInstruments = function () {
+            this.chart.removeAllInstruments_onClick();
+        };
+
+        this.uiSet_lineWidthSelector = function (value) {
+            this.chart.setLineWidthToCanvas(value);
+            this.setUiStateForLineWidth(value);
+        };
+
+        this.onMinicolorsChange = function(value, opacity){
+            var color = $(this).val(),
+                colorRGBA = color,
+                option = $(this).attr('data-option');
+
+            if(!color.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(color, opacity)
+            }
+
+            _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
+            _this.setUiStateForColorSelector(option, colorRGBA);
+
+            $(this).minicolors('value', colorRGBA);
+            _this.chart.setStyleToCanvas(colorRGBA, option);
+        };
+
+        this.onPaletteChange = function(){
+            var color = this.value;
+            var option = this.element.attr('data-option');
+            var colorRGBA = color;
+
+            if(!color.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(color, 1);
+            }
+
+            _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
+            _this.setUiStateForColorSelector(option, colorRGBA);
+            this.element.parent().find('.js-colorPicker').minicolors('value', colorRGBA);
+            _this.chart.setStyleToCanvas(colorRGBA, option);
+        };
+
+
+
+// =====================================================================================================================
+// Processing ui elements
+
+        this.setUiStateForChartType = function (type, uiClass) {
+
+            if(!!type) {
+                uiClass = this.getUiStateForChartType(type);
+            }
+
+            this.$uiContainer.find('.js-chart-ui-control-state[data-property="chartType"]')
+                .removeClass('sprite-icon-line sprite-icon-candle sprite-icon-bars')
+                .addClass(uiClass);
+        };
+
+        this.getUiStateForChartType = function (type) {
+            var uiClass = 'sprite-icon-line';
+
+            switch (type) {
+                case 'Candlestick':
+                    uiClass = 'sprite-icon-candle';
+                    break;
+                case 'Stock':
+                    uiClass = 'sprite-icon-bars';
+                    break;
+                case 'Line':
+                    uiClass = 'sprite-icon-line';
+                    break;
+            }
+
+            return uiClass;
+        };
+
+        this.setUiStateForShowVolumeByPrice = function (state) {
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolumeByPrice"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolumeByPrice"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForShowVolume = function (state) {
+            if(state == "inside" || state == "outside") {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolume"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolume"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForPercentMode = function (state) {
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="percentMode"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="percentMode"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForThemeConfig = function (state) {
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="themeConfig"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="themeConfig"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForLineWidth = function (width) {
+            this.$uiContainer.find('.js-chart-ui-control-state[data-property="lineWidthSelector"]')
+                .removeClass('sprite-icon-1px sprite-icon-2px sprite-icon-3px sprite-icon-4px sprite-icon-5px sprite-icon-8px sprite-icon-10px')
+                .addClass('sprite-icon-' + width + 'px');
+        };
+
+        this.setUiStateForColorSelector = function (option, colorRGBA) {
+            if(!colorRGBA.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(colorRGBA, 1);
+            }
+
+            this.$uiContainer.find('.js-chart-ui-control-state[data-property="' + option + '"]').css({'background-color': colorRGBA});
+            this.$uiContainer.find('.js-chart-ui-control[data-property="' + option + '"] .js-colorPicker').val(colorRGBA);
+        };
+
+        this.setUiStateForInstrumentLine = function (instrument, state) {
+            state = !!state;
+
+            var uiClass = '';
+
+            switch (instrument) {
+                case 'Line':
+                    uiClass = 'sprite-icon-free-line';
+                    break;
+                case 'HorizontalLine':
+                    uiClass = 'sprite-icon-h-line';
+                    break;
+                case 'VerticalLine':
+                    uiClass = 'sprite-icon-v-line';
+                    break;
+                case 'Channel':
+                    uiClass = 'sprite-icon-channel';
+                    break;
+                case 'Trend':
+                    uiClass = 'sprite-icon-angle-trend';
+                    break;
+                case 'Arrow':
+                    uiClass = 'sprite-icon-arrow-line';
+                    break;
+            }
+
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentLine"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentLine"]').removeClass('active');
+            }
+
+            if(!!instrument) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentLine"] i.sprite')
+                    .removeClass('sprite-icon-free-line sprite-icon-h-line sprite-icon-v-line sprite-icon-channel sprite-icon-angle-trend sprite-icon-arrow-line')
+                    .addClass(uiClass);
+            }
+        };
+
+        this.setUiStateForInstrumentForm = function (instrument, state) {
+            state = !!state;
+
+            var uiClass = '';
+
+            switch (instrument) {
+                case 'Polygon':
+                    uiClass = 'sprite-icon-f-poligon';
+                    break;
+                case 'Rectangle':
+                    uiClass = 'sprite-icon-f-square';
+                    break;
+                case 'Triangle':
+                    uiClass = 'sprite-icon-f-triangle';
+                    break;
+                case 'Ellipse':
+                    uiClass = 'sprite-icon-f-ellipse';
+                    break;
+                case 'FibonacciArc':
+                    uiClass = 'sprite-icon-f-fibonacci-arcs';
+                    break;
+                case 'FibonacciFan':
+                    uiClass = 'sprite-icon-f-fibonacci-fan';
+                    break;
+                case 'FibonacciCorrection':
+                    uiClass = 'sprite-icon-f-fibonacci-correction';
+                    break;
+            }
+
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentForm"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentForm"]').removeClass('active');
+            }
+
+            if(!!instrument) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentForm"] i.sprite')
+                    .removeClass('sprite-icon-f-poligon sprite-icon-f-square sprite-icon-f-triangle')
+                    .removeClass('sprite-icon-f-ellipse sprite-icon-f-fibonacci-arcs sprite-icon-f-fibonacci-fan sprite-icon-f-fibonacci-correction')
+                    .addClass(uiClass);
+            }
+        };
+
+        this.setUiStateForInstrumentText = function (instrument, state) {
+            state = !!state;
+
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentText"][data-value="' + instrument + '"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentText"]').removeClass('active');
+            }
+        };
+
+        this.onSelectInstrument = function (element) {
+            if(element.settings) {
+                if(element.settings.lineWidth) {
+                    this.setUiStateForLineWidth(element.settings.lineWidth);
+                }
+
+                if(element.settings.fillStyle) {
+                    this.setUiStateForColorSelector('fillStyle', element.settings.fillStyle);
+                }
+
+                if(element.settings.strokeStyle) {
+                    this.setUiStateForColorSelector('strokeStyle', element.settings.strokeStyle);
+                }
+            }
+        }
     };
 })();

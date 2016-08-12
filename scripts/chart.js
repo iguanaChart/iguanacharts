@@ -133,9 +133,11 @@
             this.TA = new iChart.Charting.TA({chart: this.viewData.chart});
             this.viewData.chart.setDataSettings(this.dataSource.dataSettings);
             this.ui = new iChart.ui(this);
+            this.dataRequestCounter = 0;
         } else {
             this.viewData.chart.chartOptions = $.extend(true, this.viewData.chart.chartOptions, settings);
             this.viewData.chart.setDataSettings(this.getChartDataUserSettings());
+            this.dataRequestCounter = 0;
         }
 
         this.ui.render();
@@ -341,9 +343,6 @@
     };
 
     /**********************************************************/
-    this.addInstrument_onClick = function () {
-        $("#iChart-chart-instruments").show();
-    };
     this.apply_onClick = function () {
         _this.update();
     };
@@ -451,14 +450,12 @@
         if (_this.viewData.chart.overlay) {
             _this.viewData.chart.overlay.removeSelected();
         }
-        $("#iChart-chart-instruments").hide();
         return false;
     };
     this.removeAllInstruments_onClick = function () {
         if (_this.viewData.chart.overlay) {
             _this.viewData.chart.overlay.clear();
         }
-        $("#iChart-chart-instruments").hide();
         $(".m-chart-instrument-delete, .m-chart-instrument-settings").hide();
         return false;
     };
@@ -475,7 +472,6 @@
             var instrClass = $this.find('i').attr('class');
             $('.' + instrClass).eq(0).parents('.isMenu').children('i').attr('class', $this.find('i').attr('class'));
         }
-        $("#iChart-chart-instruments").hide();
         return false;
     };
     this.update = function () {
@@ -1689,7 +1685,6 @@
     $(document).on("click touchend", ".js-indicator-add", this.addIndicator_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
-    $(document).on("click touchend", "[name='addInstrument']", this.addInstrument_onClick);
     $(document).on("click touchend", "[name='apply']", this.apply_onClick);
     $(document).on("click touchend", "[name='clearIndicators']", this.clearIndicators_onClick);
     $(document).on("click", "[name='pan']", this.pan_onClick);
@@ -1704,9 +1699,16 @@
     $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
     $(_this.wrapper).on('iguanaChartEvents', function(event, name, data) {
         if(name === 'chartDataReady') {
-            if(_this.viewData.chart) {
+            if(_this.viewData.chart && _this.dataRequestCounter == 0) {
                 _this.viewData.chart.updateVolumeByPrice();
+                _this.ui.initStatesControls();
             }
+        } else if(name === 'selectInstrument') {
+            _this.ui.onSelectInstrument(data);
+        } else if(name === 'drawComplete') {
+            _this.ui.setUiStateForInstrumentLine(null, 0);
+            _this.ui.setUiStateForInstrumentForm(null, 0);
+            _this.ui.setUiStateForInstrumentText(null, 0);
         }
     });
 

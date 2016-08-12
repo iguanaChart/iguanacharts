@@ -789,7 +789,7 @@ var methods = {
 
         var $table = $('<table>').css({'border-collapse': 'collapse',
                                         'position': 'relative',
-                                        //'width': '100%',
+                                        'width': (+(obj.columns) * (+(obj.size) + 2)) + 'px',
                                         //'height': '100%',
                                         'margin': 0,
                                         'padding': 0,
@@ -3195,8 +3195,8 @@ iChart.indicators = {
         }
 
         context.save();
-        // context.translate(this.area.innerOffset.left + 0.5, this.area.innerOffset.top + 0.5);
-        context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
+        context.translate(this.area.innerOffset.left + 0.5, this.area.innerOffset.top + 0.5);
+        //context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
 
         context.beginPath();
         context.moveTo(0, this.area.innerHeight);
@@ -3402,7 +3402,7 @@ iChart.indicators = {
             } else {
                 this.$deleteButton.removeClass('on');
                 this.selected.selected = true;
-                this.selected.onSelect(this.context);
+                this.selected.onSelect.call(this.selected, this.context);
             }
         }
     };
@@ -3584,7 +3584,9 @@ iChart.indicators = {
 
     iChart.Charting.ChartElement.prototype.onOut = function (ctx) {};
 
-    iChart.Charting.ChartElement.prototype.onSelect = function (ctx) {};
+    iChart.Charting.ChartElement.prototype.onSelect = function (ctx) {
+        this.layer.chart.env.wrapper.trigger('iguanaChartEvents', ['selectInstrument', this]);
+    };
 
     iChart.Charting.ChartElement.prototype.onBlur = function (ctx) {};
 
@@ -5511,6 +5513,7 @@ iChart.indicators = {
     }
 
     iChart.Charting.ChartBubble.prototype.onSelect = function (ctx) {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         if($('#chart-element-bubble').length == 0) {
             $(this.layer.chart.container).append('' +
                 '<div id="chart-element-bubble" style="z-index: 15002; position: absolute; ">' +
@@ -5795,6 +5798,7 @@ iChart.indicators = {
     }
 
     iChart.Charting.ChartText.prototype.onSelect = function (ctx) {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         if($('#chart-element-bubble').length == 0) {
             $(this.layer.chart.container).append('' +
                 '<div id="chart-element-bubble" style="z-index: 15002; position: absolute; ">' +
@@ -6119,6 +6123,7 @@ iChart.indicators = {
     };
 
     iChart.Charting.ChartOrder.prototype.onSelect = function () {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.setTestSegments();
     };
 
@@ -8179,6 +8184,7 @@ iChart.indicators = {
     };
 
     iChart.Charting.ChartPosition.prototype.onSelect = function () {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.setTestSegments();
     };
 
@@ -8539,6 +8545,7 @@ iChart.indicators = {
     };
 
     iChart.Charting.ChartTradePanel.prototype.onSelect = function () {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         //this.setTestSegments();
     };
 
@@ -9451,6 +9458,7 @@ iChart.indicators = {
 
     };
     iChart.Charting.ChartTrendorder.prototype.onSelect = function () {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.getTestContext(true);
     };
 
@@ -10362,6 +10370,7 @@ iChart.indicators = {
             this.chart.wrapper.trigger('iguanaChartEvents', ['chartDataReceived', data]);
             callback(data);
             this.chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
+            this.chart.dataRequestCounter++;
         };
 
         /**
@@ -15248,6 +15257,10 @@ iChart.indicators = {
                 return;
             }
 
+            if(!_this.chart.areas) {
+                return;
+            }
+
             var area = _this.chart.areas[0],
                 offset = _this.$container.offset();
 
@@ -15890,7 +15903,8 @@ $.views.settings.allowCode(true);
 $.templates("iChart_mainTmpl", '' +
     '<div class="iChart-control-form" style="min-height: 200px">' +
         '<div class="js-chartContainerWrapper">' +
-            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: none;"></div></div>' +
+            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: block;">' +
+            '</div></div>' +
             '<div id="{{:id}}" class="m-chart-container" style="height: 100%;">' +
             '</div>' +
         '</div>' +
@@ -15914,6 +15928,231 @@ $.templates("iChart_mainTmpl", '' +
         '<div class="chart-loader-wrapper" style="top: 0; width: 100%; height: 100%;"><div class="chart-loader"></div></div>' +
     '</div>'
 );
+
+$.templates("iChart_topToolBarTmpl", '' +
+
+    '<div class="tm-tool-bar uk-flex uk-flex-space-between">' +
+        '<div class="uk-flex uk-flex-left uk-position-relative">' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button active uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="">' +
+                    '<i class="sprite sprite-icon-line js-chart-ui-control-state" data-property="chartType"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Line chart') + '">' +
+                            '<i class="sprite sprite-icon-line js-chart-ui-control" data-property="chartType" data-value="Line"></i>' +
+                        '</div>' +
+
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Candlestick chart') + '">' +
+                            '<i class="sprite sprite-icon-candle js-chart-ui-control" data-property="chartType" data-value="Candlestick"></i>' +
+                        '</div>' +
+
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Bar chart') + '">' +
+                            '<i class="sprite sprite-icon-bars js-chart-ui-control" data-property="chartType" data-value="Stock"></i>' +
+                        '</div>' +
+
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume horizontally') + '">' +
+                '<i class="sprite sprite-icon-h-volume"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume vertically') + '">' +
+                '<i class="sprite sprite-icon-v-volume"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Relative price') + '">' +
+                '<i class="sprite sprite-icon-price"></i>' +
+            '</div>' +
+
+            '<i class="sprite sprite-icon-divider"></i>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Visual Settings') + '">' +
+                '<i class="sprite sprite-icon-palette"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Text') + '">' +
+                '<i class="sprite sprite-icon-font"></i>' +
+            '</div>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Tooltip') + '">' +
+                '<i class="sprite sprite-icon-f-comment"></i>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Line') + '">' +
+                    '<i class="sprite sprite-icon-free-line"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Free Line') + '">' +
+                            '<i class="sprite sprite-icon-free-line"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Horizontal line') + '">' +
+                            '<i class="sprite sprite-icon-h-line"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Vertical line') + '">' +
+                            '<i class="sprite sprite-icon-v-line"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Channel') + '">' +
+                            '<i class="sprite sprite-icon-channel"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Corner Trend') + '">' +
+                            '<i class="sprite sprite-icon-angle-trend"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Arrow') + '">' +
+                            '<i class="sprite sprite-icon-arrow-line"></i>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Form') + '">' +
+                    '<i class="sprite sprite sprite-icon-f-square"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Poligon') + '">' +
+                            '<i class="sprite sprite-icon-f-poligon"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Rectangle') + '">' +
+                            '<i class="sprite sprite-icon-f-square"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Triangle') + '">' +
+                            '<i class="sprite sprite-icon-f-triangle"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Ellipse') + '">' +
+                            '<i class="sprite sprite-icon-f-ellipse"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Archs') + '">' +
+                            '<i class="sprite sprite-icon-f-fibonacci-arcs"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Fan') + '">' +
+                            '<i class="sprite sprite-icon-f-fibonacci-fan"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Retracement') + '">' +
+                            '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="">' +
+                    '<i class="sprite sprite-icon-1px js-chart-ui-control-state" data-property="lineWidthSelector"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="1" data-uk-tooltip="{pos:\'top\'}" title="Line 1px">' +
+                            '<i class="sprite sprite-icon-1px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="2" data-uk-tooltip="{pos:\'top\'}" title="Line 2px">' +
+                            '<i class="sprite sprite-icon-2px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="3" data-uk-tooltip="{pos:\'top\'}" title="Line 3px">' +
+                            '<i class="sprite sprite-icon-3px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="4" data-uk-tooltip="{pos:\'top\'}" title="Line 4px">' +
+                            '<i class="sprite sprite-icon-4px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="5" data-uk-tooltip="{pos:\'top\'}" title="Line 5px">' +
+                            '<i class="sprite sprite-icon-5px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="8" data-uk-tooltip="{pos:\'top\'}" title="Line 8px">' +
+                            '<i class="sprite sprite-icon-8px"></i>' +
+                        '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="lineWidthSelector" data-value="10" data-uk-tooltip="{pos:\'top\'}" title="Line 10px">' +
+                            '<i class="sprite sprite-icon-10px"></i>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative js-chart-ui-control" data-property="fillStyle">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Fill Color">' +
+                    '<div class="tm-fill-color js-chart-ui-control-state" data-property="fillStyle" style="background-color: rgba(82, 175, 201, 0.5);"></div>' +
+                    '<i class="sprite sprite-icon-fill-color"></i>' +
+                 '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow js-chart-ui-control-holder">' +
+                        '<div class="js-colorPalette" data-option="fillStyle"></div>' +
+                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fillStyle" data-element="canvas" value="" size="10"/>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div data-uk-dropdown="" class="uk-position-relative js-chart-ui-control" data-property="strokeStyle">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Line Color">' +
+                    '<div class="tm-line-color js-chart-ui-control-state" data-property="strokeStyle" style="background-color: rgb(82, 175, 201);"></div>' +
+                    '<i class="sprite sprite-icon-line-color"></i>' +
+                '</div>' +
+                '<div class="uk-dropdown-blank" style="width: auto">' +
+                    '<div class="uk-flex uk-flex-left tm-shadow js-chart-ui-control-holder">' +
+                        '<div class="js-colorPalette" data-option="strokeStyle"></div>' +
+                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="strokeStyle" data-element="canvas" value="" size="10"/>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            '<i class="sprite sprite-icon-divider"></i>' +
+
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Clear Chart') + '">' +
+                '<i class="sprite sprite-icon-trash"></i>' +
+            '</div>' +
+
+        '</div>' +
+
+    '<div class="uk-flex uk-flex-left">' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
+    '<i class="sprite sprite-icon-1m"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button active uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
+    '<i class="sprite sprite-icon-5m"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
+    '<i class="sprite sprite-icon-15m"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
+    '<i class="sprite sprite-icon-h"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
+    '<i class="sprite sprite-icon-d"></i>' +
+    '</div>' +
+
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
+    '<i class="sprite sprite-icon-w"></i>' +
+    '</div>' +
+
+    '<i class="sprite sprite-icon-divider"></i>' +
+
+    '<div data-uk-dropdown="{\'pos:\'bottom-right\'}" class="uk-position-relative">' +
+    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Add Indicator" style="min-width: 100px">' +
+    '<i class="sprite sprite-icon-text-indicators"></i>' +
+    '</div>' +
+    '<div class="uk-dropdown-blank" style="width: auto">' +
+    '<div class="tm-shadow">' +
+    '<ul class="uk-list uk-list-line">' +
+    '<li>AD (Accumulation Distribution)</li>' +
+    '<li>ADOSC (Chaikin Oscillator)</li>' +
+    '<li>ADX (Average Directional Index)</li>' +
+    '</ul>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>'
+);
+
 
 $.templates("indicatorsCurrentTmpl", '' +
     '{{for userData}}' +
@@ -16303,27 +16542,6 @@ $.templates("themeConfigOptionsTmpl", '' +
     '</div>'
 );
 
-$.templates("iChart_optionsTmpl",
-    '<div class="js-iChartTools-options uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('', 'Настройки') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
-        '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
-            '<div class="js-iChartTools-optionsList">' +
-                '<ul class="uk-nav uk-nav-dropdown">' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-chartType" data-value="Candlestick">' + _t('1366', 'Свечи') +' <i class="uk-float-right {{if chartType == "Candlestick"}}uk-icon-circle{{else}}uk-icon-circle-o{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-chartType" data-value="Line">' + _t('1365', 'Линия') + ' <i class="uk-float-right  {{if chartType == "Line"}}uk-icon-circle{{else}}uk-icon-circle-o{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-chartType" data-value="Stock">' + _t('1367', 'Бары') + ' <i class="uk-float-right  {{if chartType == "Stock"}}uk-icon-circle{{else}}uk-icon-circle-o{{/if}}"></i></a></li>' +
-                    '<li class="uk-nav-divider"></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-percentMode">' + _t('2995', 'Относительная цена') + ' <i class="uk-float-right  {{if percentMode}}uk-icon-toggle-on{{else}}uk-icon-toggle-off{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-volumeByPrice">' + _t('', 'V по горизонтали') + ' <i class="uk-float-right  {{if showVolumeByPrice}}uk-icon-toggle-on{{else}}uk-icon-toggle-off{{/if}}"></i></a></li>' +
-                    '<li><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-volumeByDate">' + _t('', 'V по вертикали') + ' <i class="uk-float-right  {{if showVolume=="inside" || showVolume == "outside"}}uk-icon-toggle-on{{else}}uk-icon-toggle-off{{/if}}"></i></a></li>' +
-                    '<li class="uk-nav-divider"></li>' +
-                    '<li class="uk-dropdown-close"><a href="javascript:void(0);" onclick="return false;" class="js-iChartTools-themeDialog" data-value="">' + _t('', 'Визуальные настройки') + '</a></li>' +
-                '</ul>' +
-            '</div>' +
-        '</div>' +
-    '</div>'
-);
-
 $.templates("iChart_instrumentsTmpl",
     '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
         '<button class="uk-button uk-margin-small-left">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
@@ -16504,6 +16722,7 @@ var iChartDataSource = {
                 _chart.response = data.d;
 
                 _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
+                _chart.dataRequestCounter++;
 
                 _chart.fixViewport();
                 _chart.updateUnlocked = true;
@@ -16708,9 +16927,11 @@ IguanaChart = function (options) {
             this.TA = new iChart.Charting.TA({chart: this.viewData.chart});
             this.viewData.chart.setDataSettings(this.dataSource.dataSettings);
             this.ui = new iChart.ui(this);
+            this.dataRequestCounter = 0;
         } else {
             this.viewData.chart.chartOptions = $.extend(true, this.viewData.chart.chartOptions, settings);
             this.viewData.chart.setDataSettings(this.getChartDataUserSettings());
+            this.dataRequestCounter = 0;
         }
 
         this.ui.render();
@@ -16916,9 +17137,6 @@ IguanaChart = function (options) {
     };
 
     /**********************************************************/
-    this.addInstrument_onClick = function () {
-        $("#iChart-chart-instruments").show();
-    };
     this.apply_onClick = function () {
         _this.update();
     };
@@ -17026,14 +17244,12 @@ IguanaChart = function (options) {
         if (_this.viewData.chart.overlay) {
             _this.viewData.chart.overlay.removeSelected();
         }
-        $("#iChart-chart-instruments").hide();
         return false;
     };
     this.removeAllInstruments_onClick = function () {
         if (_this.viewData.chart.overlay) {
             _this.viewData.chart.overlay.clear();
         }
-        $("#iChart-chart-instruments").hide();
         $(".m-chart-instrument-delete, .m-chart-instrument-settings").hide();
         return false;
     };
@@ -17050,7 +17266,6 @@ IguanaChart = function (options) {
             var instrClass = $this.find('i').attr('class');
             $('.' + instrClass).eq(0).parents('.isMenu').children('i').attr('class', $this.find('i').attr('class'));
         }
-        $("#iChart-chart-instruments").hide();
         return false;
     };
     this.update = function () {
@@ -18264,7 +18479,6 @@ IguanaChart = function (options) {
     $(document).on("click touchend", ".js-indicator-add", this.addIndicator_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
-    $(document).on("click touchend", "[name='addInstrument']", this.addInstrument_onClick);
     $(document).on("click touchend", "[name='apply']", this.apply_onClick);
     $(document).on("click touchend", "[name='clearIndicators']", this.clearIndicators_onClick);
     $(document).on("click", "[name='pan']", this.pan_onClick);
@@ -18279,9 +18493,16 @@ IguanaChart = function (options) {
     $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
     $(_this.wrapper).on('iguanaChartEvents', function(event, name, data) {
         if(name === 'chartDataReady') {
-            if(_this.viewData.chart) {
+            if(_this.viewData.chart && _this.dataRequestCounter == 0) {
                 _this.viewData.chart.updateVolumeByPrice();
+                _this.ui.initStatesControls();
             }
+        } else if(name === 'selectInstrument') {
+            _this.ui.onSelectInstrument(data);
+        } else if(name === 'drawComplete') {
+            _this.ui.setUiStateForInstrumentLine(null, 0);
+            _this.ui.setUiStateForInstrumentForm(null, 0);
+            _this.ui.setUiStateForInstrumentText(null, 0);
         }
     });
 
@@ -18305,27 +18526,32 @@ IguanaChart = function (options) {
 {
     "use strict";
 
+    /**
+     * @param {IguanaChart} chart
+     */
+
     iChart.ui = function (chart) {
 
         this.chart = chart;
         var _this = this;
 
-        this.$topToolsBarContainer = this.chart.wrapper.find('.iChartToolsTop');
+        this.$uiContainer = this.chart.wrapper;
+        this.$topToolBarContainer = this.chart.wrapper.find('.iChartToolsTop');
 
         this.render = function () {
             var chartOptionsUiTools = this.chart.viewData.chart.chartOptions.uiTools;
             if(chartOptionsUiTools.top) {
                 this.renderTopBar();
             }
+            this.bindUiControls();
         };
 
         this.renderTopBar = function () {
-            this.$topToolsBarContainer.empty();
-            this.renderIntervals();
-            this.renderIndicators();
-            this.renderOptionsList();
-            this.renderInstrumentsList();
-            this.$topToolsBarContainer.show();
+            this.$topToolBarContainer.empty();
+            // this.renderIntervals();
+            // this.renderIndicators();
+            this.renderTopToolBar();
+            this.$topToolBarContainer.show();
         };
 
         /**
@@ -18339,7 +18565,7 @@ IguanaChart = function (options) {
 
             var indicatorsDropdownHtml = $.render.indicatorsDropdownTmpl(data);
 
-            this.$topToolsBarContainer.append(indicatorsDropdownHtml);
+            this.$topToolBarContainer.append(indicatorsDropdownHtml);
 
             $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
@@ -18388,7 +18614,7 @@ IguanaChart = function (options) {
 
             var indicatorsListHtml = $.render.indicatorsListTmpl(data);
 
-            this.$topToolsBarContainer.find('.js-iChartTools-indicators-list').html(indicatorsListHtml);
+            this.$topToolBarContainer.find('.js-iChartTools-indicators-list').html(indicatorsListHtml);
         };
 
         /**
@@ -18401,7 +18627,7 @@ IguanaChart = function (options) {
 
             var indicatorsCurrentHtml = $.render.indicatorsCurrentTmpl(data);
 
-            this.$topToolsBarContainer.find('.js-iChartTools-indicators-current').html(indicatorsCurrentHtml);
+            this.$topToolBarContainer.find('.js-iChartTools-indicators-current').html(indicatorsCurrentHtml);
 
         };
 
@@ -18519,6 +18745,7 @@ IguanaChart = function (options) {
 
             var onCloseModal = function() {
                 _this.chart.wrapper.iguanaChart('chartOptions', $windowContent.data("chartOptions"));
+                _this.setUiStateForThemeConfig(false);
                 if($.modal.impl.d.data) {
                     $.modal.impl.close();
                 }
@@ -18539,6 +18766,7 @@ IguanaChart = function (options) {
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
                         _this.chart.userSettings.chartSettings.defaultTheme = 0;
+                        _this.setUiStateForThemeConfig(false);
                         if($.modal.impl.d.data) {
                             $.modal.impl.close(false);
                         }
@@ -18643,9 +18871,12 @@ IguanaChart = function (options) {
 
             var onMinicolorsChange = function(){
                 var color = $(this).val(),
-                    opacity = $(this).attr('data-opacity'),
-                    colorRGBA = iChart.hexToRGB(color, opacity),
+                    colorRGBA = color,
                     option = $(this).attr('data-option');
+
+                if(!color.match(/^rgb.*/)) {
+                    colorRGBA = iChart.hexToRGB(color, opacity)
+                }
 
                 _this.chart.wrapper.iguanaChart('chartOptions', option, colorRGBA);
                 $(".js-colorSelector[data-option='" + option + "']").css({'background-color': colorRGBA});
@@ -18716,15 +18947,16 @@ IguanaChart = function (options) {
 
             onMinicolorsChange = typeof onMinicolorsChange == "function" ? onMinicolorsChange : function(){};
 
-            var $input = $(element),
-                opacityTrue = ($input.first().attr('data-opacity'))?true:false,
-                opacity = $input.first().attr('data-opacity'),
-                color = $input.first().val();
+            var $input = $(element);
+            var opacityTrue = ($input.first().attr('data-opacity'))?true:false;
+            var opacity = $input.first().attr('data-opacity');
+            var color = $input.first().val();
+            color = color ? color : 'rgba(82, 175, 201, 0.5)';
 
             $(element).minicolors({
                 animationSpeed: 50,
                 animationEasing: 'swing',
-                change: null,
+                change: onMinicolorsChange,
                 changeDelay: 0,
                 control: 'hue',
                 defaultValue: color,
@@ -18732,19 +18964,13 @@ IguanaChart = function (options) {
                 hideSpeed: 100,
                 inline: true,
                 letterCase: 'lowercase',
-                opacity: true,
+                opacity: opacityTrue,
                 position: 'bottom left',
                 show: null,
                 showSpeed: 100,
                 theme: 'default'
-            }).change(onMinicolorsChange);
-            if(color.match(/^rgb.*/)) {
-                opacity = iChart.rgbaGetAlfa(color);
-                color = iChart.rgbToHex(color);
-            }
+            });
             $(element).minicolors('value', color);
-            $(element).minicolors('opacity', opacity);
-
         };
 
         this.initColorPalette = function (holder, onPaletteChange) {
@@ -18764,215 +18990,11 @@ IguanaChart = function (options) {
         this.addMinicolors = function (element, holder, onMinicolorsChange, onPaletteChange) {
             if($(element).hasClass('minicolors-input')) {
                 var color = $(element).val();
-                var opacity = $(element).attr('data-opacity');
-                if(color.match(/^rgb.*/)) {
-                    opacity = iChart.rgbaGetAlfa(color);
-                    color = iChart.rgbToHex(color);
-                }
                 $(element).minicolors('value', color);
-                $(element).minicolors('opacity', opacity);
                 return;
             }
             this.initMinicolors(element, onMinicolorsChange);
             this.initColorPalette(holder, onPaletteChange);
-        };
-
-
-        this.renderOptionsList = function () {
-
-            var chartOptions = this.chart.viewData.chart.chartOptions;
-
-            var options = {
-                chartType: chartOptions.chartType,
-                percentMode: chartOptions.percentMode,
-                showVolume: chartOptions.showVolume,
-                showVolumeByPrice: chartOptions.showVolumeByPrice
-            };
-
-            var $optionsHtml = $($.render.iChart_optionsTmpl(options));
-
-            $optionsHtml.on('click touchend', '.js-iChartTools-themeDialog', function(){
-                _this.renderThemeConfigDialog();
-            }).on('click touchend', '.js-iChartTools-chartType', function(){
-                var $this = $(this);
-                $optionsHtml.find('.js-iChartTools-chartType i').removeClass('uk-icon-circle').addClass('uk-icon-circle-o');
-                $this.find('i').addClass('uk-icon-circle');
-                _this.chart.viewData.chart.setChartType($this.data("value"));
-            }).on('click touchend', '.js-iChartTools-percentMode', function(){
-                if(_this.chart.percentMode_onClick()) {
-                    $optionsHtml.find('.js-iChartTools-percentMode i').removeClass('uk-icon-toggle-off').addClass('uk-icon-toggle-on');
-                } else {
-                    $optionsHtml.find('.js-iChartTools-percentMode i').removeClass('uk-icon-toggle-on').addClass('uk-icon-toggle-off');
-                }
-            }).on('click touchend', '.js-iChartTools-volumeByPrice', function(){
-                _this.chart.VolumeByPrice_onClick();
-                if(_this.chart.viewData.chart.chartOptions.showVolumeByPrice) {
-                    $optionsHtml.find('.js-iChartTools-volumeByPrice i').removeClass('uk-icon-toggle-off').addClass('uk-icon-toggle-on');
-                } else {
-                    $optionsHtml.find('.js-iChartTools-volumeByPrice i').removeClass('uk-icon-toggle-on').addClass('uk-icon-toggle-off');
-                }
-            }).on('click touchend', '.js-iChartTools-volumeByDate', function(){
-                _this.chart.VolumeByDate_onClick();
-                var showVolume = _this.chart.viewData.chart.chartOptions.showVolume;
-                if(showVolume == "inside" || showVolume == "outside") {
-                    $optionsHtml.find('.js-iChartTools-volumeByDate i').removeClass('uk-icon-toggle-off').addClass('uk-icon-toggle-on');
-                } else {
-                    $optionsHtml.find('.js-iChartTools-volumeByDate i').removeClass('uk-icon-toggle-on').addClass('uk-icon-toggle-off');
-                }
-            });
-
-
-
-            this.$topToolsBarContainer.append($optionsHtml);
-
-        };
-
-
-        this.renderInstrumentsList = function () {
-            var $instrumentsHtml = $($.render.iChart_instrumentsTmpl());
-
-            var onMinicolorsChange = function(){
-                var color = $(this).val(),
-                    opacity = $(this).attr('data-opacity'),
-                    colorRGBA = iChart.hexToRGB(color, opacity),
-                    option = $(this).attr('data-option');
-
-                _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
-
-                $(".js-colorSelector[data-option='" + option + "']").css({'background-color': colorRGBA});
-
-                $(this).minicolors('value', color);
-                $(this).minicolors('opacity', opacity);
-                _this.chart.setStyleToCanvas(colorRGBA, option);
-            };
-            var onPaletteChange = function(){
-                var color = this.value,
-                    colorRGBA = iChart.hexToRGB(color, 1),
-                    option = this.element.attr('data-option');
-
-                _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
-                $(".js-colorSelector[data-option='" + option + "']").css({'background-color': colorRGBA});
-                this.element.parent().find('.js-colorPicker').minicolors('value', color);
-                _this.chart.setStyleToCanvas(colorRGBA, option);
-            };
-
-            $instrumentsHtml.find('.js-colorSelector[data-option="strokeStyle"]').css('background-color', _this.chart.userSettings.chartSettings.contextSettings.strokeStyle);
-            if(_this.chart.userSettings.chartSettings.contextSettings.strokeStyle) {
-                $instrumentsHtml.find('.js-colorPicker[data-option="strokeStyle"]').val(_this.chart.userSettings.chartSettings.contextSettings.strokeStyle);
-            }
-            $instrumentsHtml.find('.js-colorSelector[data-option="fillStyle"]').css('background-color', _this.chart.userSettings.chartSettings.contextSettings.fillStyle);
-            if(_this.chart.userSettings.chartSettings.contextSettings.fillStyle) {
-                $instrumentsHtml.find('.js-colorPicker[data-option="fillStyle"]').val(_this.chart.userSettings.chartSettings.contextSettings.fillStyle);
-            }
-            $instrumentsHtml.find('.js-colorSelector[data-option="fontSettingsColor"]').css('background-color', _this.chart.userSettings.chartSettings.fontSettings.color);
-            if(_this.chart.userSettings.chartSettings.fontSettings.color) {
-                $instrumentsHtml.find('.js-colorPicker[data-option="fontSettingsColor"]').val(_this.chart.userSettings.chartSettings.fontSettings.color);
-            }
-            //if(iguanaChart.userSettings.chartSettings.fontSettings.size) {
-            //    $('#fontSettingsSize').val(iguanaChart.userSettings.chartSettings.fontSettings.size);
-            //}
-
-
-
-            $instrumentsHtml.find('.js-colorSelector').each(function(){
-
-                var $this = $(this),
-                    menu = $this.find('.menuHolder').html();
-
-                $this.qtip({
-                    style: {
-                        classes: 'qtip-light'
-                    },
-                    position: {
-                        at: 'center right',
-                        my: 'left top',
-                        effect: false,
-                        viewport: $instrumentsHtml,
-                        adjust: {
-                            method: 'shift none'
-                        }
-                    },
-                    content: {
-                        title: $this.data('title'),
-                        text: menu
-                    },
-                    hide: {
-                        fixed: true,
-                        delay: 300
-                    },
-                    show: {
-                        solo: true
-                    },
-                    events: {
-                        show: function(event, api) {
-                            $(event.currentTarget).find('.js-colorPicker').each(function(){
-                                _this.addMinicolors(this, event.currentTarget, onMinicolorsChange, onPaletteChange);
-                            });
-                        }
-                    }
-                });
-            });
-
-            $instrumentsHtml.find('.js-lineWidthSelector').each(function(){
-
-                var $this = $(this),
-                    menu = $this.find('.menuHolder').html();
-
-                $this.qtip({
-                    style: {
-                        classes: 'qtip-light'
-                    },
-                    position: {
-                        at: 'center right',
-                        my: 'left top',
-                        effect: false,
-                        viewport: $instrumentsHtml,
-                        adjust: {
-                            method: 'shift none'
-                        }
-                    },
-                    content: {
-                        title: $this.data('title'),
-                        text: menu
-                    },
-                    hide: {
-                        fixed: true,
-                        delay: 300
-                    },
-                    show: {
-                        solo: true
-                    },
-                    events: {
-                        show: function(event, api) {
-                            $(event.currentTarget).find('[data-option="fontSettingsColor"]').each(function(){
-                                var $wrapper = $(this);
-                                $wrapper.off().on('click touchend', function(){
-                                    var value = $(this).attr('data-style'),
-                                        option = $(this).data('option');
-                                    $(".js-lineWidthSelector[data-option='" + option + "'] .js-currentLineWidth").attr('data-style', value);
-                                    _this.chart.setLineWidthToCanvas(value);
-                                });
-                            });
-
-                        }
-                    }
-                });
-            });
-
-            $instrumentsHtml.on('click touchend', '.js-iChartTools-instrument', function(){
-                var $this = $(this);
-
-                var settings = {
-                    fillStyle: _this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                    strokeStyle: _this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-                };
-
-                _this.chart.wrapper.iguanaChart("toolStart", $this.data("instrument"), settings);
-            }).on('click touchend', '.js-iChartTools-removeInstrument', function(){
-                _this.chart.removeAllInstruments_onClick();
-            });
-
-            this.$topToolsBarContainer.append($instrumentsHtml);
         };
 
         this.renderIntervals = function () {
@@ -18994,9 +19016,355 @@ IguanaChart = function (options) {
                 _this.chart.setInterval($(this).data('value'));
             });
 
-            this.$topToolsBarContainer.append($intervalsHtml);
+            this.$topToolBarContainer.append($intervalsHtml);
         };
 
+/* ================================================================================================================== */
+        
+        this.renderTopToolBar = function () {
+            var $topToolBarHtml = $($.render.iChart_topToolBarTmpl());
+
+            this.$topToolBarContainer.append($topToolBarHtml);
+        };
+
+        /**
+         * init states control elements
+         */
+        this.initStatesControls = function () {
+            var type = this.chart.viewData.chart.chartOptions.chartType;
+            this.setUiStateForChartType(type);
+
+            var state = !!this.chart.viewData.chart.chartOptions.showVolumeByPrice;
+            this.setUiStateForShowVolumeByPrice(state);
+
+            var state = _this.chart.viewData.chart.chartOptions.showVolume;
+            this.setUiStateForShowVolume(state);
+
+            var state = _this.chart.viewData.chart.chartOptions.percentMode;
+            this.setUiStateForPercentMode(state);
+        };
+
+        this.bindUiControls = function () {
+            this.$uiContainer.off('click touchend', '.js-chart-ui-control').on('click touchend', '.js-chart-ui-control', function (e) {
+                var $this = $(this);
+
+                var property  = $this.data('property');
+                var value = $this.data('value');
+
+                var method = 'uiSet_' + property;
+
+                if(typeof _this[method] === 'function') {
+                    _this[method](value);
+                }
+            });
+
+            this.$uiContainer.on('show.uk.dropdown', '.js-chart-ui-control[data-property="fillStyle"]', function(){
+                var $this = $(this);
+                $(this).find('.js-colorPicker').each(function(){
+                    _this.addMinicolors(this, $this.find('.js-chart-ui-control-holder'), _this.onMinicolorsChange, _this.onPaletteChange);
+                });
+            });
+
+            this.$uiContainer.on('show.uk.dropdown', '.js-chart-ui-control[data-property="strokeStyle"]', function(){
+                var $this = $(this);
+                $(this).find('.js-colorPicker').each(function(){
+                    _this.addMinicolors(this, $this.find('.js-chart-ui-control-holder'), _this.onMinicolorsChange, _this.onPaletteChange);
+                });
+            });
+
+        };
+
+        this.uiSet_chartType = function (value) {
+            this.chart.viewData.chart.setChartType(value);
+            this.setUiStateForChartType(value);
+        };
+
+        this.uiSet_showVolumeByPrice = function (value) {
+            this.chart.VolumeByPrice_onClick();
+            var state = !!this.chart.viewData.chart.chartOptions.showVolumeByPrice;
+            this.setUiStateForShowVolumeByPrice(state);
+        };
+
+        this.uiSet_showVolume = function (value) {
+            this.chart.VolumeByDate_onClick();
+            var state = _this.chart.viewData.chart.chartOptions.showVolume;
+            this.setUiStateForShowVolume(state);
+        };
+
+        this.uiSet_percentMode = function (value) {
+            var percentMode = this.chart.percentMode_onClick();
+            this.setUiStateForPercentMode(percentMode);
+        };
+
+        this.uiSet_themeConfig = function () {
+
+            if($.modal.impl.d.data) {
+                $.modal.impl.close();
+                this.setUiStateForThemeConfig(false);
+            } else {
+                this.renderThemeConfigDialog();
+                this.setUiStateForThemeConfig(true);
+            }
+        };
+
+        this.uiSet_instrumentLine = function (value) {
+            var settings = {
+                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
+                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
+            };
+
+            this.chart.wrapper.iguanaChart("toolStart", value, settings);
+            this.setUiStateForInstrumentLine(value, 1);
+        };
+
+        this.uiSet_instrumentForm = function (value) {
+            var settings = {
+                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
+                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
+            };
+
+            this.chart.wrapper.iguanaChart("toolStart", value, settings);
+            this.setUiStateForInstrumentForm(value, 1);
+        };
+
+        this.uiSet_instrumentText = function (value) {
+            var settings = {
+                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
+                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
+            };
+
+            this.chart.wrapper.iguanaChart("toolStart", value, settings);
+            this.setUiStateForInstrumentText(value, 1);
+        };
+
+        this.uiSet_clearInstruments = function () {
+            this.chart.removeAllInstruments_onClick();
+        };
+
+        this.uiSet_lineWidthSelector = function (value) {
+            this.chart.setLineWidthToCanvas(value);
+            this.setUiStateForLineWidth(value);
+        };
+
+        this.onMinicolorsChange = function(value, opacity){
+            var color = $(this).val(),
+                colorRGBA = color,
+                option = $(this).attr('data-option');
+
+            if(!color.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(color, opacity)
+            }
+
+            _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
+            _this.setUiStateForColorSelector(option, colorRGBA);
+
+            $(this).minicolors('value', colorRGBA);
+            _this.chart.setStyleToCanvas(colorRGBA, option);
+        };
+
+        this.onPaletteChange = function(){
+            var color = this.value;
+            var option = this.element.attr('data-option');
+            var colorRGBA = color;
+
+            if(!color.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(color, 1);
+            }
+
+            _this.chart.userSettings.chartSettings.contextSettings[option] = colorRGBA;
+            _this.setUiStateForColorSelector(option, colorRGBA);
+            this.element.parent().find('.js-colorPicker').minicolors('value', colorRGBA);
+            _this.chart.setStyleToCanvas(colorRGBA, option);
+        };
+
+
+
+// =====================================================================================================================
+// Processing ui elements
+
+        this.setUiStateForChartType = function (type, uiClass) {
+
+            if(!!type) {
+                uiClass = this.getUiStateForChartType(type);
+            }
+
+            this.$uiContainer.find('.js-chart-ui-control-state[data-property="chartType"]')
+                .removeClass('sprite-icon-line sprite-icon-candle sprite-icon-bars')
+                .addClass(uiClass);
+        };
+
+        this.getUiStateForChartType = function (type) {
+            var uiClass = 'sprite-icon-line';
+
+            switch (type) {
+                case 'Candlestick':
+                    uiClass = 'sprite-icon-candle';
+                    break;
+                case 'Stock':
+                    uiClass = 'sprite-icon-bars';
+                    break;
+                case 'Line':
+                    uiClass = 'sprite-icon-line';
+                    break;
+            }
+
+            return uiClass;
+        };
+
+        this.setUiStateForShowVolumeByPrice = function (state) {
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolumeByPrice"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolumeByPrice"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForShowVolume = function (state) {
+            if(state == "inside" || state == "outside") {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolume"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="showVolume"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForPercentMode = function (state) {
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="percentMode"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="percentMode"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForThemeConfig = function (state) {
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="themeConfig"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="themeConfig"]').removeClass('active');
+            }
+        };
+
+        this.setUiStateForLineWidth = function (width) {
+            this.$uiContainer.find('.js-chart-ui-control-state[data-property="lineWidthSelector"]')
+                .removeClass('sprite-icon-1px sprite-icon-2px sprite-icon-3px sprite-icon-4px sprite-icon-5px sprite-icon-8px sprite-icon-10px')
+                .addClass('sprite-icon-' + width + 'px');
+        };
+
+        this.setUiStateForColorSelector = function (option, colorRGBA) {
+            if(!colorRGBA.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(colorRGBA, 1);
+            }
+
+            this.$uiContainer.find('.js-chart-ui-control-state[data-property="' + option + '"]').css({'background-color': colorRGBA});
+            this.$uiContainer.find('.js-chart-ui-control[data-property="' + option + '"] .js-colorPicker').val(colorRGBA);
+        };
+
+        this.setUiStateForInstrumentLine = function (instrument, state) {
+            state = !!state;
+
+            var uiClass = '';
+
+            switch (instrument) {
+                case 'Line':
+                    uiClass = 'sprite-icon-free-line';
+                    break;
+                case 'HorizontalLine':
+                    uiClass = 'sprite-icon-h-line';
+                    break;
+                case 'VerticalLine':
+                    uiClass = 'sprite-icon-v-line';
+                    break;
+                case 'Channel':
+                    uiClass = 'sprite-icon-channel';
+                    break;
+                case 'Trend':
+                    uiClass = 'sprite-icon-angle-trend';
+                    break;
+                case 'Arrow':
+                    uiClass = 'sprite-icon-arrow-line';
+                    break;
+            }
+
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentLine"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentLine"]').removeClass('active');
+            }
+
+            if(!!instrument) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentLine"] i.sprite')
+                    .removeClass('sprite-icon-free-line sprite-icon-h-line sprite-icon-v-line sprite-icon-channel sprite-icon-angle-trend sprite-icon-arrow-line')
+                    .addClass(uiClass);
+            }
+        };
+
+        this.setUiStateForInstrumentForm = function (instrument, state) {
+            state = !!state;
+
+            var uiClass = '';
+
+            switch (instrument) {
+                case 'Polygon':
+                    uiClass = 'sprite-icon-f-poligon';
+                    break;
+                case 'Rectangle':
+                    uiClass = 'sprite-icon-f-square';
+                    break;
+                case 'Triangle':
+                    uiClass = 'sprite-icon-f-triangle';
+                    break;
+                case 'Ellipse':
+                    uiClass = 'sprite-icon-f-ellipse';
+                    break;
+                case 'FibonacciArc':
+                    uiClass = 'sprite-icon-f-fibonacci-arcs';
+                    break;
+                case 'FibonacciFan':
+                    uiClass = 'sprite-icon-f-fibonacci-fan';
+                    break;
+                case 'FibonacciCorrection':
+                    uiClass = 'sprite-icon-f-fibonacci-correction';
+                    break;
+            }
+
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentForm"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentForm"]').removeClass('active');
+            }
+
+            if(!!instrument) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentForm"] i.sprite')
+                    .removeClass('sprite-icon-f-poligon sprite-icon-f-square sprite-icon-f-triangle')
+                    .removeClass('sprite-icon-f-ellipse sprite-icon-f-fibonacci-arcs sprite-icon-f-fibonacci-fan sprite-icon-f-fibonacci-correction')
+                    .addClass(uiClass);
+            }
+        };
+
+        this.setUiStateForInstrumentText = function (instrument, state) {
+            state = !!state;
+
+            if(state) {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentText"][data-value="' + instrument + '"]').addClass('active');
+            } else {
+                this.$uiContainer.find('.js-chart-ui-control-state[data-property="instrumentText"]').removeClass('active');
+            }
+        };
+
+        this.onSelectInstrument = function (element) {
+            if(element.settings) {
+                if(element.settings.lineWidth) {
+                    this.setUiStateForLineWidth(element.settings.lineWidth);
+                }
+
+                if(element.settings.fillStyle) {
+                    this.setUiStateForColorSelector('fillStyle', element.settings.fillStyle);
+                }
+
+                if(element.settings.strokeStyle) {
+                    this.setUiStateForColorSelector('strokeStyle', element.settings.strokeStyle);
+                }
+            }
+        }
     };
 })();
 (function ($){

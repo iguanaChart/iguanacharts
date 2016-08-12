@@ -113,7 +113,9 @@
 
     iChart.Charting.ChartElement.prototype.onOut = function (ctx) {};
 
-    iChart.Charting.ChartElement.prototype.onSelect = function (ctx) {};
+    iChart.Charting.ChartElement.prototype.onSelect = function (ctx) {
+        this.layer.chart.env.wrapper.trigger('iguanaChartEvents', ['selectInstrument', this]);
+    };
 
     iChart.Charting.ChartElement.prototype.onBlur = function (ctx) {};
 

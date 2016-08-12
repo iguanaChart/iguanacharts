@@ -59,6 +59,7 @@
             this.chart.wrapper.trigger('iguanaChartEvents', ['chartDataReceived', data]);
             callback(data);
             this.chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
+            this.chart.dataRequestCounter++;
         };
 
         /**

@@ -49,7 +49,7 @@ var methods = {
 
         var $table = $('<table>').css({'border-collapse': 'collapse',
                                         'position': 'relative',
-                                        //'width': '100%',
+                                        'width': (+(obj.columns) * (+(obj.size) + 2)) + 'px',
                                         //'height': '100%',
                                         'margin': 0,
                                         'padding': 0,

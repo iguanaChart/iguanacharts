@@ -877,6 +877,7 @@
 
     };
     iChart.Charting.ChartTrendorder.prototype.onSelect = function () {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.getTestContext(true);
     };
 

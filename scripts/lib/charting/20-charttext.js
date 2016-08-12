@@ -217,6 +217,7 @@
     }
 
     iChart.Charting.ChartText.prototype.onSelect = function (ctx) {
+        iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         if($('#chart-element-bubble').length == 0) {
             $(this.layer.chart.container).append('' +
                 '<div id="chart-element-bubble" style="z-index: 15002; position: absolute; ">' +
