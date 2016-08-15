@@ -1688,7 +1688,7 @@ iChart.indicators = {
         "value": "AD",
         "outputRegion": "self",
         "description": _t('4789', 'Формула распределения накопления использует отношение между объемом и ценами, чтобы оценить интенсивность изменения цен; если объем увеличивается, весьма вероятно, что цены поднимутся.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5400">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5400">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
     "ADOSC":{
@@ -1698,7 +1698,7 @@ iChart.indicators = {
         "value": "ADOSC",
         "outputRegion": "self",
         "description":_t('4790', 'Индикатор осциллятора Чайкина – это разница между трехдневным экспоненциальным скользящим средним и десятидневным экспоненциальным скользящим средним, примененная к распределению накопления.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5425">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5425">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"FastPeriod", "Name":_t('4791', 'Краткосрочный интервал'), "Value":3},
             {"Code":"SlowPeriod", "Name":_t('4792', 'Долгосрочный интервал'), "Value":10}
@@ -1723,7 +1723,7 @@ iChart.indicators = {
         "value": "ADXDI",
         "outputRegion": "self",
         "description":_t('4793', 'Индикатор среднего направленного движения служит для определения вероятного направления основного тренда.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5421">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5421">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
         ]
@@ -1759,7 +1759,7 @@ iChart.indicators = {
         "value": "BBANDS",
         "outputRegion": "price",
         "description":_t('4801', 'Индикаторы с линиями Боллинджера наносятся на график как уровни стандартного отклонения выше и ниже скользящего среднего.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5397">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5397">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":7},
             {"Code":"DeviationsUp", "Name":_t('4803', 'Верхнее число станд. отклонения'), "Value":2},
@@ -1773,7 +1773,7 @@ iChart.indicators = {
         "value": "CCI",
         "outputRegion": "self",
         "description":_t('4805', 'Индикатор ценовых моментов сравнивает цены с их скользящими средними.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5424">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5424">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
         ]
@@ -1797,7 +1797,7 @@ iChart.indicators = {
         "value": "DPO",
         "outputRegion": "self",
         "description":_t('4810', 'Осциллятор цен с исключенным трендом пытается исключить из цен тренды.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5432">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5432">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
         ]
@@ -1808,7 +1808,7 @@ iChart.indicators = {
         "name": _t('438', 'EMA (Экспоненциальное скользящее среднее)'),
         "value": "EMA",
         "outputRegion": "price",
-        "description":_t('4812', 'Экспоненциальное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние дни имеют в вычислении больший вес.') + ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5396">' + _t('15833', 'Подробнее.') + '</a>',
+        "description":_t('4812', 'Экспоненциальное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние дни имеют в вычислении больший вес.') + ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5396">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]
@@ -1821,7 +1821,7 @@ iChart.indicators = {
         "value": "ENV",
         "outputRegion": "price",
         "description":_t('4815', 'Конверты наносятся над и под скользящим средним; смещение определяется указанным процентом.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5431">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5431">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20},
             {"Code":"shift", "Name":_t('4817', 'Сдвиг, %'), "Value":1}
@@ -1835,7 +1835,7 @@ iChart.indicators = {
         "value": "MACD",
         "outputRegion": "self",
         "description":_t('4818', 'Индикатор конвергенции и дивергенции скользящих средних сравнивает два скользящих средних цен и используется вместе с девятидневным экспоненциальным скользящим средним в качестве сигнала для моментов покупки и продажи.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5428">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5428">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"FastPeriod", "Name":_t('4819', 'Краткосрочный период'), "Value":12},
             {"Code":"SlowPeriod", "Name":_t('4820', 'Долгосрочный период'), "Value":26},
@@ -1869,7 +1869,7 @@ iChart.indicators = {
         "value": "OBV",
         "outputRegion": "self",
         "description":_t('4828', 'Индикатор балансового объема измеряет положительный и отрицательный поток объема.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
     "PSAR":{
@@ -1879,7 +1879,7 @@ iChart.indicators = {
         "value": "PSAR",
         "outputRegion": "price",
         "description":_t('4833', 'Индикатор Параболик помогает определять точки разворота тренда.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5399">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5399">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"Acceleration", "Name":_t('860', 'Шаг'), "Value":0.02},
             {"Code":"Maximum", "Name":_t('4835', 'Максимальный шаг'), "Value":0.2}
@@ -1892,7 +1892,7 @@ iChart.indicators = {
         "value": "ROC",
         "outputRegion": "self",
         "description":_t('4840', 'Индикатор темпов изменений сравнивает указанную цену закрытия с текущей ценой.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5430">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5430">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
         ]
@@ -1904,7 +1904,7 @@ iChart.indicators = {
         "value": "RSI",
         "outputRegion": "self",
         "description":_t('4842', 'Индекс относительной силы – это осциллятор момента, сравнивающий восходящие изменения цены закрытия с нисходящими изменениями и выдающий значения в диапазоне от 0 до 100.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5411">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5411">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
         ]
@@ -1978,7 +1978,7 @@ iChart.indicators = {
         "value": "WCLPRICE",
         "outputRegion": "price",
         "description":_t('4858', 'Формула взвешенной цены закрытия вычисляет среднее значение цен за день. Единственное отличие взвешенной цены закрытия и типичной цены в том, что у цены закрытия больший вес и она считается самой важной ценой.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5433">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5433">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
     "WILLR":{
@@ -1988,7 +1988,7 @@ iChart.indicators = {
         "value": "WILLR",
         "outputRegion": "self",
         "description":_t('4859', 'Процентный диапазон Уильямса – это индикатор момента, который показывает уровни перекупленности и перепроданности.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5410">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5410">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":14}
         ]
@@ -15941,15 +15941,15 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Line chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17371', 'Line chart') + '">' +
                             '<i class="sprite sprite-icon-line js-chart-ui-control" data-property="chartType" data-value="Line"></i>' +
                         '</div>' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Candlestick chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17372', 'Candlestick chart') + '">' +
                             '<i class="sprite sprite-icon-candle js-chart-ui-control" data-property="chartType" data-value="Candlestick"></i>' +
                         '</div>' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Bar chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17373', 'Bar chart') + '">' +
                             '<i class="sprite sprite-icon-bars js-chart-ui-control" data-property="chartType" data-value="Stock"></i>' +
                         '</div>' +
 
@@ -15957,54 +15957,54 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume horizontally') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17374', 'Display volume horizontally') + '">' +
                 '<i class="sprite sprite-icon-h-volume"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume vertically') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17375', 'Display volume vertically') + '">' +
                 '<i class="sprite sprite-icon-v-volume"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Relative price') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17376', 'Relative price') + '">' +
                 '<i class="sprite sprite-icon-price"></i>' +
             '</div>' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Visual Settings') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17377', 'Visual Settings') + '">' +
                 '<i class="sprite sprite-icon-palette"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Text') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17378', 'Add Text') + '">' +
                 '<i class="sprite sprite-icon-font"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Tooltip') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17379', 'Add Tooltip') + '">' +
                 '<i class="sprite sprite-icon-f-comment"></i>' +
             '</div>' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
-                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Line') + '">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17380', 'Draw Line') + '">' +
                     '<i class="sprite sprite-icon-free-line"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Free Line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17381', 'Free Line') + '">' +
                             '<i class="sprite sprite-icon-free-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Horizontal line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17382', 'Horizontal line') + '">' +
                             '<i class="sprite sprite-icon-h-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Vertical line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17383', 'Vertical line') + '">' +
                             '<i class="sprite sprite-icon-v-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Channel') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17384', 'Channel') + '">' +
                             '<i class="sprite sprite-icon-channel"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Corner Trend') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17385', 'Corner Trend') + '">' +
                             '<i class="sprite sprite-icon-angle-trend"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Arrow') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17386', 'Arrow') + '">' +
                             '<i class="sprite sprite-icon-arrow-line"></i>' +
                         '</div>' +
                     '</div>' +
@@ -16012,30 +16012,30 @@ $.templates("iChart_topToolBarTmpl", '' +
             '</div>' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
-                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Form') + '">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17387', 'Draw Form') + '">' +
                     '<i class="sprite sprite sprite-icon-f-square"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Poligon') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17388', 'Poligon') + '">' +
                             '<i class="sprite sprite-icon-f-poligon"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Rectangle') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17389', 'Rectangle') + '">' +
                             '<i class="sprite sprite-icon-f-square"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Triangle') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17390', 'Triangle') + '">' +
                             '<i class="sprite sprite-icon-f-triangle"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Ellipse') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17391', 'Ellipse') + '">' +
                             '<i class="sprite sprite-icon-f-ellipse"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Archs') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17392', 'Fibonacci Archs') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-arcs"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Fan') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17393', 'Fibonacci Fan') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-fan"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Retracement') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17394', 'Fibonacci Retracement') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
                         '</div>' +
                     '</div>' +
@@ -16101,7 +16101,7 @@ $.templates("iChart_topToolBarTmpl", '' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Clear Chart') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17395', 'Clear Chart') + '">' +
                 '<i class="sprite sprite-icon-trash"></i>' +
             '</div>' +
 
@@ -16544,7 +16544,7 @@ $.templates("themeConfigOptionsTmpl", '' +
 
 $.templates("iChart_instrumentsTmpl",
     '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
+        '<button class="uk-button uk-margin-small-left">' + _t('17396', 'Рисование') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
             '<div class="js-iChartTools-instrumentsList">' +
                 '<div class="js-colorSelector" data-option="fillStyle" style="background-color: #778899" data-title="' + _t('3014', 'Цвет заливки') + '">' +
@@ -16561,7 +16561,7 @@ $.templates("iChart_instrumentsTmpl",
                     '</div>' +
                 '</div>' +
                 ' ' +
-                '<div class="js-colorSelector" data-option="fontSettingsColor" style="background-color: #778899" data-title="' + _t('', 'Цвет текста') + '">' +
+                '<div class="js-colorSelector" data-option="fontSettingsColor" style="background-color: #778899" data-title="' + _t('17397', 'Цвет текста') + '">' +
                     '<div class="menuHolder" style="display: none; padding: 10px;">' +
                         '<div class="js-colorPalette" data-option="fontSettingsColor"></div>' +
                         '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fontSettingsColor" data-element="canvas" value="#778899" size="10"/>' +
@@ -18712,7 +18712,7 @@ IguanaChart = function (options) {
             });
 
             this.chart.wrapper.append($indicatorDialogHtml);
-            $('.iChartDialog').modal({modal: false, zIndex: 1500, title: _t('', 'Настройки индикатора')});
+            $('.iChartDialog').modal({modal: false, zIndex: 1500, title: _t('17398', 'Настройки индикатора')});
         };
 
         this.renderThemeConfigDialog = function (additionButtons) {

@@ -10,7 +10,7 @@ iChart.indicators = {
         "value": "AD",
         "outputRegion": "self",
         "description": _t('4789', 'Формула распределения накопления использует отношение между объемом и ценами, чтобы оценить интенсивность изменения цен; если объем увеличивается, весьма вероятно, что цены поднимутся.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5400">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5400">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
     "ADOSC":{
@@ -20,7 +20,7 @@ iChart.indicators = {
         "value": "ADOSC",
         "outputRegion": "self",
         "description":_t('4790', 'Индикатор осциллятора Чайкина – это разница между трехдневным экспоненциальным скользящим средним и десятидневным экспоненциальным скользящим средним, примененная к распределению накопления.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5425">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5425">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"FastPeriod", "Name":_t('4791', 'Краткосрочный интервал'), "Value":3},
             {"Code":"SlowPeriod", "Name":_t('4792', 'Долгосрочный интервал'), "Value":10}
@@ -45,7 +45,7 @@ iChart.indicators = {
         "value": "ADXDI",
         "outputRegion": "self",
         "description":_t('4793', 'Индикатор среднего направленного движения служит для определения вероятного направления основного тренда.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5421">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5421">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":14}
         ]
@@ -81,7 +81,7 @@ iChart.indicators = {
         "value": "BBANDS",
         "outputRegion": "price",
         "description":_t('4801', 'Индикаторы с линиями Боллинджера наносятся на график как уровни стандартного отклонения выше и ниже скользящего среднего.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5397">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5397">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('5421', 'Интервал'), "Value":7},
             {"Code":"DeviationsUp", "Name":_t('4803', 'Верхнее число станд. отклонения'), "Value":2},
@@ -95,7 +95,7 @@ iChart.indicators = {
         "value": "CCI",
         "outputRegion": "self",
         "description":_t('4805', 'Индикатор ценовых моментов сравнивает цены с их скользящими средними.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5424">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5424">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
         ]
@@ -119,7 +119,7 @@ iChart.indicators = {
         "value": "DPO",
         "outputRegion": "self",
         "description":_t('4810', 'Осциллятор цен с исключенным трендом пытается исключить из цен тренды.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5432">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5432">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
         ]
@@ -130,7 +130,7 @@ iChart.indicators = {
         "name": _t('438', 'EMA (Экспоненциальное скользящее среднее)'),
         "value": "EMA",
         "outputRegion": "price",
-        "description":_t('4812', 'Экспоненциальное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние дни имеют в вычислении больший вес.') + ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5396">' + _t('15833', 'Подробнее.') + '</a>',
+        "description":_t('4812', 'Экспоненциальное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние дни имеют в вычислении больший вес.') + ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5396">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]
@@ -143,7 +143,7 @@ iChart.indicators = {
         "value": "ENV",
         "outputRegion": "price",
         "description":_t('4815', 'Конверты наносятся над и под скользящим средним; смещение определяется указанным процентом.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5431">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5431">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20},
             {"Code":"shift", "Name":_t('4817', 'Сдвиг, %'), "Value":1}
@@ -157,7 +157,7 @@ iChart.indicators = {
         "value": "MACD",
         "outputRegion": "self",
         "description":_t('4818', 'Индикатор конвергенции и дивергенции скользящих средних сравнивает два скользящих средних цен и используется вместе с девятидневным экспоненциальным скользящим средним в качестве сигнала для моментов покупки и продажи.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5428">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5428">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"FastPeriod", "Name":_t('4819', 'Краткосрочный период'), "Value":12},
             {"Code":"SlowPeriod", "Name":_t('4820', 'Долгосрочный период'), "Value":26},
@@ -191,7 +191,7 @@ iChart.indicators = {
         "value": "OBV",
         "outputRegion": "self",
         "description":_t('4828', 'Индикатор балансового объема измеряет положительный и отрицательный поток объема.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
     "PSAR":{
@@ -201,7 +201,7 @@ iChart.indicators = {
         "value": "PSAR",
         "outputRegion": "price",
         "description":_t('4833', 'Индикатор Параболик помогает определять точки разворота тренда.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5399">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5399">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"Acceleration", "Name":_t('860', 'Шаг'), "Value":0.02},
             {"Code":"Maximum", "Name":_t('4835', 'Максимальный шаг'), "Value":0.2}
@@ -214,7 +214,7 @@ iChart.indicators = {
         "value": "ROC",
         "outputRegion": "self",
         "description":_t('4840', 'Индикатор темпов изменений сравнивает указанную цену закрытия с текущей ценой.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5430">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5430">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
         ]
@@ -226,7 +226,7 @@ iChart.indicators = {
         "value": "RSI",
         "outputRegion": "self",
         "description":_t('4842', 'Индекс относительной силы – это осциллятор момента, сравнивающий восходящие изменения цены закрытия с нисходящими изменениями и выдающий значения в диапазоне от 0 до 100.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5411">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5411">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
         ]
@@ -300,7 +300,7 @@ iChart.indicators = {
         "value": "WCLPRICE",
         "outputRegion": "price",
         "description":_t('4858', 'Формула взвешенной цены закрытия вычисляет среднее значение цен за день. Единственное отличие взвешенной цены закрытия и типичной цены в том, что у цены закрытия больший вес и она считается самой важной ценой.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5433">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5433">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
     "WILLR":{
@@ -310,7 +310,7 @@ iChart.indicators = {
         "value": "WILLR",
         "outputRegion": "self",
         "description":_t('4859', 'Процентный диапазон Уильямса – это индикатор момента, который показывает уровни перекупленности и перепроданности.') +
-            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5410">' + _t('15833', 'Подробнее.') + '</a>',
+            ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5410">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":14}
         ]
