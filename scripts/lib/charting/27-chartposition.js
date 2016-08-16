@@ -308,7 +308,7 @@
         }
     };
 
-    iChart.Charting.ChartPosition.prototype.onSelect = function () {
+    iChart.Charting.ChartPosition.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.setTestSegments();
     };

@@ -6122,7 +6122,7 @@ iChart.indicators = {
         }
     };
 
-    iChart.Charting.ChartOrder.prototype.onSelect = function () {
+    iChart.Charting.ChartOrder.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.setTestSegments();
     };
@@ -8183,7 +8183,7 @@ iChart.indicators = {
         }
     };
 
-    iChart.Charting.ChartPosition.prototype.onSelect = function () {
+    iChart.Charting.ChartPosition.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.setTestSegments();
     };
@@ -8544,7 +8544,7 @@ iChart.indicators = {
         }
     };
 
-    iChart.Charting.ChartTradePanel.prototype.onSelect = function () {
+    iChart.Charting.ChartTradePanel.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         //this.setTestSegments();
     };
@@ -9457,7 +9457,7 @@ iChart.indicators = {
         }
 
     };
-    iChart.Charting.ChartTrendorder.prototype.onSelect = function () {
+    iChart.Charting.ChartTrendorder.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         this.getTestContext(true);
     };
@@ -16107,49 +16107,35 @@ $.templates("iChart_topToolBarTmpl", '' +
 
         '</div>' +
 
-    '<div class="uk-flex uk-flex-left">' +
+        '<div class="uk-flex uk-flex-left">' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
-    '<i class="sprite sprite-icon-1m"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I1" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
+            '<i class="sprite sprite-icon-1m"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button active uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
-    '<i class="sprite sprite-icon-5m"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I5" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
+            '<i class="sprite sprite-icon-5m"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
-    '<i class="sprite sprite-icon-15m"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I15" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
+            '<i class="sprite sprite-icon-15m"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
-    '<i class="sprite sprite-icon-h"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="H1" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
+            '<i class="sprite sprite-icon-h"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
-    '<i class="sprite sprite-icon-d"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
+            '<i class="sprite sprite-icon-d"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
-    '<i class="sprite sprite-icon-w"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D7" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
+            '<i class="sprite sprite-icon-w"></i>' +
+        '</div>' +
 
-    '<i class="sprite sprite-icon-divider"></i>' +
+        '<i class="sprite sprite-icon-divider"></i>' +
 
-    '<div data-uk-dropdown="{\'pos:\'bottom-right\'}" class="uk-position-relative">' +
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Add Indicator" style="min-width: 100px">' +
-    '<i class="sprite sprite-icon-text-indicators"></i>' +
-    '</div>' +
-    '<div class="uk-dropdown-blank" style="width: auto">' +
-    '<div class="tm-shadow">' +
-    '<ul class="uk-list uk-list-line">' +
-    '<li>AD (Accumulation Distribution)</li>' +
-    '<li>ADOSC (Chaikin Oscillator)</li>' +
-    '<li>ADX (Average Directional Index)</li>' +
-    '</ul>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
+        '<div class="js-chart-ui-indicators"></div>' +
     '</div>'
 );
 
@@ -16178,7 +16164,7 @@ $.templates("indicatorsCurrentTmpl", '' +
 );
 
 $.templates("indicatorsListTmpl", '' +
-    '<ul class="uk-nav uk-nav-dropdown">' +
+    '<ul class="uk-list uk-list-line">' +
         '<li class="uk-nav-divider"></li>' +
         '{{for indicators}}' +
             '<li><a href="javascript:void(0);" onclick="return false;" class="js-add-indicator" data-value="{{:value}}">{{:value}}</a></li>' +
@@ -16187,17 +16173,18 @@ $.templates("indicatorsListTmpl", '' +
 );
 
 $.templates("indicatorsDropdownTmpl",
-    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('3101', 'Индикаторы') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
+
+    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\', pos:\'bottom-right\'}" class="uk-position-relative">' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Add Indicator" style="min-width: 100px">' +
+            '<i class="sprite sprite-icon-text-indicators"></i>' +
+        '</div>' +
         '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
-            '<div class="uk-grid uk-dropdown-grid">' +
-                '<div class="uk-width-1-1">' +
-                    '<div class="uk-panel js-iChartTools-indicators-current">' +
-                        '{{include tmpl="indicatorsCurrentTmpl"/}}' +
-                    '</div>' +
-                    '<div class="js-iChartTools-indicators-list">' +
-                        '{{include tmpl="indicatorsListTmpl"/}}' +
-                    '</div>' +
+            '<div class="tm-shadow">' +
+                '<div class="uk-panel js-iChartTools-indicators-current">' +
+                    '{{include tmpl="indicatorsCurrentTmpl"/}}' +
+                '</div>' +
+                '<div class="js-iChartTools-indicators-list">' +
+                    '{{include tmpl="indicatorsListTmpl"/}}' +
                 '</div>' +
             '</div>' +
         '</div>' +
@@ -16542,91 +16529,11 @@ $.templates("themeConfigOptionsTmpl", '' +
     '</div>'
 );
 
-$.templates("iChart_instrumentsTmpl",
-    '<div class="js-iChartTools-instruments uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('', 'Рисование') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
-        '<div class="uk-dropdown uk-dropdown-bottom" style="top: 30px; left: 0px;">' +
-            '<div class="js-iChartTools-instrumentsList">' +
-                '<div class="js-colorSelector" data-option="fillStyle" style="background-color: #778899" data-title="' + _t('3014', 'Цвет заливки') + '">' +
-                    '<div class="menuHolder" style="display: none; padding: 10px;">' +
-                        '<div class="js-colorPalette" data-option="fillStyle"></div>' +
-                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fillStyle" data-element="canvas" value="#778899" size="10"/>' +
-                    '</div>' +
-                '</div>' +
-                ' ' +
-                '<div class="js-colorSelector" data-option="strokeStyle" style="background-color: #778899" data-title="' + _t('3016', 'Цвет линий') + '">' +
-                    '<div class="menuHolder" style="display: none; padding: 10px;">' +
-                        '<div class="js-colorPalette" data-option="strokeStyle"></div>' +
-                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="strokeStyle" data-element="canvas" value="#778899" size="10"/>' +
-                    '</div>' +
-                '</div>' +
-                ' ' +
-                '<div class="js-colorSelector" data-option="fontSettingsColor" style="background-color: #778899" data-title="' + _t('', 'Цвет текста') + '">' +
-                    '<div class="menuHolder" style="display: none; padding: 10px;">' +
-                        '<div class="js-colorPalette" data-option="fontSettingsColor"></div>' +
-                        '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="fontSettingsColor" data-element="canvas" value="#778899" size="10"/>' +
-                    '</div>' +
-                '</div>' +
-                ' ' +
-                '<div class="js-lineWidthSelector" data-option="fontSettingsColor" data-title="' + _t('3017', 'Толщина линий') + '">' +
-                    '<span class="lineWidth js-currentLineWidth" data-style="1"></span>' +
-                    '<div class="menuHolder" style="display: none">' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="1" title="' + _t('3901', '1px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="2" title="' + _t('3902', '2px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="3" title="' + _t('3903', '3px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="4" title="' + _t('3904', '4px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="5" title="' + _t('3905', '5px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="8" title="' + _t('3906', '8px') + '"></span>' +
-                        '<span class="lineWidth" data-option="fontSettingsColor" data-style="10" title="' + _t('3907', '10px') + '"></span>' +
-                    '</div>' +
-                '</div>' +
-                '<div>' +
-                    '<ul class="uk-nav uk-nav-dropdown">' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Line">' + _t('51', 'Свободная линия') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="HorizontalLine">' + _t('52', 'Горизонтальная линия') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="VerticalLine">' + _t('53', 'Вертикальная линия') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Channel">' + _t('54', 'Канал') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Trend">' + _t('55', 'Угловой тренд') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Arrow">' + _t('62', 'Стрелка') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Polygon">' + _t('3012', 'Полигон') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Rectangle">' + _t('3013', 'Прямоугольник') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Triangle">' + _t('56', 'Треугольник') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Ellipse">' + _t('58', 'Эллипс') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="FibonacciArc">' + _t('59', 'Арки Фибоначчи') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="FibonacciFan">' + _t('60', 'Веер Фибоначчи') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="FibonacciCorrection">' + _t('61', 'Коррекция Фибоначчи') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Text">' + _t('64', 'Вставить текст') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-instrument" data-instrument="Bubble">' + _t('3008', 'Текст c указателем') +' <i class="uk-float-right"></i></a></li>' +
-                        '<li class="uk-nav-divider"></li>' +
-                        '<li class="uk-dropdown-close"><a href="javascript:void(0);" class="js-iChartTools-removeInstrument">' + _t('15227', 'Очистить график') +' <i class="uk-float-right"></i></a></li>' +
-                    '</ul>' +
-                '</div>' +
-            '</div>' +
-        '</div>' +
-    '</div>'
-);
-
-$.templates("iChart_intervalsTmpl2", '' +
-    '<div class="js-iChartTools-intervals uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button">' + _t('5421', 'Интервал') + '<i class="uk-icon-caret-down"></i></button>' +
-        '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
-            '<ul class="uk-nav uk-nav-dropdown js-chart-intervals">' +
-                '{{for intervals}}' +
-                '<li><a href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a></li>' +
-                '{{/for}}' +
-            '</ul>' +
-        '</div>' +
-    '</div>'
-);
-
 $.templates("iChart_intervalsTmpl", '' +
     '<div class="uk-margin-small-left js-iChartTools-intervals" style="display: inline-block">' +
-                '{{for intervals}}' +
-                '<a class="uk-button js-chart-interval" href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a>' +
-                '{{/for}}' +
+        '{{for intervals}}' +
+        '<a class="uk-button js-chart-interval" href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a>' +
+        '{{/for}}' +
     '</div>'
 );
 
@@ -18548,8 +18455,7 @@ IguanaChart = function (options) {
 
         this.renderTopBar = function () {
             this.$topToolBarContainer.empty();
-            // this.renderIntervals();
-            // this.renderIndicators();
+            //this.renderIndicators();
             this.renderTopToolBar();
             this.$topToolBarContainer.show();
         };
@@ -18565,7 +18471,8 @@ IguanaChart = function (options) {
 
             var indicatorsDropdownHtml = $.render.indicatorsDropdownTmpl(data);
 
-            this.$topToolBarContainer.append(indicatorsDropdownHtml);
+            //this.$topToolBarContainer.append(indicatorsDropdownHtml);
+            this.chart.wrapper.find('.js-chart-ui-indicators').append(indicatorsDropdownHtml);
 
             $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
@@ -18869,7 +18776,7 @@ IguanaChart = function (options) {
                 });
             });
 
-            var onMinicolorsChange = function(){
+            var onMinicolorsChange = function(value, opacity){
                 var color = $(this).val(),
                     colorRGBA = color,
                     option = $(this).attr('data-option');
@@ -18997,34 +18904,13 @@ IguanaChart = function (options) {
             this.initColorPalette(holder, onPaletteChange);
         };
 
-        this.renderIntervals = function () {
-
-            var data = {
-                intervals: [
-                    {value: 'I1', name : intervalShortNames('I1')},
-                    {value: 'I5', name : intervalShortNames('I5')},
-                    {value: 'I15', name : intervalShortNames('I15')},
-                    {value: 'H1', name : intervalShortNames('H1')},
-                    {value: 'D1', name : intervalShortNames('D1')},
-                    {value: 'D7', name : intervalShortNames('D7')}
-                ]
-            };
-
-            var $intervalsHtml = $($.render.iChart_intervalsTmpl(data));
-
-            $intervalsHtml.on('click touchend', '.js-chart-interval', function(){
-                _this.chart.setInterval($(this).data('value'));
-            });
-
-            this.$topToolBarContainer.append($intervalsHtml);
-        };
-
 /* ================================================================================================================== */
         
         this.renderTopToolBar = function () {
             var $topToolBarHtml = $($.render.iChart_topToolBarTmpl());
 
             this.$topToolBarContainer.append($topToolBarHtml);
+            this.renderIndicators();
         };
 
         /**
@@ -19042,6 +18928,8 @@ IguanaChart = function (options) {
 
             var state = _this.chart.viewData.chart.chartOptions.percentMode;
             this.setUiStateForPercentMode(state);
+
+            this.setUiStateForDataInterval(_this.chart.dataSource.dataSettings.interval);
         };
 
         this.bindUiControls = function () {
@@ -19144,6 +19032,11 @@ IguanaChart = function (options) {
         this.uiSet_lineWidthSelector = function (value) {
             this.chart.setLineWidthToCanvas(value);
             this.setUiStateForLineWidth(value);
+        };
+
+        this.uiSet_dataInterval = function (value) {
+            this.chart.setInterval(value);
+            this.setUiStateForDataInterval(value);
         };
 
         this.onMinicolorsChange = function(value, opacity){
@@ -19364,7 +19257,17 @@ IguanaChart = function (options) {
                     this.setUiStateForColorSelector('strokeStyle', element.settings.strokeStyle);
                 }
             }
-        }
+        };
+
+        this.setUiStateForDataInterval = function (value) {
+            this.$uiContainer.find('.js-chart-ui-control[data-property="dataInterval"]').removeClass('active');
+            if(!!value) {
+                this.$uiContainer.find('.js-chart-ui-control[data-property="dataInterval"][data-value="' + value + '"]').addClass('active');
+            }
+
+        };
+
+
     };
 })();
 (function ($){

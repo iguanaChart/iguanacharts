@@ -285,7 +285,7 @@
         }
     };
 
-    iChart.Charting.ChartTradePanel.prototype.onSelect = function () {
+    iChart.Charting.ChartTradePanel.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
         //this.setTestSegments();
     };

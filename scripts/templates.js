@@ -211,49 +211,35 @@ $.templates("iChart_topToolBarTmpl", '' +
 
         '</div>' +
 
-    '<div class="uk-flex uk-flex-left">' +
+        '<div class="uk-flex uk-flex-left">' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
-    '<i class="sprite sprite-icon-1m"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I1" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
+            '<i class="sprite sprite-icon-1m"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button active uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
-    '<i class="sprite sprite-icon-5m"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I5" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
+            '<i class="sprite sprite-icon-5m"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
-    '<i class="sprite sprite-icon-15m"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I15" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
+            '<i class="sprite sprite-icon-15m"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
-    '<i class="sprite sprite-icon-h"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="H1" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
+            '<i class="sprite sprite-icon-h"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
-    '<i class="sprite sprite-icon-d"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
+            '<i class="sprite sprite-icon-d"></i>' +
+        '</div>' +
 
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
-    '<i class="sprite sprite-icon-w"></i>' +
-    '</div>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D7" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
+            '<i class="sprite sprite-icon-w"></i>' +
+        '</div>' +
 
-    '<i class="sprite sprite-icon-divider"></i>' +
+        '<i class="sprite sprite-icon-divider"></i>' +
 
-    '<div data-uk-dropdown="{\'pos:\'bottom-right\'}" class="uk-position-relative">' +
-    '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Add Indicator" style="min-width: 100px">' +
-    '<i class="sprite sprite-icon-text-indicators"></i>' +
-    '</div>' +
-    '<div class="uk-dropdown-blank" style="width: auto">' +
-    '<div class="tm-shadow">' +
-    '<ul class="uk-list uk-list-line">' +
-    '<li>AD (Accumulation Distribution)</li>' +
-    '<li>ADOSC (Chaikin Oscillator)</li>' +
-    '<li>ADX (Average Directional Index)</li>' +
-    '</ul>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
+        '<div class="js-chart-ui-indicators"></div>' +
     '</div>'
 );
 
@@ -282,7 +268,7 @@ $.templates("indicatorsCurrentTmpl", '' +
 );
 
 $.templates("indicatorsListTmpl", '' +
-    '<ul class="uk-nav uk-nav-dropdown">' +
+    '<ul class="uk-list uk-list-line">' +
         '<li class="uk-nav-divider"></li>' +
         '{{for indicators}}' +
             '<li><a href="javascript:void(0);" onclick="return false;" class="js-add-indicator" data-value="{{:value}}">{{:value}}</a></li>' +
@@ -291,17 +277,18 @@ $.templates("indicatorsListTmpl", '' +
 );
 
 $.templates("indicatorsDropdownTmpl",
-    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}">' +
-        '<button class="uk-button uk-margin-small-left">' + _t('3101', 'Индикаторы') + '<i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
+
+    '<div class="js-iChartTools-indicators uk-button-dropdown" data-uk-dropdown="{mode:\'click\', pos:\'bottom-right\'}" class="uk-position-relative">' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="Add Indicator" style="min-width: 100px">' +
+            '<i class="sprite sprite-icon-text-indicators"></i>' +
+        '</div>' +
         '<div class="uk-dropdown uk-dropdown-bottom uk-dropdown-scrollable" style="top: 30px; left: 0px;">' +
-            '<div class="uk-grid uk-dropdown-grid">' +
-                '<div class="uk-width-1-1">' +
-                    '<div class="uk-panel js-iChartTools-indicators-current">' +
-                        '{{include tmpl="indicatorsCurrentTmpl"/}}' +
-                    '</div>' +
-                    '<div class="js-iChartTools-indicators-list">' +
-                        '{{include tmpl="indicatorsListTmpl"/}}' +
-                    '</div>' +
+            '<div class="tm-shadow">' +
+                '<div class="uk-panel js-iChartTools-indicators-current">' +
+                    '{{include tmpl="indicatorsCurrentTmpl"/}}' +
+                '</div>' +
+                '<div class="js-iChartTools-indicators-list">' +
+                    '{{include tmpl="indicatorsListTmpl"/}}' +
                 '</div>' +
             '</div>' +
         '</div>' +
@@ -648,9 +635,9 @@ $.templates("themeConfigOptionsTmpl", '' +
 
 $.templates("iChart_intervalsTmpl", '' +
     '<div class="uk-margin-small-left js-iChartTools-intervals" style="display: inline-block">' +
-                '{{for intervals}}' +
-                '<a class="uk-button js-chart-interval" href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a>' +
-                '{{/for}}' +
+        '{{for intervals}}' +
+        '<a class="uk-button js-chart-interval" href="javascript:void(0);" onclick="return false;" data-value="{{:value}}">{{:name}}</a>' +
+        '{{/for}}' +
     '</div>'
 );
 

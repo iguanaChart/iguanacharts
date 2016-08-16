@@ -24,8 +24,7 @@
 
         this.renderTopBar = function () {
             this.$topToolBarContainer.empty();
-            // this.renderIntervals();
-            // this.renderIndicators();
+            //this.renderIndicators();
             this.renderTopToolBar();
             this.$topToolBarContainer.show();
         };
@@ -41,7 +40,8 @@
 
             var indicatorsDropdownHtml = $.render.indicatorsDropdownTmpl(data);
 
-            this.$topToolBarContainer.append(indicatorsDropdownHtml);
+            //this.$topToolBarContainer.append(indicatorsDropdownHtml);
+            this.chart.wrapper.find('.js-chart-ui-indicators').append(indicatorsDropdownHtml);
 
             $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
@@ -345,7 +345,7 @@
                 });
             });
 
-            var onMinicolorsChange = function(){
+            var onMinicolorsChange = function(value, opacity){
                 var color = $(this).val(),
                     colorRGBA = color,
                     option = $(this).attr('data-option');
@@ -473,34 +473,13 @@
             this.initColorPalette(holder, onPaletteChange);
         };
 
-        this.renderIntervals = function () {
-
-            var data = {
-                intervals: [
-                    {value: 'I1', name : intervalShortNames('I1')},
-                    {value: 'I5', name : intervalShortNames('I5')},
-                    {value: 'I15', name : intervalShortNames('I15')},
-                    {value: 'H1', name : intervalShortNames('H1')},
-                    {value: 'D1', name : intervalShortNames('D1')},
-                    {value: 'D7', name : intervalShortNames('D7')}
-                ]
-            };
-
-            var $intervalsHtml = $($.render.iChart_intervalsTmpl(data));
-
-            $intervalsHtml.on('click touchend', '.js-chart-interval', function(){
-                _this.chart.setInterval($(this).data('value'));
-            });
-
-            this.$topToolBarContainer.append($intervalsHtml);
-        };
-
 /* ================================================================================================================== */
         
         this.renderTopToolBar = function () {
             var $topToolBarHtml = $($.render.iChart_topToolBarTmpl());
 
             this.$topToolBarContainer.append($topToolBarHtml);
+            this.renderIndicators();
         };
 
         /**
@@ -518,6 +497,8 @@
 
             var state = _this.chart.viewData.chart.chartOptions.percentMode;
             this.setUiStateForPercentMode(state);
+
+            this.setUiStateForDataInterval(_this.chart.dataSource.dataSettings.interval);
         };
 
         this.bindUiControls = function () {
@@ -620,6 +601,11 @@
         this.uiSet_lineWidthSelector = function (value) {
             this.chart.setLineWidthToCanvas(value);
             this.setUiStateForLineWidth(value);
+        };
+
+        this.uiSet_dataInterval = function (value) {
+            this.chart.setInterval(value);
+            this.setUiStateForDataInterval(value);
         };
 
         this.onMinicolorsChange = function(value, opacity){
@@ -840,6 +826,16 @@
                     this.setUiStateForColorSelector('strokeStyle', element.settings.strokeStyle);
                 }
             }
-        }
+        };
+
+        this.setUiStateForDataInterval = function (value) {
+            this.$uiContainer.find('.js-chart-ui-control[data-property="dataInterval"]').removeClass('active');
+            if(!!value) {
+                this.$uiContainer.find('.js-chart-ui-control[data-property="dataInterval"][data-value="' + value + '"]').addClass('active');
+            }
+
+        };
+
+
     };
 })();
