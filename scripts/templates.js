@@ -45,15 +45,15 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Line chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17371', 'Line chart') + '">' +
                             '<i class="sprite sprite-icon-line js-chart-ui-control" data-property="chartType" data-value="Line"></i>' +
                         '</div>' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Candlestick chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17372', 'Candlestick chart') + '">' +
                             '<i class="sprite sprite-icon-candle js-chart-ui-control" data-property="chartType" data-value="Candlestick"></i>' +
                         '</div>' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Bar chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17373', 'Bar chart') + '">' +
                             '<i class="sprite sprite-icon-bars js-chart-ui-control" data-property="chartType" data-value="Stock"></i>' +
                         '</div>' +
 
@@ -61,54 +61,54 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume horizontally') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17374', 'Display volume horizontally') + '">' +
                 '<i class="sprite sprite-icon-h-volume"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume vertically') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17375', 'Display volume vertically') + '">' +
                 '<i class="sprite sprite-icon-v-volume"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Relative price') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17376', 'Relative price') + '">' +
                 '<i class="sprite sprite-icon-price"></i>' +
             '</div>' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Visual Settings') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17377', 'Visual Settings') + '">' +
                 '<i class="sprite sprite-icon-palette"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Text') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17378', 'Add Text') + '">' +
                 '<i class="sprite sprite-icon-font"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Tooltip') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17379', 'Add Tooltip') + '">' +
                 '<i class="sprite sprite-icon-f-comment"></i>' +
             '</div>' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
-                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Line') + '">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17380', 'Draw Line') + '">' +
                     '<i class="sprite sprite-icon-free-line"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Free Line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17381', 'Free Line') + '">' +
                             '<i class="sprite sprite-icon-free-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Horizontal line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17382', 'Horizontal line') + '">' +
                             '<i class="sprite sprite-icon-h-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Vertical line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17383', 'Vertical line') + '">' +
                             '<i class="sprite sprite-icon-v-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Channel') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17384', 'Channel') + '">' +
                             '<i class="sprite sprite-icon-channel"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Corner Trend') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17385', 'Corner Trend') + '">' +
                             '<i class="sprite sprite-icon-angle-trend"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Arrow') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17386', 'Arrow') + '">' +
                             '<i class="sprite sprite-icon-arrow-line"></i>' +
                         '</div>' +
                     '</div>' +
@@ -116,30 +116,30 @@ $.templates("iChart_topToolBarTmpl", '' +
             '</div>' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
-                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Form') + '">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17387', 'Draw Form') + '">' +
                     '<i class="sprite sprite sprite-icon-f-square"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Poligon') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17388', 'Poligon') + '">' +
                             '<i class="sprite sprite-icon-f-poligon"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Rectangle') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17389', 'Rectangle') + '">' +
                             '<i class="sprite sprite-icon-f-square"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Triangle') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17390', 'Triangle') + '">' +
                             '<i class="sprite sprite-icon-f-triangle"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Ellipse') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17391', 'Ellipse') + '">' +
                             '<i class="sprite sprite-icon-f-ellipse"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Archs') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17392', 'Fibonacci Archs') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-arcs"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Fan') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17393', 'Fibonacci Fan') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-fan"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Retracement') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17394', 'Fibonacci Retracement') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
                         '</div>' +
                     '</div>' +
@@ -205,7 +205,7 @@ $.templates("iChart_topToolBarTmpl", '' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Clear Chart') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17395', 'Clear Chart') + '">' +
                 '<i class="sprite sprite-icon-trash"></i>' +
             '</div>' +
 
