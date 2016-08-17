@@ -60,6 +60,9 @@ https://github.com/uikit/uikit/releases/download/v2.26.4/uikit-2.26.4.zip
 - jsrender - https://www.jsviews.com/download/jsrender.min.js
 - jquery-minicolors - https://github.com/claviska/jquery-minicolors
 
+
+You can download all needed dependence from https://github.com/iguanaChart/dependencies/archive/master.zip
+
 ####Including dependencies example
 
 ```html

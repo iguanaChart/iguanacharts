@@ -1,0 +1,846 @@
+.m-chart-container {
+    position: relative;
+    margin: 0 0 0 0;
+    overflow: hidden;
+}
+
+.m-chart-d, .m-chart-h, .m-chart-t, .m-chart-v {
+    position: absolute;
+}
+
+.m-chart-d {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    height: 8px;
+    width: 8px;
+}
+
+.m-chart-h {
+    border-top: 1px dashed #595959;
+    height: 0;
+}
+
+.m-chart-t {
+    margin: 0 200px 0 0;
+}
+
+.m-chart-v {
+    border-left: 1px dashed #595959;
+    width: 0;
+}
+
+.m-chart-legend-color {
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 0 4px 0 0;
+    height: 12px;
+    line-height: 12px;
+    width: 12px;
+}
+
+.m-chart-legend-name {
+    display: inline-block;
+    font-family: 'Ubuntu', Arial, Helvetica, Geneva, sans-serif;
+    font-weight: 400;
+    margin: 0 8px 0 0;
+}
+
+.m-chart-selection {
+    background-color: #1b94e0;
+    filter: alpha(opacity=25);
+    opacity: 0.25;
+    position: relative;
+    z-index: 5000;
+}
+
+.m-chart-warnings {
+    background-color: #ffffff;
+    color: Red;
+    font-size: 10px;
+    left: 25px;
+    padding: 0 3px;
+    position: absolute;
+    top: 30px;
+    white-space: pre;
+    z-index: 102;
+}
+
+.iChart-chart-series-icon {
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 0 4px 0 0;
+    height: 12px;
+    line-height: 12px;
+    width: 12px;
+}
+
+.iChart-chart-series-name {
+    font-family: 'Ubuntu', Arial, Helvetica, Geneva, sans-serif;
+    font-weight: 500;
+}
+
+.m-chart-settings div div {
+    padding: 3px 5px;
+}
+
+.m-chart-d, .m-chart-h, .m-chart-t, .m-chart-v {
+    position: absolute;
+}
+
+.m-chart-d {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    height: 8px;
+    width: 8px;
+}
+
+.m-chart-h {
+    border-top: 1px dashed #595959;
+    height: 0;
+}
+
+.m-chart-t {
+    font-size: 85%;
+    margin: 3px 0;
+    white-space: nowrap;
+}
+
+.m-chart-v {
+    border-left: 1px dashed #595959;
+    width: 0;
+}
+
+.iChart-control-form {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-size: 0.923em;
+    /*    margin: 10px 0;
+        padding: 6px 0;*/
+}
+
+.iChart-control-form-fullscreen {
+    background-color: #fff;
+    border: none;
+    margin: 0;
+    padding: 10px 5px;
+    text-align: left;
+}
+
+.iChart-indicator-description {
+    font-size: 12px;
+    padding: 10px 0;
+}
+
+.iChart-indicator-parameters {
+    padding: 0 0 10px 0;
+}
+
+[name='timeframeValue'] {
+    width: 2em;
+}
+
+#iChart-chart-container {
+    height: 800px;
+}
+
+#iChart-chart-form-top {
+    margin-left: 5px;
+}
+
+.m-chart-button-container {
+    height: 70px;
+    left: 16px;
+    position: absolute;
+    top: 30px;
+    width: 114px;
+    z-index: 1000;
+}
+
+.m-chart-container:hover .m-chart-button-container-background {
+    filter: alpha(opacity=75);
+    opacity: 0.75;
+}
+
+.m-chart-container:hover .m-chart-button {
+    background-color: #fff;
+    filter: alpha(opacity=100);
+    opacity: 1;
+}
+
+.m-chart-button-container-background {
+    filter: alpha(opacity=0);
+    height: 28px;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 28px;
+}
+
+.m-chart-button {
+    background-image: url('icons/panzoom.gif');
+    background-repeat: no-repeat;
+    border: 1px solid #fff;
+    display: inline-block;
+    filter: alpha(opacity=0);
+    height: 18px;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    vertical-align: middle;
+    width: 18px;
+}
+
+.m-chart-button:hover {
+    border: 1px solid #dee7f8;
+}
+
+.m-chart-button-selected, .m-chart-button-selected:hover {
+    border: 1px solid #afcbfa;
+}
+
+.m-chart-button-pan-top {
+    background-position: 0 0;
+    left: 48px;
+    top: 4px;
+}
+
+.m-chart-button-pan-top:active {
+    left: 49px;
+    top: 5px;
+}
+
+.m-chart-button-pan-right {
+    background-position: -16px -16px;
+    left: 70px;
+    top: 26px;
+}
+
+.m-chart-button-pan-right:active {
+    left: 71px;
+    top: 27px;
+}
+
+.m-chart-button-pan-bottom {
+    background-position: 0 -32px;
+    left: 48px;
+    top: 48px;
+}
+
+.m-chart-button-pan-bottom:active {
+    left: 49px;
+    top: 49px;
+}
+
+.m-chart-button-pan-left {
+    background-position: -16px 0;
+    left: 26px;
+    top: 26px;
+}
+
+.m-chart-button-pan-left:active {
+    left: 27px;
+    top: 27px;
+}
+
+.m-chart-button-zoom-reset {
+    background-position: -32px 0;
+    left: 5px;
+    top: 5px;
+}
+
+.m-chart-button-zoom-reset:active {
+    left: 5px;
+    top: 5px;
+}
+
+.m-chart-button-pan-select {
+    background-position: -16px -32px;
+    left: 4px;
+    top: 15px;
+}
+
+.m-chart-button-pan-select:active {
+    left: 5px;
+    top: 16px;
+}
+
+.m-chart-button-zoom-select {
+    background-position: 0 -16px;
+    left: 4px;
+    top: 37px;
+}
+
+.m-chart-button-zoom-select:active {
+    left: 5px;
+    top: 38px;
+}
+
+.m-chart-button-zoom-in {
+    background-position: -32px -32px;
+    left: 92px;
+    top: 15px;
+}
+
+.m-chart-button-zoom-in:active {
+    left: 93px;
+    top: 16px;
+}
+
+.m-chart-button-zoom-out {
+    background-position: -32px -16px;
+    left: 92px;
+    top: 37px;
+}
+
+.m-chart-button-zoom-out:active {
+    left: 93px;
+    top: 38px;
+}
+
+.m-chart-area-close {
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.5em;
+    padding: 0 !important;
+    position: absolute;
+    right: 10px;
+    z-index: 2;
+}
+
+.m-chart-area-close:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.m-chart-scrollforward {
+    color: #000;
+    position: absolute;
+    z-index: 2;
+    opacity: 0.5;
+}
+
+.m-chart-scrollforward:hover {
+    opacity: 1;
+}
+
+.m-chart-scrollerOverlayRight {
+    border-bottom: 1px solid rgb(119, 119, 119);
+    border-left: 1px solid rgb(119, 119, 119);
+    position: absolute;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+.m-chart-scrollerOverlayLeft {
+    border-bottom: 1px solid rgb(119, 119, 119);
+    border-right: 1px solid rgb(119, 119, 119);
+    position: absolute;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+.m-chart-scrollerOverlayHandle {
+    color: rgb(255, 255, 255);
+    cursor: ew-resize;
+    padding: 0px 1px 2px;
+    position: absolute;
+    z-index: 2;
+    background: rgb(119, 119, 119);
+    opacity: 0.5;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
+}
+
+.m-chart-scrollerOverlayHandle:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,.19),0 6px 6px rgba(0,0,0,.23);
+    opacity: 1;
+}
+
+/** ==============================LOADER ======================================**/
+.chart-loader-wrapper {
+    position: absolute;
+    z-index: 115;
+}
+
+.chart-loader {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #3498db;
+    -webkit-animation: chart-loader-spin 2s linear infinite;
+    animation: chart-loader-spin 2s linear infinite;
+    z-index: 1001;
+}
+
+.chart-loader:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #e74c3c;
+    -webkit-animation: chart-loader-spin 3s linear infinite;
+    animation: chart-loader-spin 3s linear infinite;
+}
+.chart-loader:after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #f9c922;
+    -webkit-animation: chart-loader-spin 1.5s linear infinite;
+    animation: chart-loader-spin 1.5s linear infinite;
+}
+@-webkit-keyframes chart-loader-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes chart-loader-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================================================== */
+
+.m-chart-instrument-delete {
+    color: #aaa;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    z-index: 2;
+    line-height: 16px;
+    padding: 0px 2px;
+    border-radius: 8px;
+}
+
+.m-chart-instrument-delete:hover {
+    color: #595959;
+    text-decoration: none;
+}
+
+.m-chart-instrument-delete.on {
+    color: #FFF;
+    background: #ce4f57;
+}
+
+.m-chart-instrument-delete.on:hover {
+    color: #FFF;
+    background: #E34F57;
+    text-decoration: none;
+}
+
+.m-chart-instrument-settings {
+    color: #aaa;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    z-index: 1000;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+    margin-left: -6px;
+    margin-top: 3px;
+    background: url("../images/bullet_wrench.png") no-repeat;
+}
+
+.m-chart-instrument-delete:hover {
+    color: #595959;
+}
+
+.m-chart-instrument-settings:hover {
+    color: #595959;
+}
+
+.m-chart-instrument-delete {
+    cursor: pointer;
+}
+
+#elementSettings {
+    position: absolute;
+    z-index: 1010;
+}
+
+#elementSettings.label {
+    position: absolute;
+    z-index: 1010;
+    padding: 10px;
+    background: #fff;
+    border: 2px solid #777;
+    border-radius: 3px;
+    width: 180px;
+    height: 105px;
+}
+
+#elementSettings.label img {
+    cursor: pointer;
+}
+
+#elementSettings.label textarea {
+    resize: both;
+    -moz-user-select: text;
+}
+
+#elementSettings.label .close {
+    float: right;
+    cursor: default;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.Mark-select {
+    display: none;
+    position: absolute;
+    /*margin-top: 29px;
+    background: #fff;
+    border: 1px solid #777;
+    width: 16px;
+    padding: 5px;*/
+    z-index: 1000;
+    margin-left: 35px;
+    margin-top: 37px;
+}
+
+.popupWrapper {
+    position: relative;
+}
+
+.rowTop span,
+.rowBottom span {
+    margin: 0 -1px 0 0;
+    padding: 0;
+    float: left;
+    display: inline-block;
+}
+
+.rowTop {
+    position: absolute;
+    height: 22px;
+    top: 10px;
+    left: 5px;
+}
+
+.rowBottom {
+    position: absolute;
+    height: 22px;
+    top: 31px;
+    left: 5px;
+}
+
+#bottomPanelChartLink .k-button,
+#bottomPanelChartLink .k-buttonHover {
+    background-color: #DB843D;
+    color: #fff;
+    border-color: #DB843D;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#bottomPanelShowTrades .k-button,
+#bottomPanelShowTrades .k-buttonHover {
+    background-color: #db4bc7;
+    color: #fff;
+    border-color: #db4bc7;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#bottomPanelChartImg .k-button {
+    background-color: #52afc9;
+    color: #fff;
+    border-color: #52afc9;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+
+}
+
+#bottomPanelChartIndicators .k-button {
+    background-color: #188F18;
+    color: #fff;
+    border-color: #188F18;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#bottomPanelChartIdea .k-button {
+    background-color: #BD313F;
+    color: #fff;
+    border-color: #BD313F;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.iChart-indicator-width .lineWidth {
+    width: 28px;
+}
+
+.lineWidth {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    position: relative;
+}
+.lineWidth:hover {
+    cursor: pointer;
+}
+.lineWidth:after {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    background: #20232a;
+    content: "";
+    width: 100%;
+    display: block;
+}
+.lineWidth[data-style="1"]:after {
+    height: 1px;
+}
+.lineWidth[data-style="2"]:after {
+    height: 2px;
+}
+.lineWidth[data-style="3"]:after {
+    height: 3px;
+}
+.lineWidth[data-style="4"]:after {
+    height: 4px;
+}
+.lineWidth[data-style="5"]:after {
+    height: 5px;
+}
+.lineWidth[data-style="8"]:after {
+    height: 8px;
+}
+.lineWidth[data-style="10"]:after {
+    height: 10px;
+}
+
+.palette-item:hover {
+    z-index: 101;
+    position: relative;
+    -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+/************************************ iChartTools ******************************************************/
+
+
+.iChartToolsContainer {
+    text-align: right;
+}
+.iChartToolsTop {
+    display: inline-block;
+    text-align: left;
+    height: 40px;
+}
+
+.js-colorSelector {
+    border: 1px solid #CCCCCC;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.js-lineWidthSelector {
+    display: inline-block;
+}
+
+#simplemodal-overlay {
+    background-color: #999999;
+}
+
+#simplemodal-container {
+    background-color: #FFFFFF;
+    border: 1px solid #999999;
+}
+
+#simplemodal-title {
+    background-color: #EEEEEE;
+    padding: 2px 10px;
+    font-size: 110%;
+    font-weight: bold;
+    color: #555;
+}
+
+.simplemodal-wrap {
+    height: 100%;
+    padding: 5px 20px 20px;
+    position: relative;
+    overflow: auto;
+    outline: 0;
+}
+
+#simplemodal-container a.modalCloseImg {
+    width: 12px;
+    height: 12px;
+    display: inline;
+    z-index: 3200;
+    position: absolute;
+    top: 4px;
+    right: 3px;
+    cursor: pointer;
+}
+
+
+.m-chart-btn {
+    background: #fff;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    min-height: 31px;
+    min-width: 70px;
+    padding: 2px 16px;
+    text-align: center;
+    text-shadow: none;
+    text-transform: uppercase;
+    transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    color: #212121;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-appearance: none;
+    display: inline-block;
+    vertical-align: middle;
+    font: 500 14px / 31px "Roboto", sans-serif !important;
+}
+.m-chart-btn:hover,
+.m-chart-btn:focus,
+.m-chart-btn:active
+{
+    background: #fff;
+    outline: none;
+    text-decoration: none;
+    color: #212121;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+
+
+/*---------------------------- UI ----------------------------------------------*/
+.tm-tool-bar {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    width: 100%;
+    background-color: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff));
+    background: -webkit-linear-gradient(top, #fff, #fff);
+    background: -moz-linear-gradient(top, #fff, #fff);
+    background: -ms-linear-gradient(top, #fff, #fff);
+    background: -o-linear-gradient(top, #fff, #fff);
+    z-index: 100;
+}
+.tm-shadow {
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.tm-graph-button {
+    cursor: pointer;
+    min-width: 40px;
+    min-height: 40px;
+    border-right: 1px solid #cfd8dc;
+    border-left: 1px solid #cfd8dc;
+    margin-right: -1px;
+    background-color: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff));
+    background: -webkit-linear-gradient(top, #fff, #fff);
+    background: -moz-linear-gradient(top, #fff, #fff);
+    background: -ms-linear-gradient(top, #fff, #fff);
+    background: -o-linear-gradient(top, #fff, #fff);
+}
+.tm-graph-button:hover {
+    background-color: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3f2fd));
+    background: -webkit-linear-gradient(top, #fff, #e3f2fd);
+    background: -moz-linear-gradient(top, #fff, #e3f2fd);
+    background: -ms-linear-gradient(top, #fff, #e3f2fd);
+    background: -o-linear-gradient(top, #fff, #e3f2fd);
+}
+.tm-graph-button.active {
+    background-color: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3f2fd));
+    background: -webkit-linear-gradient(top, #fff, #e3f2fd);
+    background: -moz-linear-gradient(top, #fff, #e3f2fd);
+    background: -ms-linear-gradient(top, #fff, #e3f2fd);
+    background: -o-linear-gradient(top, #fff, #e3f2fd);
+}
+.uk-tooltip {
+    background: #fff;
+    color: #000;
+    font-size: 10px;
+    line-height: 10px;
+    padding: 2px 5px;
+    border-radius: 0;
+    text-shadow: none;
+    min-width: inherit;
+}
+.uk-list li {
+    font-size: 12px;
+    padding: 3px 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: left;
+}
+.uk-list li:hover {
+    background: #e3f2fd;
+}
+.uk-list-line > li:nth-child(n+2) {
+    margin-top: 0;
+}
+.tm-fill-color,
+.tm-line-color {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 5px;
+    left: 6px;
+    background: #2196f3;
+}
