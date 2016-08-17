@@ -15903,7 +15903,7 @@ $.views.settings.allowCode(true);
 $.templates("iChart_mainTmpl", '' +
     '<div class="iChart-control-form" style="min-height: 200px">' +
         '<div class="js-chartContainerWrapper">' +
-            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: block;">' +
+            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: none;">' +
             '</div></div>' +
             '<div id="{{:id}}" class="m-chart-container" style="height: 100%;">' +
             '</div>' +
