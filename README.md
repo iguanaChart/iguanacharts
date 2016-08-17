@@ -58,6 +58,7 @@ https://github.com/uikit/uikit/releases/download/v2.26.4/uikit-2.26.4.zip
 - hammerjs - http://hammerjs.github.io/dist/hammer.min.js
 - jquery.hammer.js -https://github.com/hammerjs/jquery.hammer.js
 - jsrender - https://www.jsviews.com/download/jsrender.min.js
+- jquery-minicolors - https://github.com/claviska/jquery-minicolors
 
 ####Including dependencies example
 

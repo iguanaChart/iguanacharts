@@ -678,6 +678,7 @@
 .iChartToolsTop {
     display: inline-block;
     text-align: left;
+    height: 40px;
 }
 
 .js-colorSelector {
