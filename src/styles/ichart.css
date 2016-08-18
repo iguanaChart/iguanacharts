@@ -812,7 +812,7 @@
     background: -ms-linear-gradient(top, #fff, #e3f2fd);
     background: -o-linear-gradient(top, #fff, #e3f2fd);
 }
-.uk-tooltip {
+.tm-tool-bar .uk-tooltip {
     background: #fff;
     color: #000;
     font-size: 10px;
@@ -822,17 +822,17 @@
     text-shadow: none;
     min-width: inherit;
 }
-.uk-list li {
+.js-iChartTools-indicators-list .uk-list li {
     font-size: 12px;
     padding: 3px 5px;
     cursor: pointer;
     white-space: nowrap;
     text-align: left;
 }
-.uk-list li:hover {
+.js-iChartTools-indicators-list .uk-list li:hover {
     background: #e3f2fd;
 }
-.uk-list-line > li:nth-child(n+2) {
+.js-iChartTools-indicators-list .uk-list-line > li:nth-child(n+2) {
     margin-top: 0;
 }
 .tm-fill-color,
