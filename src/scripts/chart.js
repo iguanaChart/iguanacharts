@@ -1697,6 +1697,9 @@
     //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
     $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
     $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("dblclick", function () {
+        _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
+    });
     $(_this.wrapper).on('iguanaChartEvents', function(event, name, data) {
         if(name === 'chartDataReady') {
             if(_this.viewData.chart && _this.dataRequestCounter == 0) {

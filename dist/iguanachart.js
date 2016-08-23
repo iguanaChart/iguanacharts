@@ -13838,14 +13838,24 @@ iChart.indicators = {
 
         if(this.name == 'ChartArea1') {
             // учет построенных инструментов анализа, что бы тоже попадали в область видимости
+            var exclude = [
+                'HorizontalLine'
+            ];
             var history = this.chart.overlay.history;
             for(var i=0;i<history.length;i++) {
+
+                var element = history[i];
+
+                if($.inArray(element.elementType, exclude) >= 0) {
+                    continue;
+                }
+
                 var useElement = false;
                 //Если инструмент попадает хотябы частично в область видимости, то учитываем его при масшабировании.
-                for(var j=0;j<history[i].points.length;j++) {
-                    if(history[i].points[j].x >= this.xSeries[start]*1000 && history[i].points[j].x <= this.xSeries[end]*1000 || history[i].positionAbsolute) {
+                for(var j=0;j<element.points.length;j++) {
+                    if(element.points[j].x >= this.xSeries[start]*1000 && element.points[j].x <= this.xSeries[end]*1000 || element.positionAbsolute) {
                         useElement = true;
-                    } else if (history[i].points[j].x < this.xSeries[0] || history[i].points[j].x > this.xSeries[this.xSeries.length - 1]) {
+                    } else if (element.points[j].x < this.xSeries[0] || element.points[j].x > this.xSeries[this.xSeries.length - 1]) {
                         // если точка вне области графика, то не учитываем
                         useElement = false;
                         break;
@@ -13853,13 +13863,13 @@ iChart.indicators = {
 
                 }
                 if(useElement) {
-                    for(var j=0;j<history[i].points.length;j++) {
-                        if(history[i].points[j].y) {
+                    for(var j=0;j<element.points.length;j++) {
+                        if(element.points[j].y) {
 
                             if(this.chart.isComparison && series.kind != "TA_LIB" && this.ySeries[0].points.length) {
-                                var y = ((history[i].points[j].y  /  this.ySeries[0].points[start][3]) - 1) * 100;
+                                var y = ((element.points[j].y  /  this.ySeries[0].points[start][3]) - 1) * 100;
                             } else {
-                                var y = history[i].points[j].y;
+                                var y = element.points[j].y;
                             }
                             result.max = Math.max(result.max, y);
                             result.min = Math.min(result.min, y);
@@ -18398,6 +18408,9 @@ IguanaChart = function (options) {
     //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
     $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
     $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("dblclick", function () {
+        _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
+    });
     $(_this.wrapper).on('iguanaChartEvents', function(event, name, data) {
         if(name === 'chartDataReady') {
             if(_this.viewData.chart && _this.dataRequestCounter == 0) {
