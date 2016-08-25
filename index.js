@@ -4,6 +4,7 @@
 
 var gulp = require('gulp');
 var concata = require('gulp-concat');
+var gnf = require('gulp-npm-files');
 
 gulp.src([
     './src/styles/ichart.css',

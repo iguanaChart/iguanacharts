@@ -2,21 +2,31 @@
   "name": "iguanachart",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/iguanachart.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "./node_modules/http-server/bin/http-server -a127.0.0.1 -p8000",
+    "example": "./node_modules/http-server/bin/http-server -a127.0.0.1 -p8000",
     "build": "node ./index.js && node ./minify.js",
-    "//": "nt_release\": \"npm run build && cp -R ./dist/* ./test"
+    "nt_release": "npm run build && cp -R ./dist/* ../iguanachart"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "hammerjs": "^2.0.8",
+    "jquery": "^1.0.0",
+    "jquery-hammerjs": "^2.0.0",
+    "jquery-minicolors": "^2.1.10",
+    "jquery-mousewheel": "^3.1.13",
+    "jquery.event.move": "^1.3.6",
+    "jsrender": "^0.9.80",
+    "uikit": "^2.26.4"
+  },
+  "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
+    "gulp-npm-files": "^0.1.3",
     "http-server": "^0.9.0",
-    "jQuery": "^1.7.4",
     "node-minify": "^1.3.9",
-    "uglify-js": "^2.7.0"
+    "uglify-js": "^2.7.3"
   }
 }

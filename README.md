@@ -85,6 +85,43 @@ You can download all needed dependence from https://github.com/iguanaChart/depen
 
 ```
 
+#### require config
+```javascript
+        require.config({
+            paths: {
+                jquery: 'https://code.jquery.com/jquery-1.12.4.min',
+                uikit: '/dependencies/uikit/js/uikit.min',
+                'jquery.eventmove': '/dependencies/jquery.event.move',
+                'jquery.hammer': '/dependencies/jquery.hammer',
+                'jsrender': "/dependencies/jsrender.min",
+                'jquery.minicolors': '/dependencies/jquery-minicolors/jquery.minicolors.min',
+                'iguanachart': '/dist/iguanachart',
+                'hammerjs': '/dependencies/hammer.min'
+            },
+            shim: {
+                'uikit': {
+                    deps: [
+                        'jquery'
+                    ]
+                },
+                jsrender: {
+                    deps: [
+                        'jquery'
+                    ]
+                },
+                iguanachart: {
+                    deps: [
+                        'jquery',
+                        'uikit',
+                        'jquery.eventmove',
+                        'jquery.hammer',
+                        'jsrender',
+                        'jquery.minicolors'
+                    ]
+                }
+            }
+        })
+```
 
 ## License
 
