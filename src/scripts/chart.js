@@ -1649,11 +1649,11 @@
         };
 
         var data4 = {
-            date: 1463580900000,
-            price: 2691,
-            date2: 1463605200000,
-            price2: 2683.5,
-            tf: 900,
+            date: 1470040482973,
+            price: 122.62,
+            date2: 1472922012575,
+            price2: 135,
+            tf: 1440,
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',

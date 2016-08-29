@@ -361,13 +361,13 @@
 
         //Вызываем функцию
         if (element && element.value && typeof element.value.onMouseDown =='function' ) {
-            element.value.onMouseDown(e);
+            element.value.onMouseDown(e, x, y);
         }
 
 
         if (typeof element === "undefined")
         {
-            this.setSelected(null)
+            this.setSelected(null);
             return;
         } else if(!element.value.controlEnable) {
             return;
@@ -497,12 +497,6 @@
         }
         else
         {
-
-            if (element.onHover == 'function') {
-                element.onHover(x, y);
-            }
-
-
             if(element.mode.toString().match(new RegExp("^c_", "i"))) {
                 this.chart.container.style.cursor = "pointer";
                 this.setControlsHover(element);
@@ -516,7 +510,7 @@
                 this.setControlsHover(element);
                 this.chart.container.style.cursor = "pointer";
             } else {
-                this.setHover(element.value);
+                this.setHover(element.value, x, y);
                 this.setControlsHover(element);
                 if(typeof element.value.hoverCursor != "undefined") {
                     this.chart.container.style.cursor = element.value.hoverCursor;
@@ -584,10 +578,9 @@
                 this.drag.element.points = result.markers;
                 delete this.drag.element.testContext;
                 this.syncHash();
+                this.drag.element.onDrop(this.drag.mode);
             }
         }
-
-        this.drag.element.onDrop(this.drag.mode);
         delete this.drag.element.markers;
         this.drag = null;
         this.render();
@@ -795,9 +788,9 @@
                 }
             }
         }
-    }
+    };
 
-    iChart.Charting.ChartDrawingLayer.prototype.setHover = function (element)
+    iChart.Charting.ChartDrawingLayer.prototype.setHover = function (element, x, y)
     {
         /// <summary>
         /// Sets hover to the specified chart element and redraws the canvas to highlight it.
@@ -820,10 +813,13 @@
         if (this.hover !== element)
         {
             this.hover = element;
+
+            if(element !== null && typeof element.onHover === 'function') {
+                element.onHover(x, y);
+            }
+
             this.render();
         }
-
-
     };
 
     iChart.Charting.ChartDrawingLayer.prototype.setSelected = function (element)
@@ -846,7 +842,6 @@
             }
 
             this.selected = element;
-            this.render();
 
             if (element === null)
             {
@@ -857,6 +852,7 @@
                 this.selected.selected = true;
                 this.selected.onSelect.call(this.selected, this.context);
             }
+            this.render();
         }
     };
 

@@ -47,7 +47,6 @@
             ctx.fillStyle = "rgba(255,255,153,.2)";
             ctx.strokeStyle = "#52afc9";
             ctx.inHover = true;
-            this.onHover(ctx);
         }
         else
         {
