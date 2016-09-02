@@ -512,8 +512,15 @@
             } else {
                 this.setHover(element.value, x, y);
                 this.setControlsHover(element);
-                if(typeof element.value.hoverCursor != "undefined") {
-                    this.chart.container.style.cursor = element.value.hoverCursor;
+
+                if(typeof element.value.hoverCursor != "undefined" || typeof element.value.hoverPointCursor != "undefined") {
+                    if(element.mode > 0 && typeof element.value.hoverPointCursor != "undefined") {
+                        this.chart.container.style.cursor = element.value.hoverPointCursor;
+                    } else if(element.mode == 0 && typeof element.value.hoverCursor != "undefined") {
+                        this.chart.container.style.cursor = element.value.hoverCursor;
+                    } else {
+                        this.chart.container.style.cursor = "pointer";
+                    }
                 } else {
                     this.chart.container.style.cursor = "pointer";
                 }

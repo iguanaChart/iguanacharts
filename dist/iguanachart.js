@@ -3059,8 +3059,15 @@ iChart.indicators = {
             } else {
                 this.setHover(element.value, x, y);
                 this.setControlsHover(element);
-                if(typeof element.value.hoverCursor != "undefined") {
-                    this.chart.container.style.cursor = element.value.hoverCursor;
+
+                if(typeof element.value.hoverCursor != "undefined" || typeof element.value.hoverPointCursor != "undefined") {
+                    if(element.mode > 0 && typeof element.value.hoverPointCursor != "undefined") {
+                        this.chart.container.style.cursor = element.value.hoverPointCursor;
+                    } else if(element.mode == 0 && typeof element.value.hoverCursor != "undefined") {
+                        this.chart.container.style.cursor = element.value.hoverCursor;
+                    } else {
+                        this.chart.container.style.cursor = "pointer";
+                    }
                 } else {
                     this.chart.container.style.cursor = "pointer";
                 }
@@ -8589,9 +8596,11 @@ iChart.indicators = {
         iChart.Charting.ChartElement.prototype.constructor.call(this, layer);
 
         this.elementType = "Trendorder";
-        this.drawType = 'manually';
+        this.drawType = 'auto';
         this.hoverCursor = "row-resize";
         this.moveCursor = "row-resize";
+        this.hoverPointCursor = "move";
+        this.movePointCursor = "move";
         this.maxPointCount = 2;
         this.hasSettings = true;
         this.controlEnable = true;
@@ -8601,7 +8610,7 @@ iChart.indicators = {
          * Непроизводить корректировку точек, т.к. элемент находиться под обрабатой внешним методом
          * @type {boolean}
          */
-        this.freezed = false;
+        this.freezed = true;
         this.settings = {
             text: '',
             textHeight: 13,
@@ -8624,14 +8633,94 @@ iChart.indicators = {
         } else {
             this.points[0] = {x: settings.date, y: settings.price};
             this.points[1] = {x: settings.date2, y: settings.price2};
+
+            var coords = this.getFloatCoords();
+
+            this.trendLineSettings = {
+                points: this.getBorderPoints(coords)
+            };
+
+            this.calcPointsPosition(coords[1].x, 150);
         }
+    };
+
+    /**
+     *
+     * @param x
+     * @param length
+     */
+    iChart.Charting.ChartTrendorder.prototype.calcPointsPosition = function (x, length) {
+        length = length ? length : 150;
+        var coords = this.getCoordinates(this.layer.context, this.points);
+        var borderPoints = this.getBorderPoints(coords);
+
+        var xCenter = (borderPoints[0].x + borderPoints[1].x) / 2;
+
+        if( x < xCenter) {
+            this.points[0].x = this.layer.area.getXValue(x) * 1000;
+            var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], x);
+            this.points[0].y = this.layer.area.getYValue(foundPoint.y);
+
+            var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], xCenter);
+            this.points[1].x = this.layer.area.getXValue(xCenter) * 1000;
+            this.points[1].y = this.layer.area.getYValue(foundPoint.y);
+
+            var coords = this.getCoordinates(this.layer.context, this.points);
+
+            //Перенос центральной точки, если управляющая слишком близко к ней
+            if(Math.sqrt(Math.pow(coords[0].x - coords[1].x, 2) + Math.pow(coords[0].y - coords[1].y, 2)) < length) {
+
+                var alpha = Math.atan((coords[0].y - coords[1].y) / (coords[0].x - coords[1].x));
+                var newPx = coords[0].x + (length+5) * Math.cos(alpha);
+                var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], newPx);
+
+                this.points[1].x = this.layer.area.getXValue(newPx) * 1000;
+                this.points[1].y = this.layer.area.getYValue(foundPoint.y);
+            }
+
+        } else {
+
+            this.points[1].x = this.layer.area.getXValue(x) * 1000;
+            var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], x);
+            this.points[1].y = this.layer.area.getYValue(foundPoint.y);
+
+            var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], xCenter);
+            this.points[0].x = this.layer.area.getXValue(xCenter) * 1000;
+            this.points[0].y = this.layer.area.getYValue(foundPoint.y);
+
+            var coords = this.getCoordinates(this.layer.context, this.points);
+
+            if(Math.sqrt(Math.pow(coords[0].x - coords[1].x, 2) + Math.pow(coords[0].y - coords[1].y, 2)) < length) {
+
+                var alpha = Math.atan((coords[0].y - coords[1].y) / (coords[0].x - coords[1].x));
+                var newPx = coords[1].x - (length+5) * Math.cos(alpha);
+                var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], newPx);
+
+                this.points[0].x = this.layer.area.getXValue(newPx) * 1000;
+                this.points[0].y = this.layer.area.getYValue(foundPoint.y);
+            }
+        }
+
+    };
+
+    /**
+     *
+     * @param points
+     * @returns {*[]}
+     */
+    iChart.Charting.ChartTrendorder.prototype.getFloatCoords = function (points) {
+        points = (typeof points != "undefined") ? points : this.points;
+        var coords = [{x:0, y:0},{x:0,y:0}];
+        coords[0].x = this.layer.area.getXPositionByValue(points[0].x / 1000);
+        coords[0].y = this.layer.area.getYPosition(points[0].y);
+        coords[1].x = this.layer.area.getXPositionByValue(points[1].x / 1000);
+        coords[1].y = this.layer.area.getYPosition(points[1].y);
+        return coords;
     };
 
     iChart.Charting.ChartTrendorder.prototype.normalizeCoords = function (ctx, coords)
     {
-        this.points[1].x = $.now();
-        this.points[1].y = this.findYForward(this.points[1].x);
-
+        this.moveForward();
         return this.getCoordinates(ctx, this.points);
     };
 
@@ -8671,8 +8760,10 @@ iChart.indicators = {
 
             this.drawLable(ctx, color, this.settings.textColor, coords[0].x, coords[0].y, this.settings.text);
 
-            this.drawPoint(ctx, coords[0].x, coords[0].y, color, 4);
-            this.drawPoint(ctx, coords[1].x, coords[1].y, color, 4);
+            if(this.selected) {
+                this.drawPoint(ctx, coords[0].x, coords[0].y, color, 4);
+                this.drawPoint(ctx, coords[1].x, coords[1].y, color, 4);
+            }
         } else {
             ctx.save();
             ctx.strokeStyle = color;
@@ -8689,57 +8780,117 @@ iChart.indicators = {
         }
     };
 
-    iChart.Charting.ChartTrendorder.prototype.drawTrendMode = function (ctx, coords) {
-        if (typeof this.markers !== "undefined")
-        {
-            var points = this.markers;
-        } else {
-            if(!this.selected && !this.freezed) {
-                console.trace();
-                this.points[1].x = $.now();
-                this.points[1].y = this.findYForward(this.points[1].x);
-            }
-            var points = this.points;
-        }
+    /**
+     *
+     * @returns {{time: *, x}}
+     */
+    iChart.Charting.ChartTrendorder.prototype.getOpenOrderData = function () {
+        var openTime = this.layer.chart.areas[0].xSeries[this.layer.chart.areas[0].xSeries.length - this.layer.chart.chartOptions.futureAmount - 1];
+        var openX = this.layer.area.getXPositionByValue(openTime);
 
+        return {time: openTime, x: openX};
+    };
 
+    /**
+     *
+     * @returns {{time: Date, x}}
+     */
+    iChart.Charting.ChartTrendorder.prototype.getExpireOrderData = function () {
+        var openOrder = this.getOpenOrderData();
+        var expireTime = new Date((openOrder.time + this.layer.chart.env.dataSource.dataSettings.timeframe * 60) *  1000);
 
+        var expireX = this.layer.area.getXPositionByValue(expireTime / 1000);
+
+        return {time: expireTime, x: expireX};
+    };
+
+    /**
+     *
+     * @param coords
+     * @returns {{x, y, k, b}}
+     */
+    iChart.Charting.ChartTrendorder.prototype.getOpenCoords = function (coords) {
+        var openOrder = this.getOpenOrderData();
+        return iChart.getLineEquation(coords[0], coords[1], openOrder.x);
+    };
+
+    /**
+     *
+     * @param coords
+     * @returns {{x, y, k, b}}
+     */
+    iChart.Charting.ChartTrendorder.prototype.getExpireCoords = function (coords) {
+        var expireOrder = this.getExpireOrderData();
+        return iChart.getLineEquation(coords[0], coords[1], expireOrder.x);
+    };
+
+    /**
+     *
+     * @param ctx
+     * @param coords
+     */
+    iChart.Charting.ChartTrendorder.prototype.getOrderParams = function (coords) {
+
+        var foundOpenCoords = this.getOpenCoords(coords);
+        var foundExpireCoords = this.getExpireCoords(coords);
+
+        var newOrderParams = {
+            points: [
+                {x: this.layer.area.getXValue(foundOpenCoords.x) * 1000, y: this.layer.area.getYValue(foundOpenCoords.y)},
+                {x: this.layer.area.getXValue(foundExpireCoords.x) * 1000, y: this.layer.area.getYValue(foundExpireCoords.y)}
+            ]
+        };
+
+        return newOrderParams;
+    };
+
+    /**
+     *
+     * @param coords
+     * @returns {*[]}
+     */
+    iChart.Charting.ChartTrendorder.prototype.getBorderPoints = function (coords) {
         var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
         if(foundPoint1.y < 0 ) {
             foundPoint1.y = 0;
             foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
-        } else if(foundPoint1.y > ctx.canvas.height ) {
-            foundPoint1.y = ctx.canvas.height;
+        } else if(foundPoint1.y > this.layer.canvas.height ) {
+            foundPoint1.y = this.layer.canvas.height;
             foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
         }
 
 
-        var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], ctx.canvas.width);
+        var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.width);
         if(foundPoint2.y < 0 ) {
             foundPoint2.y = 0;
             foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
-        } else if(foundPoint2.y > ctx.canvas.height ) {
-            foundPoint2.y = ctx.canvas.height;
+        } else if(foundPoint2.y > this.layer.canvas.height ) {
+            foundPoint2.y = this.layer.canvas.height;
             foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
         }
 
+        return [foundPoint1, foundPoint2];
+    };
+
+    iChart.Charting.ChartTrendorder.prototype.drawTrendMode = function (ctx, coords) {
+
+        if (typeof this.markers !== "undefined")
+        {
+            var points = this.markers;
+
+        } else {
+            if(!this.selected && !this.freezed) {
+                console.trace();
+                this.moveForward();
+            }
+            var points = this.points;
+        }
+
         this.trendLineSettings = {
-            points: [foundPoint1, foundPoint2]
+            points: this.getBorderPoints(this.getFloatCoords(points))
         };
 
-        var openTime = this.layer.chart.areas[0].xSeries[this.layer.chart.areas[0].xSeries.length - this.layer.chart.chartOptions.futureAmount - 1];
-        var openX = this.layer.area.getXPositionByValue(openTime);
-
-        var expireTime = new Date(openTime *  1000);
-        expireTime.setSeconds(0);
-        expireTime.setMinutes(0);
-        expireTime.setHours(0);
-        expireTime.setTime(expireTime.getTime() + 86400000);
-
-        var expireX = this.layer.area.getXPositionByValue(expireTime / 1000);
-
-        var foundOpenCoords = iChart.getLineEquation(coords[0], coords[1], openX);
-        var foundExpireCoords = iChart.getLineEquation(coords[0], coords[1], expireX);
+        var foundOpenCoords = this.getOpenCoords(coords);
 
         ctx.save();
         ctx.beginPath();
@@ -8749,12 +8900,7 @@ iChart.indicators = {
         ctx.strokeStyle = color;
 
         ctx.moveTo(foundOpenCoords.x, foundOpenCoords.y);
-        ctx.lineTo(foundPoint1.x, foundPoint1.y);
-
-        ctx.stroke();
-
-        ctx.moveTo(foundExpireCoords.x, foundExpireCoords.y);
-        ctx.lineTo(foundPoint2.x, foundPoint2.y);
+        ctx.lineTo(this.trendLineSettings.points[0].x, this.trendLineSettings.points[0].y);
 
         ctx.stroke();
 
@@ -8770,13 +8916,7 @@ iChart.indicators = {
         ctx.stroke();
         ctx.restore();
 
-        this.settings.newOrderParams = {
-            points: [
-                {x: this.layer.area.getXValue(foundOpenCoords.x) * 1000, y: this.layer.area.getYValue(foundOpenCoords.y)},
-                {x: this.layer.area.getXValue(foundExpireCoords.x) * 1000, y: this.layer.area.getYValue(foundExpireCoords.y)}
-            ]
-        };
-
+        this.settings.newOrderParams = this.getOrderParams(coords);
 
         if(this.selected) {
             this.drawPoint(ctx, coords[0].x, coords[0].y, color, 4);
@@ -8850,6 +8990,16 @@ iChart.indicators = {
         return y;
     };
 
+    /**
+     *
+     */
+    iChart.Charting.ChartTrendorder.prototype.moveForward = function () {
+        if(this.points[1].x < $.now()) {
+            this.points[1].x = $.now();
+            this.points[1].y = this.findYForward(this.points[1].x);
+        }
+    };
+
     iChart.Charting.ChartTrendorder.prototype.pointsForward = function (ctx) {
         var startIndex = iChart.Charting.indexOfFirstElementGreaterThanOrEqualTo(this.layer.chart.areas[0].xSeries, this.settings.date / 1000);
         var endIndex = this.layer.chart.areas[0].xSeries.length - 1;
@@ -8878,7 +9028,7 @@ iChart.indicators = {
             var x = this.layer.area.getXPositionByValue(foundPoint.x / 1000);
             var y = this.layer.area.getYPosition(foundPoint.y + correction);
 
-            this.drawPoint(ctx, x, y, '#66FF66');
+            this.drawPoint(ctx, x, y, '#66FF66', 3);
         }
     };
 
@@ -9311,6 +9461,7 @@ iChart.indicators = {
 
     iChart.Charting.ChartTrendorder.prototype.onDrag  = function (points)
     {
+
         if(!points[0] || !points[1]) {
             return false;
         }
@@ -9320,15 +9471,19 @@ iChart.indicators = {
                 this.settings.mode = 'trend';
                 this.settings.date2 = new Date(points[1].x);
                 this.settings.price2 = this.points[1].y;
+                var coords = this.getCoordinates(this.layer.context, points);
+                this.settings.newOrderParams = this.getOrderParams(coords);
             }
         } else {
 
         }
 
-        if (this.points[0].x != points[0].x && points[0].x >= points[1].x - 1000) {
-            points[0].x = points[1].x - 1000;
-        } else if (this.points[1].x != points[1].x && points[1].x <= points[0].x + 1000) {
-            points[1].x = points[0].x + 1000;
+        var minDiff = (this.layer.area.getXValue(1) - this.layer.area.getXValue(0)) * 1000;
+
+        if (this.points[0].x != points[0].x && points[0].x >= points[1].x - minDiff) {
+            points[0].x = points[1].x - minDiff;
+        } else if (this.points[1].x != points[1].x && points[1].x <= points[0].x + minDiff) {
+            points[1].x = points[0].x + minDiff;
         }
 
         if(typeof this.settings.restriction == 'function') {
@@ -9357,7 +9512,6 @@ iChart.indicators = {
         }
 
         if(typeof this.settings.onDrop == 'function') {
-            console.log(this);
             this.settings.onDrop.call(this);
         }
     };
@@ -9422,28 +9576,7 @@ iChart.indicators = {
         //console.log('onMouseDown', arguments, this);
         if(this.settings.mode == 'trend' && !this.selected) {
 
-            if( x < (this.layer.canvas.width / 2)) {
-                this.points[0].x = this.layer.area.getXValue(x) * 1000;
-                var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], x);
-                this.points[0].y = this.layer.area.getYValue(foundPoint.y);
-
-                var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], this.layer.canvas.width/2);
-                this.points[1].x = this.layer.area.getXValue(this.layer.canvas.width/2) * 1000;
-                this.points[1].y = this.layer.area.getYValue(foundPoint.y);
-
-                // TODO можно отодвинуть центральную точку, если управляющая слишком близко
-            } else {
-
-                this.points[1].x = this.layer.area.getXValue(x) * 1000;
-                var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], x);
-                this.points[1].y = this.layer.area.getYValue(foundPoint.y);
-
-                var foundPoint = iChart.getLineEquation(this.trendLineSettings.points[0], this.trendLineSettings.points[1], this.layer.canvas.width/2);
-                this.points[0].x = this.layer.area.getXValue(this.layer.canvas.width/2) * 1000;
-                this.points[0].y = this.layer.area.getYValue(foundPoint.y);
-
-            }
-
+            this.calcPointsPosition(x, 150);
         }
 
         if (typeof this.settings.onSelect == 'function') {
@@ -9461,8 +9594,6 @@ iChart.indicators = {
         //return 'rgba(' + rgb.join(", ") + ')';
 
     };
-
-
 
 
 })();
@@ -18270,11 +18401,11 @@ IguanaChart = function (options) {
         };
 
         var data4 = {
-            date: 1470040482973,
-            price: 122.62,
-            date2: 1472922012575,
-            price2: 135,
-            tf: 1440,
+            date: 1472798700000,
+            price: 142.73127071556314,
+            date2: 1472799600000,
+            price2: 142.75374359194433,
+            tf: 900,
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
@@ -18284,8 +18415,8 @@ IguanaChart = function (options) {
         };
 
         var data2 = {
-            date: 1451990743298.6785,
-            price: 2221.7,
+            date: 1472553953049000,
+            price: 135,
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
