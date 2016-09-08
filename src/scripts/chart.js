@@ -136,6 +136,7 @@
             this.dataRequestCounter = 0;
         } else {
             this.viewData.chart.chartOptions = $.extend(true, this.viewData.chart.chartOptions, settings);
+            this.viewData.chart.overlay.deserialize(iChart.parseQueryString((this.dataSource.dataSettings.hash|| "#").substr(1)));
             this.viewData.chart.setDataSettings(this.getChartDataUserSettings());
             this.dataRequestCounter = 0;
         }
@@ -251,13 +252,7 @@
 
         var documentHash = _this.dataSource.dataSettings.useHash == false ? _this.dataSource.dataSettings.hash : document.location.hash;
         var params = iChart.parseQueryString(documentHash.substr(1));
-        var drawParams = {};
-
-        for (var paramKey in params) {
-            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
-                drawParams[paramKey] = params[paramKey];
-            }
-        }
+        var drawParams = _this.getDrawParams(params);
 
         delete this._dataSettings.hash;
         var hash = "#" + iChart.toQueryString($.extend(this._dataSettings, drawParams));
@@ -274,6 +269,23 @@
                 $(this.container).trigger('iguanaChartEvents', ['hashChanged', hash]);
             }
         }
+    };
+
+    /**
+     *
+     * @param params
+     * @returns {{}}
+     */
+    this.getDrawParams = function (params) {
+        var drawParams = {};
+
+        for (var paramKey in params) {
+            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
+                drawParams[paramKey] = params[paramKey];
+            }
+        }
+
+        return drawParams;
     };
 
     this.chart_onIntervalChange = function (chart)

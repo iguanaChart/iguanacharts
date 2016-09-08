@@ -637,7 +637,7 @@
                                 indicator = a.ySeries[j].name,
                                 params = $.extend(true, {}, a.ySeries[j].params);
 
-                            if (this.env.TA[indicator]) {
+                            if (this.env.TA[indicator] && !updatedIndicators[indicator + "/" + index]) {
                                 this.env.TA[indicator](0, index);
                                 this.env.TA[indicator](1, index, params);
                                 updatedIndicators[indicator + "/" + index] = true;

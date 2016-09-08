@@ -8645,7 +8645,7 @@ iChart.indicators = {
     };
 
     /**
-     *
+     * Расчет удобного положение управляющих точек
      * @param x
      * @param length
      */
@@ -8781,7 +8781,7 @@ iChart.indicators = {
     };
 
     /**
-     *
+     * Время и координата первой точки условия приказа
      * @returns {{time: *, x}}
      */
     iChart.Charting.ChartTrendorder.prototype.getOpenOrderData = function () {
@@ -8792,7 +8792,7 @@ iChart.indicators = {
     };
 
     /**
-     *
+     * Время и координата второй точки условия приказа
      * @returns {{time: Date, x}}
      */
     iChart.Charting.ChartTrendorder.prototype.getExpireOrderData = function () {
@@ -8804,9 +8804,10 @@ iChart.indicators = {
         return {time: expireTime, x: expireX};
     };
 
+
     /**
      *
-     * @param coords
+     * @param coords {[{x:,y:},{x,y}]}
      * @returns {{x, y, k, b}}
      */
     iChart.Charting.ChartTrendorder.prototype.getOpenCoords = function (coords) {
@@ -8825,7 +8826,7 @@ iChart.indicators = {
     };
 
     /**
-     *
+     * Получение параметров для приказа
      * @param ctx
      * @param coords
      */
@@ -8845,7 +8846,7 @@ iChart.indicators = {
     };
 
     /**
-     *
+     * Получить координаты точке пересечение прямой с границами экрана
      * @param coords
      * @returns {*[]}
      */
@@ -8872,6 +8873,11 @@ iChart.indicators = {
         return [foundPoint1, foundPoint2];
     };
 
+    /**
+     * Рендер в режиме наклонной прямой
+     * @param ctx
+     * @param coords
+     */
     iChart.Charting.ChartTrendorder.prototype.drawTrendMode = function (ctx, coords) {
 
         if (typeof this.markers !== "undefined")
@@ -8991,7 +8997,7 @@ iChart.indicators = {
     };
 
     /**
-     *
+     * Скорректировать прямую с учетом пропусков свечей
      */
     iChart.Charting.ChartTrendorder.prototype.moveForward = function () {
         if(this.points[1].x < $.now()) {
@@ -11417,7 +11423,7 @@ iChart.indicators = {
                                 indicator = a.ySeries[j].name,
                                 params = $.extend(true, {}, a.ySeries[j].params);
 
-                            if (this.env.TA[indicator]) {
+                            if (this.env.TA[indicator] && !updatedIndicators[indicator + "/" + index]) {
                                 this.env.TA[indicator](0, index);
                                 this.env.TA[indicator](1, index, params);
                                 updatedIndicators[indicator + "/" + index] = true;
@@ -16888,6 +16894,7 @@ IguanaChart = function (options) {
             this.dataRequestCounter = 0;
         } else {
             this.viewData.chart.chartOptions = $.extend(true, this.viewData.chart.chartOptions, settings);
+            this.viewData.chart.overlay.deserialize(iChart.parseQueryString((this.dataSource.dataSettings.hash|| "#").substr(1)));
             this.viewData.chart.setDataSettings(this.getChartDataUserSettings());
             this.dataRequestCounter = 0;
         }
@@ -17003,13 +17010,7 @@ IguanaChart = function (options) {
 
         var documentHash = _this.dataSource.dataSettings.useHash == false ? _this.dataSource.dataSettings.hash : document.location.hash;
         var params = iChart.parseQueryString(documentHash.substr(1));
-        var drawParams = {};
-
-        for (var paramKey in params) {
-            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
-                drawParams[paramKey] = params[paramKey];
-            }
-        }
+        var drawParams = _this.getDrawParams(params);
 
         delete this._dataSettings.hash;
         var hash = "#" + iChart.toQueryString($.extend(this._dataSettings, drawParams));
@@ -17026,6 +17027,23 @@ IguanaChart = function (options) {
                 $(this.container).trigger('iguanaChartEvents', ['hashChanged', hash]);
             }
         }
+    };
+
+    /**
+     *
+     * @param params
+     * @returns {{}}
+     */
+    this.getDrawParams = function (params) {
+        var drawParams = {};
+
+        for (var paramKey in params) {
+            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
+                drawParams[paramKey] = params[paramKey];
+            }
+        }
+
+        return drawParams;
     };
 
     this.chart_onIntervalChange = function (chart)
