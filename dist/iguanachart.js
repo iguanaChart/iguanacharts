@@ -3383,9 +3383,6 @@ iChart.indicators = {
         /// </summary>
         /// <param name="element">Chart element that is being selected, or a null to deselect the element that was selected before.</param>
 
-        // if (element !== null) {
-        //     element.drawSettings();
-        // }
         $('#elementSettings').remove();
         if (this.selected !== element)
         {
@@ -3602,52 +3599,6 @@ iChart.indicators = {
     iChart.Charting.ChartElement.prototype.onDrag  = function (points) {};
 
     iChart.Charting.ChartElement.prototype.drawPopupSettings = function (ctx, coords) {};
-
-    // iChart.Charting.ChartElement.prototype.drawSettings = function (element) {
-    //
-    //     if (!this.settings) return;
-    //
-    //     var settings = this.settings;
-    //     var fillStyle = (settings.fillStyle) ? iChart.rgbToHex(settings.fillStyle) : ''; //заливка
-    //     var strokeStyle = (settings.strokeStyle) ? iChart.rgbToHex(settings.strokeStyle): ''; //цвет линий
-    //     var fontColor = (settings.fontColor) ? iChart.rgbToHex(settings.fontColor): '';
-    //     var lineWidth = (settings.lineWidth) ? settings.lineWidth : ''; //толщина линий
-    //     var fontSize = (settings.fontSize) ? settings.fontSize : ''; //толщина линий
-    //     var fillStyleAlpha =  (settings.fillStyle) ? (settings.fillStyle.split(',')[3] ? settings.fillStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-    //     var strokeStyleAlpha =  (settings.strokeStyle) ? (settings.strokeStyle.split(',')[3] ? settings.strokeStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-    //     var fontColorAlpha =  (settings.fontColor) ? (settings.fontColor.split(',')[3] ? settings.fontColor.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-    //
-    //     var self = this;
-    //     var setSettings = function (settings) { self.setSettings(settings); };
-    //
-    //     //Проапдейтим цвет фона
-    //     if (fillStyle != '') {
-    //         $('#fillStyleCanvas').show();
-    //         $('.fillStyle').css('background-color', settings.fillStyle);
-    //         $('#fillStyle').attr('data-opacity', fillStyleAlpha).val(fillStyle);
-    //
-    //     }
-    //
-    //     //Проапдейтим цвет линий
-    //     if (strokeStyle != '') {
-    //         // $('#strokeStyleCanvas').show();
-    //         // $('.strokeStyle').css('background-color', settings.strokeStyle);
-    //         // $('#strokeStyle').attr('data-opacity', strokeStyleAlpha).val(strokeStyle);
-    //     }
-    //
-    //     if (fontColor != '') {
-    //         $('#fontSettingsColor').show();
-    //         $('#fontSettingsColor').attr('data-opacity', fontColorAlpha).val(fontColor);
-    //     }
-    //
-    //     if (lineWidth != '') {
-    //         $('#lineWidthSelector').attr('data-style', lineWidth);
-    //     }
-    //
-    //     if(fontSize != '') {
-    //         $('#fontSettingsSize').val(fontSize);
-    //     }
-    // };
 
     iChart.Charting.ChartElement.prototype.setSettings = function (settings) {
         this.settings = $.extend(this.settings, settings);
@@ -4798,13 +4749,6 @@ iChart.indicators = {
         return false;
 
     };
-
-    iChart.Charting.ChartLabel.prototype.onInsert = function ()
-    {
-        var coords = this.getCoordinates(this.layer.context, this.points);
-        //this.drawSettings(this.layer.context, coords[0]);
-    };
-
 
     iChart.Charting.ChartLabel.prototype.setTestSegments = function ()
     {
@@ -12309,7 +12253,7 @@ iChart.indicators = {
         if (this.chartOptions.minHeight && this.areas)
         {
             if(this.chartOptions.uiTools.top) {
-                var uiTopHeigth = 40;
+                var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
             } else {
                 var uiTopHeigth = 0;
             }
@@ -12380,7 +12324,7 @@ iChart.indicators = {
         if (this.chartOptions.minHeight)
         {
             if(this.chartOptions.uiTools.top) {
-                var uiTopHeigth = 40;
+                var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
             } else {
                 var uiTopHeigth = 0;
             }
