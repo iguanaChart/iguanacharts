@@ -12269,6 +12269,8 @@ iChart.indicators = {
             primaryHeight = this.chartOptions.primaryAreaHeight;
         }
 
+        height += uiTopHeigth;
+
         if(this.areas) {
             for (var i = 0; i < areas.length; ++i)
             {
@@ -12291,7 +12293,7 @@ iChart.indicators = {
                 }
             }
         } else {
-            height = primaryHeight = primaryHeight + this.chartOptions.scrollerHeight;
+            height += primaryHeight = primaryHeight + this.chartOptions.scrollerHeight;
         }
         return {height: height, primaryHeight: primaryHeight};
     };
@@ -12431,6 +12433,7 @@ iChart.indicators = {
         }
 
         this.positionVolumeByPriceArea();
+
         var dimensions = this.onPositionAreas.call(this);
         if (dimensions)
         {
@@ -12438,16 +12441,15 @@ iChart.indicators = {
             height = dimensions.height || height;
         }
 
-        this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, width, height);
-        if (containerHeight !== height)
-        {
-            $container.height(height);
-        }
+        containerHeight = height;
+        containerWidth = width;
+        height += uiTopHeigth;
 
-        if (containerWidth !== width)
-        {
-            $container.width(height);
-        }
+        this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, containerWidth, containerHeight);
+
+        $container.height(containerHeight);
+        $container.width(containerWidth);
+
     };
 
     iChart.Charting.Chart.prototype._selectionMouseDownCallback = function (selection)
@@ -15936,7 +15938,7 @@ $.views.settings.allowCode(true);
 $.templates("iChart_mainTmpl", '' +
     '<div class="iChart-control-form" style="min-height: 200px">' +
         '<div class="js-chartContainerWrapper">' +
-            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: none;">' +
+            '<div class="iChartToolsContainer"><div class="iChartToolsTop" style="display: none;">' +
             '</div></div>' +
             '<div id="{{:id}}" class="m-chart-container" style="height: 100%;">' +
             '</div>' +

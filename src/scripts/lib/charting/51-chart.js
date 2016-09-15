@@ -1519,6 +1519,8 @@
             primaryHeight = this.chartOptions.primaryAreaHeight;
         }
 
+        height += uiTopHeigth;
+
         if(this.areas) {
             for (var i = 0; i < areas.length; ++i)
             {
@@ -1541,7 +1543,7 @@
                 }
             }
         } else {
-            height = primaryHeight = primaryHeight + this.chartOptions.scrollerHeight;
+            height += primaryHeight = primaryHeight + this.chartOptions.scrollerHeight;
         }
         return {height: height, primaryHeight: primaryHeight};
     };
@@ -1681,6 +1683,7 @@
         }
 
         this.positionVolumeByPriceArea();
+
         var dimensions = this.onPositionAreas.call(this);
         if (dimensions)
         {
@@ -1688,16 +1691,15 @@
             height = dimensions.height || height;
         }
 
-        this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, width, height);
-        if (containerHeight !== height)
-        {
-            $container.height(height);
-        }
+        containerHeight = height;
+        containerWidth = width;
+        height += uiTopHeigth;
 
-        if (containerWidth !== width)
-        {
-            $container.width(height);
-        }
+        this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, containerWidth, containerHeight);
+
+        $container.height(containerHeight);
+        $container.width(containerWidth);
+
     };
 
     iChart.Charting.Chart.prototype._selectionMouseDownCallback = function (selection)
