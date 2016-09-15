@@ -73,12 +73,10 @@
             contextSettings: {
                 fillStyle: 'rgba(82,175,201,.2)',
                 strokeStyle: 'rgba(82,175,201,1)',
-                lineWidth: 1
-            },
-            fontSettings: {
-                famaly: 'Arial,Helvetica,sans-serif',
-                color: '#444444',
-                size: '14'
+                lineWidth: 1,
+                fontFamaly: 'Arial,Helvetica,sans-serif',
+                fontColor: '#444444',
+                fontSize: '14'
             },
             indicatorsColor: {},
             indicatorsWidth: {},
@@ -249,8 +247,10 @@
             var iguanaChart = this.data('iguanaChart'),
                 chart = iguanaChart.viewData.chart;
             if (chart.overlay) {
-                chart.overlay.start(options[0]);
+                var element = chart.overlay.start(options[0]);
+                element.setSettings(options[1]);
             }
+            return false;
         },
         addPoint: function(options) {
             var iguanaChart = this.data('iguanaChart');

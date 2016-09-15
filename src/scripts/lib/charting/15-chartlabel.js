@@ -125,14 +125,7 @@
 
         return false;
 
-    }
-
-    iChart.Charting.ChartLabel.prototype.onInsert = function ()
-    {
-        var coords = this.getCoordinates(this.layer.context, this.points);
-        this.drawSettings(this.layer.context, coords[0]);
-    }
-
+    };
 
     iChart.Charting.ChartLabel.prototype.setTestSegments = function ()
     {

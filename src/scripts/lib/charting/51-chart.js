@@ -1502,7 +1502,13 @@
 
         if (this.chartOptions.minHeight && this.areas)
         {
-            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight;
+            if(this.chartOptions.uiTools.top) {
+                var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
+            } else {
+                var uiTopHeigth = 0;
+            }
+
+            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
             primaryHeight = Math.floor(this.chartOptions.primaryToSecondaryAreaHeightRatio * secondaryHeight);
@@ -1567,7 +1573,13 @@
         var secondaryHeight;
         if (this.chartOptions.minHeight)
         {
-            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight;
+            if(this.chartOptions.uiTools.top) {
+                var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
+            } else {
+                var uiTopHeigth = 0;
+            }
+
+            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
             primaryHeight = Math.floor(this.chartOptions.primaryToSecondaryAreaHeightRatio * secondaryHeight);

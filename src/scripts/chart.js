@@ -51,12 +51,10 @@
             contextSettings: {
                 fillStyle: 'rgba(82,175,201,.2)',
                 strokeStyle: 'rgba(82,175,201,1)',
-                lineWidth: 1
-            },
-            fontSettings: {
-                famaly: 'Arial,Helvetica,sans-serif',
-                color: '#444444',
-                size: '14'
+                lineWidth: 1,
+                fontFamaly: 'Arial,Helvetica,sans-serif',
+                fontColor: '#444444',
+                fontSize: '14'
             },
             indicatorsColor: {},
             indicatorsWidth: {},
@@ -475,16 +473,6 @@
         if (_this.viewData.chart) {
             _this.viewData.chart.resetZoom();
         }
-    };
-    this.selectInstrument_onClick = function () {
-        var $this = $(this);
-        $this.addClass('active');
-        if (_this.viewData.chart.overlay) {
-            _this.viewData.chart.overlay.start($this.attr("data-instrument"));
-            var instrClass = $this.find('i').attr('class');
-            $('.' + instrClass).eq(0).parents('.isMenu').children('i').attr('class', $this.find('i').attr('class'));
-        }
-        return false;
     };
     this.update = function () {
         /// <summary>
@@ -1580,6 +1568,9 @@
             var settings = selected.settings;
             settings[prop] = color;
             selected.setSettings(settings);
+            if(this.viewData.chart.chartOptions.elementStyle[selected.elementType]) {
+                this.viewData.chart.chartOptions.elementStyle[selected.elementType][prop] = color;
+            }
         }
         this.userSettings.chartSettings.contextSettings[prop] = color;
     };

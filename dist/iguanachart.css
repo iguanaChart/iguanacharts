@@ -483,7 +483,7 @@
     width: 16px;
     margin-left: -6px;
     margin-top: 3px;
-    background: url("../images/bullet_wrench.png") no-repeat;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAFSSURBVDjLzdPPS8JwAAVw6Z/o0J/TqUOHKA/RIfDSP5CHyIi5DRWatrWGsh8o4kAkJoNBYJiBaebJb8xDZSbK0DQMIkKoXn+BpYTQ4V0/h8d7LgCuv8Q1c0DTNI+qql1ZlkexWEyYCtA0bUFRlE6r1QIhBJIkZaYCZFlesywLjuNAFMWhIAhGJBLROY47nAiIRqNu0zRRr9fB8/xtOBx+KxQKCIVCn78CkiTNiaJ4Wa1WQQhBpVIBIQSlUgksy3Z/BPhsm+IyjVHSKMK2beRyOei6jng8DoZhOn6/3zMW4Iy2N5B+/MqW+/AlGjhOnSEYDBosy27SNO2mKGp+bIl0qundTTRH2fIA1vUzkvkePJz9MfEOvGrj/aTYh3k1QPriCb7EA1Zp+2BiYOvobqicOkid97At32N5/4aZaonrAXtjhbZflvZqr4s7tcD/+MLMgW9PPe6C6jWXgQAAAABJRU5ErkJggg==) no-repeat;
 }
 
 .m-chart-instrument-delete:hover {
@@ -669,6 +669,11 @@
     box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
+.chartInstrument.mark {
+    background-color: #eFeFef;
+    border: 1px solid #aaaaaa;
+}
+
 /************************************ iChartTools ******************************************************/
 
 
@@ -812,7 +817,7 @@
     background: -ms-linear-gradient(top, #fff, #e3f2fd);
     background: -o-linear-gradient(top, #fff, #e3f2fd);
 }
-.tm-tool-bar .uk-tooltip {
+.uk-tooltip {
     background: #fff;
     color: #000;
     font-size: 10px;
@@ -822,17 +827,17 @@
     text-shadow: none;
     min-width: inherit;
 }
-.js-iChartTools-indicators-list .uk-list li {
+.uk-list li {
     font-size: 12px;
     padding: 3px 5px;
     cursor: pointer;
     white-space: nowrap;
     text-align: left;
 }
-.js-iChartTools-indicators-list .uk-list li:hover {
+.uk-list li:hover {
     background: #e3f2fd;
 }
-.js-iChartTools-indicators-list .uk-list-line > li:nth-child(n+2) {
+.uk-list-line > li:nth-child(n+2) {
     margin-top: 0;
 }
 .tm-fill-color,

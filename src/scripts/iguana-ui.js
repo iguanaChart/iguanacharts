@@ -565,33 +565,27 @@
         };
 
         this.uiSet_instrumentLine = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentLine(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_instrumentForm = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentForm(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_instrumentText = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentText(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_clearInstruments = function () {

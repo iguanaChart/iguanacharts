@@ -836,9 +836,6 @@
         /// </summary>
         /// <param name="element">Chart element that is being selected, or a null to deselect the element that was selected before.</param>
 
-        if (element !== null) {
-            element.drawSettings();
-        }
         $('#elementSettings').remove();
         if (this.selected !== element)
         {
@@ -877,6 +874,8 @@
         {
             this.history.push(this.unfinished);
         }
+
+        return this.unfinished;
     };
 
     iChart.Charting.ChartDrawingLayer.prototype.syncHash = function ()

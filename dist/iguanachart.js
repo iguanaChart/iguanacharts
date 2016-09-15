@@ -3383,9 +3383,9 @@ iChart.indicators = {
         /// </summary>
         /// <param name="element">Chart element that is being selected, or a null to deselect the element that was selected before.</param>
 
-        if (element !== null) {
-            element.drawSettings();
-        }
+        // if (element !== null) {
+        //     element.drawSettings();
+        // }
         $('#elementSettings').remove();
         if (this.selected !== element)
         {
@@ -3424,6 +3424,8 @@ iChart.indicators = {
         {
             this.history.push(this.unfinished);
         }
+
+        return this.unfinished;
     };
 
     iChart.Charting.ChartDrawingLayer.prototype.syncHash = function ()
@@ -3501,6 +3503,7 @@ iChart.indicators = {
         this.controlEnable = true;
         this.storageEnable = true;
         this.hasSettings = false;
+        this.settings = {};
         this.hasPopupSettings = false;
         this.drawSingle = false;//Рисовать без копии фигуры при перетаскивании
         this.positionAbsolute = false;
@@ -3600,54 +3603,54 @@ iChart.indicators = {
 
     iChart.Charting.ChartElement.prototype.drawPopupSettings = function (ctx, coords) {};
 
-    iChart.Charting.ChartElement.prototype.drawSettings = function (element) {
-
-        if (!this.settings) return;
-
-        var settings = this.settings;
-        var fillStyle = (settings.fillStyle) ? iChart.rgbToHex(settings.fillStyle) : ''; //заливка
-        var strokeStyle = (settings.strokeStyle) ? iChart.rgbToHex(settings.strokeStyle): ''; //цвет линий
-        var fontColor = (settings.color) ? iChart.rgbToHex(settings.color): '';
-        var lineWidth = (settings.lineWidth) ? settings.lineWidth : ''; //толщина линий
-        var fontSize = (settings.size) ? settings.size : ''; //толщина линий
-        var fillStyleAlpha =  (settings.fillStyle) ? (settings.fillStyle.split(',')[3] ? settings.fillStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-        var strokeStyleAlpha =  (settings.strokeStyle) ? (settings.strokeStyle.split(',')[3] ? settings.strokeStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-        var fontColorAlpha =  (settings.color) ? (settings.color.split(',')[3] ? settings.color.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-
-        var self = this;
-        var setSettings = function (settings) { self.setSettings(settings); };
-
-        //Проапдейтим цвет фона
-        if (fillStyle != '') {
-            $('#fillStyleCanvas').show();
-            $('.fillStyle').css('background-color', settings.fillStyle);
-            $('#fillStyle').attr('data-opacity', fillStyleAlpha).val(fillStyle);
-
-        }
-        
-        //Проапдейтим цвет линий
-        if (strokeStyle != '') {
-            $('#strokeStyleCanvas').show();
-            $('.strokeStyle').css('background-color', settings.strokeStyle);
-            $('#strokeStyle').attr('data-opacity', strokeStyleAlpha).val(strokeStyle);
-        }
-
-        if (fontColor != '') {
-            $('#fontSettingsColor').show();
-            $('#fontSettingsColor').attr('data-opacity', fontColorAlpha).val(fontColor);
-        }
-
-        if (lineWidth != '') {
-            $('#lineWidthSelector').attr('data-style', lineWidth);
-        }
-
-        if(fontSize != '') {
-            $('#fontSettingsSize').val(fontSize);
-        }
-    };
+    // iChart.Charting.ChartElement.prototype.drawSettings = function (element) {
+    //
+    //     if (!this.settings) return;
+    //
+    //     var settings = this.settings;
+    //     var fillStyle = (settings.fillStyle) ? iChart.rgbToHex(settings.fillStyle) : ''; //заливка
+    //     var strokeStyle = (settings.strokeStyle) ? iChart.rgbToHex(settings.strokeStyle): ''; //цвет линий
+    //     var fontColor = (settings.fontColor) ? iChart.rgbToHex(settings.fontColor): '';
+    //     var lineWidth = (settings.lineWidth) ? settings.lineWidth : ''; //толщина линий
+    //     var fontSize = (settings.fontSize) ? settings.fontSize : ''; //толщина линий
+    //     var fillStyleAlpha =  (settings.fillStyle) ? (settings.fillStyle.split(',')[3] ? settings.fillStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
+    //     var strokeStyleAlpha =  (settings.strokeStyle) ? (settings.strokeStyle.split(',')[3] ? settings.strokeStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
+    //     var fontColorAlpha =  (settings.fontColor) ? (settings.fontColor.split(',')[3] ? settings.fontColor.split(',')[3].slice(0,-1) : 0.5) : 0.5;
+    //
+    //     var self = this;
+    //     var setSettings = function (settings) { self.setSettings(settings); };
+    //
+    //     //Проапдейтим цвет фона
+    //     if (fillStyle != '') {
+    //         $('#fillStyleCanvas').show();
+    //         $('.fillStyle').css('background-color', settings.fillStyle);
+    //         $('#fillStyle').attr('data-opacity', fillStyleAlpha).val(fillStyle);
+    //
+    //     }
+    //
+    //     //Проапдейтим цвет линий
+    //     if (strokeStyle != '') {
+    //         // $('#strokeStyleCanvas').show();
+    //         // $('.strokeStyle').css('background-color', settings.strokeStyle);
+    //         // $('#strokeStyle').attr('data-opacity', strokeStyleAlpha).val(strokeStyle);
+    //     }
+    //
+    //     if (fontColor != '') {
+    //         $('#fontSettingsColor').show();
+    //         $('#fontSettingsColor').attr('data-opacity', fontColorAlpha).val(fontColor);
+    //     }
+    //
+    //     if (lineWidth != '') {
+    //         $('#lineWidthSelector').attr('data-style', lineWidth);
+    //     }
+    //
+    //     if(fontSize != '') {
+    //         $('#fontSettingsSize').val(fontSize);
+    //     }
+    // };
 
     iChart.Charting.ChartElement.prototype.setSettings = function (settings) {
-        this.settings = settings;
+        this.settings = $.extend(this.settings, settings);
         if(typeof this.layer != "undefined" && this.layer.context) {
             this.layer.render();
             this.layer.syncHash();
@@ -4585,7 +4588,7 @@ iChart.indicators = {
         this.maxPointCount = 1;
         this.hasSettings = true;
         this.hasPopupSettings = true;
-        this.settings = {mark: $("[data-instrument=\'Mark\'].active").attr('data-mark')};
+        this.settings = {mark: 'smileUp'};
 
         $('#elementSettings').remove();
 
@@ -4606,51 +4609,57 @@ iChart.indicators = {
             var img = new Image();
 
             img.src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + settings.mark + ".png";
+            ctx.save();
+            ctx.translate(- 0.5, - 0.5);
             ctx.drawImage(img,coords[0].x-img.width/2, coords[0].y- img.height/2, img.width, img.height);
+            ctx.restore();
             $('.Mark-select').hide();
         }
     };
 
     iChart.Charting.ChartMark.prototype.drawPopupSettings = function (ctx, coord)
     {
-        $('#elementSettings').remove(); 
+        $('#elementSettings').remove();
+
         $('<div id="elementSettings" class="mark chartInstrument">' +
             '<div class="uk-flex uk-flex-left">' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="up" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-up"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="left" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-left"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="leftUp" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-leftUp"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="rightUp" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-rightUp"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="smileUp" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-smileUp"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="exclamation" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-exclamation"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="buy" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-buy"></i></div></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"up"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-up"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"left"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-left"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"leftUp"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-upLeft"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"rightUp"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-upRight"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"smileUp"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-smileUp"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"exclamation"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-exclamation"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"buy"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-buy"></i></div></div>' +
             '<div class="uk-flex uk-flex-left">' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="down" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-down"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="right" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-right"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="leftDown" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-leftDown"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="rightDown" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-rightDown"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="smileDown" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-smileDown"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="question" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-question"></i></div>' +
-            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-mark="sell" name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-sell"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"down"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-down"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"right"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-right"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"leftDown"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-downLeft"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"rightDown"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-downRight"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"smileDown"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-smileDown"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"question"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-question"></i></div>' +
+            '<div class="chartTool uk-flex uk-flex-center uk-flex-middle" data-settings=\'{"mark":"sell"}\' name="SelectInstrument" data-instrument="Mark"><i class="sprite sprite-icon-sell"></i></div>' +
             '</div>' +
             '</div>').appendTo($(this.layer.chart.container));
         var x = coord.x - $('#elementSettings.mark').width()+8;
         $('#elementSettings').css({ "left": this.layer.area.innerOffset.left+x, "top": this.layer.area.innerOffset.top+coord.y + 15 });
 
         var self = this;
-        var setSettings_onClick = function (i)
+        var setSettings_onClick = function (settings)
         {
-            self.setSettings({mark: i});
+            self.setSettings(settings);
             self.layer.render();
         };
 
         $('#elementSettings .chartTool').off("mousedown").on('mousedown', function(event){
             event.stopPropagation();
-            setSettings_onClick($(this).attr('data-mark'));
+            setSettings_onClick($(this).data('settings'));
             $('#elementSettings').remove();
         });
 
         return false;
     };
+
+    iChart.Charting.ChartMark.prototype.drawPoints = function (ctx, pointCoords) {};
 
     iChart.Charting.ChartMark.prototype.setTestSegments = function ()
     {
@@ -4788,13 +4797,13 @@ iChart.indicators = {
 
         return false;
 
-    }
+    };
 
     iChart.Charting.ChartLabel.prototype.onInsert = function ()
     {
         var coords = this.getCoordinates(this.layer.context, this.points);
-        this.drawSettings(this.layer.context, coords[0]);
-    }
+        //this.drawSettings(this.layer.context, coords[0]);
+    };
 
 
     iChart.Charting.ChartLabel.prototype.setTestSegments = function ()
@@ -5202,7 +5211,7 @@ iChart.indicators = {
         this.drawType = 'manually';
         this.maxPointCount = 3;
         this.hasSettings = true;
-        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, layer.chart.env.userSettings.chartSettings.fontSettings, {text: ''});
+        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, {text: ''});
     };
 
     inheritPrototype(iChart.Charting.ChartBubble, iChart.Charting.ChartElement);
@@ -5436,8 +5445,8 @@ iChart.indicators = {
 
             ctx.beginPath();
 
-            ctx.fillStyle = this.settings.color;
-            ctx.font = 'normal ' + this.settings.size + 'px ' + this.settings.famaly;
+            ctx.fillStyle = this.settings.fontColor;
+            ctx.font = 'normal ' + this.settings.fontSize + 'px ' + this.settings.fontFamaly;
             ctx.textAlign = "left";
             ctx.textBaseline="top";
 
@@ -5456,8 +5465,8 @@ iChart.indicators = {
 //console.log(words);
 
             var line = '';
-            var textHeight = 0+Math.round(parseInt(this.settings.size)/10);
-            var lineHeight = parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5);
+            var textHeight = 0+Math.round(parseInt(this.settings.fontSize)/10);
+            var lineHeight = parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5);
             //var lineHeight = 16;
 
             for (var n = 0; n < countWords; n++) {
@@ -5495,9 +5504,9 @@ iChart.indicators = {
                 $('#chart-bubble-text').val('').focus().val(this.settings.text);
             }
             $('#chart-bubble-text').css({
-                font: 'normal '+this.settings.size+'px/'+ (parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5)) +'px ' + this.settings.famaly,
+                font: 'normal '+this.settings.fontSize+'px/'+ (parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5)) +'px ' + this.settings.fontFamaly,
                 background: "rgba(230,230,230,.0)",
-                color: this.settings.color,
+                color: this.settings.fontColor,
                 overflow: "hidden",
                 border: "0px solid red",
                 width: width +'px',
@@ -5522,9 +5531,9 @@ iChart.indicators = {
                 '<textarea id="chart-bubble-text"></textarea>' +
                 '</div>');
             $('#chart-bubble-text').css({
-                font: 'normal '+this.settings.size+'px/'+(parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5))+'px ' + this.settings.famaly,
+                font: 'normal '+this.settings.fontSize+'px/'+ (parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5)) +'px ' + this.settings.fontFamaly,
                 background: "rgba(230,230,230,.0)",
-                color: this.settings.color,
+                color: this.settings.fontColor,
                 overflow: "hidden",
                 border: "0px solid red"
             });
@@ -5599,7 +5608,7 @@ iChart.indicators = {
         this.drawType = 'manually';
         this.maxPointCount = 2;
         this.hasSettings = true;
-        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, layer.chart.env.userSettings.chartSettings.fontSettings, {text: ''});
+        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, {text: ''});
     };
 
     inheritPrototype(iChart.Charting.ChartText, iChart.Charting.ChartElement);
@@ -5721,8 +5730,8 @@ iChart.indicators = {
 
             ctx.beginPath();
 
-            ctx.fillStyle = this.settings.color;
-            ctx.font = 'normal ' + this.settings.size + 'px ' + this.settings.famaly;
+            ctx.fillStyle = this.settings.fontColor;
+            ctx.font = 'normal ' + this.settings.fontSize + 'px ' + this.settings.fontFamaly;
             ctx.textAlign = "left";
             ctx.textBaseline="top";
 
@@ -5741,8 +5750,8 @@ iChart.indicators = {
 //console.log(words);
 
             var line = '';
-            var textHeight = 0+Math.round(parseInt(this.settings.size)/10);
-            var lineHeight = parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5);
+            var textHeight = 0+Math.round(parseInt(this.settings.fontSize)/10);
+            var lineHeight = parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5);
             //var lineHeight = 16;
 
             for (var n = 0; n < countWords; n++) {
@@ -5780,9 +5789,9 @@ iChart.indicators = {
                 $('#chart-bubble-text').val('').focus().val(this.settings.text);
             }
             $('#chart-bubble-text').css({
-                font: 'normal '+this.settings.size+'px/'+(parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5))+'px ' + this.settings.famaly,
+                font: 'normal '+this.settings.fontSize+'px/'+(parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5))+'px ' + this.settings.fontFamaly,
                 background: "rgba(230,230,230,.0)",
-                color: this.settings.color,
+                color: this.settings.fontColor,
                 overflow: "hidden",
                 border: "0px solid red",
                 width: width +'px',
@@ -5807,14 +5816,13 @@ iChart.indicators = {
                 '<textarea id="chart-bubble-text"></textarea>' +
                 '</div>');
             $('#chart-bubble-text').css({
-                font: 'normal '+this.settings.size+'px/'+(parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5))+'px ' + this.settings.famaly,
+                font: 'normal '+this.settings.fontSize+'px/'+(parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5))+'px ' + this.settings.fontFamaly,
                 background: "rgba(230,230,230,.0)",
-                color: this.settings.color,
+                color: this.settings.fontColor,
                 overflow: "hidden",
                 border: "0px solid red"
             });
         }
-        console.log('here');
         $('#chart-bubble-text').val('').focus().val(this.settings.text);
         //$('#chart-bubble-text').get(0).setSelectionRange(0, $('#chart-bubble-text').val().length);
 
@@ -10683,6 +10691,18 @@ iChart.indicators = {
         this._showVolume =  'hidden';
         this.showVolumeByPrice =  false;
 
+        this.elementStyle = {
+            'Arrow': {
+                fillStyle: 'rgba(255,0,0,.2)',
+                strokeStyle: 'rgba(255,0,0,1)',
+                lineWidth: 3
+            },
+            'Text': {
+                fontColor: '#777777',
+                fontSize: '28'
+            }
+        };
+
         this.uiTools = {
             top: false,
         };
@@ -12288,7 +12308,13 @@ iChart.indicators = {
 
         if (this.chartOptions.minHeight && this.areas)
         {
-            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight;
+            if(this.chartOptions.uiTools.top) {
+                var uiTopHeigth = 40;
+            } else {
+                var uiTopHeigth = 0;
+            }
+
+            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
             primaryHeight = Math.floor(this.chartOptions.primaryToSecondaryAreaHeightRatio * secondaryHeight);
@@ -12353,7 +12379,13 @@ iChart.indicators = {
         var secondaryHeight;
         if (this.chartOptions.minHeight)
         {
-            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight;
+            if(this.chartOptions.uiTools.top) {
+                var uiTopHeigth = 40;
+            } else {
+                var uiTopHeigth = 0;
+            }
+
+            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
             primaryHeight = Math.floor(this.chartOptions.primaryToSecondaryAreaHeightRatio * secondaryHeight);
@@ -16809,12 +16841,10 @@ IguanaChart = function (options) {
             contextSettings: {
                 fillStyle: 'rgba(82,175,201,.2)',
                 strokeStyle: 'rgba(82,175,201,1)',
-                lineWidth: 1
-            },
-            fontSettings: {
-                famaly: 'Arial,Helvetica,sans-serif',
-                color: '#444444',
-                size: '14'
+                lineWidth: 1,
+                fontFamaly: 'Arial,Helvetica,sans-serif',
+                fontColor: '#444444',
+                fontSize: '14'
             },
             indicatorsColor: {},
             indicatorsWidth: {},
@@ -17233,16 +17263,6 @@ IguanaChart = function (options) {
         if (_this.viewData.chart) {
             _this.viewData.chart.resetZoom();
         }
-    };
-    this.selectInstrument_onClick = function () {
-        var $this = $(this);
-        $this.addClass('active');
-        if (_this.viewData.chart.overlay) {
-            _this.viewData.chart.overlay.start($this.attr("data-instrument"));
-            var instrClass = $this.find('i').attr('class');
-            $('.' + instrClass).eq(0).parents('.isMenu').children('i').attr('class', $this.find('i').attr('class'));
-        }
-        return false;
     };
     this.update = function () {
         /// <summary>
@@ -18338,6 +18358,9 @@ IguanaChart = function (options) {
             var settings = selected.settings;
             settings[prop] = color;
             selected.setSettings(settings);
+            if(this.viewData.chart.chartOptions.elementStyle[selected.elementType]) {
+                this.viewData.chart.chartOptions.elementStyle[selected.elementType][prop] = color;
+            }
         }
         this.userSettings.chartSettings.contextSettings[prop] = color;
     };
@@ -19068,33 +19091,27 @@ IguanaChart = function (options) {
         };
 
         this.uiSet_instrumentLine = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentLine(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_instrumentForm = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentForm(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_instrumentText = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentText(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_clearInstruments = function () {
@@ -19417,12 +19434,10 @@ IguanaChart = function (options) {
             contextSettings: {
                 fillStyle: 'rgba(82,175,201,.2)',
                 strokeStyle: 'rgba(82,175,201,1)',
-                lineWidth: 1
-            },
-            fontSettings: {
-                famaly: 'Arial,Helvetica,sans-serif',
-                color: '#444444',
-                size: '14'
+                lineWidth: 1,
+                fontFamaly: 'Arial,Helvetica,sans-serif',
+                fontColor: '#444444',
+                fontSize: '14'
             },
             indicatorsColor: {},
             indicatorsWidth: {},
@@ -19593,8 +19608,10 @@ IguanaChart = function (options) {
             var iguanaChart = this.data('iguanaChart'),
                 chart = iguanaChart.viewData.chart;
             if (chart.overlay) {
-                chart.overlay.start(options[0]);
+                var element = chart.overlay.start(options[0]);
+                element.setSettings(options[1]);
             }
+            return false;
         },
         addPoint: function(options) {
             var iguanaChart = this.data('iguanaChart');
