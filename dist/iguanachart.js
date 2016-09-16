@@ -16984,7 +16984,7 @@ IguanaChart = function (options) {
         /// Called when the chart data settings change.
         /// </summary>
 
-        var documentHash = _this.dataSource.dataSettings.useHash == false ? _this.dataSource.dataSettings.hash : document.location.hash;
+        var documentHash = _this.dataSource.dataSettings.useHash == false ? (_this.dataSource.dataSettings.hash || '#') : document.location.hash;
         var params = iChart.parseQueryString(documentHash.substr(1));
         var drawParams = _this.getDrawParams(params);
 

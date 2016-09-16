@@ -68,20 +68,21 @@ You can download all needed dependence from https://github.com/iguanaChart/depen
 ```html
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
-    <link rel="stylesheet" href="/scripts/uikit/css/uikit.min.css" media="all">
-    <script type="text/javascript" src="/scripts/uikit/js/uikit.min.js"></script>
+    <link rel="stylesheet" href="/dependencies/uikit/css/uikit.min.css" media="all">
+    <script type="text/javascript" src="/dependencies/uikit/js/uikit.min.js"></script>
 
-    <script type="text/javascript" src="/scripts/jquery.event.move.js"></script>
-    <script type="text/javascript" src="/scripts/jquery.mousewheel.min.js"></script>
-    <script type="text/javascript" src="/scripts/hammer.min.js"></script>
-    <script type="text/javascript" src="/scripts/jquery.hammer.js"></script>
-    <script type="text/javascript" src="/scripts/jsrender.min.js"></script>
+    <script type="text/javascript" src="/dependencies/jquery.event.move.js"></script>
+    <script type="text/javascript" src="/dependencies/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="/dependencies/hammer.min.js"></script>
+    <script type="text/javascript" src="/dependencies/jquery.hammer.js"></script>
+    <script type="text/javascript" src="/dependencies/jsrender.min.js"></script>
 
-    <link rel="stylesheet" href="/scripts/jquery.qtip.min.css" media="all">
-    <script type="text/javascript" src="/scripts/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" href="/dependencies/jquery.qtip.min.css" media="all">
+    <script type="text/javascript" src="/dependencies/jquery.qtip.min.js"></script>
 
-    <link rel="stylesheet" href="/scripts/jquery-minicolors/jquery.minicolors.css" media="all">
-    <script type="text/javascript" src="/scripts/jquery-minicolors/jquery.minicolors.min.js"></script>
+    <link rel="stylesheet" href="/dependencies/jquery-minicolors/jquery.minicolors.css" media="all">
+    <script type="text/javascript" src="/dependencies/jquery-minicolors/jquery.minicolors.min.js"></script>
+
 
 ```
 
