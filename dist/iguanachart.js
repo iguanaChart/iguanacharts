@@ -12250,14 +12250,14 @@ iChart.indicators = {
         var height = 0;
         var width = 0;
 
+        if(this.chartOptions.uiTools.top) {
+            var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
+        } else {
+            var uiTopHeigth = 0;
+        }
+
         if (this.chartOptions.minHeight && this.areas)
         {
-            if(this.chartOptions.uiTools.top) {
-                var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
-            } else {
-                var uiTopHeigth = 0;
-            }
-
             var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
@@ -12323,14 +12323,15 @@ iChart.indicators = {
         // Set outer dimensions.
         var primaryHeight;
         var secondaryHeight;
+
+        if(this.chartOptions.uiTools.top) {
+            var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
+        } else {
+            var uiTopHeigth = 0;
+        }
+
         if (this.chartOptions.minHeight)
         {
-            if(this.chartOptions.uiTools.top) {
-                var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
-            } else {
-                var uiTopHeigth = 0;
-            }
-
             var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
@@ -18713,6 +18714,7 @@ IguanaChart = function (options) {
                 switch ($(this).attr('data-value')) {
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
+                        _this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', iChart.Charting.ChartOptions.getThemeOptions(_this.chart.viewData.chart.chartOptions)]);
                         _this.chart.userSettings.chartSettings.defaultTheme = 0;
                         _this.setUiStateForThemeConfig(false);
                         if($.modal.impl.d.data) {
@@ -19006,23 +19008,27 @@ IguanaChart = function (options) {
         this.uiSet_chartType = function (value) {
             this.chart.viewData.chart.setChartType(value);
             this.setUiStateForChartType(value);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"chartType" : value}]);
         };
 
         this.uiSet_showVolumeByPrice = function (value) {
             this.chart.VolumeByPrice_onClick();
             var state = !!this.chart.viewData.chart.chartOptions.showVolumeByPrice;
             this.setUiStateForShowVolumeByPrice(state);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"showVolumeByPrice" : state}]);
         };
 
         this.uiSet_showVolume = function (value) {
             this.chart.VolumeByDate_onClick();
             var state = _this.chart.viewData.chart.chartOptions.showVolume;
             this.setUiStateForShowVolume(state);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"showVolume" : state}]);
         };
 
         this.uiSet_percentMode = function (value) {
             var percentMode = this.chart.percentMode_onClick();
             this.setUiStateForPercentMode(percentMode);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"percentMode" : percentMode}]);
         };
 
         this.uiSet_themeConfig = function () {
