@@ -19092,7 +19092,7 @@ IguanaChart = function (options) {
             this.initColorPalette(holder, onPaletteChange);
         };
 
-        /* ================================================================================================================== */
+/* ================================================================================================================== */
         
         this.renderTopToolBar = function () {
             var $topToolBarHtml = $($.render.iChart_topToolBarTmpl());
