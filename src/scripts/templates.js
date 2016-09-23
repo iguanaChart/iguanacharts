@@ -203,6 +203,10 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Screenshot') + '">' +
+                '<i class="uk-icon-camera uk-icon-small"></i>' +
+            '</div>' +
+
             '<i class="sprite sprite-icon-divider"></i>' +
 
             '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17395', 'Clear Chart') + '">' +
@@ -308,6 +312,15 @@ $.templates("indicatorDialogTmpl", '' +
         '<div>' +
             '<a  href="javascript:void(0);" onclick="return false;" class="uk-button js-set-params-indicator">Ok</a>' +
             '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button">Cancel</a>' +
+        '</div>' +
+    '</div>'
+);
+
+$.templates("captureDialogTmpl", '' +
+    '<div class="iChartDialog" style="display: none;">' +
+        '<img class="js-iChartTools-capture"/>' +
+        '<div class="uk-flex uk-flex-right">' +
+            '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button js-set-params-indicator">Ok</a>' +
         '</div>' +
     '</div>'
 );

@@ -607,6 +607,24 @@
             this.setUiStateForDataInterval(value);
         };
 
+        this.uiSet_captureImage = function () {
+            var dataImage = this.chart.viewData.chart.toBase64('image/png');
+
+            if($.modal.impl.d.data) {
+                $.modal.impl.close();
+            }
+
+            $('.iChartDialog').remove();
+            var $captureDialogTmpl = $($.render.captureDialogTmpl());
+
+            $captureDialogTmpl.find('.js-iChartTools-capture').attr('src', 'data:image/png;base64, ' + dataImage);
+
+            this.chart.wrapper.append($captureDialogTmpl);
+
+            var width = $captureDialogTmpl.find('.js-iChartTools-capture').get(0).width;
+            $('.iChartDialog').modal({modal: false, zIndex: 1500, maxWidth: width, title: _t('1724', 'Скачать картинку')});
+        };
+
         this.onMinicolorsChange = function(value, opacity){
             var color = $(this).val(),
                 colorRGBA = color,

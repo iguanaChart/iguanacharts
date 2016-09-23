@@ -96,6 +96,7 @@ You can download all needed dependence from https://github.com/iguanaChart/depen
                 'jquery.hammer': '/dependencies/jquery.hammer',
                 'jsrender': "/dependencies/jsrender.min",
                 'jquery.minicolors': '/dependencies/jquery-minicolors/jquery.minicolors.min',
+                'jquery.qtip': '/dependencies/jquery.qtip.min',
                 'iguanachart': '/dist/iguanachart',
                 'hammerjs': '/dependencies/hammer.min'
             },
@@ -117,7 +118,8 @@ You can download all needed dependence from https://github.com/iguanaChart/depen
                         'jquery.eventmove',
                         'jquery.hammer',
                         'jsrender',
-                        'jquery.minicolors'
+                        'jquery.minicolors',
+                        'jquery.qtip'
                     ]
                 }
             }
