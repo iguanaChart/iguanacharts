@@ -18478,7 +18478,7 @@ IguanaChart = function (options) {
     if(typeof jNTChartTrading != 'undefined') {
         /*//РИСОВАНИЕ ПРИКАЗОВ*/
 
-        if (typeof jNTUserinfo !== "undefined" && jNTUserinfo.isDemo && $iguanaChart.optionsRestore('devmode')) {
+        if (typeof jNTUserinfo !== "undefined" && jNTUserinfo.isDemo) {
             if (typeof extendIChartWithTrandorders == 'function') {
                 extendIChartWithTrandorders.call(this);
             }
