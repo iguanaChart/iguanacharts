@@ -931,6 +931,13 @@ Date.parse = function(input) {
 }
 
 if(typeof _t == "undefined") {
+
+    /**
+     *
+     * @type {{}}
+     */
+    _.data = {};
+
     /**
      * Получить перевод по хэш ключу
      * @param hash srting  хэш перевода
@@ -939,24 +946,25 @@ if(typeof _t == "undefined") {
      */
     function _(hash, str) {
 
-        if(!_.data[hash]) {
+        if(typeof _.data !== "undefined") {
 
-            if (!!i18n[hash]) {
+            if (!_.data[hash]) {
 
-                _.data[hash] = i18n[hash];
+                if (!!i18n[hash]) {
 
-                return _.data[hash]
+                    _.data[hash] = i18n[hash];
+
+                    return _.data[hash]
+                }
+
+            } else {
+
+                return _.data[hash];
             }
 
-        } else {
-
-            return _.data[hash];
+            return str;
         }
-
-        return str;
     }
-
-    _.data = {};
 
     /**
      * Вырезать из строки перевода нужную форму ед/мнж числа
