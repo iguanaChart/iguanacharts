@@ -8,7 +8,7 @@ if(typeof tzOffsetMoscow == "undefined") {
 }
 
 if(typeof LANG_NAME == "undefined") {
-    LANG_NAME = 'ru';
+    LANG_NAME = 'en';
 }
 
 if(typeof TEXT_TRANSLATOR_MODE == "undefined") {
@@ -66,8 +66,148 @@ Date.parse = function(input) {
 }
 
 if(typeof _t == "undefined") {
-    _t = function(id, string) {
-        return string;
+
+    /**
+     *
+     * @type {{}}
+     */
+    _.data = {};
+
+    /**
+     * Получить перевод по хэш ключу
+     * @param hash srting  хэш перевода
+     * @param str srting текст по умолчанию
+     * @return srting
+     */
+    function _(hash, str) {
+
+        if(typeof _.data !== "undefined") {
+
+            if (!_.data[hash]) {
+
+                if (!!i18n[hash]) {
+
+                    _.data[hash] = i18n[hash];
+
+                    return _.data[hash]
+                }
+
+            } else {
+
+                return _.data[hash];
+            }
+
+            return str;
+        }
+    }
+
+    /**
+     * Вырезать из строки перевода нужную форму ед/мнж числа
+     * @see \My_Translate::getPluralForm  /!\ изменяя этот метод меняйте php копию
+     *
+     * 1                   2,3,4               5,6...
+     * Вася купил N булку||Вася купил N булки||Валя купил N булок
+     *
+     * В зависимости от $num будет выбрана необходимая форма. Также определение идет от выбранного языка, т.к. ед и мн числа разные
+     *
+     * @param text           Строка перевода вида "Вася купил %QTY% булку||Вася купил %QTY% булки||Валя купил %QTY% булок"
+     * @param num            кол-во из фразы
+     * @param langShortName  язык
+     *
+     * @return int  фраза в нужном мнж числе
+     */
+    function translateGetPluralForm (text, num, langShortName)
+    {
+        // сперва узнаем - целое ли?
+        var isInt   = parseInt(num) == num;
+        var form    = 2;
+
+        // --- RU и UK - разбор русского и украинского языков, правила одинаковые ---
+        if (langShortName == 'ru' || langShortName == 'uk') {
+
+            // все дробные как форма 2.
+            if (!isInt) {
+                form = 2;
+            } else {
+
+                var endTwo = ("" + num + "").length > 1 ? ("" + num + "").substr(-2, 1) : false;
+                if (endTwo == '1') {
+                    form = 3;
+                } else {
+                    var end = ("" + num + "").substr(-1);
+
+                    switch (end) {
+                        case '1':
+                            form = 1;
+                            break;
+
+                        case '2':     case '3':     case '4':
+                        form = 2;
+                        break;
+
+                        default:
+                        case '0':     case '5':     case '6':     case '7':     case '8':     case '9':
+                        form = 3;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // --- EN - разбор англ. языка ---
+        else if (langShortName == 'en') {
+
+            // все просто: > 1 - мнж, <= 1 - ед, видимо программисты придумывали язык
+            if (num > 1) {
+                form = 2;
+            } else {
+                form = 1;
+            }
+        }
+
+        // --- Все остальные, пока аналог EN ---
+        else {
+
+            if (num > 1) {
+                form = 2;
+            } else {
+                form = 1;
+            }
+        }
+
+        var strings = text.split('||');
+
+        if (typeof strings[form - 1] === 'undefined') {
+            return strings[0];
+        } else {
+            return strings[form - 1];
+        }
+    }
+
+    _t = function (id, txtOrig, variables)
+    {
+        var translate  = '';
+        var itsOrig    = false;
+        var pluralMode = (((typeof variables == 'object')) && (typeof variables.QTY !== 'undefined') && (txtOrig.indexOf("||") != -1));
+
+        translate = _(id, txtOrig);
+
+        if (typeof translate === 'undefined' || translate == txtOrig) {
+            translate   = txtOrig;
+            itsOrig = true;
+        }
+
+        if (pluralMode) {
+            translate = translateGetPluralForm(translate, variables.QTY, itsOrig ? 'ru' : LANG_NAME);
+        }
+
+        if (typeof variables == 'object') {
+            $.each(variables, function(index, value) {
+                translate = translate.replace(new RegExp('%'+index+'%','g'), value);
+            });
+        }
+
+        return ' '+translate+' ';
     }
 }
 

@@ -637,7 +637,7 @@
                                 indicator = a.ySeries[j].name,
                                 params = $.extend(true, {}, a.ySeries[j].params);
 
-                            if (this.env.TA[indicator]) {
+                            if (this.env.TA[indicator] && !updatedIndicators[indicator + "/" + index]) {
                                 this.env.TA[indicator](0, index);
                                 this.env.TA[indicator](1, index, params);
                                 updatedIndicators[indicator + "/" + index] = true;
@@ -1500,9 +1500,15 @@
         var height = 0;
         var width = 0;
 
+        if(this.chartOptions.uiTools.top) {
+            var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
+        } else {
+            var uiTopHeigth = 0;
+        }
+
         if (this.chartOptions.minHeight && this.areas)
         {
-            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight;
+            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
             primaryHeight = Math.floor(this.chartOptions.primaryToSecondaryAreaHeightRatio * secondaryHeight);
@@ -1512,6 +1518,8 @@
             secondaryHeight = Math.round(this.chartOptions.primaryAreaHeight / this.chartOptions.primaryToSecondaryAreaHeightRatio);
             primaryHeight = this.chartOptions.primaryAreaHeight;
         }
+
+        height += uiTopHeigth;
 
         if(this.areas) {
             for (var i = 0; i < areas.length; ++i)
@@ -1535,7 +1543,7 @@
                 }
             }
         } else {
-            height = primaryHeight = primaryHeight + this.chartOptions.scrollerHeight;
+            height += primaryHeight = primaryHeight + this.chartOptions.scrollerHeight;
         }
         return {height: height, primaryHeight: primaryHeight};
     };
@@ -1565,9 +1573,16 @@
         // Set outer dimensions.
         var primaryHeight;
         var secondaryHeight;
+
+        if(this.chartOptions.uiTools.top) {
+            var uiTopHeigth = this.env.ui.$topToolBarContainer.height();
+        } else {
+            var uiTopHeigth = 0;
+        }
+
         if (this.chartOptions.minHeight)
         {
-            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight;
+            var heightWithoutScroller = this.chartOptions.minHeight - this.chartOptions.scrollerHeight - uiTopHeigth;
             var areaCount = $.grep(areas, function (x) { return !x.isLayer; }).length;
             secondaryHeight = Math.max(this.chartOptions.minAreaHeight, Math.floor(heightWithoutScroller / (areaCount + (this.chartOptions.scrollerHeight === 0 ? 0 : -1) + this.chartOptions.primaryToSecondaryAreaHeightRatio - 1)));
             primaryHeight = Math.floor(this.chartOptions.primaryToSecondaryAreaHeightRatio * secondaryHeight);
@@ -1669,6 +1684,7 @@
         }
 
         this.positionVolumeByPriceArea();
+
         var dimensions = this.onPositionAreas.call(this);
         if (dimensions)
         {
@@ -1676,16 +1692,12 @@
             height = dimensions.height || height;
         }
 
-        this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, width, height);
-        if (containerHeight !== height)
-        {
-            $container.height(height);
-        }
+        containerHeight = height;
+        height += uiTopHeigth;
 
-        if (containerWidth !== width)
-        {
-            $container.width(height);
-        }
+        this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, containerWidth, containerHeight);
+
+        $container.height(containerHeight);
     };
 
     iChart.Charting.Chart.prototype._selectionMouseDownCallback = function (selection)

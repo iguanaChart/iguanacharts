@@ -27,6 +27,7 @@
         this.controlEnable = true;
         this.storageEnable = true;
         this.hasSettings = false;
+        this.settings = {};
         this.hasPopupSettings = false;
         this.drawSingle = false;//Рисовать без копии фигуры при перетаскивании
         this.positionAbsolute = false;
@@ -47,7 +48,6 @@
             ctx.fillStyle = "rgba(255,255,153,.2)";
             ctx.strokeStyle = "#52afc9";
             ctx.inHover = true;
-            this.onHover(ctx);
         }
         else
         {
@@ -127,54 +127,8 @@
 
     iChart.Charting.ChartElement.prototype.drawPopupSettings = function (ctx, coords) {};
 
-    iChart.Charting.ChartElement.prototype.drawSettings = function (element) {
-
-        if (!this.settings) return;
-
-        var settings = this.settings;
-        var fillStyle = (settings.fillStyle) ? iChart.rgbToHex(settings.fillStyle) : ''; //заливка
-        var strokeStyle = (settings.strokeStyle) ? iChart.rgbToHex(settings.strokeStyle): ''; //цвет линий
-        var fontColor = (settings.color) ? iChart.rgbToHex(settings.color): '';
-        var lineWidth = (settings.lineWidth) ? settings.lineWidth : ''; //толщина линий
-        var fontSize = (settings.size) ? settings.size : ''; //толщина линий
-        var fillStyleAlpha =  (settings.fillStyle) ? (settings.fillStyle.split(',')[3] ? settings.fillStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-        var strokeStyleAlpha =  (settings.strokeStyle) ? (settings.strokeStyle.split(',')[3] ? settings.strokeStyle.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-        var fontColorAlpha =  (settings.color) ? (settings.color.split(',')[3] ? settings.color.split(',')[3].slice(0,-1) : 0.5) : 0.5;
-
-        var self = this;
-        var setSettings = function (settings) { self.setSettings(settings); };
-
-        //Проапдейтим цвет фона
-        if (fillStyle != '') {
-            $('#fillStyleCanvas').show();
-            $('.fillStyle').css('background-color', settings.fillStyle);
-            $('#fillStyle').attr('data-opacity', fillStyleAlpha).val(fillStyle);
-
-        }
-        
-        //Проапдейтим цвет линий
-        if (strokeStyle != '') {
-            $('#strokeStyleCanvas').show();
-            $('.strokeStyle').css('background-color', settings.strokeStyle);
-            $('#strokeStyle').attr('data-opacity', strokeStyleAlpha).val(strokeStyle);
-        }
-
-        if (fontColor != '') {
-            $('#fontSettingsColor').show();
-            $('#fontSettingsColor').attr('data-opacity', fontColorAlpha).val(fontColor);
-        }
-
-        if (lineWidth != '') {
-            $('#lineWidthSelector').attr('data-style', lineWidth);
-        }
-
-        if(fontSize != '') {
-            $('#fontSettingsSize').val(fontSize);
-        }
-    };
-
     iChart.Charting.ChartElement.prototype.setSettings = function (settings) {
-        this.settings = settings;
+        this.settings = $.extend(this.settings, settings);
         if(typeof this.layer != "undefined" && this.layer.context) {
             this.layer.render();
             this.layer.syncHash();

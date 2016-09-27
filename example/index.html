@@ -9,66 +9,77 @@
 
     <title>Iguana Charts</title>
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>
+    <script type="text/javascript" src="/dist/i18n/i18n.en.js"></script>
 
     <link rel="stylesheet" href="/dependencies/uikit/css/uikit.min.css" media="all">
-    <script type="text/javascript" src="/dependencies/uikit/js/uikit.min.js"></script>
-
-    <script type="text/javascript" src="/dependencies/jquery.event.move.js"></script>
-    <script type="text/javascript" src="/dependencies/jquery.mousewheel.min.js"></script>
-    <script type="text/javascript" src="/dependencies/hammer.min.js"></script>
-    <script type="text/javascript" src="/dependencies/jquery.hammer.js"></script>
-    <script type="text/javascript" src="/dependencies/jsrender.min.js"></script>
-
     <link rel="stylesheet" href="/dependencies/jquery.qtip.min.css" media="all">
-    <script type="text/javascript" src="/dependencies/jquery.qtip.min.js"></script>
-
     <link rel="stylesheet" href="/dependencies/jquery-minicolors/jquery.minicolors.css" media="all">
-    <script type="text/javascript" src="/dependencies/jquery-minicolors/jquery.minicolors.min.js"></script>
 
     <link rel="stylesheet" href="/dist/iguanachart.css" media="all">
-    <script type="text/javascript" src="/dist/iguanachart.js"></script>
-
+    <script type="text/javascript">
+        require.config({
+            paths: {
+                jquery: 'https://code.jquery.com/jquery-1.12.4.min',
+                uikit: '/dependencies/uikit/js/uikit.min',
+                'jquery.eventmove': '/dependencies/jquery.event.move',
+                'jquery.hammer': '/dependencies/jquery.hammer',
+                'jsrender': "/dependencies/jsrender.min",
+                'jquery.minicolors': '/dependencies/jquery-minicolors/jquery.minicolors.min',
+                'jquery.qtip': '/dependencies/jquery.qtip.min',
+                'iguanachart': '/dist/iguanachart',
+                'hammerjs': '/dependencies/hammer.min'
+            },
+            shim: {
+                'uikit': {
+                    deps: [
+                        'jquery'
+                    ]
+                },
+                jsrender: {
+                    deps: [
+                        'jquery'
+                    ]
+                },
+                iguanachart: {
+                    deps: [
+                        'jquery',
+                        'uikit',
+                        'jquery.eventmove',
+                        'jquery.hammer',
+                        'jsrender',
+                        'jquery.minicolors',
+                        'jquery.qtip'
+                    ]
+                }
+            }
+        })
+    </script>
 </head>
 <body>
-
-<h1>Page title</h1>
 
 <br/>
 
 <div class="iChart" style="position: relative; height: 550px; width: 1000px"></div>
 
 <script type="text/javascript">
-    iChartDataSource.host = "https://beta.tradernet.ru";
+    require(['jquery', 'iguanachart'], function ($) {
+        iChartDataSource.host = "https://beta.tradernet.ru";
 
-    /*
-     $('.iChart').iguanaChart(
-     {
-     ticker: "AAPL.US",
-     date_from: "01.01.2015",
-     date_to: "01.01.2016",
-     lib_path: "/scripts/iguanachart/",
-     chartOptions: {
-     minHeight: 500,
-     showVolume: 'inside',
-     uiTools: {top: true}
-     },
-     dataSource: $.extend(true, {}, iChartDataSource)
-     }
-     );*/
-    $('.iChart').iguanaChart(
-            {
-                ticker: "AAPL.US",
-                period: "1M",
-                lib_path: "/scripts/iguanachart/",
-                chartOptions: {
-                    minHeight: 500,
-                    showVolume: 'inside',
-                    uiTools: {top: true}
-                },
-                dataSource: $.extend(true, {}, iChartDataSource)
-            }
-    );
+        $('.iChart').iguanaChart(
+                {
+                    ticker: "AAPL.US",
+                    period: "1M",
+                    lib_path: "/dist",
+                    chartOptions: {
+                        minHeight: 500,
+                        showVolume: 'inside',
+                        uiTools: {top: true}
+                    },
+                    dataSource: $.extend(true, {}, iChartDataSource)
+                }
+        );
+    });
 
 
 </script>

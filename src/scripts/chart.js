@@ -51,12 +51,10 @@
             contextSettings: {
                 fillStyle: 'rgba(82,175,201,.2)',
                 strokeStyle: 'rgba(82,175,201,1)',
-                lineWidth: 1
-            },
-            fontSettings: {
-                famaly: 'Arial,Helvetica,sans-serif',
-                color: '#444444',
-                size: '14'
+                lineWidth: 1,
+                fontFamaly: 'Arial,Helvetica,sans-serif',
+                fontColor: '#444444',
+                fontSize: '14'
             },
             indicatorsColor: {},
             indicatorsWidth: {},
@@ -136,6 +134,7 @@
             this.dataRequestCounter = 0;
         } else {
             this.viewData.chart.chartOptions = $.extend(true, this.viewData.chart.chartOptions, settings);
+            this.viewData.chart.overlay.deserialize(iChart.parseQueryString((this.dataSource.dataSettings.hash|| "#").substr(1)));
             this.viewData.chart.setDataSettings(this.getChartDataUserSettings());
             this.dataRequestCounter = 0;
         }
@@ -249,15 +248,9 @@
         /// Called when the chart data settings change.
         /// </summary>
 
-        var documentHash = _this.dataSource.dataSettings.useHash == false ? _this.dataSource.dataSettings.hash : document.location.hash;
+        var documentHash = _this.dataSource.dataSettings.useHash == false ? (_this.dataSource.dataSettings.hash || '#') : document.location.hash;
         var params = iChart.parseQueryString(documentHash.substr(1));
-        var drawParams = {};
-
-        for (var paramKey in params) {
-            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
-                drawParams[paramKey] = params[paramKey];
-            }
-        }
+        var drawParams = _this.getDrawParams(params);
 
         delete this._dataSettings.hash;
         var hash = "#" + iChart.toQueryString($.extend(this._dataSettings, drawParams));
@@ -274,6 +267,23 @@
                 $(this.container).trigger('iguanaChartEvents', ['hashChanged', hash]);
             }
         }
+    };
+
+    /**
+     *
+     * @param params
+     * @returns {{}}
+     */
+    this.getDrawParams = function (params) {
+        var drawParams = {};
+
+        for (var paramKey in params) {
+            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
+                drawParams[paramKey] = params[paramKey];
+            }
+        }
+
+        return drawParams;
     };
 
     this.chart_onIntervalChange = function (chart)
@@ -463,16 +473,6 @@
         if (_this.viewData.chart) {
             _this.viewData.chart.resetZoom();
         }
-    };
-    this.selectInstrument_onClick = function () {
-        var $this = $(this);
-        $this.addClass('active');
-        if (_this.viewData.chart.overlay) {
-            _this.viewData.chart.overlay.start($this.attr("data-instrument"));
-            var instrClass = $this.find('i').attr('class');
-            $('.' + instrClass).eq(0).parents('.isMenu').children('i').attr('class', $this.find('i').attr('class'));
-        }
-        return false;
     };
     this.update = function () {
         /// <summary>
@@ -1568,6 +1568,9 @@
             var settings = selected.settings;
             settings[prop] = color;
             selected.setSettings(settings);
+            if(this.viewData.chart.chartOptions.elementStyle[selected.elementType]) {
+                this.viewData.chart.chartOptions.elementStyle[selected.elementType][prop] = color;
+            }
         }
         this.userSettings.chartSettings.contextSettings[prop] = color;
     };
@@ -1585,7 +1588,7 @@
     if(typeof jNTChartTrading != 'undefined') {
         /*//РИСОВАНИЕ ПРИКАЗОВ*/
 
-        if (typeof jNTUserinfo !== "undefined" && jNTUserinfo.isDemo && $iguanaChart.optionsRestore('devmode')) {
+        if (typeof jNTUserinfo !== "undefined" && jNTUserinfo.isDemo) {
             if (typeof extendIChartWithTrandorders == 'function') {
                 extendIChartWithTrandorders.call(this);
             }
@@ -1649,10 +1652,10 @@
         };
 
         var data4 = {
-            date: 1463580900000,
-            price: 2691,
-            date2: 1463605200000,
-            price2: 2683.5,
+            date: 1472798700000,
+            price: 142.73127071556314,
+            date2: 1472799600000,
+            price2: 142.75374359194433,
             tf: 900,
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
@@ -1663,8 +1666,8 @@
         };
 
         var data2 = {
-            date: 1451990743298.6785,
-            price: 2221.7,
+            date: 1472553953049000,
+            price: 135,
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
@@ -1697,6 +1700,9 @@
     //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
     $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
     $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("dblclick", function () {
+        _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
+    });
     $(_this.wrapper).on('iguanaChartEvents', function(event, name, data) {
         if(name === 'chartDataReady') {
             if(_this.viewData.chart && _this.dataRequestCounter == 0) {

@@ -241,6 +241,7 @@
                 switch ($(this).attr('data-value')) {
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
+                        _this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', iChart.Charting.ChartOptions.getThemeOptions(_this.chart.viewData.chart.chartOptions)]);
                         _this.chart.userSettings.chartSettings.defaultTheme = 0;
                         _this.setUiStateForThemeConfig(false);
                         if($.modal.impl.d.data) {
@@ -534,23 +535,27 @@
         this.uiSet_chartType = function (value) {
             this.chart.viewData.chart.setChartType(value);
             this.setUiStateForChartType(value);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"chartType" : value}]);
         };
 
         this.uiSet_showVolumeByPrice = function (value) {
             this.chart.VolumeByPrice_onClick();
             var state = !!this.chart.viewData.chart.chartOptions.showVolumeByPrice;
             this.setUiStateForShowVolumeByPrice(state);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"showVolumeByPrice" : state}]);
         };
 
         this.uiSet_showVolume = function (value) {
             this.chart.VolumeByDate_onClick();
             var state = _this.chart.viewData.chart.chartOptions.showVolume;
             this.setUiStateForShowVolume(state);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"showVolume" : state}]);
         };
 
         this.uiSet_percentMode = function (value) {
             var percentMode = this.chart.percentMode_onClick();
             this.setUiStateForPercentMode(percentMode);
+            this.chart.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {"percentMode" : percentMode}]);
         };
 
         this.uiSet_themeConfig = function () {
@@ -565,33 +570,27 @@
         };
 
         this.uiSet_instrumentLine = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentLine(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_instrumentForm = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentForm(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_instrumentText = function (value) {
-            var settings = {
-                fillStyle: this.chart.userSettings.chartSettings.contextSettings.fillStyle,
-                strokeStyle: this.chart.userSettings.chartSettings.contextSettings.strokeStyle
-            };
+            var settings = $.extend({}, this.chart.userSettings.chartSettings.contextSettings, this.chart.viewData.chart.chartOptions.elementStyle[value]);
 
             this.chart.wrapper.iguanaChart("toolStart", value, settings);
             this.setUiStateForInstrumentText(value, 1);
+            this.onSelectInstrument({settings: settings});
         };
 
         this.uiSet_clearInstruments = function () {
@@ -606,6 +605,24 @@
         this.uiSet_dataInterval = function (value) {
             this.chart.setInterval(value);
             this.setUiStateForDataInterval(value);
+        };
+
+        this.uiSet_captureImage = function () {
+            var dataImage = this.chart.viewData.chart.toBase64('image/png');
+
+            if($.modal.impl.d.data) {
+                $.modal.impl.close();
+            }
+
+            $('.iChartDialog').remove();
+            var $captureDialogTmpl = $($.render.captureDialogTmpl());
+
+            $captureDialogTmpl.find('.js-iChartTools-capture').attr('src', 'data:image/png;base64, ' + dataImage);
+
+            this.chart.wrapper.append($captureDialogTmpl);
+
+            var width = $captureDialogTmpl.find('.js-iChartTools-capture').get(0).width;
+            $('.iChartDialog').modal({modal: false, zIndex: 1500, maxWidth: width, title: _t('1724', 'Скачать картинку')});
         };
 
         this.onMinicolorsChange = function(value, opacity){

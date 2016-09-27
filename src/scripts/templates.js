@@ -7,7 +7,7 @@ $.views.settings.allowCode(true);
 $.templates("iChart_mainTmpl", '' +
     '<div class="iChart-control-form" style="min-height: 200px">' +
         '<div class="js-chartContainerWrapper">' +
-            '<div class="iChartToolsContainer" style="margin-bottom: 5px"><div class="iChartToolsTop" style="display: none;">' +
+            '<div class="iChartToolsContainer"><div class="iChartToolsTop" style="display: none;">' +
             '</div></div>' +
             '<div id="{{:id}}" class="m-chart-container" style="height: 100%;">' +
             '</div>' +
@@ -203,6 +203,10 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Screenshot') + '">' +
+                '<i class="sprite sprite-icon-camera"></i>' +
+            '</div>' +
+
             '<i class="sprite sprite-icon-divider"></i>' +
 
             '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17395', 'Clear Chart') + '">' +
@@ -269,7 +273,6 @@ $.templates("indicatorsCurrentTmpl", '' +
 
 $.templates("indicatorsListTmpl", '' +
     '<ul class="uk-list uk-list-line">' +
-        '<li class="uk-nav-divider"></li>' +
         '{{for indicators}}' +
             '<li><a href="javascript:void(0);" onclick="return false;" class="js-add-indicator" data-value="{{:value}}">{{:value}}</a></li>' +
         '{{/for}}' +
@@ -308,6 +311,15 @@ $.templates("indicatorDialogTmpl", '' +
         '<div>' +
             '<a  href="javascript:void(0);" onclick="return false;" class="uk-button js-set-params-indicator">Ok</a>' +
             '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button">Cancel</a>' +
+        '</div>' +
+    '</div>'
+);
+
+$.templates("captureDialogTmpl", '' +
+    '<div class="iChartDialog" style="display: none;">' +
+        '<img class="js-iChartTools-capture"/>' +
+        '<div class="uk-flex uk-flex-right">' +
+            '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button js-set-params-indicator">Ok</a>' +
         '</div>' +
     '</div>'
 );

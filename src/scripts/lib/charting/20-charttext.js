@@ -16,7 +16,7 @@
         this.drawType = 'manually';
         this.maxPointCount = 2;
         this.hasSettings = true;
-        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, layer.chart.env.userSettings.chartSettings.fontSettings, {text: ''});
+        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, {text: ''});
     };
 
     inheritPrototype(iChart.Charting.ChartText, iChart.Charting.ChartElement);
@@ -138,8 +138,8 @@
 
             ctx.beginPath();
 
-            ctx.fillStyle = this.settings.color;
-            ctx.font = 'normal ' + this.settings.size + 'px ' + this.settings.famaly;
+            ctx.fillStyle = this.settings.fontColor;
+            ctx.font = 'normal ' + this.settings.fontSize + 'px ' + this.settings.fontFamaly;
             ctx.textAlign = "left";
             ctx.textBaseline="top";
 
@@ -158,8 +158,8 @@
 //console.log(words);
 
             var line = '';
-            var textHeight = 0+Math.round(parseInt(this.settings.size)/10);
-            var lineHeight = parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5);
+            var textHeight = 0+Math.round(parseInt(this.settings.fontSize)/10);
+            var lineHeight = parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5);
             //var lineHeight = 16;
 
             for (var n = 0; n < countWords; n++) {
@@ -197,9 +197,9 @@
                 $('#chart-bubble-text').val('').focus().val(this.settings.text);
             }
             $('#chart-bubble-text').css({
-                font: 'normal '+this.settings.size+'px/'+(parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5))+'px ' + this.settings.famaly,
+                font: 'normal '+this.settings.fontSize+'px/'+(parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5))+'px ' + this.settings.fontFamaly,
                 background: "rgba(230,230,230,.0)",
-                color: this.settings.color,
+                color: this.settings.fontColor,
                 overflow: "hidden",
                 border: "0px solid red",
                 width: width +'px',
@@ -224,14 +224,13 @@
                 '<textarea id="chart-bubble-text"></textarea>' +
                 '</div>');
             $('#chart-bubble-text').css({
-                font: 'normal '+this.settings.size+'px/'+(parseInt(this.settings.size) + Math.round(parseInt(this.settings.size)/5))+'px ' + this.settings.famaly,
+                font: 'normal '+this.settings.fontSize+'px/'+(parseInt(this.settings.fontSize) + Math.round(parseInt(this.settings.fontSize)/5))+'px ' + this.settings.fontFamaly,
                 background: "rgba(230,230,230,.0)",
-                color: this.settings.color,
+                color: this.settings.fontColor,
                 overflow: "hidden",
                 border: "0px solid red"
             });
         }
-        console.log('here');
         $('#chart-bubble-text').val('').focus().val(this.settings.text);
         //$('#chart-bubble-text').get(0).setSelectionRange(0, $('#chart-bubble-text').val().length);
 

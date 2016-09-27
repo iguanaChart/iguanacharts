@@ -96,6 +96,18 @@
         this._showVolume =  'hidden';
         this.showVolumeByPrice =  false;
 
+        this.elementStyle = {
+            'Arrow': {
+                fillStyle: 'rgba(255,0,0,.2)',
+                strokeStyle: 'rgba(255,0,0,1)',
+                lineWidth: 3
+            },
+            'Text': {
+                fontColor: '#777777',
+                fontSize: '28'
+            }
+        };
+
         this.uiTools = {
             top: false,
         };
