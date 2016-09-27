@@ -204,7 +204,7 @@ $.templates("iChart_topToolBarTmpl", '' +
             '</div>' +
 
             '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Screenshot') + '">' +
-                '<i class="uk-icon-camera uk-icon-small"></i>' +
+                '<i class="sprite sprite-icon-camera"></i>' +
             '</div>' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
@@ -273,7 +273,6 @@ $.templates("indicatorsCurrentTmpl", '' +
 
 $.templates("indicatorsListTmpl", '' +
     '<ul class="uk-list uk-list-line">' +
-        '<li class="uk-nav-divider"></li>' +
         '{{for indicators}}' +
             '<li><a href="javascript:void(0);" onclick="return false;" class="js-add-indicator" data-value="{{:value}}">{{:value}}</a></li>' +
         '{{/for}}' +

@@ -1693,14 +1693,11 @@
         }
 
         containerHeight = height;
-        containerWidth = width;
         height += uiTopHeigth;
 
         this.canvas = iChart.Charting.initCanvas(this.container, this.canvas, containerWidth, containerHeight);
 
         $container.height(containerHeight);
-        $container.width(containerWidth);
-
     };
 
     iChart.Charting.Chart.prototype._selectionMouseDownCallback = function (selection)
