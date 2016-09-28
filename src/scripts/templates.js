@@ -89,10 +89,13 @@ $.templates("iChart_topToolBarTmpl", '' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
                 '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17380', 'Draw Line') + '">' +
-                    '<i class="sprite sprite-icon-free-line"></i>' +
+                    '<i class="sprite sprite-icon-arrow-line"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17386', 'Arrow') + '">' +
+                            '<i class="sprite sprite-icon-arrow-line"></i>' +
+                        '</div>' +
                         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17381', 'Free Line') + '">' +
                             '<i class="sprite sprite-icon-free-line"></i>' +
                         '</div>' +
@@ -107,9 +110,6 @@ $.templates("iChart_topToolBarTmpl", '' +
                         '</div>' +
                         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17385', 'Corner Trend') + '">' +
                             '<i class="sprite sprite-icon-angle-trend"></i>' +
-                        '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17386', 'Arrow') + '">' +
-                            '<i class="sprite sprite-icon-arrow-line"></i>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
