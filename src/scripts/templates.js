@@ -203,7 +203,7 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Screenshot') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17493', 'Screenshot') + '">' +
                 '<i class="sprite sprite-icon-camera"></i>' +
             '</div>' +
 
