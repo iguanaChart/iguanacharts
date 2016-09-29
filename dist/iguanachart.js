@@ -8731,8 +8731,6 @@ iChart.indicators = {
             this.trendLineSettings = {
                 points: this.getBorderPoints(coords)
             };
-
-            this.calcPointsPosition(coords[1].x, 150);
         }
     };
 
@@ -8943,23 +8941,31 @@ iChart.indicators = {
      * @returns {*[]}
      */
     iChart.Charting.ChartTrendorder.prototype.getBorderPoints = function (coords) {
-        var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
-        if(foundPoint1.y < 0 ) {
-            foundPoint1.y = 0;
-            foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
-        } else if(foundPoint1.y > this.layer.canvas.height ) {
-            foundPoint1.y = this.layer.canvas.height;
-            foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
-        }
 
+        if(coords[0].y < 0 || coords[0].y > this.layer.canvas.height || coords[0].x < 0 || coords[0].x > this.layer.canvas.width) {
 
-        var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.width);
-        if(foundPoint2.y < 0 ) {
-            foundPoint2.y = 0;
-            foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
-        } else if(foundPoint2.y > this.layer.canvas.height ) {
-            foundPoint2.y = this.layer.canvas.height;
-            foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
+            var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
+            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.width);
+
+        } else {
+
+            var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
+            if (foundPoint1.y < 0) {
+                foundPoint1.y = 0;
+                foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
+            } else if (foundPoint1.y > this.layer.canvas.height) {
+                foundPoint1.y = this.layer.canvas.height;
+                foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
+            }
+
+            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.width);
+            if(foundPoint2.y < 0 ) {
+                foundPoint2.y = 0;
+                foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
+            } else if(foundPoint2.y > this.layer.canvas.height ) {
+                foundPoint2.y = this.layer.canvas.height;
+                foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
+            }
         }
 
         return [foundPoint1, foundPoint2];
@@ -9190,10 +9196,16 @@ iChart.indicators = {
             this.drawLineMode(ctx, coords);
 
         } else {
+            var toCalc = false;
             if(!this.settings.newOrderParams) {
                 coords = this.normalizeCoords(ctx, coords);
+                toCalc = true;
             }
             this.drawTrendMode(ctx, coords);
+
+            if(toCalc) {
+                this.calcPointsPosition(coords[1].x, 150);
+            }
         }
 
     };
@@ -9205,7 +9217,7 @@ iChart.indicators = {
         ctx.lineWidth = 1;
         ctx.strokeStyle = color;
         ctx.fillStyle = color;
-        r = r || 2
+        r = r || 2;
         ctx.arc(x, y, r, 0, 2 * Math.PI, true);
         ctx.closePath();
 
