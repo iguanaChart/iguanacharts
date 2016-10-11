@@ -653,3 +653,54 @@ $.templates("iChart_intervalsTmpl", '' +
     '</div>'
 );
 
+$.templates("iChart_textPopupSettingsTmpl", '' +
+    '<div class="uk-margin-small-left js-iChartTools-textPopupSettings" style="display: none;">' +
+    '<div style="">' +
+    '<div class="uk-grid uk-grid-small">' +
+
+    '<div class="uk-width-1-3">' +
+    '<div class="uk-form-select" data-uk-form-select>' +
+    '<span>' + _t('', 'Size') + '</span>' +
+    '<select>' +
+    '{{for size}}' +
+    '<option value="{{:}}">{{:}}</option>' +
+    '{{/for}}' +
+    '</select>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="uk-width-1-3">' +
+    '<div class="uk-form-select" data-uk-form-select>' +
+    '<span>' + _t('', 'Font') + '</span>' +
+    '<select>' +
+    '{{for fonts}}' +
+    '<option value="{{:}}">{{:}}</option>' +
+    '{{/for}}' +
+    '</select>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="uk-width-1-3">' +
+    '<div class="js-colorSelector" data-option="backgroundColor" style="background-color: {{: color }}">' +
+    '<div class="menuHolder" style="display: none; padding: 10px;">' +
+    '<div class="js-colorPalette" data-option="backgroundColor"></div>' +
+    '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="backgroundColor" data-element="canvas" value="{{: color }}" size="10"/>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="uk-width-1-1">' +
+    '<textarea style="width: 100%; height: 50px;">{{:text}}</textarea>' +
+    '</div>' +
+
+    '<div class="uk-width-1-1 uk-text-right">' +
+    '<button class="uk-button js-textPopupSettings" data-value="cancel">' + _t('1403', 'Отмена') + '</button> ' +
+    '<button class="uk-button  uk-button-primary js-textPopupSettings" data-value="ok">' + _t('3920', "OK") + '</button>' +
+    '</div>' +
+
+    '</div>' +
+
+    '</div>' +
+    '</div>'
+);
+

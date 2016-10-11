@@ -16,6 +16,7 @@
         this.drawType = 'manually';
         this.maxPointCount = 2;
         this.hasSettings = true;
+        this.hasPopupSettings = true;
         this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings, {text: ''});
     };
 
@@ -214,7 +215,84 @@
             });
         }
 
-    }
+    };
+
+    iChart.Charting.ChartText.prototype.drawPopupSettings = function (ctx, coord) {
+
+        var data = {
+            size: [8,9,10,11,12,14,16,20,24,28,32,40],
+            fonts: ['Verdana', 'Courier New', 'Times New Roman', 'Arial'],
+            color: 'rgba(255,100,100,1)',
+            text: ''
+        };
+
+        var $textPopupSettingsHtml = $($.render.iChart_textPopupSettingsTmpl(data));
+        console.log(coord);
+        console.log($textPopupSettingsHtml);
+
+        var _this = this;
+
+        var onMinicolorsChange = function(value, opacity){
+            var color = $(this).val(),
+                colorRGBA = color,
+                option = $(this).attr('data-option');
+
+            if(!color.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(color, opacity)
+            }
+
+            console.log(color, colorRGBA, opacity);
+            $(this).minicolors('value', color);
+            $(this).minicolors('opacity', opacity);
+        };
+
+
+        $textPopupSettingsHtml.find('.js-colorSelector').each(function(){
+
+            var $this = $(this),
+                menu = $this.find('.menuHolder').html();
+
+            $this.qtip({
+                style: {
+                    classes: 'qtip-light'
+                },
+                position: {
+                    at: 'center right',
+                    my: 'left center',
+                    effect: false,
+                    viewport: $(window),
+                    adjust: {
+                        method: 'shift none'
+                    }
+                },
+                content: {
+                    //title: title,
+                    text: menu
+                },
+                hide: {
+                    fixed: true,
+                    delay: 300
+                },
+                show: {
+                    solo: true
+                },
+                events: {
+                    show: function(event, api) {
+                        $(event.currentTarget).find('.js-colorPicker').each(function(){
+                            _this.layer.chart.env.ui.addMinicolors(this, event.currentTarget, onMinicolorsChange, null);
+                        });
+                    }
+                }
+            });
+        });
+
+
+        this.layer.chart.env.wrapper.append($textPopupSettingsHtml);
+        $textPopupSettingsHtml.modal(
+            {modal: false, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('', 'Настройки текста')})
+        ;
+
+    };
 
     iChart.Charting.ChartText.prototype.onSelect = function (ctx) {
         iChart.Charting.ChartElement.prototype.onSelect.call(this, ctx);
