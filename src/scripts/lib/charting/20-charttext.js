@@ -220,15 +220,37 @@
     iChart.Charting.ChartText.prototype.drawPopupSettings = function (ctx, coord) {
 
         var data = {
-            size: [8,9,10,11,12,14,16,20,24,28,32,40],
-            fonts: ['Verdana', 'Courier New', 'Times New Roman', 'Arial'],
-            color: 'rgba(255,100,100,1)',
-            text: ''
+            options: {
+                sizes: [
+                    {name: 8, value: 8},
+                    {name: 9, value: 9},
+                    {name: 10, value: 10},
+                    {name: 11, value: 11},
+                    {name: 12, value: 12},
+                    {name: 14, value: 14},
+                    {name: 16, value: 16},
+                    {name: 20, value: 20},
+                    {name: 24, value: 24},
+                    {name: 28, value: 28},
+                    {name: 32, value: 32},
+                    {name: 40, value: 40}
+                ],
+                fonts: [
+                    {name: 'Verdana', value: 'Verdana,Tahoma,Geneva,Arial,Sans-serif'},
+                    {name: 'Courier New', value: 'Courier New,Monospace'},
+                    {name: 'Times New Roman', value: 'TimesNewRoman,Times,Baskerville,Georgia,serif'},
+                    {name: 'Arial', value: 'Arial,Helvetica,sans-serif'}
+                ]
+            },
+            values: {
+                fontSize: this.settings.fontSize,
+                fontColor: this.settings.fontColor,
+                fontFamaly: this.settings.fontFamaly,
+                text: this.settings.text
+            }
         };
 
         var $textPopupSettingsHtml = $($.render.iChart_textPopupSettingsTmpl(data));
-        console.log(coord);
-        console.log($textPopupSettingsHtml);
 
         var _this = this;
 
@@ -241,11 +263,25 @@
                 colorRGBA = iChart.hexToRGB(color, opacity)
             }
 
-            console.log(color, colorRGBA, opacity);
-            $(this).minicolors('value', color);
-            $(this).minicolors('opacity', opacity);
+            $textPopupSettingsHtml.find('.js-colorSelector[data-option="' + option + '"]').css('background-color', colorRGBA);
+            $textPopupSettingsHtml.find('input[data-option="' + option + '"]').val(colorRGBA);
+
+            $(this).minicolors('value', colorRGBA);
         };
 
+        var onPaletteChange = function(){
+            var color = this.value;
+            var option = this.element.attr('data-option');
+            var colorRGBA = color;
+
+            if(!color.match(/^rgb.*/)) {
+                colorRGBA = iChart.hexToRGB(color, 1);
+            }
+
+            $textPopupSettingsHtml.find('.js-colorSelector[data-option="' + option + '"]').css('background-color', colorRGBA);
+            $textPopupSettingsHtml.find('input[data-option="' + option + '"]').val(colorRGBA);
+            this.element.parent().find('.js-colorPicker').minicolors('value', colorRGBA);
+        };
 
         $textPopupSettingsHtml.find('.js-colorSelector').each(function(){
 
@@ -266,7 +302,6 @@
                     }
                 },
                 content: {
-                    //title: title,
                     text: menu
                 },
                 hide: {
@@ -279,19 +314,32 @@
                 events: {
                     show: function(event, api) {
                         $(event.currentTarget).find('.js-colorPicker').each(function(){
-                            _this.layer.chart.env.ui.addMinicolors(this, event.currentTarget, onMinicolorsChange, null);
+                            _this.layer.chart.env.ui.addMinicolors(this, event.currentTarget, onMinicolorsChange, onPaletteChange);
                         });
                     }
                 }
             });
         });
 
+        $textPopupSettingsHtml.on('click', '.js-textPopupSettings', {popupWindow:$textPopupSettingsHtml, element: _this}, function(e){
+            if($(this).data('value') == "ok") {
+                e.data.element.settings.fontSize = e.data.popupWindow.find("[name='fontSize']").val();
+                e.data.element.settings.fontFamaly = e.data.popupWindow.find("[name='fontFamaly']").val();
+                e.data.element.settings.text = e.data.popupWindow.find("[name='text']").val();
+                $('#chart-bubble-text').val(e.data.element.settings.text);
+                e.data.element.settings.fontColor = e.data.popupWindow.find("input[data-option='fontColor']").val();
+                e.data.element.layer.render();
+            }
+
+            if($.modal.impl.d.data) {
+                $.modal.impl.close();
+            }
+        });
 
         this.layer.chart.env.wrapper.append($textPopupSettingsHtml);
         $textPopupSettingsHtml.modal(
-            {modal: false, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('', 'Настройки текста')})
+            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('', 'Настройки текста')})
         ;
-
     };
 
     iChart.Charting.ChartText.prototype.onSelect = function (ctx) {
