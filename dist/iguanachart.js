@@ -884,6 +884,10 @@ if(typeof IGUANACHART_THEME == "undefined") {
     IGUANACHART_THEME = "White";
 }
 
+if(typeof MOBILE_BROWSER_DETECTED == "undefined") {
+    MOBILE_BROWSER_DETECTED = false;
+}
+
 function formatDate(offset, time) {
     var date = new Date();
     var time = date.getTime();
@@ -6563,8 +6567,8 @@ iChart.indicators = {
 
         this.elementType = "Visualtrade";
         this.drawType = 'auto';
-        this.hoverCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
-        this.moveCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.hoverCursor = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.moveCursor = MOBILE_BROWSER_DETECTED ? "move": "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
         this.maxPointCount = 5;
         this.hasSettings = true;
         this.controlEnable = true;
@@ -7778,8 +7782,8 @@ iChart.indicators = {
 
         this.elementType = "Level";
         this.drawType = 'auto';
-        this.hoverCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
-        this.moveCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.hoverCursor = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.moveCursor = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
         this.maxPointCount = 1;
         this.hasSettings = true;
         this.controlEnable = true;
@@ -12044,7 +12048,8 @@ iChart.indicators = {
         switch (mode)
         {
             case "pan":
-                this.container.style.cursor = this.overlay.defaultCursor = "url('" + this.env.lib_path + "/styles/cursors/grab.cur'), move";
+                this.container.style.cursor = this.overlay.defaultCursor
+                        = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.env.lib_path + "/styles/cursors/grab.cur'), move";
                 break;
             case "zoom":
                 this.container.style.cursor = this.overlay.defaultCursor = "crosshair";
@@ -12920,7 +12925,8 @@ iChart.indicators = {
                 }
                 else
                 {
-                    this.container.style.cursor = this.overlay.defaultCursor = "url('" + this.env.lib_path + "/styles/cursors/grabbing.cur'), move";
+                    this.container.style.cursor = this.overlay.defaultCursor
+                        = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.env.lib_path + "/styles/cursors/grabbing.cur'), move";
                 }
 
                 break;
@@ -13046,7 +13052,8 @@ iChart.indicators = {
 
         if (selection.mode === "pan")
         {
-            this.container.style.cursor = this.overlay.defaultCursor = "url('" + this.env.lib_path + "/styles/cursors/grab.cur'), move";
+            this.container.style.cursor = this.overlay.defaultCursor
+                = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.env.lib_path + "/styles/cursors/grab.cur'), move";
         }
         else
         {

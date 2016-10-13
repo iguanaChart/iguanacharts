@@ -13,8 +13,8 @@
 
         this.elementType = "Level";
         this.drawType = 'auto';
-        this.hoverCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
-        this.moveCursor = "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.hoverCursor = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
+        this.moveCursor = MOBILE_BROWSER_DETECTED ? "move" : "url('" + this.layer.chart.env.lib_path + "/styles/cursors/red_vertical_cursor.cur'), move";
         this.maxPointCount = 1;
         this.hasSettings = true;
         this.controlEnable = true;

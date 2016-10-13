@@ -19,6 +19,10 @@ if(typeof IGUANACHART_THEME == "undefined") {
     IGUANACHART_THEME = "White";
 }
 
+if(typeof MOBILE_BROWSER_DETECTED == "undefined") {
+    MOBILE_BROWSER_DETECTED = false;
+}
+
 function formatDate(offset, time) {
     var date = new Date();
     var time = date.getTime();
