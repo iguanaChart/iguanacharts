@@ -660,7 +660,7 @@ $.templates("iChart_textPopupSettingsTmpl", '' +
 
                 '<div class="uk-width-1-5">' +
                     '<div class="uk-form-select" data-uk-form-select>' +
-                        '<span>' + _t('', 'Size') + '</span>' +
+                        '<span>' + _t('17600', 'Size') + '</span>' +
                         '<select name="fontSize">' +
                             '{{for options.sizes}}' +
                             '<option value="{{:value}}" {{if value == ~root.values.fontSize}} selected {{/if}}>{{:name}}</option>' +
@@ -671,7 +671,7 @@ $.templates("iChart_textPopupSettingsTmpl", '' +
 
                 '<div class="uk-width-2-5">' +
                     '<div class="uk-form-select" data-uk-form-select>' +
-                        '<span>' + _t('', 'Font') + '</span>' +
+                        '<span>' + _t('17601', 'Font') + '</span>' +
                         '<select name="fontFamaly">' +
                             '{{for options.fonts}}' +
                             '<option value="{{:value}}" {{if value == ~root.values.fontFamaly}} selected {{/if}}>{{:name}}</option>' +
