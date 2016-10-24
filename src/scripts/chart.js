@@ -401,7 +401,6 @@
         params.end = this.dataSource.dataSettings.date_to;
         params.interval = this.dataSource.dataSettings.interval;
         params.timeframe = iChart.getChartTimeframe(this.dataSource.dataSettings.interval);
-        params.securityId = this.dataSource.dataSettings.securityId;
         params["type"] = this.dataSource.dataSettings.type;
         params["compareIds"] = this.dataSource.dataSettings.compareIds;
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;

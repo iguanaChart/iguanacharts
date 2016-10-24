@@ -699,7 +699,7 @@
         /// </summary>
 
         clearTimeout(this.env.timers.scheduleUpdate);
-        if (this.chartOptions.updateInterval && this._dataSettings.securityId == this.env.viewData.chart._dataSettings.securityId)
+        if (this.chartOptions.updateInterval && this._dataSettings.id == this.env.viewData.chart._dataSettings.id)
         {
             if($(this.env.container).length) {
                 this.env.timers.scheduleUpdate = setTimeout($.proxy(this.update, this, true), this.env.viewData.chart._dataSettings.timeframe * 20000); // 1/3 от периода в милисекундах
@@ -740,8 +740,8 @@
                 changes.interval = this._dataSettings.interval;
                 this.env.wrapper.trigger('iguanaChartEvents', ['intervalChange', this._dataSettings.interval]);
             }
-            if(oldSettings.securityId != this._dataSettings.securityId) {
-                changes.securityId = this._dataSettings.securityId;
+            if(oldSettings.id != this._dataSettings.id) {
+                changes.id = this._dataSettings.id;
             }
             if(oldSettings.type != this._dataSettings.type) {
                 changes.type = this._dataSettings.type;

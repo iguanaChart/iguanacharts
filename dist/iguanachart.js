@@ -5732,7 +5732,7 @@ iChart.indicators = {
 
         this.layer.chart.env.wrapper.append($textPopupSettingsHtml);
         $textPopupSettingsHtml.modal(
-            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('', 'Настройки текста')})
+            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('17599', 'Настройки текста')})
         ;
     };
 
@@ -6143,7 +6143,7 @@ iChart.indicators = {
 
         this.layer.chart.env.wrapper.append($textPopupSettingsHtml);
         $textPopupSettingsHtml.modal(
-            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('', 'Настройки текста')})
+            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('17599', 'Настройки текста')})
         ;
     };
 
@@ -11856,7 +11856,7 @@ iChart.indicators = {
         /// </summary>
 
         clearTimeout(this.env.timers.scheduleUpdate);
-        if (this.chartOptions.updateInterval && this._dataSettings.securityId == this.env.viewData.chart._dataSettings.securityId)
+        if (this.chartOptions.updateInterval && this._dataSettings.id == this.env.viewData.chart._dataSettings.id)
         {
             if($(this.env.container).length) {
                 this.env.timers.scheduleUpdate = setTimeout($.proxy(this.update, this, true), this.env.viewData.chart._dataSettings.timeframe * 20000); // 1/3 от периода в милисекундах
@@ -11897,8 +11897,8 @@ iChart.indicators = {
                 changes.interval = this._dataSettings.interval;
                 this.env.wrapper.trigger('iguanaChartEvents', ['intervalChange', this._dataSettings.interval]);
             }
-            if(oldSettings.securityId != this._dataSettings.securityId) {
-                changes.securityId = this._dataSettings.securityId;
+            if(oldSettings.id != this._dataSettings.id) {
+                changes.id = this._dataSettings.id;
             }
             if(oldSettings.type != this._dataSettings.type) {
                 changes.type = this._dataSettings.type;
@@ -16999,7 +16999,7 @@ $.templates("iChart_textPopupSettingsTmpl", '' +
 
                 '<div class="uk-width-1-5">' +
                     '<div class="uk-form-select" data-uk-form-select>' +
-                        '<span>' + _t('', 'Size') + '</span>' +
+                        '<span>' + _t('17600', 'Size') + '</span>' +
                         '<select name="fontSize">' +
                             '{{for options.sizes}}' +
                             '<option value="{{:value}}" {{if value == ~root.values.fontSize}} selected {{/if}}>{{:name}}</option>' +
@@ -17010,7 +17010,7 @@ $.templates("iChart_textPopupSettingsTmpl", '' +
 
                 '<div class="uk-width-2-5">' +
                     '<div class="uk-form-select" data-uk-form-select>' +
-                        '<span>' + _t('', 'Font') + '</span>' +
+                        '<span>' + _t('17601', 'Font') + '</span>' +
                         '<select name="fontFamaly">' +
                             '{{for options.fonts}}' +
                             '<option value="{{:value}}" {{if value == ~root.values.fontFamaly}} selected {{/if}}>{{:name}}</option>' +
@@ -17058,7 +17058,7 @@ var iChartDataSource = {
         compareIds: "",
         compareStocks: "",
         compareTickets: "",
-        securityId: "",
+        //securityId: "",
         start: '',
         end: '',
     },
@@ -17068,7 +17068,7 @@ var iChartDataSource = {
 
     getUrl: function (params) {
         var cachedParams = {
-            'securityId': params.securityId,
+            //'securityId': params.securityId,
             'id': params.id,
             'compareIds': params.compareIds,
             'compareStocks': params.compareStocks,
@@ -17084,7 +17084,7 @@ var iChartDataSource = {
         };
 
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
-        cachedParams['hash'] = cachedParams.securityId.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
+        cachedParams['hash'] = cachedParams.id.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
 
         return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
     },
@@ -17115,7 +17115,23 @@ var iChartDataSource = {
             {
                 _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReceived', data]);
 
+                if(data.info && data.info[_chart.dataSource.dataSettings.id]) {
+                    var stockInfo = data.info[_chart.dataSource.dataSettings.id];
+                    _chart.userSettings.currentSecurity = {
+                        id: stockInfo.nt_ticker,
+                        short_name: stockInfo.short_name,
+                        default_ticker: stockInfo.default_ticker,
+                        nt_ticker: stockInfo.nt_ticker,
+                        firstDate: stockInfo.firstDate,
+                        currency: stockInfo.currency,
+                        min_step: stockInfo.min_step
+                    };
+                    _chart.viewData.chart.chartOptions.watermarkText = stockInfo.nt_ticker;
+                    _chart.viewData.chart.chartOptions.watermarkSubText = stockInfo.short_name;
+                }
+
                 data = _this.dataAdapter(data, $params);
+
                 clearTimeout(_chart.timers.loading);
 
                 _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
@@ -17177,28 +17193,38 @@ var iChartDataSource = {
             }
 
             params.ticker = hash.ticker;
-            params.securityId = hash.securityId;
+            //params.securityId = hash.securityId;
             params.interval = hash.interval;
         }
 
-        $.getJSON(iChartDataSource.host + '/api/get-security-info-json',{id: params.securityId, ticker:params.ticker, f_history: params.f_history}, function(data){
+        _this.chart.userSettings.currentSecurity = {
+            id: params.ticker,
+            short_name: params.ticker,
+            default_ticker: params.ticker,
+            nt_ticker: params.ticker,
+            firstDate: '',
+            currency: '',
+            min_step: ''
+        };
+        _this.chart.dataSource.dataSettings.useHash = false;
+        _this.chart.dataSource.dataSettings.id = params.ticker;
+        //_this.chart.dataSource.dataSettings.securityId = data.id;
+        _this.chart.dataSource.dataSettings.intervalRestriction = "";
 
-            _this.chart.userSettings.currentSecurity = data;
-            _this.chart.dataSource.dataSettings.useHash = false;
-            _this.chart.dataSource.dataSettings.id = data.nt_ticker;
-            _this.chart.dataSource.dataSettings.securityId = data.id;
-            _this.chart.dataSource.dataSettings.intervalRestriction = "";
+        params.chartOptions.watermarkText = params.ticker;
+        params.chartOptions.watermarkSubText = params.ticker;
 
-            params.chartOptions.watermarkText = data.nt_ticker;
-            params.chartOptions.watermarkSubText = data.short_name;
+        if(typeof params.type != "undefined") {
+            params.chartOptions.chartType = params.type;
+        }
 
-            if(typeof params.type != "undefined") {
-                params.chartOptions.chartType = params.type;
-            }
-
-            initReadyCallback(params.chartOptions);
-
-        });
+        initReadyCallback(params.chartOptions);
+        //
+        //
+        // $.getJSON(iChartDataSource.host + '/api/get-security-info-json',{id: params.securityId, ticker:params.ticker, f_history: params.f_history}, function(data){
+        //
+        //
+        // });
 
     }
 };
@@ -17606,7 +17632,7 @@ IguanaChart = function (options) {
         params.end = this.dataSource.dataSettings.date_to;
         params.interval = this.dataSource.dataSettings.interval;
         params.timeframe = iChart.getChartTimeframe(this.dataSource.dataSettings.interval);
-        params.securityId = this.dataSource.dataSettings.securityId;
+        //params.securityId = this.dataSource.dataSettings.securityId;
         params["type"] = this.dataSource.dataSettings.type;
         params["compareIds"] = this.dataSource.dataSettings.compareIds;
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;

@@ -14,7 +14,6 @@ var iChartDataSource = {
         compareIds: "",
         compareStocks: "",
         compareTickets: "",
-        securityId: "",
         start: '',
         end: '',
     },
@@ -24,7 +23,6 @@ var iChartDataSource = {
 
     getUrl: function (params) {
         var cachedParams = {
-            'securityId': params.securityId,
             'id': params.id,
             'compareIds': params.compareIds,
             'compareStocks': params.compareStocks,
@@ -40,7 +38,7 @@ var iChartDataSource = {
         };
 
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
-        cachedParams['hash'] = cachedParams.securityId.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
+        cachedParams['hash'] = cachedParams.id.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
 
         return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
     },
@@ -71,7 +69,23 @@ var iChartDataSource = {
             {
                 _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReceived', data]);
 
+                if(data.info && data.info[_chart.dataSource.dataSettings.id]) {
+                    var stockInfo = data.info[_chart.dataSource.dataSettings.id];
+                    _chart.userSettings.currentSecurity = {
+                        id: stockInfo.nt_ticker,
+                        short_name: stockInfo.short_name,
+                        default_ticker: stockInfo.default_ticker,
+                        nt_ticker: stockInfo.nt_ticker,
+                        firstDate: stockInfo.firstDate,
+                        currency: stockInfo.currency,
+                        min_step: stockInfo.min_step
+                    };
+                    _chart.viewData.chart.chartOptions.watermarkText = stockInfo.nt_ticker;
+                    _chart.viewData.chart.chartOptions.watermarkSubText = stockInfo.short_name;
+                }
+
                 data = _this.dataAdapter(data, $params);
+
                 clearTimeout(_chart.timers.loading);
 
                 _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
@@ -133,28 +147,30 @@ var iChartDataSource = {
             }
 
             params.ticker = hash.ticker;
-            params.securityId = hash.securityId;
             params.interval = hash.interval;
         }
 
-        $.getJSON(iChartDataSource.host + '/api/get-security-info-json',{id: params.securityId, ticker:params.ticker, f_history: params.f_history}, function(data){
+        _this.chart.userSettings.currentSecurity = {
+            id: params.ticker,
+            short_name: params.ticker,
+            default_ticker: params.ticker,
+            nt_ticker: params.ticker,
+            firstDate: '',
+            currency: '',
+            min_step: ''
+        };
+        _this.chart.dataSource.dataSettings.useHash = false;
+        _this.chart.dataSource.dataSettings.id = params.ticker;
+        _this.chart.dataSource.dataSettings.intervalRestriction = "";
 
-            _this.chart.userSettings.currentSecurity = data;
-            _this.chart.dataSource.dataSettings.useHash = false;
-            _this.chart.dataSource.dataSettings.id = data.nt_ticker;
-            _this.chart.dataSource.dataSettings.securityId = data.id;
-            _this.chart.dataSource.dataSettings.intervalRestriction = "";
+        params.chartOptions.watermarkText = params.ticker;
+        params.chartOptions.watermarkSubText = params.ticker;
 
-            params.chartOptions.watermarkText = data.nt_ticker;
-            params.chartOptions.watermarkSubText = data.short_name;
+        if(typeof params.type != "undefined") {
+            params.chartOptions.chartType = params.type;
+        }
 
-            if(typeof params.type != "undefined") {
-                params.chartOptions.chartType = params.type;
-            }
-
-            initReadyCallback(params.chartOptions);
-
-        });
+        initReadyCallback(params.chartOptions);
 
     }
 };
