@@ -17058,7 +17058,6 @@ var iChartDataSource = {
         compareIds: "",
         compareStocks: "",
         compareTickets: "",
-        //securityId: "",
         start: '',
         end: '',
     },
@@ -17068,7 +17067,6 @@ var iChartDataSource = {
 
     getUrl: function (params) {
         var cachedParams = {
-            //'securityId': params.securityId,
             'id': params.id,
             'compareIds': params.compareIds,
             'compareStocks': params.compareStocks,
@@ -17193,7 +17191,6 @@ var iChartDataSource = {
             }
 
             params.ticker = hash.ticker;
-            //params.securityId = hash.securityId;
             params.interval = hash.interval;
         }
 
@@ -17208,7 +17205,6 @@ var iChartDataSource = {
         };
         _this.chart.dataSource.dataSettings.useHash = false;
         _this.chart.dataSource.dataSettings.id = params.ticker;
-        //_this.chart.dataSource.dataSettings.securityId = data.id;
         _this.chart.dataSource.dataSettings.intervalRestriction = "";
 
         params.chartOptions.watermarkText = params.ticker;
@@ -17219,12 +17215,6 @@ var iChartDataSource = {
         }
 
         initReadyCallback(params.chartOptions);
-        //
-        //
-        // $.getJSON(iChartDataSource.host + '/api/get-security-info-json',{id: params.securityId, ticker:params.ticker, f_history: params.f_history}, function(data){
-        //
-        //
-        // });
 
     }
 };
@@ -17632,7 +17622,6 @@ IguanaChart = function (options) {
         params.end = this.dataSource.dataSettings.date_to;
         params.interval = this.dataSource.dataSettings.interval;
         params.timeframe = iChart.getChartTimeframe(this.dataSource.dataSettings.interval);
-        //params.securityId = this.dataSource.dataSettings.securityId;
         params["type"] = this.dataSource.dataSettings.type;
         params["compareIds"] = this.dataSource.dataSettings.compareIds;
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;
