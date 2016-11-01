@@ -146,7 +146,7 @@ var iChartDataSource = {
                 this.chart.dataSource.dataSettings.graphicIndicators = iChart.toQueryString(graphicIndicators);
             }
 
-            params.ticker = hash.ticker;
+            params.ticker = hash.id;
             params.interval = hash.interval;
         }
 
