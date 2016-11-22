@@ -200,6 +200,7 @@ TA.INT_MACD.calculate = function(startIdx, endIdx, dataShape, settings){
     * will start at the requested 'startIdx'.
     */
     tempInteger = startIdx-lookbackSignal;
+    TA.EMA.SetSettings({CandleValueIdx:this.Settings.CandleValueIdx});
     TA.EMA._int_ema( tempInteger, endIdx, dataShape, this.Settings.SlowPeriod, k1, slowEMABuffer);
 
     if( !slowEMABuffer || !slowEMABuffer.length ) {

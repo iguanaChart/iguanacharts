@@ -2035,7 +2035,7 @@ iChart.indicators = {
         "name": _t('', 'PCH (Price chanel)'),
         "value": "PCH",
         "outputRegion": "price",
-        "description":_t('', ''),
+        "description":_t('', 'price channel это уровни потдержки и сопротивления, которые меняются вместе с ценой.'),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
         ]
@@ -2190,7 +2190,7 @@ iChart.indicators = {
         "name": _t('', 'ZLEMA (Zero-Lag Moving Average Indicator)'),
         "value": "ZLEMA",
         "outputRegion": "price",
-        "description":_t('', 'Тройное экспоненциальное скользящее среднее основано на тройном скользящем среднем цены закрытия. Его назначение – исключить короткие циклы. Этот индикатор сохраняет цену закрытия в трендах, которые короче указанного периода.'),
+        "description":_t('', ''),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]
@@ -22861,6 +22861,7 @@ TA.INT_MACD.calculate = function(startIdx, endIdx, dataShape, settings){
     * will start at the requested 'startIdx'.
     */
     tempInteger = startIdx-lookbackSignal;
+    TA.EMA.SetSettings({CandleValueIdx:this.Settings.CandleValueIdx});
     TA.EMA._int_ema( tempInteger, endIdx, dataShape, this.Settings.SlowPeriod, k1, slowEMABuffer);
 
     if( !slowEMABuffer || !slowEMABuffer.length ) {
@@ -25553,22 +25554,13 @@ TA.ZLEMA._lookback = function(optInTimePeriod) {
 };
 
 TA.ZLEMA.calculate = function(startIdx, endIdx, dataShape, settings) {
-    var outBegIdx, outNBElement,
-        firstEMA = [],
+    var firstEMA = [],
         secondEMA = [],
         tempBuffer = [],
         zlema1 = [],
         zlema2 = [],
-        k,
-        firstEMABegIdx,
-        firstEMANbElement,
-        secondEMABegIdx,
-        secondEMANbElement,
-        thirdEMABegIdx,
-        thirdEMANbElement,
-        tempInt, outIdx, lookbackTotal, lookbackEMA,
-        firstEMAIdx, secondEMAIdx,
-        retCode, outReal = [];
+        lookbackTotal, lookbackEMA,
+        outReal = [];
 
     this.SetSettings(settings);
 
@@ -25602,7 +25594,6 @@ TA.ZLEMA.calculate = function(startIdx, endIdx, dataShape, settings) {
     for (var i=0; i< secondEMA.length; i++) {
         zlema1[i] = firstEMA[i+lookbackEMA] + firstEMA[i + lookbackEMA] - secondEMA[i];
     }
-
 
     for (var i=0; i<lookbackEMA; i++) {
         zlema1.splice(0,0,0);
