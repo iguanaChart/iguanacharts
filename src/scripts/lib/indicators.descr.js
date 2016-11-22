@@ -124,6 +124,19 @@ iChart.indicators = {
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
         ]
     },
+    "ELDR":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "outputNames": ['Bull','Bear','Rays'],
+        "name": _t('', 'ELDR (Лучи Элдера)'),
+        "value": "ELDR",
+        "outputRegion": "self",
+        "description":_t('', 'Индикатор Лучи Элдера поможет вам оценить, в какой момент времени «быки» и «медведи» становятся слабее или сильнее.') +
+        ' ' + '' + _t('15840', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":13}
+        ]
+    },
     "EMA":{
         "type": 'TA_LIB',
         "output": 1,
@@ -194,6 +207,17 @@ iChart.indicators = {
             ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
+    "PCH":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "name": _t('', 'PCH (Price chanel)'),
+        "value": "PCH",
+        "outputRegion": "price",
+        "description":_t('', 'price channel это уровни потдержки и сопротивления, которые меняются вместе с ценой.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
+        ]
+    },
     "PSAR":{
         "type": 'TA_LIB',
         "output": 1,
@@ -251,6 +275,18 @@ iChart.indicators = {
         "description":_t('4846', 'Стандартное отклонение используется для обозначения волатильности и показывает, например, разницу между значениями цены закрытия и ее скользящего среднего.'),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "STOCH":{
+        "type": 'TA_LIB',
+        "output": 2,
+        "name": _t('', 'STOCH (Вероятностный индикатор)'),
+        "value": "STOCH",
+        "description":_t('', 'Вероятностный индикатор помогает находить изменения трендов, обнаруживая моменты, когда цены закрытия приближаются к низким ценам на рынке, имеющем восходящий тренд, и когда цены закрытия близки к высоким ценам на рынке, имеющем нисходящий тренд.'),
+        "parameters":[
+            {"Code":"PeriodFastK", "Name":_t('', 'Краткосрочный период %K'), "Value":5},
+            {"Code":"PeriodSlowK", "Name":_t('', 'Долгосрочный период %K'), "Value":3},
+            {"Code":"PeriodSlowD", "Name":_t('', 'Период %D'), "Value":3}
         ]
     },
     "TEMA":{
@@ -324,6 +360,17 @@ iChart.indicators = {
         "description":_t('4861', 'Взвешенное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние данные имеют в вычислении больший вес.'),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":9}
+        ]
+    },
+    "ZLEMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('', 'ZLEMA (Zero-Lag Moving Average Indicator)'),
+        "value": "ZLEMA",
+        "outputRegion": "price",
+        "description":_t('', ''),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]
     },
     "TRPLN":{

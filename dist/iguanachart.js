@@ -1946,6 +1946,19 @@ iChart.indicators = {
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
         ]
     },
+    "ELDR":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "outputNames": ['Bull','Bear','Rays'],
+        "name": _t('', 'ELDR (Лучи Элдера)'),
+        "value": "ELDR",
+        "outputRegion": "self",
+        "description":_t('', 'Индикатор Лучи Элдера поможет вам оценить, в какой момент времени «быки» и «медведи» становятся слабее или сильнее.') +
+        ' ' + '' + _t('15840', 'Подробнее.') + '</a>',
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":13}
+        ]
+    },
     "EMA":{
         "type": 'TA_LIB',
         "output": 1,
@@ -2016,6 +2029,17 @@ iChart.indicators = {
             ' ' + '<a target="_blank" href="http://www.nettrader.ru/education/book/5434">' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[]
     },
+    "PCH":{
+        "type": 'TA_LIB',
+        "output": 3,
+        "name": _t('', 'PCH (Price chanel)'),
+        "value": "PCH",
+        "outputRegion": "price",
+        "description":_t('', ''),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
+        ]
+    },
     "PSAR":{
         "type": 'TA_LIB',
         "output": 1,
@@ -2073,6 +2097,18 @@ iChart.indicators = {
         "description":_t('4846', 'Стандартное отклонение используется для обозначения волатильности и показывает, например, разницу между значениями цены закрытия и ее скользящего среднего.'),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":10}
+        ]
+    },
+    "STOCH":{
+        "type": 'TA_LIB',
+        "output": 2,
+        "name": _t('', 'STOCH (Вероятностный индикатор)'),
+        "value": "STOCH",
+        "description":_t('', 'Вероятностный индикатор помогает находить изменения трендов, обнаруживая моменты, когда цены закрытия приближаются к низким ценам на рынке, имеющем восходящий тренд, и когда цены закрытия близки к высоким ценам на рынке, имеющем нисходящий тренд.'),
+        "parameters":[
+            {"Code":"PeriodFastK", "Name":_t('', 'Краткосрочный период %K'), "Value":5},
+            {"Code":"PeriodSlowK", "Name":_t('', 'Долгосрочный период %K'), "Value":3},
+            {"Code":"PeriodSlowD", "Name":_t('', 'Период %D'), "Value":3}
         ]
     },
     "TEMA":{
@@ -2146,6 +2182,17 @@ iChart.indicators = {
         "description":_t('4861', 'Взвешенное скользящее среднее – это среднее значение данных, рассчитанное за некий период времени, причем последние данные имеют в вычислении больший вес.'),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":9}
+        ]
+    },
+    "ZLEMA":{
+        "type": 'TA_LIB',
+        "output": 1,
+        "name": _t('', 'ZLEMA (Zero-Lag Moving Average Indicator)'),
+        "value": "ZLEMA",
+        "outputRegion": "price",
+        "description":_t('', 'Тройное экспоненциальное скользящее среднее основано на тройном скользящем среднем цены закрытия. Его назначение – исключить короткие циклы. Этот индикатор сохраняет цену закрытия в трендах, которые короче указанного периода.'),
+        "parameters":[
+            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]
     },
     "TRPLN":{
@@ -22105,6 +22152,86 @@ TA.DPO._lookback = function(optInTimePeriod) {
 
 
 if (!!TA.INDICATOR_TEMPLATE)
+    TA.ELDR = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.ELDR = {};
+
+TA.ELDR.name = 'ELDR';
+TA.ELDR.type = 'line';
+
+TA.ELDR.DefaultSettings = {
+    TimePeriod: 13,
+    MAType: TA.MATypes.EMA
+};
+
+TA.ELDR.Settings = {};
+
+TA.ELDR._lookback = function(TimePeriod, MAType) {
+    if( !TimePeriod )
+        TimePeriod = this.DefaultSettings.TimePeriod;
+    else if( (TimePeriod < 1) || (TimePeriod > 100000) )
+        return -1;
+
+    if( !MAType)
+        MAType = this.DefaultSettings.MAType;
+    else if( (MAType < 0) || (MAType > 8) )
+        return -1;
+
+    return TA.MA._lookback( TimePeriod, MAType );
+};
+
+TA.ELDR.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var EMA = [],
+        Bulls = [],
+        Bears = [],
+        ELDR = [],
+        Signal = [],
+        Smooth = [],
+        tempBuffer = [],
+        SmoothPeriod = 2;
+
+    this.SetSettings(settings);
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
+
+    lookbackTotal = TA.EMA._lookback(this.Settings.TimePeriod);
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+    EMA = localMA.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: TA.CLOSE});
+
+    for(var i=0; i < EMA.length; i++) {
+        Bulls[i] = dataShape[i+lookbackTotal][TA.HIGH] - EMA[i];
+        Bears[i] = dataShape[i+lookbackTotal][TA.LOW] - EMA[i];
+        ELDR[i] = ((dataShape[i+lookbackTotal][TA.HIGH] + dataShape[i+lookbackTotal][TA.LOW]) / 2) - EMA[i];
+    }
+
+    ELDR.forEach(function(n,i){tempBuffer[i] = [n]});
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+    Signal = localMA.calculate(0, tempBuffer.length-1, tempBuffer, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: 0});
+
+    for (var i=0; i<this.Settings.TimePeriod-1; i++) {
+        Signal.splice(0,0,0);
+    }
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+    Smooth = localMA.calculate(0, tempBuffer.length-1, tempBuffer, {TimePeriod: SmoothPeriod, MAType: this.Settings.MAType, CandleValueIdx: 0});
+
+    for (var i=0; i<SmoothPeriod-1; i++) {
+        Smooth.splice(0,0,0);
+    }
+
+    return {"ELDR": ELDR, "Signal": Signal, "Smooth": Smooth};
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.EMA = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.EMA = {};
@@ -23310,6 +23437,66 @@ TA.OBV.calculate = function(startIdx, endIdx, dataShape, settings) {
     return outReal;
 };
 if (!!TA.INDICATOR_TEMPLATE)
+    TA.PCH = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.PCH = {};
+
+TA.PCH.name = 'PCH';
+TA.PCH.type = 'line';
+
+TA.PCH.DefaultSettings = {
+    TimePeriod: 13
+};
+
+TA.PCH.Settings = {};
+
+
+TA.PCH._lookback = function(optInTimePeriod) {
+    if (!optInTimePeriod)
+        optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((optInTimePeriod < 1) || (optInTimePeriod > 100000))
+        return -1;
+    if (optInTimePeriod > 1)
+        return optInTimePeriod;
+    else
+        return 1;
+};
+
+TA.PCH.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var outReal = [];
+    var high = [];
+    var middle = [];
+    var low = [];
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+    this.SetSettings(settings);
+
+    var lookback = this._lookback(this.Settings.TimePeriod);
+
+    for(var i = lookback - 1; i<=endIdx; i++) {
+        var high20 = dataShape[i][TA.HIGH];
+        var low20 = dataShape[i][TA.LOW];
+        for(var j = i-lookback+1; j<=i; j++) {
+            if(dataShape[j][TA.HIGH] > high20) {
+                high20 = dataShape[j][TA.HIGH];
+            }
+            if(dataShape[j][TA.LOW] < low20) {
+                low20 = dataShape[j][TA.LOW];
+            }
+        }
+        high.push(high20);
+        low.push(low20);
+        middle.push((high20 + low20) / 2);
+    }
+
+    outReal = {high: high, low: low, middle: middle};
+
+    return outReal;
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.PLUS_DI = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.PLUS_DI = {};
@@ -24258,6 +24445,230 @@ TA.STDDEV.initChart = function (dataShape, hcOptions, ticker) {
 TA.STDDEV.SetSettings(TA.STDDEV.DefaultSettings);
 
 if (!!TA.INDICATOR_TEMPLATE)
+    TA.STOCH = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.STOCH = {};
+
+TA.STOCH.name = 'STOCH';
+TA.STOCH.type = 'line';
+
+TA.STOCH.DefaultSettings = {
+    PeriodFastK: 5,
+    PeriodSlowK: 3,
+    PeriodSlowD: 3,
+    SlowKMAType: TA.MATypes.SMA,
+    SlowDMAType: TA.MATypes.SMA
+};
+
+TA.STOCH.Settings = {};
+
+TA.STOCH.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var outSlowK = [];
+    var outSlowD = [];
+
+    var lowest, highest, tmp, diff;
+    var tempBuffer = [];
+    var outIdx, lowestIdx, highestIdx;
+    var lookbackTotal, lookbackK, lookbackKSlow, lookbackDSlow;
+    var trailingIdx, today, i;
+
+    if(!!settings)
+        this.SetSettings(settings);
+
+    if(!startIdx)
+        startIdx = 0;
+
+    if(!endIdx)
+        endIdx = dataShape.length-1;
+
+    if( startIdx < 0 )
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if( (endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+
+    if( !dataShape || !dataShape.length )
+        throw 'TA_BAD_PARAM';
+
+    if( !this.Settings.PeriodFastK )
+        this.Settings.PeriodFastK = this.DefaultSettings.PeriodFastK;
+    else if( (this.Settings.PeriodFastK < 1) || (this.Settings.PeriodFastK > 100000) )
+        throw 'TA_BAD_PARAM';
+
+
+    if( !this.Settings.PeriodSlowK )
+        this.Settings.PeriodSlowK = this.DefaultSettings.PeriodSlowK;
+    else if( (this.Settings.PeriodSlowK < 1) || (this.Settings.PeriodSlowK > 100000) )
+        throw 'TA_BAD_PARAM';
+
+
+    if( !this.Settings.PeriodSlowD )
+        this.Settings.PeriodSlowD = this.DefaultSettings.PeriodSlowD;
+    else if( (this.Settings.PeriodSlowD < 1) || (this.Settings.PeriodSlowD > 100000) )
+        throw 'TA_BAD_PARAM';
+
+    if (this.Settings.SlowKMAType)
+        this.Settings.SlowKMAType = this.DefaultSettings.SlowKMAType;
+    else if ((this.Settings.SlowKMAType < 0) || (this.Settings.SlowKMAType > 8))
+        throw 'TA_BAD_PARAM';
+
+    if (this.Settings.SlowDMAType)
+        this.Settings.SlowDMAType = this.DefaultSettings.SlowDMAType;
+    else if ((this.Settings.SlowDMAType < 0) || (this.Settings.SlowDMAType > 8))
+        throw 'TA_BAD_PARAM';
+
+    if (!outSlowK)
+        throw 'TA_BAD_PARAM';
+
+    if (!outSlowD)
+        throw 'TA_BAD_PARAM';
+
+    lookbackK      = this.Settings.PeriodFastK - 1;
+    lookbackKSlow  = TA.MA._lookback( this.Settings.PeriodSlowK, this.Settings.SlowKMAType );
+    lookbackDSlow  = TA.MA._lookback( this.Settings.PeriodSlowD, this.Settings.SlowDMAType );
+    lookbackTotal  = lookbackK + lookbackDSlow + lookbackKSlow;
+
+    /* Move up the start index if there is not
+     * enough initial data.
+     */
+    if( startIdx < lookbackTotal )
+        startIdx = lookbackTotal;
+
+    /* Make sure there is still something to evaluate. */
+    if( startIdx > endIdx )
+    {
+        /* Succeed... but no data in the output. */
+        return {slowK: [], slowD: []};
+    }
+
+    /* Proceed with the calculation for the requested range.
+     * Note that this algorithm allows the input and
+     * output to be the same buffer.
+     */
+    outIdx = 0;
+
+    /* Calculate just enough K for ending up with the caller
+     * requested range. (The range of k must consider all
+     * the lookback involve with the smoothing).
+     */
+    trailingIdx = startIdx-lookbackTotal;
+    today       = trailingIdx+lookbackK;
+    lowestIdx   = highestIdx = -1;
+    diff = highest = lowest  = 0.0;
+
+    /* Do the K calculation */
+    while( today <= endIdx )
+    {
+        /* Set the lowest low */
+        tmp = dataShape[today][TA.LOW];
+        if( lowestIdx < trailingIdx )
+        {
+            lowestIdx = trailingIdx;
+            lowest = dataShape[lowestIdx][TA.LOW];
+            i = lowestIdx;
+            while( ++i<=today )
+            {
+                tmp = dataShape[i][TA.LOW];
+                if( tmp < lowest )
+                {
+                    lowestIdx = i;
+                    lowest = tmp;
+                }
+            }
+            diff = (highest - lowest)/100.0;
+        }
+        else if( tmp <= lowest )
+        {
+            lowestIdx = today;
+            lowest = tmp;
+            diff = (highest - lowest)/100.0;
+        }
+
+        /* Set the highest high */
+        tmp = dataShape[today][TA.HIGH];
+        if( highestIdx < trailingIdx )
+        {
+            highestIdx = trailingIdx;
+            highest = dataShape[highestIdx][TA.HIGH];
+            i = highestIdx;
+            while( ++i<=today )
+            {
+                tmp = dataShape[i][TA.HIGH];
+                if( tmp > highest )
+                {
+                    highestIdx = i;
+                    highest = tmp;
+                }
+            }
+            diff = (highest - lowest)/100.0;
+        }
+        else if( tmp >= highest )
+        {
+            highestIdx = today;
+            highest = tmp;
+            diff = (highest - lowest)/100.0;
+        }
+
+        /* Calculate stochastic. */
+        if( diff != 0.0 )
+            tempBuffer[outIdx++] = [(dataShape[today][TA.CLOSE]-lowest)/diff];
+        else
+            tempBuffer[outIdx++] = [0.0];
+
+        trailingIdx++;
+        today++;
+    }
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.PeriodSlowK, MAType: this.Settings.SlowKMAType});
+    outSlowK = localMA.calculate(0, outIdx-1, tempBuffer, {TimePeriod: this.Settings.PeriodSlowK, MAType: this.Settings.SlowKMAType, CandleValueIdx: 0});
+
+    var outNBElement = outSlowK.length;
+
+    outSlowK.forEach(function(n,i){tempBuffer[i] = [n]});
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.PeriodSlowK, MAType: this.Settings.SlowKMAType});
+    outSlowD = localMA.calculate(0, outNBElement-1, tempBuffer, {TimePeriod: this.Settings.PeriodSlowD, MAType: this.Settings.SlowDMAType, CandleValueIdx: 0});
+
+    //outSlowD.forEach(function(n,i){outSlowD[i] = [n]});
+
+    outSlowK = outSlowK.slice(lookbackDSlow);
+
+    return {slowK: outSlowK, slowD: outSlowD};
+};
+
+TA.STOCH._lookback = function( optInPeriodFastK, optInPeriodSlowK, optInPeriodSlowD, optInSlowKMAType, optInSlowDMAType ) {
+
+    if( !optInPeriodFastK )
+        optInPeriodFastK = this.DefaultSettings.PeriodFastK;
+    else if( (optInPeriodFastK < 1) || (optInPeriodFastK > 100000) )
+        return -1;
+
+    if( !optInPeriodSlowK )
+        optInPeriodSlowK = this.DefaultSettings.PeriodSlowK;
+    else if( (optInPeriodSlowK < 1) || (optInPeriodSlowK > 100000) )
+        return -1;
+
+    if( !optInSlowKMAType)
+        optInSlowKMAType = this.DefaultSettings.SlowKMAType;
+    else if( (optInSlowKMAType < 0) || (optInSlowKMAType > 8) )
+        return -1;
+
+    if( !optInPeriodSlowD )
+        optInPeriodSlowD = this.DefaultSettings.PeriodSlowD;
+    else if( (optInPeriodSlowD < 1) || (optInPeriodSlowD > 100000) )
+        return -1;
+
+    if( !optInSlowDMAType)
+        optInSlowDMAType = this.DefaultSettings.SlowDMAType;
+    else if( (optInSlowDMAType < 0) || (optInSlowDMAType > 8) )
+        return -1;
+
+    var retValue = optInPeriodFastK - 1;
+    retValue += TA.MA._lookback( optInPeriodSlowK, optInSlowKMAType );
+    retValue += TA.MA._lookback( optInPeriodSlowD, optInSlowDMAType );
+
+    return retValue;
+};
+if (!!TA.INDICATOR_TEMPLATE)
     TA.TEMA = TA.INDICATOR_TEMPLATE.Create();
 else
     TA.TEMA = {};
@@ -25115,6 +25526,109 @@ TA.WMA.initChart = function (dataShape, hcOptions, ticker) {
 
 TA.WMA.SetSettings(TA.WMA.DefaultSettings);
 
+if (!!TA.INDICATOR_TEMPLATE)
+    TA.ZLEMA = TA.INDICATOR_TEMPLATE.Create();
+else
+    TA.ZLEMA = {};
+
+TA.ZLEMA.name = 'ZLEMA';
+TA.ZLEMA.type = 'line';
+
+TA.ZLEMA.DefaultSettings = {
+    CandleValueIdx: TA.CLOSE,
+    TimePeriod: 12
+};
+
+TA.ZLEMA.Settings = {};
+
+
+TA.ZLEMA._lookback = function(optInTimePeriod) {
+    var retValue;
+    if (!optInTimePeriod)
+        optInTimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
+        return -1;
+    retValue = TA.EMA._lookback(optInTimePeriod);
+    return retValue;
+};
+
+TA.ZLEMA.calculate = function(startIdx, endIdx, dataShape, settings) {
+    var outBegIdx, outNBElement,
+        firstEMA = [],
+        secondEMA = [],
+        tempBuffer = [],
+        zlema1 = [],
+        zlema2 = [],
+        k,
+        firstEMABegIdx,
+        firstEMANbElement,
+        secondEMABegIdx,
+        secondEMANbElement,
+        thirdEMABegIdx,
+        thirdEMANbElement,
+        tempInt, outIdx, lookbackTotal, lookbackEMA,
+        firstEMAIdx, secondEMAIdx,
+        retCode, outReal = [];
+
+    this.SetSettings(settings);
+
+    if (startIdx < 0)
+        throw 'TA_OUT_OF_RANGE_START_INDEX';
+    if ((endIdx < 0) || (endIdx < startIdx))
+        throw 'TA_OUT_OF_RANGE_END_INDEX';
+    if (!dataShape || !dataShape.length) throw 'TA_BAD_PARAM';
+    if (!this.Settings.TimePeriod)
+        this.Settings.TimePeriod = this.DefaultSettings.TimePeriod;
+    else if ((this.Settings.TimePeriod < 2) || (this.Settings.TimePeriod > 100000))
+        throw 'TA_BAD_PARAM';
+
+    lookbackEMA = TA.EMA._lookback(this.Settings.TimePeriod);
+
+    lookbackTotal = lookbackEMA;
+    if (startIdx < lookbackTotal)
+        startIdx = lookbackTotal;
+    if (startIdx > endIdx) {
+        return outReal;
+    }
+
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+    firstEMA = localMA.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: TA.CLOSE});
+    firstEMA.forEach(function(n,i){tempBuffer[i] = [n]});
+
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+    secondEMA = localMA.calculate(startIdx, tempBuffer.length-1, tempBuffer, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: 0});
+
+    for (var i=0; i< secondEMA.length; i++) {
+        zlema1[i] = firstEMA[i+lookbackEMA] + firstEMA[i + lookbackEMA] - secondEMA[i];
+    }
+
+
+    for (var i=0; i<lookbackEMA; i++) {
+        zlema1.splice(0,0,0);
+    }
+
+/*
+    var lag = Math.floor((this.Settings.TimePeriod-1) / 2);
+    var EmaData = [];
+
+    for (var i = lag; i<=endIdx; i++) {
+        EmaData.push(dataShape[i][TA.CLOSE] + (dataShape[i][TA.CLOSE] - dataShape[i-lag][TA.CLOSE]));
+    }
+
+    EmaData.forEach(function(n,i){tempBuffer[i] = [n]});
+    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
+    var secondEMA = localMA.calculate(0, tempBuffer.length-1, tempBuffer, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: 0});
+
+    zlema2 = secondEMA;
+
+    for (var i=0; i<lag; i++) {
+        zlema2.splice(0,0,0);
+    }*/
+
+    return {out1: zlema1/*, out2: zlema2*/};
+
+};
 
 
 /*
@@ -25512,7 +26026,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             params = params || this.getDefaultParams(INDICATOR);
 
             var chartSeries = this.getData();
-            var taData = TA.BBANDS.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
 
             var Series = this.createSeries(INDICATOR, index);
             //------------------------------------------------------------------------------------------------------------------------
@@ -25574,7 +26088,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.AD.justifyCalculate(0, chartSeries.length-1, chartSeries);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -25628,7 +26142,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.ADOSC.justifyCalculate(0, chartSeries.length-1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -25679,7 +26193,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.ADX.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -25734,7 +26248,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
 
             var taData = {};
             var chartSeries = this.getData();
-            taData['ADX'] = TA.ADX.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            taData['ADX'] = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData['ADX'].length; j++) {
                 Series[0].points.push([taData['ADX'][j] === 0 ? null : taData['ADX'][j]]);
             }
@@ -25808,7 +26322,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             };
 
             var chartSeries = this.getData();
-            var taData = TA.AROON.justifyCalculate(0, chartSeries.length-1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params);
 
             var Series = this.createSeries(INDICATOR, index);
 
@@ -25877,7 +26391,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.ATR.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -25929,7 +26443,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.CCI.justifyCalculate(0, chartSeries.length-1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -25981,7 +26495,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.CHV.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26032,7 +26546,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.DPO.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26062,7 +26576,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.EMA.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
 
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
@@ -26082,7 +26596,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             var INDICATOR = 'ENV';
             params = params || this.getDefaultParams(INDICATOR);
             var chartSeries = this.getData();
-            var taData = TA.ENV.justifyCalculate(0, chartSeries.length - 1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params, 1);
 
             var Series = this.createSeries(INDICATOR, index);
             //------------------------------------------------------------------------------------------------------------------------
@@ -26118,7 +26632,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             params = params || this.getDefaultParams(INDICATOR);
 
             var chartSeries = this.getData();
-            var taData = TA.MACD.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
 
             var indicatorArea = new iChart.Charting.ChartArea({ "chart": this.chart });
             indicatorArea.axisX.showLabels = false;
@@ -26194,7 +26708,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.MEDPRICE.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26240,7 +26754,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.MFI.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26288,7 +26802,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.OBV.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26319,7 +26833,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].chartType = "Point";
 
             var chartSeries = this.getData();
-            var taData = TA.SAR.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
 
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
@@ -26367,7 +26881,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].chartArea = indicatorArea.name;
 
             var chartSeries = this.getData();
-            var taData = TA.ROC.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26419,7 +26933,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.RSI.justifyCalculate(0, chartSeries.length-1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params);
 
             for(var j=0; j<taData.length; j++) {
 
@@ -26453,7 +26967,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.SMA.justifyCalculate(0, chartSeries.length - 1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params, 1);
             for (var j = 0; j < taData.length; j++) {
 
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
@@ -26502,7 +27016,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].chartArea = indicatorArea.name;
 
             var chartSeries = this.getData();
-            var taData = TA.STDDEV.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26532,7 +27046,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.TEMA.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26557,7 +27071,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.TRIMA.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26581,7 +27095,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.TYPPRICE.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26624,7 +27138,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].indicatorIndex = index;
 
             var chartSeries = this.getData();
-            var taData = TA.VPT.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26654,7 +27168,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.WCLPRICE.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26701,7 +27215,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].indicatorIndex = index;
 
             var chartSeries = this.getData();
-            var taData = TA.WILLR.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
@@ -26731,7 +27245,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].labels = this.getLabels(Series[0], params);
 
             var chartSeries = this.getData();
-            var taData = TA.WMA.justifyCalculate(0, chartSeries.length - 1, chartSeries, params, 1);
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params, 1);
 
             for (var j = 0; j < taData.length; j++) {
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
@@ -26745,6 +27259,218 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             this.removeIndicator(index);
         }
     };
+
+    iChart.Charting.TA.prototype.STOCH = function (enable, index, params) {
+        if(enable) {
+            var INDICATOR = 'STOCH',
+                areaName = 'ChartAreaI_' + INDICATOR;
+            params = params || this.getDefaultParams(INDICATOR);
+
+            var indicatorArea = new iChart.Charting.ChartArea({ "chart": this.chart });
+            indicatorArea.axisX.showLabels = false;
+            indicatorArea.enabled = true;
+            indicatorArea.xSeries = this.chart.areas[0].xSeries;
+            indicatorArea.ySeries = [];
+            indicatorArea.name = areaName;
+            indicatorArea.title = INDICATOR;
+
+            indicatorArea.onClose = function ()
+            {
+                this.chart.clearIndicators(this);
+            };
+
+            var chartSeries = this.getData();
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+
+            var Series = this.createSeries(INDICATOR, index);
+
+            Series[0].params = params;
+            Series[0].indicatorIndex = index;
+            Series[0].labels = this.getLabels(Series[0], params, 'K');
+
+            for (var j = 0; j < taData['slowK'].length; j++) {
+                Series[0].points.push([taData['slowK'][j] === 0 ? null : taData['slowK'][j]]);
+            }
+            indicatorArea.ySeries.push(Series[0]);
+
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[1].params = params;
+            Series[1].indicatorIndex = index;
+            Series[1].labels = this.getLabels(Series[1], params, "D");
+
+            for (var j = 0; j < taData['slowD'].length; j++) {
+                Series[1].points.push([taData['slowD'][j] === 0 ? null : taData['slowD'][j]]);
+            }
+            indicatorArea.ySeries.push(Series[1]);
+
+            this.chart.areas.push(indicatorArea);
+
+            for (var i = 0; i < this.chart.areas.length; ++i)
+            {
+                this.chart.areas[i].setMinMax();
+            }
+
+            $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
+            this.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
+
+        } else {
+            this.removeIndicator(index);
+        }
+    };
+
+    iChart.Charting.TA.prototype.ELDR = function (enable, index, params) {
+        if(enable) {
+            var INDICATOR = 'ELDR',
+                areaName = 'ChartAreaI_' + INDICATOR;
+            params = params || this.getDefaultParams(INDICATOR);
+
+            var indicatorArea = new iChart.Charting.ChartArea({ "chart": this.chart });
+            indicatorArea.axisX.showLabels = false;
+            indicatorArea.enabled = true;
+            indicatorArea.xSeries = this.chart.areas[0].xSeries;
+            indicatorArea.ySeries = [];
+            indicatorArea.name = areaName;
+            indicatorArea.title = INDICATOR;
+
+            indicatorArea.onClose = function ()
+            {
+                this.chart.clearIndicators(this);
+            };
+
+            var chartSeries = this.getData();
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+
+            var Series = this.createSeries(INDICATOR, index);
+
+
+            Series[0].params = params;
+            Series[0].indicatorIndex = index;
+            Series[0].chartType = "Column";
+            Series[0].labels = this.getLabels(Series[0], params);
+
+            for (var j = 0; j < taData['ELDR'].length; j++) {
+                Series[0].points.push([taData['ELDR'][j] === 0 ? null : taData['ELDR'][j]]);
+            }
+            indicatorArea.ySeries.push(Series[0]);
+
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[1].params = params;
+            Series[1].indicatorIndex = index;
+            Series[1].name = 'Signal';
+            Series[1].labels = this.getLabels(Series[1], params);
+
+            for (var j = 0; j < taData['Signal'].length; j++) {
+                Series[1].points.push([taData['Signal'][j] === 0 ? null : taData['Signal'][j]]);
+            }
+            indicatorArea.ySeries.push(Series[1]);
+
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[2].params = params;
+            Series[2].indicatorIndex = index;
+            Series[2].name = 'Smooth';
+            Series[2].labels = this.getLabels(Series[2], {p:2});
+
+            for (var j = 0; j < taData['Smooth'].length; j++) {
+                Series[2].points.push([taData['Smooth'][j] === 0 ? null : taData['Smooth'][j]]);
+            }
+            indicatorArea.ySeries.push(Series[2]);
+
+
+            this.chart.areas.push(indicatorArea);
+
+            for (var i = 0; i < this.chart.areas.length; ++i)
+            {
+                this.chart.areas[i].setMinMax();
+            }
+
+            $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
+            this.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
+
+        } else {
+            this.removeIndicator(index);
+        }
+    };
+
+    iChart.Charting.TA.prototype.ZLEMA = function (enable, index, params) {
+        if(enable) {
+            var INDICATOR = 'ZLEMA';
+            params = params || this.getDefaultParams(INDICATOR);
+
+            var chartSeries = this.getData();
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+
+            var Series = this.createSeries(INDICATOR, index);
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[0].labels = this.getLabels(Series[0], params);
+            Series[0].params = params;
+            //Series[0].chartType = "Point";
+
+            for (var j = 0; j < taData['out1'].length; j++) {
+                Series[0].points.push([taData['out1'][j] === 0 ? null : taData['out1'][j]]);
+            }
+            this.chart.areas[0].ySeries.push(Series[0]);
+
+            //------------------------------------------------------------------------------------------------------------------------
+            /*Series[1].labels = this.getLabels(Series[1], params);
+            Series[1].params = params;
+
+            for (var j = 0; j < taData['out2'].length; j++) {
+                Series[1].points.push([taData['out2'][j] === 0 ? null : taData['out2'][j]]);
+            }
+            this.chart.areas[0].ySeries.push(Series[1]);*/
+
+            $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
+            this.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": false});
+        } else {
+            this.removeIndicator(index);
+        }
+    };
+
+    iChart.Charting.TA.prototype.PCH = function (enable, index, params) {
+        if(enable) {
+            var INDICATOR = 'PCH';
+            params = params || this.getDefaultParams(INDICATOR);
+
+            var chartSeries = this.getData();
+            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+
+            var Series = this.createSeries(INDICATOR, index);
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[0].labels = this.getLabels(Series[0], params, ' Upper');
+            Series[0].params = params;
+            //Series[0].chartType = "Point";
+
+            for (var j = 0; j < taData['high'].length; j++) {
+                Series[0].points.push([taData['high'][j] === 0 ? null : taData['high'][j]]);
+            }
+            this.chart.areas[0].ySeries.push(Series[0]);
+
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[1].labels = this.getLabels(Series[1], params, ' Lower');
+            Series[1].params = params;
+
+            for (var j = 0; j < taData['low'].length; j++) {
+                Series[1].points.push([taData['low'][j] === 0 ? null : taData['low'][j]]);
+            }
+            this.chart.areas[0].ySeries.push(Series[1]);
+
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[2].labels = this.getLabels(Series[2], params, ' Middle');
+            Series[2].params = params;
+
+            for (var j = 0; j < taData['middle'].length; j++) {
+                Series[2].points.push([taData['middle'][j] === 0 ? null : taData['middle'][j]]);
+            }
+            this.chart.areas[0].ySeries.push(Series[2]);
+
+
+            $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
+            this.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": false});
+        } else {
+            this.removeIndicator(index);
+        }
+    };
+
 
     iChart.Charting.TA.prototype.analyseResistSupport = function (TimePeriod) {
 
