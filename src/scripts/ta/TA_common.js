@@ -617,7 +617,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
 
             var taData = {};
             var chartSeries = this.getData();
-            taData['ADX'] = TA[INDICATOR].justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
+            taData['ADX'] = TA.ADX.justifyCalculate(0, chartSeries.length-1, chartSeries, params, 1);
             for(var j=0; j<taData['ADX'].length; j++) {
                 Series[0].points.push([taData['ADX'][j] === 0 ? null : taData['ADX'][j]]);
             }
@@ -1202,7 +1202,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             Series[0].chartType = "Point";
 
             var chartSeries = this.getData();
-            var taData = TA[INDICATOR].justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
+            var taData = TA.SAR.justifyCalculate(0, chartSeries.length - 1, chartSeries, params);
             for (var j = 0; j < taData.length; j++) {
 
                 Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
@@ -1529,7 +1529,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
 
     iChart.Charting.TA.prototype.WCLPRICE = function (enable, index, params) {
         if(enable) {
-            var INDICATOR = 'RSI';
+            var INDICATOR = 'WCLPRICE';
             params = params || this.getDefaultParams(INDICATOR);
 
             var Series = this.createSeries(INDICATOR, index);
