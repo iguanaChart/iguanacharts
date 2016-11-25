@@ -259,6 +259,9 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
                 }
                 if (indicatorIndex.length) {
                     if (a.ySeries.length === 0) {
+                        if(typeof a.overlay != "undefined") {
+                            $(a.overlay.canvas).remove();
+                        }
                         var removed = this.chart.areas.splice(i, 1);
                         removed[0].dispose();
                         --i;
@@ -1642,7 +1645,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             indicatorArea.ySeries = [];
             indicatorArea.name = areaName;
             indicatorArea.title = INDICATOR;
-            indicatorArea.overlay = new iChart.Charting.ChartAreaLayer(this.chart);
+            //indicatorArea.overlay = new iChart.Charting.ChartAreaLayer(this.chart);
 
             indicatorArea.onClose = function ()
             {
