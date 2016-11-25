@@ -15,23 +15,16 @@ TA.ZLEMA.Settings = {};
 
 
 TA.ZLEMA._lookback = function(optInTimePeriod) {
-    var retValue;
-    if (!optInTimePeriod)
-        optInTimePeriod = this.DefaultSettings.TimePeriod;
-    else if ((optInTimePeriod < 2) || (optInTimePeriod > 100000))
-        return -1;
-    retValue = TA.EMA._lookback(optInTimePeriod);
-    return retValue;
+    return 0;
 };
 
 TA.ZLEMA.calculate = function(startIdx, endIdx, dataShape, settings) {
     var firstEMA = [],
         secondEMA = [],
         tempBuffer = [],
-        zlema1 = [],
-        zlema2 = [],
+        zlema = [],
         lookbackTotal, lookbackEMA,
-        outReal = [];
+        outReal = zlema;
 
     this.SetSettings(settings);
 
@@ -54,40 +47,18 @@ TA.ZLEMA.calculate = function(startIdx, endIdx, dataShape, settings) {
         return outReal;
     }
 
+    var k = TA.PER_TO_K(this.Settings.TimePeriod);
+    var lag = Math.ceil((this.Settings.TimePeriod-1) / 2.0);
+    var zlema = [];
 
-    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
-    firstEMA = localMA.calculate(startIdx, endIdx, dataShape, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: TA.CLOSE});
-    firstEMA.forEach(function(n,i){tempBuffer[i] = [n]});
-
-    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
-    secondEMA = localMA.calculate(startIdx, tempBuffer.length-1, tempBuffer, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: 0});
-
-    for (var i=0; i< secondEMA.length; i++) {
-        zlema1[i] = firstEMA[i+lookbackEMA] + firstEMA[i + lookbackEMA] - secondEMA[i];
+    for (var i = 0; i<=endIdx; i++) {
+        if(i < lag) {
+            zlema[i] = dataShape[i][TA.CLOSE];
+        } else {
+            zlema[i] = k * (2 * dataShape[i][TA.CLOSE] - dataShape[i - lag][TA.CLOSE]) + (1 - k) * zlema[i -1];
+        }
     }
 
-    for (var i=0; i<lookbackEMA; i++) {
-        zlema1.splice(0,0,0);
-    }
-
-/*
-    var lag = Math.floor((this.Settings.TimePeriod-1) / 2);
-    var EmaData = [];
-
-    for (var i = lag; i<=endIdx; i++) {
-        EmaData.push(dataShape[i][TA.CLOSE] + (dataShape[i][TA.CLOSE] - dataShape[i-lag][TA.CLOSE]));
-    }
-
-    EmaData.forEach(function(n,i){tempBuffer[i] = [n]});
-    var localMA = TA.MA.Create({TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType});
-    var secondEMA = localMA.calculate(0, tempBuffer.length-1, tempBuffer, {TimePeriod: this.Settings.TimePeriod, MAType: this.Settings.MAType, CandleValueIdx: 0});
-
-    zlema2 = secondEMA;
-
-    for (var i=0; i<lag; i++) {
-        zlema2.splice(0,0,0);
-    }*/
-
-    return {out1: zlema1/*, out2: zlema2*/};
+    return zlema;
 
 };

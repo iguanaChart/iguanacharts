@@ -1642,6 +1642,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             indicatorArea.ySeries = [];
             indicatorArea.name = areaName;
             indicatorArea.title = INDICATOR;
+            indicatorArea.overlay = new iChart.Charting.ChartAreaLayer(this.chart);
 
             indicatorArea.onClose = function ()
             {
@@ -1671,6 +1672,18 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
                 Series[1].points.push([taData['slowD'][j] === 0 ? null : taData['slowD'][j]]);
             }
             indicatorArea.ySeries.push(Series[1]);
+
+            var element = indicatorArea.overlay.createElement("HorizontalLine");
+            element.points = [{'x':$.now(), 'y':20}];
+            element.hasSettings = true;
+            element.setSettings({drawLabel: false, strokeStyle: "#ff5555", lineWidth: 1});
+            indicatorArea.overlay.history.push(element);
+
+            var element = indicatorArea.overlay.createElement("HorizontalLine");
+            element.points = [{'x':$.now(), 'y':80}];
+            element.hasSettings = true;
+            element.setSettings({drawLabel: false, strokeStyle: "#ff5555", lineWidth: 1});
+            indicatorArea.overlay.history.push(element);
 
             this.chart.areas.push(indicatorArea);
 
@@ -1744,6 +1757,17 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             }
             indicatorArea.ySeries.push(Series[2]);
 
+            //------------------------------------------------------------------------------------------------------------------------
+            Series[3].params = params;
+            Series[3].indicatorIndex = index;
+            Series[3].name = 'EMA';
+            Series[3].labels = this.getLabels(Series[3], params);
+
+            for (var j = 0; j < taData['EMA'].length; j++) {
+                Series[3].points.push([taData['EMA'][j] === 0 ? null : taData['EMA'][j]]);
+            }
+
+            this.chart.areas[0].ySeries.push(Series[3]);
 
             this.chart.areas.push(indicatorArea);
 
@@ -1772,21 +1796,11 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             //------------------------------------------------------------------------------------------------------------------------
             Series[0].labels = this.getLabels(Series[0], params);
             Series[0].params = params;
-            //Series[0].chartType = "Point";
 
-            for (var j = 0; j < taData['out1'].length; j++) {
-                Series[0].points.push([taData['out1'][j] === 0 ? null : taData['out1'][j]]);
+            for (var j = 0; j < taData.length; j++) {
+                Series[0].points.push([taData[j] === 0 ? null : taData[j]]);
             }
             this.chart.areas[0].ySeries.push(Series[0]);
-
-            //------------------------------------------------------------------------------------------------------------------------
-            /*Series[1].labels = this.getLabels(Series[1], params);
-            Series[1].params = params;
-
-            for (var j = 0; j < taData['out2'].length; j++) {
-                Series[1].points.push([taData['out2'][j] === 0 ? null : taData['out2'][j]]);
-            }
-            this.chart.areas[0].ySeries.push(Series[1]);*/
 
             $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
             this.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": false});
@@ -1805,33 +1819,23 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
 
             var Series = this.createSeries(INDICATOR, index);
             //------------------------------------------------------------------------------------------------------------------------
-            Series[0].labels = this.getLabels(Series[0], params, ' Upper');
+            Series[0].labels = this.getLabels(Series[0], params, ' Lower');
             Series[0].params = params;
             //Series[0].chartType = "Point";
 
-            for (var j = 0; j < taData['high'].length; j++) {
-                Series[0].points.push([taData['high'][j] === 0 ? null : taData['high'][j]]);
+            for (var j = 0; j < taData['low'].length; j++) {
+                Series[0].points.push([taData['low'][j] === 0 ? null : taData['low'][j]]);
             }
             this.chart.areas[0].ySeries.push(Series[0]);
 
             //------------------------------------------------------------------------------------------------------------------------
-            Series[1].labels = this.getLabels(Series[1], params, ' Lower');
+            Series[1].labels = this.getLabels(Series[1], params, ' Upper');
             Series[1].params = params;
 
-            for (var j = 0; j < taData['low'].length; j++) {
-                Series[1].points.push([taData['low'][j] === 0 ? null : taData['low'][j]]);
+            for (var j = 0; j < taData['high'].length; j++) {
+                Series[1].points.push([taData['high'][j] === 0 ? null : taData['high'][j]]);
             }
             this.chart.areas[0].ySeries.push(Series[1]);
-
-            //------------------------------------------------------------------------------------------------------------------------
-            Series[2].labels = this.getLabels(Series[2], params, ' Middle');
-            Series[2].params = params;
-
-            for (var j = 0; j < taData['middle'].length; j++) {
-                Series[2].points.push([taData['middle'][j] === 0 ? null : taData['middle'][j]]);
-            }
-            this.chart.areas[0].ySeries.push(Series[2]);
-
 
             $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
             this.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": false});

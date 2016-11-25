@@ -76,5 +76,5 @@ TA.ELDR.calculate = function(startIdx, endIdx, dataShape, settings) {
         Smooth.splice(0,0,0);
     }
 
-    return {"ELDR": ELDR, "Signal": Signal, "Smooth": Smooth};
+    return {"ELDR": ELDR, "Signal": Signal, "Smooth": Smooth, "EMA": EMA};
 };

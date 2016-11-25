@@ -272,6 +272,9 @@
             //area = $.extend (true, this.chart.areas[i], userSettings[area.name]);
             //area = $.extend (true, this.chart.areas[i], this.chart.env.userSettings.chartSettings.areaSettings);
             this.renderArea(this.chart.areas[i], context);
+            if(typeof this.chart.areas[i].overlay != "undefined") {
+                this.chart.areas[i].overlay.update(this.chart.areas[i]);
+            }
         }
     };
 

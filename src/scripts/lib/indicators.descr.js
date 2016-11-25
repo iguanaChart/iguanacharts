@@ -126,7 +126,7 @@ iChart.indicators = {
     },
     "ELDR":{
         "type": 'TA_LIB',
-        "output": 3,
+        "output": 4,
         "outputNames": ['Bull','Bear','Rays'],
         "name": _t('', 'ELDR (Лучи Элдера)'),
         "value": "ELDR",
@@ -215,7 +215,8 @@ iChart.indicators = {
         "outputRegion": "price",
         "description":_t('', 'price channel это уровни потдержки и сопротивления, которые меняются вместе с ценой.'),
         "parameters":[
-            {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":20}
+            {"Code":"TimePeriodLower", "Name":_t('', 'Период Lower'), "Value":20},
+            {"Code":"TimePeriodUpper", "Name":_t('', 'Период Upper'), "Value":20}
         ]
     },
     "PSAR":{
