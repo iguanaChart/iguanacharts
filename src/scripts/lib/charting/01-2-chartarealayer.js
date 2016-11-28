@@ -894,7 +894,18 @@
         {
             delete this.history[i].testContext;
         }
-        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+        var $canvas = $('canvas#' + area.name);
+        if($canvas.length) {
+            this.canvas = $canvas.get(0);
+            this.context = this.canvas.getContext("2d");
+            this.offset = this.chart._containerSize.offset;
+        } else {
+            this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+            if (this.canvas) {
+                $(this.canvas).attr('id', this.area.name)
+            }
+        }
+
         this.render();
     };
 

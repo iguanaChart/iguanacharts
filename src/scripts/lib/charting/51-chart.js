@@ -171,6 +171,9 @@
 
                 if (a.ySeries.length === 0)
                 {
+                    if(typeof a.overlay != "undefined") {
+                        $(a.overlay.canvas).remove();
+                    }
                     var removed = this.areas.splice(i, 1);
                     removed[0].dispose();
                     --i;

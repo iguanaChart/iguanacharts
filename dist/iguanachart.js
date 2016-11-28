@@ -3633,7 +3633,18 @@ iChart.indicators = {
         {
             delete this.history[i].testContext;
         }
-        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+        var $canvas = $('canvas#' + area.name);
+        if($canvas.length) {
+            this.canvas = $canvas.get(0);
+            this.context = this.canvas.getContext("2d");
+            this.offset = this.chart._containerSize.offset;
+        } else {
+            this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+            if (this.canvas) {
+                $(this.canvas).attr('id', this.area.name)
+            }
+        }
+
         this.render();
     };
 
@@ -12293,6 +12304,9 @@ iChart.indicators = {
 
                 if (a.ySeries.length === 0)
                 {
+                    if(typeof a.overlay != "undefined") {
+                        $(a.overlay.canvas).remove();
+                    }
                     var removed = this.areas.splice(i, 1);
                     removed[0].dispose();
                     --i;
@@ -26978,7 +26992,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.AD = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'AD',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             var indicatorArea = new iChart.Charting.ChartArea({ "chart": this.chart });
@@ -27023,7 +27037,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.ADOSC = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'ADOSC',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27075,7 +27089,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.ADX = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'ADX',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27126,7 +27140,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.ADXDI = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'ADXDI',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27207,7 +27221,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.AROON = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'AROON',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27272,7 +27286,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.ATR = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'ATR',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27324,7 +27338,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.CCI = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'CCI',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27376,7 +27390,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.CHV = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'CHV',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27428,7 +27442,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.DPO = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'DPO',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27538,7 +27552,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.MACD = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'MACD',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             var chartSeries = this.getData();
@@ -27635,7 +27649,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.MFI = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'MFI',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27687,7 +27701,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.OBV = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'OBV',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             var indicatorArea = new iChart.Charting.ChartArea({"chart": this.chart});
@@ -27761,7 +27775,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.ROC = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'ROC',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27814,7 +27828,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.RSI = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'RSI',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -27827,6 +27841,20 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
                 indicatorArea.ySeries = [];
                 indicatorArea.name = areaName;
                 indicatorArea.title = '';
+                indicatorArea.overlay = new iChart.Charting.ChartAreaLayer(this.chart);
+
+                var element = indicatorArea.overlay.createElement("HorizontalLine");
+                element.points = [{'x':$.now(), 'y':30}];
+                element.hasSettings = true;
+                element.setSettings({drawLabel: false, strokeStyle: "#ff5555", lineWidth: 1});
+                indicatorArea.overlay.history.push(element);
+
+                var element = indicatorArea.overlay.createElement("HorizontalLine");
+                element.points = [{'x':$.now(), 'y':70}];
+                element.hasSettings = true;
+                element.setSettings({drawLabel: false, strokeStyle: "#ff5555", lineWidth: 1});
+                indicatorArea.overlay.history.push(element);
+
                 this.chart.areas.push(indicatorArea);
             }
 
@@ -27896,7 +27924,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.STDDEV = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'STDDEV',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -28022,7 +28050,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.VPT = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'VPT',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             var indicatorArea = new iChart.Charting.ChartArea({"chart": this.chart});
@@ -28095,7 +28123,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.WILLR = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'WILLR',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             indicatorArea = this.findArea(areaName);
@@ -28173,7 +28201,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.STOCH = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'STOCH',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             var indicatorArea = new iChart.Charting.ChartArea({ "chart": this.chart });
@@ -28183,7 +28211,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             indicatorArea.ySeries = [];
             indicatorArea.name = areaName;
             indicatorArea.title = INDICATOR;
-            //indicatorArea.overlay = new iChart.Charting.ChartAreaLayer(this.chart);
+            indicatorArea.overlay = new iChart.Charting.ChartAreaLayer(this.chart);
 
             indicatorArea.onClose = function ()
             {
@@ -28244,7 +28272,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
     iChart.Charting.TA.prototype.ELDR = function (enable, index, params) {
         if(enable) {
             var INDICATOR = 'ELDR',
-                areaName = 'ChartAreaI_' + INDICATOR;
+                areaName = 'ChartAreaI_' + index + '_' + INDICATOR;
             params = params || this.getDefaultParams(INDICATOR);
 
             var indicatorArea = new iChart.Charting.ChartArea({ "chart": this.chart });
