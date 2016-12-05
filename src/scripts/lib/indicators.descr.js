@@ -128,10 +128,10 @@ iChart.indicators = {
         "type": 'TA_LIB',
         "output": 4,
         "outputNames": ['Bull','Bear','Rays'],
-        "name": _t('', 'ELDR (Лучи Элдера)'),
+        "name": _t('17699', 'ELDR (Лучи Элдера)'),
         "value": "ELDR",
         "outputRegion": "self",
-        "description":_t('', 'Индикатор Лучи Элдера поможет вам оценить, в какой момент времени «быки» и «медведи» становятся слабее или сильнее.') +
+        "description":_t('17700', 'Индикатор Лучи Элдера поможет вам оценить, в какой момент времени «быки» и «медведи» становятся слабее или сильнее.') +
         ' ' + '' + _t('15840', 'Подробнее.') + '</a>',
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":13}
@@ -210,13 +210,13 @@ iChart.indicators = {
     "PCH":{
         "type": 'TA_LIB',
         "output": 3,
-        "name": _t('', 'PCH (Price chanel)'),
+        "name": _t('17701', 'PCH (Price chanel)'),
         "value": "PCH",
         "outputRegion": "price",
-        "description":_t('', 'price channel это уровни потдержки и сопротивления, которые меняются вместе с ценой.'),
+        "description":_t('17702', 'price channel это уровни потдержки и сопротивления, которые меняются вместе с ценой.'),
         "parameters":[
-            {"Code":"TimePeriodLower", "Name":_t('', 'Период Lower'), "Value":20},
-            {"Code":"TimePeriodUpper", "Name":_t('', 'Период Upper'), "Value":20}
+            {"Code":"TimePeriodLower", "Name":_t('17703', 'Период Lower'), "Value":20},
+            {"Code":"TimePeriodUpper", "Name":_t('17704', 'Период Upper'), "Value":20}
         ]
     },
     "PSAR":{
@@ -281,13 +281,13 @@ iChart.indicators = {
     "STOCH":{
         "type": 'TA_LIB',
         "output": 2,
-        "name": _t('', 'STOCH (Вероятностный индикатор)'),
+        "name": _t('453', 'STOCH (Вероятностный индикатор)'),
         "value": "STOCH",
-        "description":_t('', 'Вероятностный индикатор помогает находить изменения трендов, обнаруживая моменты, когда цены закрытия приближаются к низким ценам на рынке, имеющем восходящий тренд, и когда цены закрытия близки к высоким ценам на рынке, имеющем нисходящий тренд.'),
+        "description":_t('4848', 'Вероятностный индикатор помогает находить изменения трендов, обнаруживая моменты, когда цены закрытия приближаются к низким ценам на рынке, имеющем восходящий тренд, и когда цены закрытия близки к высоким ценам на рынке, имеющем нисходящий тренд.'),
         "parameters":[
-            {"Code":"PeriodFastK", "Name":_t('', 'Краткосрочный период %K'), "Value":5},
-            {"Code":"PeriodSlowK", "Name":_t('', 'Долгосрочный период %K'), "Value":3},
-            {"Code":"PeriodSlowD", "Name":_t('', 'Период %D'), "Value":3}
+            {"Code":"PeriodFastK", "Name":_t('4849', 'Краткосрочный период %K'), "Value":5},
+            {"Code":"PeriodSlowK", "Name":_t('4850', 'Долгосрочный период %K'), "Value":3},
+            {"Code":"PeriodSlowD", "Name":_t('4851', 'Период %D'), "Value":3}
         ]
     },
     "TEMA":{
@@ -366,10 +366,10 @@ iChart.indicators = {
     "ZLEMA":{
         "type": 'TA_LIB',
         "output": 1,
-        "name": _t('', 'ZLEMA (Zero-Lag Moving Average Indicator)'),
+        "name": _t('17705', 'ZLEMA (Zero-Lag Moving Average Indicator)'),
         "value": "ZLEMA",
         "outputRegion": "price",
-        "description":_t('', ''),
+        "description":_t('13667', ''),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]
