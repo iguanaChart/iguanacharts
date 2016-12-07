@@ -124,6 +124,7 @@
     };
 
     iChart.Charting.ChartSelection.prototype.disabled = false;
+    iChart.Charting.ChartSelection.prototype.moved = false;
     iChart.Charting.ChartSelection.prototype.movestart = null;
     iChart.Charting.ChartSelection.prototype.move = null;
     iChart.Charting.ChartSelection.prototype.moveend = null;

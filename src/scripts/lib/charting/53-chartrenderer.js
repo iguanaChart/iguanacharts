@@ -114,8 +114,8 @@
             }
 
             this.renderSeriesCollection(area, context);
-            if(area.name == "ChartArea1" && area.chart.chartOptions.updateInterval) {
-                this.renderCurrentLable(area, context);
+            if(area.name == "ChartArea1" && area.chart.chartOptions.showCurrentLabel) {
+                this.renderCurrentLabel(area, context);
             }
         }
 
@@ -127,7 +127,7 @@
      * @param area
      * @param context
      */
-    iChart.Charting.ChartRenderer.prototype.renderCurrentLable = function (area, context)
+    iChart.Charting.ChartRenderer.prototype.renderCurrentLabel = function (area, context)
     {
         var x = area.innerWidth,
             value,
@@ -188,6 +188,7 @@
         context.textBaseline = "middle";
 
         context.fillStyle = fillColor;
+        context.strokeStyle = fillColor;
         context.fillRect(x+8, y-8, context.measureText(text).width+10, 15);
 
         context.beginPath();
@@ -203,8 +204,15 @@
         context.fillStyle = textColor;
         context.fillText(text, x+8, y);
 
-        if(addons) {
+        context.translate(0.5, 0.5);
+        context.beginPath();
+        context.lineWidth = 1;
+        context.moveTo(0, y);
+        context.lineTo(x, y);
+        context.stroke();
+        context.closePath();
 
+        if(addons) {
             context.beginPath();
             context.fillStyle = '#f44336';
             context.moveTo(x-4, addons.bidY-4);
@@ -229,7 +237,7 @@
 
         context.restore();
 
-    }
+    };
 
     iChart.Charting.ChartRenderer.prototype.renderAxes = function (area, context)
     {

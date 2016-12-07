@@ -1714,7 +1714,7 @@
         /// Called when the mouse selection starts.
         /// </summary>
         /// <param name="selection" type="iChart.Charting.ChartSelection">Selection container.</param>
-
+        selection.moved = false;
         switch (selection.mode)
         {
             case "pan":
@@ -1798,6 +1798,7 @@
         /// </summary>
         /// <returns type="Boolean">A value indicating whether the selection should be shown.</returns>
 
+        selection.moved = true;
         switch (selection.mode)
         {
             case "pan":
@@ -1904,6 +1905,13 @@
         else
         {
             this.container.style.cursor = this.overlay.defaultCursor = "crosshair";
+        }
+
+        if(!selection.moved && !selection.position1.insideX && selection.position1.insideY) {
+            this.chartOptions.showCurrentLabel = !this.chartOptions.showCurrentLabel;
+            this.env.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {showCurrentLabel: this.chartOptions.showCurrentLabel}]);
+            this.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
+            return;
         }
 
         var threshold = selection.mode === "pan" ? 1 : 20;

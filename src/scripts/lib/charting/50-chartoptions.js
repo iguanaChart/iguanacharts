@@ -78,6 +78,7 @@
         this.primaryToSecondaryAreaHeightRatio =  2;
         this.scrollerHeight =  80;
         this.updateInterval =  true;
+        this.showCurrentLabel =  true;
         this.yLabelsOutside =  true;
         this.percentMode =  false;
         this.futureAmount =  100;

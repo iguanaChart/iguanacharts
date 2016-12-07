@@ -12000,6 +12000,7 @@ iChart.indicators = {
         this.primaryToSecondaryAreaHeightRatio =  2;
         this.scrollerHeight =  80;
         this.updateInterval =  true;
+        this.showCurrentLabel =  true;
         this.yLabelsOutside =  true;
         this.percentMode =  false;
         this.futureAmount =  100;
@@ -13847,7 +13848,7 @@ iChart.indicators = {
         /// Called when the mouse selection starts.
         /// </summary>
         /// <param name="selection" type="iChart.Charting.ChartSelection">Selection container.</param>
-
+        selection.moved = false;
         switch (selection.mode)
         {
             case "pan":
@@ -13931,6 +13932,7 @@ iChart.indicators = {
         /// </summary>
         /// <returns type="Boolean">A value indicating whether the selection should be shown.</returns>
 
+        selection.moved = true;
         switch (selection.mode)
         {
             case "pan":
@@ -14039,6 +14041,13 @@ iChart.indicators = {
             this.container.style.cursor = this.overlay.defaultCursor = "crosshair";
         }
 
+        if(!selection.moved && !selection.position1.insideX && selection.position1.insideY) {
+            this.chartOptions.showCurrentLabel = !this.chartOptions.showCurrentLabel;
+            this.env.wrapper.trigger('iguanaChartEvents', ['chartOptionsChanged', {showCurrentLabel: this.chartOptions.showCurrentLabel}]);
+            this.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
+            return;
+        }
+
         var threshold = selection.mode === "pan" ? 1 : 20;
         if (Math.abs(selection.x2 - selection.x1) < threshold && Math.abs(selection.y2 - selection.y1) < threshold)
         {
@@ -14101,6 +14110,7 @@ iChart.indicators = {
                         this.viewport.x.min = this.viewport.x.max;
                         this.viewport.x.max = min;
                     }
+
 
                     if (deltaY !== 0 && this.viewport.y.min !== null && this.viewport.y.max !== null)
                     {
@@ -15625,8 +15635,8 @@ iChart.indicators = {
             }
 
             this.renderSeriesCollection(area, context);
-            if(area.name == "ChartArea1" && area.chart.chartOptions.updateInterval) {
-                this.renderCurrentLable(area, context);
+            if(area.name == "ChartArea1" && area.chart.chartOptions.showCurrentLabel) {
+                this.renderCurrentLabel(area, context);
             }
         }
 
@@ -15638,7 +15648,7 @@ iChart.indicators = {
      * @param area
      * @param context
      */
-    iChart.Charting.ChartRenderer.prototype.renderCurrentLable = function (area, context)
+    iChart.Charting.ChartRenderer.prototype.renderCurrentLabel = function (area, context)
     {
         var x = area.innerWidth,
             value,
@@ -15699,6 +15709,7 @@ iChart.indicators = {
         context.textBaseline = "middle";
 
         context.fillStyle = fillColor;
+        context.strokeStyle = fillColor;
         context.fillRect(x+8, y-8, context.measureText(text).width+10, 15);
 
         context.beginPath();
@@ -15714,8 +15725,15 @@ iChart.indicators = {
         context.fillStyle = textColor;
         context.fillText(text, x+8, y);
 
-        if(addons) {
+        context.translate(0.5, 0.5);
+        context.beginPath();
+        context.lineWidth = 1;
+        context.moveTo(0, y);
+        context.lineTo(x, y);
+        context.stroke();
+        context.closePath();
 
+        if(addons) {
             context.beginPath();
             context.fillStyle = '#f44336';
             context.moveTo(x-4, addons.bidY-4);
@@ -15740,7 +15758,7 @@ iChart.indicators = {
 
         context.restore();
 
-    }
+    };
 
     iChart.Charting.ChartRenderer.prototype.renderAxes = function (area, context)
     {
@@ -16576,6 +16594,7 @@ iChart.indicators = {
     };
 
     iChart.Charting.ChartSelection.prototype.disabled = false;
+    iChart.Charting.ChartSelection.prototype.moved = false;
     iChart.Charting.ChartSelection.prototype.movestart = null;
     iChart.Charting.ChartSelection.prototype.move = null;
     iChart.Charting.ChartSelection.prototype.moveend = null;
