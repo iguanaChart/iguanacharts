@@ -252,8 +252,8 @@
         var params = iChart.parseQueryString(documentHash.substr(1));
         var drawParams = _this.getDrawParams(params);
 
-        delete this._dataSettings.hash;
-        var hash = "#" + iChart.toQueryString($.extend(this._dataSettings, drawParams));
+        delete _this.viewData.chart._dataSettings.hash;
+        var hash = "#" + iChart.toQueryString($.extend(_this.viewData.chart._dataSettings, drawParams));
 
         _this.viewData.hash = hash;
         if(_this.dataSource.dataSettings.useHash == false) {
@@ -780,7 +780,7 @@
         return _this.viewData.chart.chartOptions.percentMode;
     };
 
-    this.iconsLoad = function () { 
+    this.iconsLoad = function () {
         $(["/i/admin/add.png",
             "/iguanachart/images/buy.png",
             "/iguanachart/images/down.png",
