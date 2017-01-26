@@ -803,6 +803,9 @@
                 case 'FibonacciCorrection':
                     uiClass = 'sprite-icon-f-fibonacci-correction';
                     break;
+                case 'HorizontalRange':
+                    uiClass = 'sprite-icon-h-line-double';
+                    break;
             }
 
             if(state) {
