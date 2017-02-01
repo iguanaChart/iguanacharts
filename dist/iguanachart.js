@@ -18158,7 +18158,7 @@ var iChartDataSource = {
         end: '',
     },
 
-    host: "https://beta.tradernet.ru",
+    host: "",
     url: "/api/get-hloc?",
 
     getUrl: function (params) {
