@@ -40,7 +40,8 @@ gulp.task('js', function() {
         './src/scripts/jquery.iguana-chart.js',
         './src/scripts/ta/TA_prototypes.js',
         './src/scripts/ta/functions/*',
-        './src/scripts/ta/TA_common.js'
+        './src/scripts/ta/TA_common.js',
+        './src/scripts/ta/TA_analyse_rs.js'
     ])
         .pipe(concata('iguanachart.js'))
         .pipe(gulp.dest('./dist/'));
