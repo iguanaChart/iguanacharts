@@ -532,7 +532,7 @@ iChart.Charting.TA.prototype.analyseResistSupport = function (TimePeriod , offse
             supportPoints: supportPoints,
             resistPoints: resistPoints,
             points: points,
-            lastPoint: data[data.length - 1]
+            lastPoint: {x: data.length - 1, y: data[data.length - 1][TA.CLOSE], time: data[data.length - 1][TA.FULLTIME]}
         };
     } else {
         return false;
@@ -573,6 +573,8 @@ iChart.Charting.TA.prototype.autoResistSupport = function (debug, offset) {
             this.chart.overlay.history.push(element);
         }
 
+        this.analyser(dataRS);
+
         if (debug) {
 
             var data = this.getData();
@@ -589,7 +591,7 @@ iChart.Charting.TA.prototype.autoResistSupport = function (debug, offset) {
             };
 
             element.id = 'SR_analyzer';
-            element.points = [{'x': dataRS.lastPoint[10], 'y': dataRS.lastPoint[TA.CLOSE]}];
+            element.points = [{'x': dataRS.lastPoint.time, 'y': dataRS.lastPoint.y}];
             this.chart.overlay.history.push(element);
 
 
@@ -661,4 +663,107 @@ iChart.Charting.TA.prototype.testInPast = function (offset) {
     this.clearResistSupport();
     this.autoResistSupport(1, offset);
 };
+
+iChart.Charting.TA.prototype.analyser = function (dataRS) {
+    var pResist = iChart.getLineEquation(dataRS.resistPoints[0], dataRS.resistPoints[1], dataRS.lastPoint.x);
+    var pSupport = iChart.getLineEquation(dataRS.supportPoints[0], dataRS.supportPoints[1], dataRS.lastPoint.x);
+
+
+
+    var dtResistSupport = Math.abs(pResist.y - pSupport.y);
+
+    var dtResist = pResist.y - dataRS.lastPoint.y;
+    var dtSupport = dataRS.lastPoint.y - pSupport.y;
+
+    var dtpResist = dtResist / dtResistSupport * 100;
+    var dtpSupport = dtSupport / dtResistSupport * 100;
+
+    console.log(pSupport);
+    console.log(dataRS.resistPoints[0], dataRS.resistPoints[1]);
+    console.log(dataRS.supportPoints[0], dataRS.supportPoints[1]);
+    console.log(dtpResist, dtpSupport);
+
+    if(dtpResist < 10 && dtpResist > 0) {
+        return 1;
+    } else if (dtpSupport < 10 && dtpSupport > 0) {
+        return 2;
+    }
+
+    return false;
+};
+
+iChart.Charting.TA.prototype.analyserSearch = function (offset) {
+    offset = offset || 200;
+
+    var currentSignal = 0;
+    var firstSignal = 0;
+    var lastSignal = 0;
+    var summ = 0;
+
+    for(var i=offset;i>0;i--) {
+        var dataRS = this.analyseResistSupport(8, i);
+
+        var advice = this.analyser(dataRS);
+        if(advice) {
+
+            var element = this.chart.overlay.createElement("Event");
+            element.hasSettings = true;
+            element.drawType = 'auto';
+            element.settings = {
+                color: advice == 1 ? '#f742d0' : '#085fff',
+                size: 5,
+                shape: 'triangle',
+                dataRS: dataRS,
+                pointFormatter: function () {
+                    console.log(this.dataRS);
+                }
+            };
+
+            element.id = 'SR_analyserSearch';
+            element.points = [{'x': dataRS.lastPoint.time, 'y': dataRS.lastPoint.y}];
+            this.chart.overlay.history.push(element);
+
+
+            if(currentSignal != advice) {
+
+                if(advice == 1) {
+                    summ -= dataRS.lastPoint.y
+                }
+
+                if(dataRS.extremeSupports.length > 2 || debug) {
+                    var element = this.chart.overlay.createElement("Line");
+                    element.points = [{'x': dataRS.supportPoints[0].time, 'y': dataRS.supportPoints[0].y}, {
+                        'x': dataRS.supportPoints[1].time,
+                        'y': dataRS.supportPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_analyzer';
+                    this.chart.overlay.history.push(element);
+                }
+
+                if(dataRS.extremeResist.length > 2 || debug) {
+                    var element = this.chart.overlay.createElement("Line");
+                    element.points = [{'x': dataRS.resistPoints[0].time, 'y': dataRS.resistPoints[0].y}, {
+                        'x': dataRS.resistPoints[1].time,
+                        'y': dataRS.resistPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_analyzer';
+                    this.chart.overlay.history.push(element);
+                }
+
+                currentSignal = advice;
+            }
+
+
+            this.chart.overlay.render();
+        }
+    }
+
+};
+
 
