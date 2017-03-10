@@ -25,7 +25,9 @@
             shape: 'disk', //[disk,circle,square,diamond,triangle]
             pointFormatter: function () {
                 return '';
-            }
+            },
+            onHover: function () {},
+            onOut: function () {}
         };
     };
 
@@ -154,10 +156,17 @@
         var left = coords[0].x + /*$(iChart.viewData.chart.container).position().left + */$(this.layer.chart.container).offset().left;
 
         this.drawTooltip(this.settings, top, left);
+
+        if(typeof this.settings.onHover == "function") {
+            this.settings.onHover.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.onOut = function (ctx) {
         $('#chart-element-tooltip').hide();
+        if(typeof this.settings.onOut == "function") {
+            this.settings.onOut.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.drawTooltip = function (data, top, left) {

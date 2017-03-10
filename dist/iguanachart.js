@@ -401,14 +401,14 @@
             var s = this;
 
             // bind the close event to any element with the closeClass class
-            $('.' + s.o.closeClass).bind('click.simplemodal touchend.simplemodal', function (e) {
+            $('.' + s.o.closeClass).bind('click.simplemodal', function (e) {
                 e.preventDefault();
                 s.close();
             });
 
             // bind the overlay click to the close function, if enabled
             if (s.o.modal && s.o.close && s.o.overlayClose) {
-                s.d.overlay.bind('click.simplemodal touchend.simplemodal', function (e) {
+                s.d.overlay.bind('click.simplemodal', function (e) {
                     e.preventDefault();
                     s.close();
                 });
@@ -447,10 +447,10 @@
          * Unbind events
          */
         unbindEvents: function () {
-            $('.' + this.o.closeClass).unbind('click.simplemodal touchend.simplemodal');
+            $('.' + this.o.closeClass).unbind('click.simplemodal');
             doc.unbind('keydown.simplemodal');
             wndw.unbind('.simplemodal');
-            this.d.overlay.unbind('click.simplemodal touchend.simplemodal');
+            this.d.overlay.unbind('click.simplemodal');
         },
         /*
          * Fix issues in IE6 and IE7 in quirks mode
@@ -810,7 +810,7 @@ var methods = {
             $table.append($tr);
         }
 
-        $table.on('click touchend', 'td', function(){
+        $table.on('click', 'td', function(){
             obj.value = $(this).data('color');
             obj.change.call(obj);
         });
@@ -8581,7 +8581,9 @@ iChart.indicators = {
             shape: 'disk', //[disk,circle,square,diamond,triangle]
             pointFormatter: function () {
                 return '';
-            }
+            },
+            onHover: function () {},
+            onOut: function () {}
         };
     };
 
@@ -8710,10 +8712,17 @@ iChart.indicators = {
         var left = coords[0].x + /*$(iChart.viewData.chart.container).position().left + */$(this.layer.chart.container).offset().left;
 
         this.drawTooltip(this.settings, top, left);
+
+        if(typeof this.settings.onHover == "function") {
+            this.settings.onHover.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.onOut = function (ctx) {
         $('#chart-element-tooltip').hide();
+        if(typeof this.settings.onOut == "function") {
+            this.settings.onOut.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.drawTooltip = function (data, top, left) {
@@ -19045,16 +19054,16 @@ IguanaChart = function (options) {
 
         this.uiGraphIndicatorsWindow2.show();
 
-        $(".indicators-set").off("click touchend");
-        $(".indicators-close").off("click touchend");
-        $(".indicators-set").on('click touchend', function () {
+        $(".indicators-set").off("click");
+        $(".indicators-close").off("click");
+        $(".indicators-set").on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
             _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.uiGraphIndicatorsWindow2.hide();
             return false;
         });
-        $(".indicators-close").on('click touchend', function () {
+        $(".indicators-close").on('click', function () {
             _this.uiGraphIndicatorsWindow2.hide();
             if(_this.timers.updateInterval) {_this.setScheduleUpdateState(1, _this.timers.updateInterval)}
             return false;
@@ -20000,22 +20009,22 @@ IguanaChart = function (options) {
 //----------------------------------------------------------------------------------------------------------------------
 
     $(document).on("change", ".indicatorsSelect", this.indicator_onChange);
-    $(document).on("click touchend", ".js-indicator-remove", this.removeIndicator_onClick);
-    $(document).on("click touchend", ".js-indicator-add", this.addIndicator_onClick);
+    $(document).on("click", ".js-indicator-remove", this.removeIndicator_onClick);
+    $(document).on("click", ".js-indicator-add", this.addIndicator_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
-    $(document).on("click touchend", "[name='apply']", this.apply_onClick);
-    $(document).on("click touchend", "[name='clearIndicators']", this.clearIndicators_onClick);
+    $(document).on("click", "[name='apply']", this.apply_onClick);
+    $(document).on("click", "[name='clearIndicators']", this.clearIndicators_onClick);
     $(document).on("click", "[name='pan']", this.pan_onClick);
-    $(document).on("click touchend", ".js-lineWidth." + this.name, function(){
+    $(document).on("click", ".js-lineWidth." + this.name, function(){
         _this.setIndicatorWidth(this)
     });
     //    $(document).on("click", "[name='removeAllInstruments']", this.removeAllInstruments_onClick);
     //    $(document).on("click", "[name='removeSelectedInstrument']", this.removeSelectedInstrument_onClick);
-    $(document).on("click touchend", "[name='resetZoom']", this.resetZoom_onClick);
-    //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
-    $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
-    $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("click", "[name='resetZoom']", this.resetZoom_onClick);
+    //$(document).on("click", "[name='SelectInstrument']", this.selectInstrument_onClick);
+    $(document).on("click", "[name='updateChart']", this.updateChart_onClick);
+    $(document).on("click", "[name='zoom']", this.zoom_onClick);
     $(document).on("dblclick", function () {
         _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
     });
@@ -20034,7 +20043,7 @@ IguanaChart = function (options) {
         }
     });
 
-    $(_this.wrapper).on("click touchend", ".iChart-indicator-description a", function(e){
+    $(_this.wrapper).on("click", ".iChart-indicator-description a", function(e){
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
@@ -20046,7 +20055,7 @@ IguanaChart = function (options) {
         _this.wrapper.trigger('iguanaChartEvents', ['chartResize']);
     });
 
-    $(document).on("click touchend", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
+    $(document).on("click", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
 
 };
 
@@ -20095,7 +20104,7 @@ IguanaChart = function (options) {
             //this.$topToolBarContainer.append(indicatorsDropdownHtml);
             this.chart.wrapper.find('.js-chart-ui-indicators').append(indicatorsDropdownHtml);
 
-            $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
+            $(this.chart.wrapper).off('click', '.js-add-indicator').on('click', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
                 var params = {};
                 iChart.indicators[ind].parameters.forEach(function(n){
@@ -20109,7 +20118,7 @@ IguanaChart = function (options) {
             });
 
 
-            $(this.chart.wrapper).off('click touchend', '.js-remove-indicator').on('click touchend', '.js-remove-indicator', function (e) {
+            $(this.chart.wrapper).off('click', '.js-remove-indicator').on('click', '.js-remove-indicator', function (e) {
                 var ind = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 ind.splice($(this).data('index'), 1);
                 _this.chart.dataSource.dataSettings.graphicIndicators = _this.chart.serializeIndicators(ind);
@@ -20119,7 +20128,7 @@ IguanaChart = function (options) {
                 e.preventDefault();
             });
 
-            $(this.chart.wrapper).off('click touchend', '.js-edit-indicator').on('click touchend', '.js-edit-indicator', function (e) {
+            $(this.chart.wrapper).off('click', '.js-edit-indicator').on('click', '.js-edit-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var inx = $(this).data('index');
 
@@ -20226,7 +20235,7 @@ IguanaChart = function (options) {
                 }
             }
 
-            $(document).off('click touchend', '.js-set-params-indicator').on('click touchend', '.js-set-params-indicator', function (e) {
+            $(document).off('click', '.js-set-params-indicator').on('click', '.js-set-params-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var newParams = $('.js-iChartTools-indicators-params input').serializeArray();
 
@@ -20289,7 +20298,7 @@ IguanaChart = function (options) {
             });
 
 
-            $themeConfig.on('click touchend','.js-chartOptions', function(){
+            $themeConfig.on('click','.js-chartOptions', function(){
                 switch ($(this).attr('data-value')) {
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
@@ -20306,13 +20315,13 @@ IguanaChart = function (options) {
                 }
             });
 
-            $themeConfig.on('click touchend', '.js-themeSelect', function(){
+            $themeConfig.on('click', '.js-themeSelect', function(){
                 _this.chart.wrapper.iguanaChart('setTheme', $(this).data('theme'));
                 $windowContent.find('.js-themeConfigOptions').empty().append(_this.renderThemeConfigOptions());
                 return false;
             });
 
-            $themeConfig.on('click touchend', '.js-themeSaveAs', function(){
+            $themeConfig.on('click', '.js-themeSaveAs', function(){
 
                 UIkit.modal.prompt(_t('5228', "Название") + ':', '', function(title){
                     if(title) {
@@ -20330,7 +20339,7 @@ IguanaChart = function (options) {
                 return false;
             });
 
-            $themeConfig.on('click touchend', '.js-themeDelete', function(e){
+            $themeConfig.on('click', '.js-themeDelete', function(e){
                 var name = $(this).data('name');
                 var pos = $.grep($iguanaChart.thems, function(n, i){ return (n.name == name) ? (n.i = i) : null})[0];
                 $iguanaChart.thems.splice(pos,1);
@@ -20387,7 +20396,7 @@ IguanaChart = function (options) {
                         show: function(event, api) {
                             $(this).find('.js-widthSlectorWrapper').each(function(){
                                 var $wrapper = $(this);
-                                $wrapper.off().on('click touchend', '.js-lineWidth', function(){
+                                $wrapper.off().on('click', '.js-lineWidth', function(){
                                     var value = $(this).attr('data-style');
                                     _this.chart.wrapper.iguanaChart('chartOptions', $wrapper.attr('data-option'), value);
                                     $this.find('.js-widthSlectorValue').attr('data-style', value);
@@ -20464,7 +20473,7 @@ IguanaChart = function (options) {
                 });
             });
 
-            $themeConfigOptions.find('.js-checkbox').on('click touchend', '.js-flag', function(){
+            $themeConfigOptions.find('.js-checkbox').on('click', '.js-flag', function(){
                 _this.chart.wrapper.iguanaChart('chartOptions', $(this).attr('data-option'), $(this).prop('checked'));
             });
 
@@ -20555,7 +20564,7 @@ IguanaChart = function (options) {
         };
 
         this.bindUiControls = function () {
-            this.$uiContainer.off('click touchend', '.js-chart-ui-control').on('click touchend', '.js-chart-ui-control', function (e) {
+            this.$uiContainer.off('click', '.js-chart-ui-control').on('click', '.js-chart-ui-control', function (e) {
                 var $this = $(this);
 
                 var property  = $this.data('property');
@@ -28575,8 +28584,16 @@ iChart.Charting.TA.prototype.analyseResistSupport = function (TimePeriod , offse
 
     var data = this.getData();
     var data = data.slice(0,data.length-offset);
-    var dataRsi = TA.RSI.justifyCalculate(0, data.length-1, data, {TimePeriod: TimePeriod});
     var low = [], high = [];
+
+    var dataRsi = [];
+
+    try {
+        var dataRsi = TA.RSI.justifyCalculate(0, data.length-1, data, {TimePeriod: TimePeriod});
+    } catch (e) {
+        console.log(e);
+    }
+
 
     $.each(data, function(i,n) {
         low.push(n[TA.LOW]);
@@ -29230,7 +29247,9 @@ iChart.Charting.TA.prototype.testInPast = function (offset) {
     this.autoResistSupport(1, offset);
 };
 
-iChart.Charting.TA.prototype.analyser = function (dataRS) {
+iChart.Charting.TA.prototype.analyser = function (dataRS, invert) {
+    invert = invert || 0;
+
     var pResist = iChart.getLineEquation(dataRS.resistPoints[0], dataRS.resistPoints[1], dataRS.lastPoint.x);
     var pSupport = iChart.getLineEquation(dataRS.supportPoints[0], dataRS.supportPoints[1], dataRS.lastPoint.x);
 
@@ -29244,84 +29263,166 @@ iChart.Charting.TA.prototype.analyser = function (dataRS) {
     var dtpResist = dtResist / dtResistSupport * 100;
     var dtpSupport = dtSupport / dtResistSupport * 100;
 
-    console.log(pSupport);
-    console.log(dataRS.resistPoints[0], dataRS.resistPoints[1]);
-    console.log(dataRS.supportPoints[0], dataRS.supportPoints[1]);
-    console.log(dtpResist, dtpSupport);
+    // console.log(pSupport);
+    // console.log(dataRS.resistPoints[0], dataRS.resistPoints[1]);
+    // console.log(dataRS.supportPoints[0], dataRS.supportPoints[1]);
+    // console.log(dtpResist, dtpSupport);
 
-    if(dtpResist < 10 && dtpResist > 0) {
-        return 1;
-    } else if (dtpSupport < 10 && dtpSupport > 0) {
-        return 2;
+    // if(dtpResist < 10 && dtpResist > 0) {
+    //     return invert ? 2 : 1;
+    // } else if (dtpSupport < 10 && dtpSupport > 0) {
+    //     return invert ? 1: 2;
+    // }
+    if(Math.abs(dtpResist) < 10) {
+        return invert ? 2 : 1;
+    } else if (Math.abs(dtpSupport) < 10) {
+        return invert ? 1: 2;
     }
 
     return false;
 };
 
-iChart.Charting.TA.prototype.analyserSearch = function (offset) {
-    offset = offset || 200;
+iChart.Charting.TA.prototype.analyserSearch = function (offset, invert) {
+    offset = offset || this.chart.areas[0].xSeries.length - 100;
 
+    var currentSignal = 0;
+    var firstSignal = 0;
     var lastSignal = 0;
+    var summ = 0;
+    var lastSumm = 0;
 
     for(var i=offset;i>0;i--) {
         var dataRS = this.analyseResistSupport(8, i);
 
-        var advice = this.analyser(dataRS);
+        if(!dataRS) {
+            continue;
+        }
+
+        var advice = this.analyser(dataRS, invert);
         if(advice) {
+
+            if(!firstSignal) {
+                firstSignal = advice;
+            }
 
             var element = this.chart.overlay.createElement("Event");
             element.hasSettings = true;
             element.drawType = 'auto';
-            element.settings = {
+            element.setSettings({
                 color: advice == 1 ? '#f742d0' : '#085fff',
                 size: 5,
                 shape: 'triangle',
                 dataRS: dataRS,
                 pointFormatter: function () {
-                    console.log(this.dataRS);
+                    //console.log(this.dataRS);
+                },
+                onHover: function () {
+                    var element = this.layer.chart.overlay.createElement("Line");
+                    element.points = [{'x': this.settings.dataRS.resistPoints[0].time, 'y': this.settings.dataRS.resistPoints[0].y}, {
+                        'x': this.settings.dataRS.resistPoints[1].time,
+                        'y': this.settings.dataRS.resistPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_view';
+                    this.layer.chart.overlay.history.push(element);
+
+                    var element = this.layer.chart.overlay.createElement("Line");
+                    element.points = [{'x': this.settings.dataRS.supportPoints[0].time, 'y': this.settings.dataRS.supportPoints[0].y}, {
+                        'x': this.settings.dataRS.supportPoints[1].time,
+                        'y': this.settings.dataRS.supportPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_view';
+                    this.layer.chart.overlay.history.push(element);
+
+                    var extTypeSup = "l",
+                        extTypeRes = "h";
+
+                    for (var i = 0; i < this.settings.dataRS.extremeSupports.length; i++) {
+                        var element = this.layer.chart.overlay.createElement("Trade");
+                        element.hasSettings = true;
+                        element.settings = {
+                            "type_id": 1,
+                            "qb": "",
+                            "mode": 1,
+                            "date_time": '',
+                            summ: this.settings.dataRS.extremeSupports[i]["d" + extTypeSup] / this.settings.dataRS.extremeSupports[i][extTypeSup] * 100
+                        };
+                        element.points = [{'x': this.settings.dataRS.extremeSupports[i].time, 'y': this.settings.dataRS.extremeSupports[i][extTypeSup]}];
+                        element.id = 'SR_view';
+                        this.layer.chart.overlay.history.push(element);
+                    }
+
+
+                    for (var i = 0; i < this.settings.dataRS.extremeResist.length; i++) {
+                        var element = this.layer.chart.overlay.createElement("Trade");
+                        element.hasSettings = true;
+                        element.drawType = 'auto';
+                        element.settings = {
+                            "type_id": 0,
+                            "qb": "",
+                            "mode": 1,
+                            "date_time": '',
+                            summ: this.settings.dataRS.extremeResist[i]["d" + extTypeRes] / this.settings.dataRS.extremeResist[i][extTypeRes] * 100
+                        };
+
+                        element.points = [{'x': this.settings.dataRS.extremeResist[i].time, 'y': this.settings.dataRS.extremeResist[i][extTypeRes]}];
+                        element.id = 'SR_view';
+                        this.layer.chart.overlay.history.push(element);
+                    }
+
+
+                },
+                onOut: function () {
+                    var overlayHistory = this.layer.chart.overlay.history;
+                    for(var i=0; i < overlayHistory.length; i++) {
+                        var element = overlayHistory[i];
+                        if(element.id == "SR_view") {
+                            overlayHistory.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    this.layer.chart.overlay.render();
                 }
-            };
+            });
 
             element.id = 'SR_analyserSearch';
             element.points = [{'x': dataRS.lastPoint.time, 'y': dataRS.lastPoint.y}];
             this.chart.overlay.history.push(element);
 
 
-            if(lastSignal != advice) {
+            if(currentSignal != advice) {
 
-                if(dataRS.extremeSupports.length > 2 || debug) {
-                    var element = this.chart.overlay.createElement("Line");
-                    element.points = [{'x': dataRS.supportPoints[0].time, 'y': dataRS.supportPoints[0].y}, {
-                        'x': dataRS.supportPoints[1].time,
-                        'y': dataRS.supportPoints[1].y
-                    }];
-                    element.drawType = 'auto';
-                    element.storageEnable = false;
-                    element.controlEnable = false;
-                    element.id = 'SR_analyzer';
-                    this.chart.overlay.history.push(element);
+                if(advice == 1) {
+                    summ += dataRS.lastPoint.y
+                } else {
+                    summ -= dataRS.lastPoint.y
                 }
+                console.log(advice, dataRS.lastPoint, summ);
+                lastSumm = dataRS.lastPoint.y;
 
-                if(dataRS.extremeResist.length > 2 || debug) {
-                    var element = this.chart.overlay.createElement("Line");
-                    element.points = [{'x': dataRS.resistPoints[0].time, 'y': dataRS.resistPoints[0].y}, {
-                        'x': dataRS.resistPoints[1].time,
-                        'y': dataRS.resistPoints[1].y
-                    }];
-                    element.drawType = 'auto';
-                    element.storageEnable = false;
-                    element.controlEnable = false;
-                    element.id = 'SR_analyzer';
-                    this.chart.overlay.history.push(element);
-                }
-
+                currentSignal = advice;
                 lastSignal = advice;
             }
-
 
             this.chart.overlay.render();
         }
     }
+
+    if(firstSignal == lastSignal) {
+        if(firstSignal == 1) {
+            summ -= lastSumm;
+        } else {
+            summ += lastSumm;
+        }
+    }
+
+
+    console.log("Profit: ", summ);
 
 };
 

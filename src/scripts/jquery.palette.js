@@ -70,7 +70,7 @@ var methods = {
             $table.append($tr);
         }
 
-        $table.on('click touchend', 'td', function(){
+        $table.on('click', 'td', function(){
             obj.value = $(this).data('color');
             obj.change.call(obj);
         });

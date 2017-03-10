@@ -9,8 +9,16 @@ iChart.Charting.TA.prototype.analyseResistSupport = function (TimePeriod , offse
 
     var data = this.getData();
     var data = data.slice(0,data.length-offset);
-    var dataRsi = TA.RSI.justifyCalculate(0, data.length-1, data, {TimePeriod: TimePeriod});
     var low = [], high = [];
+
+    var dataRsi = [];
+
+    try {
+        var dataRsi = TA.RSI.justifyCalculate(0, data.length-1, data, {TimePeriod: TimePeriod});
+    } catch (e) {
+        console.log(e);
+    }
+
 
     $.each(data, function(i,n) {
         low.push(n[TA.LOW]);
@@ -664,7 +672,9 @@ iChart.Charting.TA.prototype.testInPast = function (offset) {
     this.autoResistSupport(1, offset);
 };
 
-iChart.Charting.TA.prototype.analyser = function (dataRS) {
+iChart.Charting.TA.prototype.analyser = function (dataRS, invert) {
+    invert = invert || 0;
+
     var pResist = iChart.getLineEquation(dataRS.resistPoints[0], dataRS.resistPoints[1], dataRS.lastPoint.x);
     var pSupport = iChart.getLineEquation(dataRS.supportPoints[0], dataRS.supportPoints[1], dataRS.lastPoint.x);
 
@@ -678,46 +688,132 @@ iChart.Charting.TA.prototype.analyser = function (dataRS) {
     var dtpResist = dtResist / dtResistSupport * 100;
     var dtpSupport = dtSupport / dtResistSupport * 100;
 
-    console.log(pSupport);
-    console.log(dataRS.resistPoints[0], dataRS.resistPoints[1]);
-    console.log(dataRS.supportPoints[0], dataRS.supportPoints[1]);
-    console.log(dtpResist, dtpSupport);
+    // console.log(pSupport);
+    // console.log(dataRS.resistPoints[0], dataRS.resistPoints[1]);
+    // console.log(dataRS.supportPoints[0], dataRS.supportPoints[1]);
+    // console.log(dtpResist, dtpSupport);
 
-    if(dtpResist < 10 && dtpResist > 0) {
-        return 1;
-    } else if (dtpSupport < 10 && dtpSupport > 0) {
-        return 2;
+    // if(dtpResist < 10 && dtpResist > 0) {
+    //     return invert ? 2 : 1;
+    // } else if (dtpSupport < 10 && dtpSupport > 0) {
+    //     return invert ? 1: 2;
+    // }
+    if(Math.abs(dtpResist) < 10) {
+        return invert ? 2 : 1;
+    } else if (Math.abs(dtpSupport) < 10) {
+        return invert ? 1: 2;
     }
 
     return false;
 };
 
-iChart.Charting.TA.prototype.analyserSearch = function (offset) {
-    offset = offset || 200;
+iChart.Charting.TA.prototype.analyserSearch = function (offset, invert) {
+    offset = offset || this.chart.areas[0].xSeries.length - 100;
 
     var currentSignal = 0;
     var firstSignal = 0;
     var lastSignal = 0;
     var summ = 0;
+    var lastSumm = 0;
 
     for(var i=offset;i>0;i--) {
         var dataRS = this.analyseResistSupport(8, i);
 
-        var advice = this.analyser(dataRS);
+        if(!dataRS) {
+            continue;
+        }
+
+        var advice = this.analyser(dataRS, invert);
         if(advice) {
+
+            if(!firstSignal) {
+                firstSignal = advice;
+            }
 
             var element = this.chart.overlay.createElement("Event");
             element.hasSettings = true;
             element.drawType = 'auto';
-            element.settings = {
+            element.setSettings({
                 color: advice == 1 ? '#f742d0' : '#085fff',
                 size: 5,
                 shape: 'triangle',
                 dataRS: dataRS,
                 pointFormatter: function () {
-                    console.log(this.dataRS);
+                    //console.log(this.dataRS);
+                },
+                onHover: function () {
+                    var element = this.layer.chart.overlay.createElement("Line");
+                    element.points = [{'x': this.settings.dataRS.resistPoints[0].time, 'y': this.settings.dataRS.resistPoints[0].y}, {
+                        'x': this.settings.dataRS.resistPoints[1].time,
+                        'y': this.settings.dataRS.resistPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_view';
+                    this.layer.chart.overlay.history.push(element);
+
+                    var element = this.layer.chart.overlay.createElement("Line");
+                    element.points = [{'x': this.settings.dataRS.supportPoints[0].time, 'y': this.settings.dataRS.supportPoints[0].y}, {
+                        'x': this.settings.dataRS.supportPoints[1].time,
+                        'y': this.settings.dataRS.supportPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_view';
+                    this.layer.chart.overlay.history.push(element);
+
+                    var extTypeSup = "l",
+                        extTypeRes = "h";
+
+                    for (var i = 0; i < this.settings.dataRS.extremeSupports.length; i++) {
+                        var element = this.layer.chart.overlay.createElement("Trade");
+                        element.hasSettings = true;
+                        element.settings = {
+                            "type_id": 1,
+                            "qb": "",
+                            "mode": 1,
+                            "date_time": '',
+                            summ: this.settings.dataRS.extremeSupports[i]["d" + extTypeSup] / this.settings.dataRS.extremeSupports[i][extTypeSup] * 100
+                        };
+                        element.points = [{'x': this.settings.dataRS.extremeSupports[i].time, 'y': this.settings.dataRS.extremeSupports[i][extTypeSup]}];
+                        element.id = 'SR_view';
+                        this.layer.chart.overlay.history.push(element);
+                    }
+
+
+                    for (var i = 0; i < this.settings.dataRS.extremeResist.length; i++) {
+                        var element = this.layer.chart.overlay.createElement("Trade");
+                        element.hasSettings = true;
+                        element.drawType = 'auto';
+                        element.settings = {
+                            "type_id": 0,
+                            "qb": "",
+                            "mode": 1,
+                            "date_time": '',
+                            summ: this.settings.dataRS.extremeResist[i]["d" + extTypeRes] / this.settings.dataRS.extremeResist[i][extTypeRes] * 100
+                        };
+
+                        element.points = [{'x': this.settings.dataRS.extremeResist[i].time, 'y': this.settings.dataRS.extremeResist[i][extTypeRes]}];
+                        element.id = 'SR_view';
+                        this.layer.chart.overlay.history.push(element);
+                    }
+
+
+                },
+                onOut: function () {
+                    var overlayHistory = this.layer.chart.overlay.history;
+                    for(var i=0; i < overlayHistory.length; i++) {
+                        var element = overlayHistory[i];
+                        if(element.id == "SR_view") {
+                            overlayHistory.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    this.layer.chart.overlay.render();
                 }
-            };
+            });
 
             element.id = 'SR_analyserSearch';
             element.points = [{'x': dataRS.lastPoint.time, 'y': dataRS.lastPoint.y}];
@@ -727,42 +823,31 @@ iChart.Charting.TA.prototype.analyserSearch = function (offset) {
             if(currentSignal != advice) {
 
                 if(advice == 1) {
+                    summ += dataRS.lastPoint.y
+                } else {
                     summ -= dataRS.lastPoint.y
                 }
-
-                if(dataRS.extremeSupports.length > 2 || debug) {
-                    var element = this.chart.overlay.createElement("Line");
-                    element.points = [{'x': dataRS.supportPoints[0].time, 'y': dataRS.supportPoints[0].y}, {
-                        'x': dataRS.supportPoints[1].time,
-                        'y': dataRS.supportPoints[1].y
-                    }];
-                    element.drawType = 'auto';
-                    element.storageEnable = false;
-                    element.controlEnable = false;
-                    element.id = 'SR_analyzer';
-                    this.chart.overlay.history.push(element);
-                }
-
-                if(dataRS.extremeResist.length > 2 || debug) {
-                    var element = this.chart.overlay.createElement("Line");
-                    element.points = [{'x': dataRS.resistPoints[0].time, 'y': dataRS.resistPoints[0].y}, {
-                        'x': dataRS.resistPoints[1].time,
-                        'y': dataRS.resistPoints[1].y
-                    }];
-                    element.drawType = 'auto';
-                    element.storageEnable = false;
-                    element.controlEnable = false;
-                    element.id = 'SR_analyzer';
-                    this.chart.overlay.history.push(element);
-                }
+                console.log(advice, dataRS.lastPoint, summ);
+                lastSumm = dataRS.lastPoint.y;
 
                 currentSignal = advice;
+                lastSignal = advice;
             }
-
 
             this.chart.overlay.render();
         }
     }
+
+    if(firstSignal == lastSignal) {
+        if(firstSignal == 1) {
+            summ -= lastSumm;
+        } else {
+            summ += lastSumm;
+        }
+    }
+
+
+    console.log("Profit: ", summ);
 
 };
 

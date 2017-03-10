@@ -728,16 +728,16 @@
 
         this.uiGraphIndicatorsWindow2.show();
 
-        $(".indicators-set").off("click touchend");
-        $(".indicators-close").off("click touchend");
-        $(".indicators-set").on('click touchend', function () {
+        $(".indicators-set").off("click");
+        $(".indicators-close").off("click");
+        $(".indicators-set").on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
             _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.uiGraphIndicatorsWindow2.hide();
             return false;
         });
-        $(".indicators-close").on('click touchend', function () {
+        $(".indicators-close").on('click', function () {
             _this.uiGraphIndicatorsWindow2.hide();
             if(_this.timers.updateInterval) {_this.setScheduleUpdateState(1, _this.timers.updateInterval)}
             return false;
@@ -1683,22 +1683,22 @@
 //----------------------------------------------------------------------------------------------------------------------
 
     $(document).on("change", ".indicatorsSelect", this.indicator_onChange);
-    $(document).on("click touchend", ".js-indicator-remove", this.removeIndicator_onClick);
-    $(document).on("click touchend", ".js-indicator-add", this.addIndicator_onClick);
+    $(document).on("click", ".js-indicator-remove", this.removeIndicator_onClick);
+    $(document).on("click", ".js-indicator-add", this.addIndicator_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
-    $(document).on("click touchend", "[name='apply']", this.apply_onClick);
-    $(document).on("click touchend", "[name='clearIndicators']", this.clearIndicators_onClick);
+    $(document).on("click", "[name='apply']", this.apply_onClick);
+    $(document).on("click", "[name='clearIndicators']", this.clearIndicators_onClick);
     $(document).on("click", "[name='pan']", this.pan_onClick);
-    $(document).on("click touchend", ".js-lineWidth." + this.name, function(){
+    $(document).on("click", ".js-lineWidth." + this.name, function(){
         _this.setIndicatorWidth(this)
     });
     //    $(document).on("click", "[name='removeAllInstruments']", this.removeAllInstruments_onClick);
     //    $(document).on("click", "[name='removeSelectedInstrument']", this.removeSelectedInstrument_onClick);
-    $(document).on("click touchend", "[name='resetZoom']", this.resetZoom_onClick);
-    //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
-    $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
-    $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("click", "[name='resetZoom']", this.resetZoom_onClick);
+    //$(document).on("click", "[name='SelectInstrument']", this.selectInstrument_onClick);
+    $(document).on("click", "[name='updateChart']", this.updateChart_onClick);
+    $(document).on("click", "[name='zoom']", this.zoom_onClick);
     $(document).on("dblclick", function () {
         _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
     });
@@ -1717,7 +1717,7 @@
         }
     });
 
-    $(_this.wrapper).on("click touchend", ".iChart-indicator-description a", function(e){
+    $(_this.wrapper).on("click", ".iChart-indicator-description a", function(e){
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
@@ -1729,6 +1729,6 @@
         _this.wrapper.trigger('iguanaChartEvents', ['chartResize']);
     });
 
-    $(document).on("click touchend", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
+    $(document).on("click", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
 
 };
