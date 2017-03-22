@@ -2872,9 +2872,9 @@ iChart.indicators = {
 
     iChart.Charting.ChartWidgetLayer.prototype.drawCrossLines = function (ctx, xPoint, yPoint) {
 
-        for (var i = 0; i < this.chart.areas.length; ++i)
+        for (var area_i = 0; area_i < this.chart.areas.length; ++area_i)
         {
-            var area = this.chart.areas[i];
+            var area = this.chart.areas[area_i];
 
             if (area.enabled === false || area.isLayer || area.isScroller)
             {
@@ -2891,6 +2891,8 @@ iChart.indicators = {
             ctx.beginPath();
             ctx.moveTo(this.xPoint, area.offset.top);
             ctx.lineTo(this.xPoint, area.offset.top + area.innerHeight);
+
+
 
             if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight)
             {
@@ -2910,13 +2912,24 @@ iChart.indicators = {
 
                 yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
 
-                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                ctx.fillRect(area.offset.left + area.innerWidth, this.yPoint-6, area.outerWidth - area.innerWidth, 12);
+                var x = area.offset.left + area.innerWidth;
+                var y = this.yPoint;
+
+                ctx.fillStyle = this.chart.chartOptions.labelColor;
+                ctx.fillRect(x + 8, y-8, ctx.measureText(yValue).width + 10, 15);
+                ctx.beginPath();
+                ctx.moveTo(x+9, y-9);
+                ctx.lineTo(x+9, y+8);
+                ctx.lineTo(x, y);
+                ctx.lineTo(x+9, y-9);
+                ctx.lineTo(x+9, y+8);
+                ctx.closePath();
+                ctx.fill();
                 ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                 ctx.textAlign = "left";
                 ctx.textBaseline="top";
-                ctx.fillStyle = this.chart.chartOptions.labelColor;
-                ctx.fillText(yValue, area.offset.left + area.innerWidth, this.yPoint-5);
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillText(yValue, x+8, y-6);
             }
 
             ctx.save();
@@ -2924,6 +2937,18 @@ iChart.indicators = {
             var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
             var tooltips = iChart.formatDateTime(dateTime, "dd.MM.yyyy" + (this.chart.showTime() ? " HH:mm" : ""));
             var textOffset = 0;
+
+            if(area_i == 0) {
+                var dateLabel = iChart.formatDateTime(dateTime, this.chart.dateFormat);
+                var dateLabelArr = dateLabel.split("\n");
+
+                var width = ctx.measureText(dateLabelArr[0] + " " + dateLabelArr[1]).width;
+                ctx.fillStyle = this.chart.chartOptions.labelColor;
+                ctx.fillRect(this.xPoint - Math.round(width / 2) - 4, area.offset.top + area.innerHeight + 2, width + 4, 12);
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.font = 'normal ' + 8 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                ctx.fillText(dateLabelArr[0] + " " + dateLabelArr[1], this.xPoint - Math.round(width / 2), area.offset.top + area.innerHeight + 3);
+            }
 
             ctx.fillStyle = this.chart.chartOptions.backgroundColor;
             ctx.fillRect(area.offset.left, area.offset.top + area.innerHeight - 15, 100, 15);
@@ -2968,7 +2993,7 @@ iChart.indicators = {
                 textOffset += 15;
 
                 tooltips = (ySeries.labels[0] && ySeries.labels[0][2] ? ySeries.labels[0][2] : ySeries.name)  + " ";
-                
+
                 if(ySeries.points[this.xIndex]) {
 
                     if (ySeries.valuesPerPoint === 4) {
