@@ -2968,12 +2968,21 @@ iChart.indicators = {
                 textOffset += 15;
 
                 tooltips = (ySeries.labels[0] && ySeries.labels[0][2] ? ySeries.labels[0][2] : ySeries.name)  + " ";
+                
                 if(ySeries.points[this.xIndex]) {
-                    if (ySeries.kind == "HLOC") {
-                        tooltips += " H: " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider)
-                            + " L: " + iChart.formatNumber(ySeries.points[this.xIndex][1], ySeries.formatProvider)
-                            + " O: " + iChart.formatNumber(ySeries.points[this.xIndex][2], ySeries.formatProvider)
-                            + " C: " + iChart.formatNumber(ySeries.points[this.xIndex][3], ySeries.formatProvider);
+
+                    if (ySeries.valuesPerPoint === 4) {
+                        if (this.chart.isComparison) {
+                            tooltips += iChart.formatNumber(ySeries.points[this.xIndex][3], ySeries.formatProvider);
+                        } else {
+                            tooltips += " H: " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider)
+                                + " L: " + iChart.formatNumber(ySeries.points[this.xIndex][1], ySeries.formatProvider)
+                                + " O: " + iChart.formatNumber(ySeries.points[this.xIndex][2], ySeries.formatProvider)
+                                + " C: " + iChart.formatNumber(ySeries.points[this.xIndex][3], ySeries.formatProvider);
+                        }
+                    } else if (ySeries.valuesPerPoint == 2) {
+                        tooltips += " " + _t('2589', "Мин:") + " " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider)
+                                 + " " + _t('2590', "Макс:") + " " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider);
                     } else {
                         tooltips += iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider);
                     }
