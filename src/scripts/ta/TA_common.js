@@ -388,7 +388,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
         var $label = $("<span/>", { "class": "m-chart-legend-color" }).css({ "background-color": color }).html("&nbsp;");
         $label = $label.add($("<span/>", { "class": "m-chart-legend-name" }).css({ "color": color }).text(Series.name + legendParams + sufix));
         var labelHtml = $("<div/>").append($label).html();
-        return [[0, labelHtml]];
+        return [[0, labelHtml, Series.name + legendParams + sufix]];
 
     };
 

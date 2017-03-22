@@ -549,13 +549,6 @@
             {
                 this.overlay.update();
             }
-
-            if(/*!this.selection.selection && */this.chartOptions.crosshairEnable) {
-                this.crosshair = $(context.canvas).crosshair({ "areas": $.grep(this.areas, function (x) { return !x.rotate; }), "showTime": this.showTime() }, this.container);
-                this.crosshair = this.crosshair.data("crosshair");
-                var mousePos = $(window).data();
-                this.crosshair.render(mousePos.mousePosX, mousePos.mousePosY, true);
-            }
         }
 
         if (typeof FlashCanvas !== "undefined")
@@ -2173,7 +2166,7 @@
             var color = series.color ? series.color.replace(/rgba\((.+),[^,]+\)/, "rgb($1)") : '';
             var $label = $("<span/>", { "class": "m-chart-legend-color" }).css({ "background-color": color }).html("&nbsp;");
             $label = $label.add($("<span/>", { "class": "m-chart-legend-name" }).css({ "color": color }).text(series.name));
-
+            var labelText = series.name;
             var labelHtml = $("<div/>").append($label).html();
             if (series.valuesPerPoint === 4)
             {
@@ -2193,7 +2186,7 @@
             }
             else
             {
-                series.labels = [[0, labelHtml]];
+                series.labels = [[0, labelHtml, labelText]];
             }
         }
 

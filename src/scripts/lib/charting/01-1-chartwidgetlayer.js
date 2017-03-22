@@ -23,16 +23,39 @@
                 hspace: 50
             }
         };
+        this.prevX = null;
+        this.prevY = null;
+        this.prevValueX = null;
+        this.prevValueY = null;
+        this.xIndex = null;
+        this.xPoint = null;
+        this.yPoint = null;
 
         if(typeof settings != "undefined") {
             for (var widget in settings) {
                 this.widget[widget] = $.extend(this.widget[widget], settings[widget]);
             }
         }
+
+        $(chart.container).off('mousedown.WidgetLayer').off('mouseup.WidgetLayer').off('mousemove.WidgetLayer').off('mouseout.WidgetLayer');
+        $(chart.container).on('mousedown.WidgetLayer', $.proxy(this.onMouseDown, this)).
+        on('mouseup.WidgetLayer', $.proxy(this.onMouseUp, this)).
+        on('mousemove.WidgetLayer', $.proxy(this.onMouseMove, this)).
+        on('mouseout.WidgetLayer', $.proxy(this.onMmouseOut, this));
+
     };
 
     iChart.Charting.ChartWidgetLayer.prototype.clear = function ()
     {
+        if(!this.context) {
+            console.log("ERROR: No context for render");
+            return 0;
+        }
+
+        var context = this.context;
+        this.context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        this.drawWidgets(context);
+
     };
 
     iChart.Charting.ChartWidgetLayer.prototype.render = function (context)
@@ -53,6 +76,7 @@
 
         context.save();
         this.drawWidgets(context);
+        this.drawCrosshair(context, {});
         context.restore();
 
         if (typeof FlashCanvas !== "undefined")
@@ -108,6 +132,58 @@
             }
         }
     };
+
+    iChart.Charting.ChartWidgetLayer.prototype.onMouseDown = function (e) {
+
+    };
+    iChart.Charting.ChartWidgetLayer.prototype.onMouseUp = function (e) {
+
+    };
+    iChart.Charting.ChartWidgetLayer.prototype.onMmouseOut = function (e) {
+        this.clear();
+    };
+    iChart.Charting.ChartWidgetLayer.prototype.onMouseMove = function (e) {
+
+        if (typeof this.offset === "undefined")
+        {
+            return;
+        }
+
+        var pageX = e.pageX;
+        var pageY = e.pageY;
+
+        if (pageX === this.pageX && pageY === this.pageY)
+        {
+            return;
+        }
+
+        this.pageX = pageX;
+        this.pageY = pageY;
+
+
+        var x = Math.round(e.pageX - this.offset.left - this.area.innerOffset.left);
+        var y = Math.round(e.pageY - this.offset.top - this.area.innerOffset.top);
+
+        if (x === this.prevX && y === this.prevY)
+        {
+            // Minor performance optimization: do not handle the same coordinates twice in a row.
+            return;
+        }
+
+        this.prevX = x;
+        this.prevY = y;
+
+        var valueX = 1000 * this.area.getXValue(x);
+        var valueY = this.area.getYValue(y);
+
+        this.prevValueX = valueX;
+        this.prevValueY = valueY;
+
+
+
+        this.render();
+    };
+
 
     iChart.Charting.ChartWidgetLayer.prototype.widgetCurPrice = function (ctx, options)
     {
@@ -271,6 +347,195 @@
         }
 
         ctx.restore();
+
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawCrosshair = function (ctx, options) {
+
+        var offset = {};
+        offset.left = Math.round(this.pageX - this.offset.left);
+        offset.top = Math.round(this.pageY - this.offset.top);
+
+        var inside = {};
+        inside.x = false;
+        inside.y = false;
+
+        for (var i = 0; i < this.chart.areas.length; ++i)
+        {
+            var area = this.chart.areas[i];
+            if (area.enabled === false || area.isLayer || area.isScroller)
+            {
+                continue;
+            }
+
+            if(area.chart.chartOptions.tooltipPosition == 'top') {
+                var top = area.innerOffset.top - 20;
+            } else if(area.chart.chartOptions.tooltipPosition == 'bottom') {
+                var top = area.innerOffset.top - 38 + area.innerHeight;
+            }
+
+            inside[i] = {};
+            inside.x = (inside[i].x = offset.left >= area.innerOffset.left && offset.left <= area.innerOffset.left + area.innerWidth) || inside.x;
+            inside.y = (inside[i].y = offset.top >= area.innerOffset.top && offset.top <= area.innerOffset.top + area.innerHeight) || inside.y;
+        }
+
+        if (!inside.x || !inside.y)
+        {
+            return;
+        }
+
+
+        var area = this.chart.areas[0];
+        if (area.xSeries.length === 0)
+        {
+            return;
+        }
+
+        var xIndex = area.getXIndex(offset.left - area.innerOffset.left);
+        if (xIndex < area.viewport.x.bounded.min || xIndex > area.viewport.x.bounded.max)
+        {
+            return;
+        }
+
+        this.xIndex = Math.max(area.viewport.x.bounded.min, Math.min(area.viewport.x.bounded.max, Math.round(xIndex)));
+
+        this.xPoint = Math.round(this.area.getXPositionByIndex(this.xIndex));
+        this.yPoint = this.prevY;
+
+        ctx.save();
+        ctx.translate(0.5, 0.5);
+        this.drawCrossLines(ctx);
+        ctx.restore();
+
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawCrossLines = function (ctx, xPoint, yPoint) {
+
+        for (var i = 0; i < this.chart.areas.length; ++i)
+        {
+            var area = this.chart.areas[i];
+
+            if (area.enabled === false || area.isLayer || area.isScroller)
+            {
+                continue;
+            }
+
+            ctx.save();
+
+            if (ctx.setLineDash) {
+                ctx.setLineDash([4, 3]);
+            }
+
+            ctx.strokeStyle="#999999";
+            ctx.beginPath();
+            ctx.moveTo(this.xPoint, area.offset.top);
+            ctx.lineTo(this.xPoint, area.offset.top + area.innerHeight);
+
+            if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight)
+            {
+                if (ctx.setLineDash) {
+                    ctx.setLineDash([4, 3]);
+                }
+
+                ctx.moveTo(area.offset.left, this.yPoint);
+                ctx.lineTo(area.offset.left + area.innerWidth, this.yPoint);
+            }
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+
+            if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
+                var yValue = area.getYValue(this.yPoint - area.offset.top);
+
+                yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
+
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillRect(area.offset.left + area.innerWidth, this.yPoint-6, area.outerWidth - area.innerWidth, 12);
+                ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                ctx.textAlign = "left";
+                ctx.textBaseline="top";
+                ctx.fillStyle = this.chart.chartOptions.labelColor;
+                ctx.fillText(yValue, area.offset.left + area.innerWidth, this.yPoint-5);
+            }
+
+            ctx.save();
+
+            var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
+            var tooltips = iChart.formatDateTime(dateTime, "dd.MM.yyyy" + (this.chart.showTime() ? " HH:mm" : ""));
+            var textOffset = 0;
+
+            ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+            ctx.fillRect(area.offset.left, area.offset.top + area.innerHeight - 15, 100, 15);
+            ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+            ctx.textAlign = "left";
+            ctx.textBaseline="top";
+
+            textOffset = ctx.measureText(tooltips).width + 20;
+            ctx.fillStyle = this.chart.chartOptions.labelColor;
+            ctx.fillText(tooltips, area.offset.left, area.offset.top + area.innerHeight - 12);
+
+            for(var j = 0; j < area.ySeries.length; j++) {
+                var ySeries = area.ySeries[j];
+
+                if(!ySeries.points[this.xIndex] || ySeries.points[this.xIndex].length == 4 && ySeries.points[this.xIndex][0] == null) {
+                    continue;
+                }
+
+                if(ySeries.valuesPerPoint > 1) {
+                    var yValue = ySeries.points[this.xIndex] ? ySeries.points[this.xIndex][ySeries.dotIndex] : null;
+                } else {
+                    var yValue = ySeries.points[this.xIndex] ? ySeries.points[this.xIndex][0] : null;
+                }
+
+                if(yValue) {
+
+                    ctx.beginPath();
+                    ctx.fillStyle = ySeries.color;
+                    ctx.arc(this.xPoint, area.offset.top + Math.round(area.getYPosition(yValue)), 4, 0, 2 * Math.PI, true);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillRect(area.offset.left + textOffset, area.offset.top + area.innerHeight - 15, 15, 15);
+
+                ctx.beginPath();
+                ctx.fillStyle = ySeries.color;
+                ctx.arc(area.offset.left + textOffset, area.offset.top + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
+                ctx.closePath();
+                ctx.fill();
+                textOffset += 15;
+
+                tooltips = (ySeries.labels[0] && ySeries.labels[0][2] ? ySeries.labels[0][2] : ySeries.name)  + " ";
+                if(ySeries.points[this.xIndex]) {
+                    if (ySeries.kind == "HLOC") {
+                        tooltips += " H: " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider)
+                            + " L: " + iChart.formatNumber(ySeries.points[this.xIndex][1], ySeries.formatProvider)
+                            + " O: " + iChart.formatNumber(ySeries.points[this.xIndex][2], ySeries.formatProvider)
+                            + " C: " + iChart.formatNumber(ySeries.points[this.xIndex][3], ySeries.formatProvider);
+                    } else {
+                        tooltips += iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider);
+                    }
+
+                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillRect(area.offset.left + textOffset, area.offset.top + area.innerHeight - 15, ctx.measureText(tooltips).width + 20, 15);
+
+                    ctx.fillStyle = this.chart.chartOptions.labelColor;
+                    ctx.fillText(tooltips, area.offset.left + textOffset, area.offset.top + area.innerHeight - 12);
+
+
+                    textOffset += ctx.measureText(tooltips).width + 20;
+                }
+
+            }
+
+            ctx.restore();
+
+            //console.log(area);
+        }
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawPoints = function (ctx) {
 
     }
 
