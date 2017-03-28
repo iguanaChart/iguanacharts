@@ -2872,73 +2872,80 @@ iChart.indicators = {
 
     iChart.Charting.ChartWidgetLayer.prototype.drawCrossLines = function (ctx, xPoint, yPoint) {
 
-        for (var area_i = 0; area_i < this.chart.areas.length; ++area_i)
-        {
-            var area = this.chart.areas[area_i];
+        var areas = this.chart.areas;
 
-            if (area.enabled === false || area.isLayer || area.isScroller)
+        for (var area_i = 0; area_i < areas.length; ++area_i)
+        {
+            var area = areas[area_i];
+
+            if (area.enabled === false || area.isScroller)
             {
                 continue;
             }
 
-            ctx.save();
+            if(area.isLayer) {
+                var parentArea = $.grep(areas, function (x) { return x.name === area.parentName })[0];
+                area.textOffset = parentArea.textOffset;
+            } else {
+                area.textOffset = 0;
+            };
 
-            if (ctx.setLineDash) {
-                ctx.setLineDash([4, 3]);
-            }
+            if(!area.isLayer) {
+                ctx.save();
 
-            ctx.strokeStyle="#999999";
-            ctx.beginPath();
-            ctx.moveTo(this.xPoint, area.offset.top);
-            ctx.lineTo(this.xPoint, area.offset.top + area.innerHeight);
-
-
-
-            if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight)
-            {
                 if (ctx.setLineDash) {
                     ctx.setLineDash([4, 3]);
                 }
 
-                ctx.moveTo(area.offset.left, this.yPoint);
-                ctx.lineTo(area.offset.left + area.innerWidth, this.yPoint);
-            }
-            ctx.stroke();
-            ctx.closePath();
-            ctx.restore();
-
-            if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
-                var yValue = area.getYValue(this.yPoint - area.offset.top);
-
-                yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
-
-                var x = area.offset.left + area.innerWidth;
-                var y = this.yPoint;
-
-                ctx.fillStyle = this.chart.chartOptions.labelColor;
-                ctx.fillRect(x + 8, y-8, ctx.measureText(yValue).width + 10, 15);
+                ctx.strokeStyle = "#999999";
                 ctx.beginPath();
-                ctx.moveTo(x+9, y-9);
-                ctx.lineTo(x+9, y+8);
-                ctx.lineTo(x, y);
-                ctx.lineTo(x+9, y-9);
-                ctx.lineTo(x+9, y+8);
+                ctx.moveTo(this.xPoint, area.offset.top);
+                ctx.lineTo(this.xPoint, area.offset.top + area.innerHeight);
+
+                if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
+                    if (ctx.setLineDash) {
+                        ctx.setLineDash([4, 3]);
+                    }
+
+                    ctx.moveTo(area.offset.left, this.yPoint);
+                    ctx.lineTo(area.offset.left + area.innerWidth, this.yPoint);
+                }
+                ctx.stroke();
                 ctx.closePath();
-                ctx.fill();
-                ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
-                ctx.textAlign = "left";
-                ctx.textBaseline="top";
-                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                ctx.fillText(yValue, x+8, y-6);
+                ctx.restore();
+
+
+                if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
+                    var yValue = area.getYValue(this.yPoint - area.offset.top);
+
+                    yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
+
+                    var x = area.offset.left + area.innerWidth;
+                    var y = this.yPoint;
+
+                    ctx.fillStyle = this.chart.chartOptions.labelColor;
+                    ctx.fillRect(x + 8, y - 8, ctx.measureText(yValue).width + 10, 15);
+                    ctx.beginPath();
+                    ctx.moveTo(x + 9, y - 9);
+                    ctx.lineTo(x + 9, y + 8);
+                    ctx.lineTo(x, y);
+                    ctx.lineTo(x + 9, y - 9);
+                    ctx.lineTo(x + 9, y + 8);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillText(yValue, x + 8, y - 6);
+                }
             }
 
             ctx.save();
 
             var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
-            var tooltips = iChart.formatDateTime(dateTime, "dd.MM.yyyy" + (this.chart.showTime() ? " HH:mm" : ""));
-            var textOffset = 0;
 
-            if(area_i == 0) {
+            if(area_i == 0 && !area.isLayer) {
                 var dateLabel = iChart.formatDateTime(dateTime, this.chart.dateFormat);
                 var dateLabelArr = dateLabel.split("\n");
 
@@ -2950,15 +2957,18 @@ iChart.indicators = {
                 ctx.fillText(dateLabelArr[0] + " " + dateLabelArr[1], this.xPoint - Math.round(width / 2), area.offset.top + area.innerHeight + 3);
             }
 
-            ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-            ctx.fillRect(area.offset.left, area.offset.top + area.innerHeight - 15, 100, 15);
-            ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
-            ctx.textAlign = "left";
-            ctx.textBaseline="top";
+            if(!area.isLayer) {
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillRect(area.offset.left, area.offset.top + area.innerHeight - 15, 100, 15);
+                ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
 
-            textOffset = ctx.measureText(tooltips).width + 20;
-            ctx.fillStyle = this.chart.chartOptions.labelColor;
-            ctx.fillText(tooltips, area.offset.left, area.offset.top + area.innerHeight - 12);
+                var tooltips = iChart.formatDateTime(dateTime, "dd.MM.yyyy" + (this.chart.showTime() ? " HH:mm" : ""));
+                area.textOffset += ctx.measureText(tooltips).width + 20;
+                ctx.fillStyle = this.chart.chartOptions.labelColor;
+                ctx.fillText(tooltips, area.offset.left, area.offset.top + area.innerHeight - 12);
+            }
 
             for(var j = 0; j < area.ySeries.length; j++) {
                 var ySeries = area.ySeries[j];
@@ -2983,14 +2993,14 @@ iChart.indicators = {
                 }
 
                 ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                ctx.fillRect(area.offset.left + textOffset, area.offset.top + area.innerHeight - 15, 15, 15);
+                ctx.fillRect(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 15, 15, 15);
 
                 ctx.beginPath();
                 ctx.fillStyle = ySeries.color;
-                ctx.arc(area.offset.left + textOffset, area.offset.top + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
+                ctx.arc(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
                 ctx.closePath();
                 ctx.fill();
-                textOffset += 15;
+                area.textOffset += 15;
 
                 tooltips = (ySeries.labels[0] && ySeries.labels[0][2] ? ySeries.labels[0][2] : ySeries.name)  + " ";
 
@@ -3013,13 +3023,13 @@ iChart.indicators = {
                     }
 
                     ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                    ctx.fillRect(area.offset.left + textOffset, area.offset.top + area.innerHeight - 15, ctx.measureText(tooltips).width + 20, 15);
+                    ctx.fillRect(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 15, ctx.measureText(tooltips).width + 20, 15);
 
                     ctx.fillStyle = this.chart.chartOptions.labelColor;
-                    ctx.fillText(tooltips, area.offset.left + textOffset, area.offset.top + area.innerHeight - 12);
+                    ctx.fillText(tooltips, area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 12);
 
 
-                    textOffset += ctx.measureText(tooltips).width + 20;
+                    area.textOffset += ctx.measureText(tooltips).width + 20;
                 }
 
             }
