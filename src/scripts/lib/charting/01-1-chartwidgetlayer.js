@@ -457,7 +457,11 @@
                 if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
                     var yValue = area.getYValue(this.yPoint - area.offset.top);
 
-                    yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
+                    if(area.chart.env.userSettings && area.chart.env.userSettings.currentSecurity && area.chart.env.userSettings.currentSecurity.min_step) {
+                        yValue = iChart.roundToPrecision(yValue, area.chart.env.userSettings.currentSecurity.min_step);
+                    } else {
+                        yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
+                    }
 
                     var x = area.offset.left + area.innerWidth;
                     var y = this.yPoint;
