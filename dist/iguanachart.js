@@ -3012,18 +3012,18 @@ iChart.indicators = {
 
                     if (ySeries.valuesPerPoint === 4) {
                         if (this.chart.isComparison) {
-                            tooltips += iChart.formatNumber(ySeries.points[this.xIndex][3], ySeries.formatProvider);
+                            tooltips += ySeries.points[this.xIndex][3];
                         } else {
-                            tooltips += " H: " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider)
-                                + " L: " + iChart.formatNumber(ySeries.points[this.xIndex][1], ySeries.formatProvider)
-                                + " O: " + iChart.formatNumber(ySeries.points[this.xIndex][2], ySeries.formatProvider)
-                                + " C: " + iChart.formatNumber(ySeries.points[this.xIndex][3], ySeries.formatProvider);
+                            tooltips += " H: " + ySeries.points[this.xIndex][0]
+                                + " L: " + ySeries.points[this.xIndex][1]
+                                + " O: " + ySeries.points[this.xIndex][2]
+                                + " C: " + ySeries.points[this.xIndex][3];
                         }
                     } else if (ySeries.valuesPerPoint == 2) {
-                        tooltips += " " + _t('2589', "Мин:") + " " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider)
-                                 + " " + _t('2590', "Макс:") + " " + iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider);
+                        tooltips += " " + _t('2589', "Мин:") + " " + ySeries.points[this.xIndex][0]
+                                 + " " + _t('2590', "Макс:") + " " + ySeries.points[this.xIndex][0];
                     } else {
-                        tooltips += iChart.formatNumber(ySeries.points[this.xIndex][0], ySeries.formatProvider);
+                        tooltips += ySeries.points[this.xIndex][0];
                     }
 
                     ctx.fillStyle = this.chart.chartOptions.backgroundColor;
