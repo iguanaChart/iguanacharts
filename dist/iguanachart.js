@@ -2918,10 +2918,10 @@ iChart.indicators = {
                 if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
                     var yValue = area.getYValue(this.yPoint - area.offset.top);
 
-                    if(area.chart.env.userSettings && area.chart.env.userSettings.currentSecurity && area.chart.env.userSettings.currentSecurity.min_step) {
-                        yValue = iChart.roundToPrecision(yValue, area.chart.env.userSettings.currentSecurity.min_step);
+                    if(yValue < 100) {
+                        yValue = iChart.formatNumber( yValue, { decimalPlaces: null, decimalPrecision: 6, "scale": 0 });
                     } else {
-                        yValue = iChart.formatNumber(yValue, area.ySeries[0].formatProvider);
+                        yValue = iChart.formatNumber( yValue, { decimalPlaces: 2, decimalPrecision: null, "scale": 0 });
                     }
 
                     var x = area.offset.left + area.innerWidth;
@@ -3025,7 +3025,13 @@ iChart.indicators = {
                         tooltips += " " + _t('2589', "Мин:") + " " + ySeries.points[this.xIndex][0]
                                  + " " + _t('2590', "Макс:") + " " + ySeries.points[this.xIndex][0];
                     } else {
-                        tooltips += ySeries.points[this.xIndex][0];
+                        var pointYValue = ySeries.points[this.xIndex][0];
+                        if(pointYValue < 100) {
+                            pointYValue = iChart.formatNumber( pointYValue, { decimalPlaces: null, decimalPrecision: 6, "scale": 0 });
+                        } else {
+                            pointYValue = iChart.formatNumber( pointYValue, { decimalPlaces: 2, decimalPrecision: null, "scale": 0 });
+                        }
+                        tooltips += pointYValue;
                     }
 
                     ctx.fillStyle = this.chart.chartOptions.backgroundColor;
