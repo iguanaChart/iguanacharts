@@ -2878,7 +2878,7 @@ iChart.indicators = {
         {
             var area = areas[area_i];
 
-            if (area.enabled === false || area.isScroller)
+            if (area.enabled === false || area.isScroller || area.name == "VolumeByPriceArea")
             {
                 continue;
             }
