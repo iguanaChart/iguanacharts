@@ -4643,6 +4643,23 @@ iChart.indicators = {
         }
 
         context.save();
+        context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
+
+        context.beginPath();
+        context.moveTo(0, this.area.innerHeight);
+        context.lineTo(this.area.outerWidth, this.area.innerHeight);
+        context.lineTo(this.area.outerWidth, 0);
+        context.lineTo(0, 0);
+        context.closePath();
+        context.clip();
+
+        for (var i = 0; i < this.history.length; ++i)
+        {
+            this.history[i].drawExtended(context, -1);
+        }
+        context.restore();
+
+        context.save();
         context.translate(this.area.innerOffset.left + 0.5, this.area.innerOffset.top + 0.5);
         //context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
 
@@ -4669,22 +4686,6 @@ iChart.indicators = {
         }
         context.restore();
 
-        context.save();
-        context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
-
-        context.beginPath();
-        context.moveTo(0, this.area.innerHeight);
-        context.lineTo(this.area.outerWidth, this.area.innerHeight);
-        context.lineTo(this.area.outerWidth, 0);
-        context.lineTo(0, 0);
-        context.closePath();
-        context.clip();
-
-        for (var i = 0; i < this.history.length; ++i)
-        {
-            this.history[i].drawExtended(context, -1);
-        }
-        context.restore();
 
         if (typeof FlashCanvas !== "undefined")
         {
@@ -17900,7 +17901,7 @@ $.templates("iChart_topToolBarTmpl", '' +
                         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17394', 'Fibonacci Retracement') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="HorizontalRange" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Горизонтальный диапазон') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="HorizontalRange" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17912', 'Горизонтальный диапазон') + '">' +
                             '<i class="sprite sprite-icon-h-line-double"></i>' +
                         '</div>' +
                     '</div>' +
