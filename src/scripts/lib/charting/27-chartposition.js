@@ -343,7 +343,7 @@
                 var x = ctx.canvas.width - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartPositionCancelCtrl').length) {
-                    $("<span/>", { id:'ichartPositionCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('', 'Закрыть позицию по рынку') }).hide().appendTo(this.layer.chart.container);
+                    $("<span/>", { id:'ichartPositionCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('15807', 'Закрыть позицию по рынку') }).hide().appendTo(this.layer.chart.container);
                 }
 
                 var self = this;

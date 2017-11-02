@@ -38,7 +38,7 @@
                 click: function () {
                     console.log(this);
                 },
-                label: _t('','Новый приказ'),
+                label: _t('6346','Новый приказ'),
                 fillColor: 'rgba(220,220,220,1)',
                 strokeStyle: '#999999'
             }

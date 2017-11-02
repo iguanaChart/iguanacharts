@@ -45,15 +45,15 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Line chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17371', 'Line chart') + '">' +
                             '<i class="sprite sprite-icon-line js-chart-ui-control" data-property="chartType" data-value="Line"></i>' +
                         '</div>' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Candlestick chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17372', 'Candlestick chart') + '">' +
                             '<i class="sprite sprite-icon-candle js-chart-ui-control" data-property="chartType" data-value="Candlestick"></i>' +
                         '</div>' +
 
-                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Bar chart') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17373', 'Bar chart') + '">' +
                             '<i class="sprite sprite-icon-bars js-chart-ui-control" data-property="chartType" data-value="Stock"></i>' +
                         '</div>' +
 
@@ -61,54 +61,54 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume horizontally') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolumeByPrice" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17374', 'Display volume horizontally') + '">' +
                 '<i class="sprite sprite-icon-h-volume"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Display volume vertically') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="showVolume" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17375', 'Display volume vertically') + '">' +
                 '<i class="sprite sprite-icon-v-volume"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Relative price') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-column uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="percentMode" data-value="false" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17376', 'Relative price') + '">' +
                 '<i class="sprite sprite-icon-price"></i>' +
             '</div>' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Visual Settings') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="themeConfig" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17377', 'Visual Settings') + '">' +
                 '<i class="sprite sprite-icon-palette"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Text') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Text" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17378', 'Add Text') + '">' +
                 '<i class="sprite sprite-icon-font"></i>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Add Tooltip') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control js-chart-ui-control-state" data-property="instrumentText" data-value="Bubble" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17379', 'Add Tooltip') + '">' +
                 '<i class="sprite sprite-icon-f-comment"></i>' +
             '</div>' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
-                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Line') + '">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17380', 'Draw Line') + '">' +
                     '<i class="sprite sprite-icon-arrow-line"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Arrow') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Arrow" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17386', 'Arrow') + '">' +
                             '<i class="sprite sprite-icon-arrow-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Free Line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Line" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17381', 'Free Line') + '">' +
                             '<i class="sprite sprite-icon-free-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Horizontal line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="HorizontalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17382', 'Horizontal line') + '">' +
                             '<i class="sprite sprite-icon-h-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Vertical line') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="VerticalLine" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17383', 'Vertical line') + '">' +
                             '<i class="sprite sprite-icon-v-line"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Channel') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Channel" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17384', 'Channel') + '">' +
                             '<i class="sprite sprite-icon-channel"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Corner Trend') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentLine" data-value="Trend" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17385', 'Corner Trend') + '">' +
                             '<i class="sprite sprite-icon-angle-trend"></i>' +
                         '</div>' +
                     '</div>' +
@@ -116,30 +116,30 @@ $.templates("iChart_topToolBarTmpl", '' +
             '</div>' +
 
             '<div data-uk-dropdown="" class="uk-position-relative">' +
-                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Draw Form') + '">' +
+                '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control-state" data-property="instrumentForm" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17387', 'Draw Form') + '">' +
                     '<i class="sprite sprite sprite-icon-f-square"></i>' +
                 '</div>' +
                 '<div class="uk-dropdown-blank" style="width: auto">' +
                     '<div class="uk-flex uk-flex-left tm-shadow">' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Poligon') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Polygon" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17388', 'Poligon') + '">' +
                             '<i class="sprite sprite-icon-f-poligon"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Rectangle') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Rectangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17389', 'Rectangle') + '">' +
                             '<i class="sprite sprite-icon-f-square"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Triangle') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Triangle" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17390', 'Triangle') + '">' +
                             '<i class="sprite sprite-icon-f-triangle"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Ellipse') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="Ellipse" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17391', 'Ellipse') + '">' +
                             '<i class="sprite sprite-icon-f-ellipse"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Archs') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciArc" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17392', 'Fibonacci Archs') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-arcs"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Fan') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciFan" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17393', 'Fibonacci Fan') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-fan"></i>' +
                         '</div>' +
-                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Fibonacci Retracement') + '">' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17394', 'Fibonacci Retracement') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
                         '</div>' +
                         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="HorizontalRange" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17912', 'Горизонтальный диапазон') + '">' +
@@ -206,13 +206,13 @@ $.templates("iChart_topToolBarTmpl", '' +
                 '</div>' +
             '</div>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Screenshot') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="captureImage" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17493', 'Screenshot') + '">' +
                 '<i class="sprite sprite-icon-camera"></i>' +
             '</div>' +
 
             '<i class="sprite sprite-icon-divider"></i>' +
 
-            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('', 'Clear Chart') + '">' +
+            '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="clearInstruments" data-value="" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17395', 'Clear Chart') + '">' +
                 '<i class="sprite sprite-icon-trash"></i>' +
             '</div>' +
 
@@ -372,7 +372,7 @@ $.templates("themeConfigOptionsTmpl", '' +
         '<div class="uk-width-1-2">' +
             '<div class="uk-grid">' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Фон') +
+                    _t('13643', 'Фон') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="backgroundColor" style="background-color: {{: chartOptions.backgroundColor }}">' +
@@ -383,7 +383,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Линии осей') +
+                    _t('13644', 'Линии осей') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-checkbox" data-option="showAxes">' +
@@ -391,7 +391,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет осей') +
+                    _t('13645', 'Цвет осей') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="axisColor" style="background-color: {{: chartOptions.axisColor }}">' +
@@ -402,7 +402,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет меток') +
+                    _t('13646', 'Цвет меток') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="labelColor" style="background-color: {{: chartOptions.labelColor }}">' +
@@ -413,7 +413,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет сетки') +
+                    _t('13647', 'Цвет сетки') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="gridColor" style="background-color: {{: chartOptions.gridColor }}">' +
@@ -424,7 +424,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет текста подложки') +
+                    _t('13648', 'Цвет текста подложки') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="watermarkColor" style="background-color: {{: chartOptions.watermarkColor }}">' +
@@ -435,7 +435,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет области') +
+                    _t('13649', 'Цвет области') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="areaColor" style="background-color: {{: chartOptions.areaColor }}">' +
@@ -446,7 +446,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет границы области') +
+                    _t('13650', 'Цвет границы области') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="areaLineColor" style="background-color: {{: chartOptions.areaLineColor }}">' +
@@ -457,7 +457,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет объемов') +
+                    _t('13651', 'Цвет объемов') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="volumeStyle" style="background-color: {{: chartOptions.volumeStyle }}">' +
@@ -468,7 +468,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет фона скроллера') +
+                    _t('13652', 'Цвет фона скроллера') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="scrollerOverlayColor" style="background-color: {{: chartOptions.scrollerOverlayColor }}">' +
@@ -479,7 +479,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет скроллера') +
+                    _t('13653', 'Цвет скроллера') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="scrollerHandlerColor" style="background-color: {{: chartOptions.scrollerHandlerColor }}">' +
@@ -490,7 +490,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет теней') +
+                    _t('15810', 'Цвет теней') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="shadowColor" style="background-color: {{: chartOptions.shadowColor }}">' +
@@ -505,7 +505,7 @@ $.templates("themeConfigOptionsTmpl", '' +
         '<div class="uk-width-1-2">' +
             '<div class="uk-grid">' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Свеча вверх') +
+                    _t('3103', 'Свеча вверх') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="candleUp" style="background-color: {{: chartOptions.candleUp }}">' +
@@ -516,7 +516,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Свеча вниз') +
+                    _t('3104', 'Свеча вниз') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="candleDown" style="background-color: {{: chartOptions.candleDown }}">' +
@@ -527,7 +527,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Обводка свечи') +
+                    _t('13654', 'Обводка свечи') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-checkbox" data-option="candleBorder">' +
@@ -535,7 +535,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Обводка свечи вверх') +
+                    _t('13655', 'Обводка свечи вверх') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="candleBorderUp" style="background-color: {{: chartOptions.candleBorderUp }}">' +
@@ -546,7 +546,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Обводка свечи вниз') +
+                    _t('13656', 'Обводка свечи вниз') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="candleBorderDown" style="background-color: {{: chartOptions.candleBorderDown }}">' +
@@ -557,7 +557,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Тень свечи') +
+                    _t('13657', 'Тень свечи') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-checkbox" data-option="candleWick">' +
@@ -565,7 +565,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет тени свечи') +
+                    _t('13658', 'Цвет тени свечи') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="candleWickStyle" style="background-color: {{: chartOptions.candleWickStyle }}">' +
@@ -576,7 +576,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Бар вверх') +
+                    _t('13659', 'Бар вверх') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="stockUp" style="background-color: {{: chartOptions.stockUp }}">' +
@@ -587,7 +587,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Бар вниз') +
+                    _t('13660', 'Бар вниз') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="stockDown" style="background-color: {{: chartOptions.stockDown }}">' +
@@ -598,7 +598,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Толщина бара') +
+                    _t('13661', 'Толщина бара') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-widthSlector" data-option="stockWidth">' +
@@ -625,7 +625,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Толщина линии') +
+                    _t('13662', 'Толщина линии') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-widthSlector" data-option="lineWidth">' +
@@ -663,7 +663,7 @@ $.templates("iChart_textPopupSettingsTmpl", '' +
 
                 '<div class="uk-width-1-5">' +
                     '<div class="uk-form-select" data-uk-form-select>' +
-                        '<span>' + _t('', 'Size') + '</span>' +
+                        '<span>' + _t('17600', 'Size') + '</span>' +
                         '<select name="fontSize">' +
                             '{{for options.sizes}}' +
                             '<option value="{{:value}}" {{if value == ~root.values.fontSize}} selected {{/if}}>{{:name}}</option>' +
@@ -674,7 +674,7 @@ $.templates("iChart_textPopupSettingsTmpl", '' +
 
                 '<div class="uk-width-2-5">' +
                     '<div class="uk-form-select" data-uk-form-select>' +
-                        '<span>' + _t('', 'Font') + '</span>' +
+                        '<span>' + _t('17601', 'Font') + '</span>' +
                         '<select name="fontFamaly">' +
                             '{{for options.fonts}}' +
                             '<option value="{{:value}}" {{if value == ~root.values.fontFamaly}} selected {{/if}}>{{:name}}</option>' +

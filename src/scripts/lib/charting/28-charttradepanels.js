@@ -99,7 +99,7 @@
         //Есои приказ в стадии отправки, то будет немного иначе выгодяеть
         if (this.settings.sendingOrder) {
 
-            this.settings.text = _t('', 'Выставляем новый приказ ...');
+            this.settings.text = _t('15808', 'Выставляем новый приказ ...');
             this.settings.fillStyle = "rgba(119,119,119,1)" /*темно серый*/;
             this.settings.textColor = '#ffffff'; /*белый*/
         }

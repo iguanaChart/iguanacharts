@@ -66,7 +66,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
      */
     iChart.Charting.TA.prototype.addCustomIndicatorSerie = function (enable, index, params) {
         if (arguments.length < 3) {
-            throw _t('', 'Неверные параметры для вывода пользовательской серии.');
+            throw _t('14949', 'Неверные параметры для вывода пользовательской серии.');
         }
 
         if(enable) {
