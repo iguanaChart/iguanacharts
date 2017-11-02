@@ -2182,7 +2182,7 @@
             }
             else if (series.valuesPerPoint == 2)
             {
-                series.labels = [[1, labelHtml + _t('', "Мин:")], [0, _t('', "Макс:")]];
+                series.labels = [[1, labelHtml + _t('2589', "Мин:")], [0, _t('2590', "Макс:")]];
             }
             else
             {

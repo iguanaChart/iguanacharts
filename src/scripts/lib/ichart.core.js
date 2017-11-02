@@ -245,7 +245,7 @@ if(typeof getTimeOffsetServer == "undefined") {
 function intervalNames(interval) {
     switch (interval) {
         case "S30":
-            return _t('', "30 секундный");
+            return _t('2072', "30 секундный");
         case "I1":
             return _t('2073', "минутный");
         case "I5":
@@ -253,11 +253,11 @@ function intervalNames(interval) {
         case "I15":
             return _t('2075', "15 минутный");
         case "H1":
-            return _t('', "Часовик");
+            return _t('2076', "Часовик");
         case "D1":
             return _t('2077', "Дневной");
         case "D7":
-            return _t('', 'Недельный');
+            return _t('2078', 'Недельный');
         default:
             return "";
     }
@@ -266,15 +266,15 @@ function intervalNames(interval) {
 function intervalShortNames(interval) {
     switch (interval) {
         case "S30":
-            return _t('', "30c");
+            return _t('1176', "30c");
         case "I1":
             return _t('1370', "М");
         case "I5":
-            return _t('', "5М");
+            return _t('3331', "5М");
         case "I15":
-            return _t('', "15М");
+            return _t('3332', "15М");
         case "H1":
-            return _t('', "Ч");
+            return _t('3333', "Ч");
         case "D1":
             return _t('1368', "Д");
         case "D3":

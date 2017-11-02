@@ -624,7 +624,7 @@
                 }
                 switch (this.getControlValue('order_type')) {
                     case "sell":
-                        label = _t('', 'Продать по рынку');
+                        label = _t('4875', 'Продать по рынку');
                         break;
                     case "sell_at":
                         label = _t('', "Продать по") + iChart.roundToPrecision(price, this.layer.chart.env.userSettings.currentSecurity.min_step);

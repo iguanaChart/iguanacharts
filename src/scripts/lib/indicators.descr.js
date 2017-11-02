@@ -369,7 +369,7 @@ iChart.indicators = {
         "name": _t('', 'ZLEMA (Zero-Lag Moving Average Indicator)'),
         "value": "ZLEMA",
         "outputRegion": "price",
-        "description":_t('', ''),
+        "description":_t('13667', ''),
         "parameters":[
             {"Code":"TimePeriod", "Name":_t('1296', 'Период'), "Value":12}
         ]

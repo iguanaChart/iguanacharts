@@ -20,10 +20,10 @@ $.templates("iChart_mainTmpl", '' +
                 '<div class="uk-modal-footer">' +
                     '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
                         '<div class="js-indicator-add md-btn md-btn-small md-btn-success">' +
-                            _t('', 'Добавить индикатор') +
+                            _t('15460', 'Добавить индикатор') +
                         '</div>' +
                     '<div class="md-btn-group"><a class="md-btn md-btn-small md-btn-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
-                        '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('', 'Для всех') + '</a>' +
+                        '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
                         '<a class="md-btn md-btn-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
                     '</div>' +
                 '</div>' +
