@@ -561,8 +561,8 @@
                                 + " C: " + ySeries.points[this.xIndex][3];
                         }
                     } else if (ySeries.valuesPerPoint == 2) {
-                        tooltips += " " + _t('2589', "Мин:") + " " + ySeries.points[this.xIndex][0]
-                                 + " " + _t('2590', "Макс:") + " " + ySeries.points[this.xIndex][0];
+                        tooltips += " " + _t('', "Мин:") + " " + ySeries.points[this.xIndex][0]
+                                 + " " + _t('', "Макс:") + " " + ySeries.points[this.xIndex][0];
                     } else {
                         var pointYValue = ySeries.points[this.xIndex][0];
                         if(pointYValue < 100) {

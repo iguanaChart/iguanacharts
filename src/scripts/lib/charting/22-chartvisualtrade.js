@@ -101,7 +101,7 @@
                     this.element.switchControl(this);
                 },
                 type: 'order_type',
-                label: _t('4875', "Продать по рынку"),
+                label: _t('', "Продать по рынку"),
                 value: 'sell',
                 active: false
             },
@@ -125,7 +125,7 @@
                     this.element.switchControl(this);
                 },
                 type: 'order_type',
-                label: _t('5452', 'Купить по рынку'),
+                label: _t('', 'Купить по рынку'),
                 value: 'buy',
                 active: false
             },
@@ -624,16 +624,16 @@
                 }
                 switch (this.getControlValue('order_type')) {
                     case "sell":
-                        label = _t('4875', 'Продать по рынку');
+                        label = _t('', 'Продать по рынку');
                         break;
                     case "sell_at":
-                        label = _t('4876', "Продать по") + iChart.roundToPrecision(price, this.layer.chart.env.userSettings.currentSecurity.min_step);
+                        label = _t('', "Продать по") + iChart.roundToPrecision(price, this.layer.chart.env.userSettings.currentSecurity.min_step);
                         break;
                     case "buy":
-                        label = _t('5452', 'Купить по рынку');
+                        label = _t('', 'Купить по рынку');
                         break;
                     case "buy_at":
-                        label = _t('5458', 'Купить по') + iChart.roundToPrecision(price, this.layer.chart.env.userSettings.currentSecurity.min_step);
+                        label = _t('', 'Купить по') + iChart.roundToPrecision(price, this.layer.chart.env.userSettings.currentSecurity.min_step);
                         break;
                 }
                 break;

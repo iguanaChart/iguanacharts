@@ -449,7 +449,7 @@
 
         this.layer.chart.env.wrapper.append($textPopupSettingsHtml);
         $textPopupSettingsHtml.modal(
-            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('17599', 'Настройки текста')})
+            {modal: false, minWidth: 500, zIndex: 1500, position: [coord.y + 'px', coord.x + 'px'], title: _t('', 'Настройки текста')})
         ;
     };
 

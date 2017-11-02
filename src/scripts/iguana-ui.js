@@ -188,7 +188,7 @@
             });
 
             this.chart.wrapper.append($indicatorDialogHtml);
-            $('.iChartDialog').modal({modal: false, zIndex: 1500, title: _t('17398', 'Настройки индикатора')});
+            $('.iChartDialog').modal({modal: false, zIndex: 1500, title: _t('', 'Настройки индикатора')});
         };
 
         this.renderThemeConfigDialog = function (additionButtons) {
@@ -232,7 +232,7 @@
                 draggable: true,
                 maxWidth: 600,
                 zIndex: 1500,
-                title: _t('13754', "Настройки вида"),
+                title: _t('', "Настройки вида"),
                 onClose: onCloseModal
             });
 

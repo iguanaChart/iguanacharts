@@ -245,7 +245,7 @@ if(typeof getTimeOffsetServer == "undefined") {
 function intervalNames(interval) {
     switch (interval) {
         case "S30":
-            return _t('2072', "30 секундный");
+            return _t('', "30 секундный");
         case "I1":
             return _t('2073', "минутный");
         case "I5":
@@ -253,11 +253,11 @@ function intervalNames(interval) {
         case "I15":
             return _t('2075', "15 минутный");
         case "H1":
-            return _t('2076', "Часовик");
+            return _t('', "Часовик");
         case "D1":
             return _t('2077', "Дневной");
         case "D7":
-            return _t('2078', 'Недельный');
+            return _t('', 'Недельный');
         default:
             return "";
     }
@@ -266,19 +266,19 @@ function intervalNames(interval) {
 function intervalShortNames(interval) {
     switch (interval) {
         case "S30":
-            return _t('1176', "30c");
+            return _t('', "30c");
         case "I1":
             return _t('1370', "М");
         case "I5":
-            return _t('3331', "5М");
+            return _t('', "5М");
         case "I15":
-            return _t('3332', "15М");
+            return _t('', "15М");
         case "H1":
-            return _t('3333', "Ч");
+            return _t('', "Ч");
         case "D1":
             return _t('1368', "Д");
         case "D3":
-            return _t('15824', "3Д");
+            return _t('', "3Д");
         case "D7":
             return _t('1369', 'Н');
         case "M1":
@@ -391,10 +391,10 @@ function intervalShortNames(interval) {
         w.iChart = {};
     }
 
-    w.iChart.dayShortNames = [_t('2129', 'Пн'), _t('2130', 'Вт'), _t('2131', 'Ср'), _t('2132', 'Чт'), _t('2133', 'Пт'), _t('2134', 'Сб'), _t('2135', 'Вс')];
-    w.iChart.monthNames = [_t('3280', 'Январь'), _t('3281', 'Февраль'), _t('3282', 'Март'), _t('3283', 'Апрель'), _t('3284', 'Май'), _t('3285', 'Июнь'), _t('3286', 'Июль'), _t('3287', 'Август'), _t('3288', 'Сентябрь'), _t('3289', 'Октябрь'), _t('3290', 'Ноябрь'), _t('3291', 'Декабрь')];
-    w.iChart.monthRNames = [_t('1889', "января"), _t('1890', "февраля"), _t('1891', "марта"), _t('1892', "апреля"), _t('1893', "мая"), _t('1894', "июня"), _t('1895', "июля"), _t('1896', "августа"), _t('1897', "сентября"), _t('1898', "октября"), _t('1899', "ноября"), _t('1900', "декабря")];
-    w.iChart.monthShortNames = [_t('3502', 'янв'), _t('3503', 'фев'), _t('3504', 'мар'), _t('3505', 'апр'), _t('4939', "май"), _t('3507', 'июн'), _t('3508', 'июл'), _t('3509', 'авг'), _t('3510', 'сен'), _t('3511', 'окт'), _t('3512', 'ноя'), _t('3513', 'дек')];
+    w.iChart.dayShortNames = [_t('', 'Пн'), _t('', 'Вт'), _t('', 'Ср'), _t('', 'Чт'), _t('', 'Пт'), _t('', 'Сб'), _t('', 'Вс')];
+    w.iChart.monthNames = [_t('', 'Январь'), _t('', 'Февраль'), _t('', 'Март'), _t('', 'Апрель'), _t('', 'Май'), _t('', 'Июнь'), _t('', 'Июль'), _t('', 'Август'), _t('', 'Сентябрь'), _t('', 'Октябрь'), _t('', 'Ноябрь'), _t('', 'Декабрь')];
+    w.iChart.monthRNames = [_t('', "января"), _t('', "февраля"), _t('', "марта"), _t('', "апреля"), _t('', "мая"), _t('', "июня"), _t('', "июля"), _t('', "августа"), _t('', "сентября"), _t('', "октября"), _t('', "ноября"), _t('', "декабря")];
+    w.iChart.monthShortNames = [_t('3502', 'янв'), _t('', 'фев'), _t('3504', 'мар'), _t('3505', 'апр'), _t('4939', "май"), _t('3507', 'июн'), _t('3508', 'июл'), _t('', 'авг'), _t('3510', 'сен'), _t('3511', 'окт'), _t('', 'ноя'), _t('3513', 'дек')];
 
     w.iChart.declineNoun = function (n, singular, dual, plural)
     {
@@ -606,16 +606,16 @@ function intervalShortNames(interval) {
             case 0:
                 break;
             case 1:
-                result += _t('3496', "тыс.");
+                result += _t('', "тыс.");
                 break;
             case 2:
-                result += _t('2137', "млн");
+                result += _t('', "млн");
                 break;
             case 3:
-                result += _t('4708', "млрд");
+                result += _t('', "млрд");
                 break;
             case 4:
-                result += _t('2139', "трлн");
+                result += _t('', "трлн");
                 break;
             default:
                 throw new Error("Number scale '" + formatProvider.scale + "' is invalid.");
