@@ -9742,6 +9742,9 @@ iChart.indicators = {
 
             this.drawCancelButton(ctx, x, y-10);
 
+            ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
+            ctx.textAlign = "left";
+            ctx.textBaseline = "middle";
             ctx.fillStyle = textColor;
             ctx.fillText(settings.profitText, x-width, y);
         }
