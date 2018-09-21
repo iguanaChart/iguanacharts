@@ -696,9 +696,10 @@
 
         if (series.chartType === "Area")
         {
+            var x = area.getXPositionByIndex(Math.min(series.points.length - this.chart.chartOptions.futureAmount -1, area.viewport.x.bounded.max));
             context.fillStyle = this.chart.chartOptions.areaColor;
-            context.lineTo(Math.round(area.getXPositionByIndex(area.viewport.x.max - this.chart.chartOptions.futureAmount)), Math.round(area.getYPosition(area.viewport.y.min)));
-            context.lineTo(Math.round(area.getXPositionByIndex(area.viewport.x.min)), Math.round(area.getYPosition(area.viewport.y.min)));
+            context.lineTo(x, Math.round(area.getYPosition(area.axisY.min)));
+            context.lineTo(area.getXPositionByIndex(area.viewport.x.bounded.min), Math.round(area.getYPosition(area.axisY.min)));
             context.closePath();
             context.fill();
         }

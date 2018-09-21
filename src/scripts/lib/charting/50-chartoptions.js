@@ -85,7 +85,7 @@
         this.crosshairEnable =  true;
         /**
          *
-         * @type {'Candlestick'|'Stock'|'Line'}
+         * @type {'Candlestick'|'Stock'|'Line','Area'}
          * @private
          */
         this._chartType =  'Candlestick';
@@ -169,7 +169,7 @@
             return this['_chartType'];
         },
         set: function(data) {
-            var values = ['Candlestick','Stock','Line'];
+            var values = ['Candlestick','Stock','Line', 'Area'];
             if(values.indexOf(data) >= 0) {
                 this['_chartType'] = data;
             } else {
