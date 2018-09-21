@@ -142,6 +142,9 @@ $.templates("iChart_topToolBarTmpl", '' +
                         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17394', 'Fibonacci Retracement') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
                         '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="HorizontalRange" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17912', 'Горизонтальный диапазон') + '">' +
+                            '<i class="sprite sprite-icon-h-line-double"></i>' +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +

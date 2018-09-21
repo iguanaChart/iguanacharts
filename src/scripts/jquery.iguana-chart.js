@@ -96,6 +96,36 @@
         }
     };
 
+    $iguanaChart.getTemplate = function(containerId, name) {
+        return '' +
+            '<div class="iChart-control-form" style="min-height: 200px">' +
+                '<div class="js-chartContainerWrapper">' +
+                    '<div class="iChartToolsContainer"><div class="iChartToolsTop" style="display: none;">' +
+                    '</div></div>' +
+                    '<div id="' + containerId + '" class="m-chart-container" style="height: 100%;">' +
+                    '</div>' +
+                '</div>' +
+                    '<div data-uk-modal="{center:true}" class="uk-modal iChart-form-simple-v js-chartTADialog uk-padding-remove ' + name + '" id="iChart-tech-analysis-dialog" style="display: none;">' +
+                        '<div class="uk-modal-dialog">' +
+                            '<a class="uk-modal-close uk-close"></a>' +
+                                '<div class="uk-modal-header">' + _t('3101', "Индикаторы") + '</div>' +
+                                '<div class="js-chartTADialogContainer"></div>' +
+                                '<div class="uk-modal-footer">' +
+                                '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
+                                    '<div class="js-indicator-add md-btn md-btn-small md-btn-success">' +
+                                        _t('15460', 'Добавить индикатор') +
+                                    '</div>' +
+                                '<div class="md-btn-group"><a class="md-btn md-btn-small md-btn-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
+                                '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
+                                '<a class="md-btn md-btn-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="chart-loader-wrapper" style="top: 0; width: 100%; height: 100%;"><div class="chart-loader"></div></div>' +
+            '</div>'
+    };
+
     $iguanaChart.init = function (chartObj, params) {
 
         function initReadyCallback (chartOptions) {
@@ -142,7 +172,8 @@
 
                 var name = 'chart' + n + '_' + (new Date().getTime()),
                     containerId = name + '_container',
-                    template = $.render.iChart_mainTmpl({id: containerId, name: name}),
+                    //template = $.render.iChart_mainTmpl({id: containerId, name: name}),
+                    template = $iguanaChart.getTemplate(containerId, name),
                     lib_path = params.lib_path || '',
                     chartObj = new IguanaChart({name: name, container: "#" + containerId, wrapper: $wrapper, lib_path: lib_path, dataSource: $.extend(true, {}, params.dataSource)});
 

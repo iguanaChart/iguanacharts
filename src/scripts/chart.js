@@ -728,16 +728,16 @@
 
         this.uiGraphIndicatorsWindow2.show();
 
-        $(".indicators-set").off("click touchend");
-        $(".indicators-close").off("click touchend");
-        $(".indicators-set").on('click touchend', function () {
+        $(".indicators-set").off("click");
+        $(".indicators-close").off("click");
+        $(".indicators-set").on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
             _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.uiGraphIndicatorsWindow2.hide();
             return false;
         });
-        $(".indicators-close").on('click touchend', function () {
+        $(".indicators-close").on('click', function () {
             _this.uiGraphIndicatorsWindow2.hide();
             if(_this.timers.updateInterval) {_this.setScheduleUpdateState(1, _this.timers.updateInterval)}
             return false;
@@ -892,10 +892,11 @@
         if(!data) { return;}
         var element = data;
         if(typeof this.viewData.chart != "undefined" && !!this.viewData.chart.areas && this.viewData.chart.canvas && !!this.viewData.chart.chartOptions.updateInterval && element.ltp) {
-            var chartDate = new Date(this.viewData.chart.areas[0].xSeries[this.viewData.chart.areas[0].xSeries.length-1]*1000);
+            var chartDate = new Date(this.viewData.chart.areas[0].xSeries[this.viewData.chart.areas[0].xSeries.length-this.viewData.chart.chartOptions.futureAmount-1]*1000);
             var curTmstmp = new Date();
-            var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate()) - this.viewData.chart._dataSettings.timeframe * 60000;
-            if(currentDate <= chartDate) {
+            //var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate()) - this.viewData.chart._dataSettings.timeframe * 60000;
+            var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate(), curTmstmp.getHours(), curTmstmp.getMinutes());
+            if(currentDate >= chartDate && currentDate < (chartDate + this.viewData.chart._dataSettings.timeframe * 60000)) {
                 var point = this.viewData.chart.areas[0].ySeries[0].points[this.viewData.chart.areas[0].ySeries[0].points.length-this.viewData.chart.chartOptions.futureAmount-1];
                 point[3] = element.ltp;
                 point[0] = Math.max(point[0], point[3]);
@@ -906,6 +907,28 @@
                 var context = this.viewData.chart.canvas.getContext("2d");
                 this.viewData.chart.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
                 //this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
+            } else if(currentDate > (chartDate + this.viewData.chart._dataSettings.timeframe * 60000)) {
+
+                var point = this.getLastPoint();
+                var newPoint = {
+                    "hloc": {},
+                    "vl": {},
+                    "xSeries" : {}
+                };
+
+                var hloc = [];
+                hloc[0] = element.ltp;
+                hloc[1] = element.ltp;
+                hloc[2] = element.ltp;
+                hloc[3] = element.ltp;
+
+                newPoint["hloc"][Object.keys(point.xSeries)[0]] = [hloc];
+                newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol];
+
+                var tm = (chartDate.getTime() + Math.floor((currentDate.getTime() - chartDate.getTime()) / (this.viewData.chart._dataSettings.timeframe * 60000)) * this.viewData.chart._dataSettings.timeframe * 60000) / 1000;
+                newPoint["xSeries"][Object.keys(point.xSeries)[0]] = [tm];
+
+                this.addPoint(newPoint);
             }
         }
     };
@@ -1683,22 +1706,22 @@
 //----------------------------------------------------------------------------------------------------------------------
 
     $(document).on("change", ".indicatorsSelect", this.indicator_onChange);
-    $(document).on("click touchend", ".js-indicator-remove", this.removeIndicator_onClick);
-    $(document).on("click touchend", ".js-indicator-add", this.addIndicator_onClick);
+    $(document).on("click", ".js-indicator-remove", this.removeIndicator_onClick);
+    $(document).on("click", ".js-indicator-add", this.addIndicator_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
-    $(document).on("click touchend", "[name='apply']", this.apply_onClick);
-    $(document).on("click touchend", "[name='clearIndicators']", this.clearIndicators_onClick);
+    $(document).on("click", "[name='apply']", this.apply_onClick);
+    $(document).on("click", "[name='clearIndicators']", this.clearIndicators_onClick);
     $(document).on("click", "[name='pan']", this.pan_onClick);
-    $(document).on("click touchend", ".js-lineWidth." + this.name, function(){
+    $(document).on("click", ".js-lineWidth." + this.name, function(){
         _this.setIndicatorWidth(this)
     });
     //    $(document).on("click", "[name='removeAllInstruments']", this.removeAllInstruments_onClick);
     //    $(document).on("click", "[name='removeSelectedInstrument']", this.removeSelectedInstrument_onClick);
-    $(document).on("click touchend", "[name='resetZoom']", this.resetZoom_onClick);
-    //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
-    $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
-    $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("click", "[name='resetZoom']", this.resetZoom_onClick);
+    //$(document).on("click", "[name='SelectInstrument']", this.selectInstrument_onClick);
+    $(document).on("click", "[name='updateChart']", this.updateChart_onClick);
+    $(document).on("click", "[name='zoom']", this.zoom_onClick);
     $(document).on("dblclick", function () {
         _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
     });
@@ -1717,7 +1740,7 @@
         }
     });
 
-    $(_this.wrapper).on("click touchend", ".iChart-indicator-description a", function(e){
+    $(_this.wrapper).on("click", ".iChart-indicator-description a", function(e){
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
@@ -1729,6 +1752,6 @@
         _this.wrapper.trigger('iguanaChartEvents', ['chartResize']);
     });
 
-    $(document).on("click touchend", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
+    $(document).on("click", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
 
 };

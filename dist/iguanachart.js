@@ -401,14 +401,14 @@
             var s = this;
 
             // bind the close event to any element with the closeClass class
-            $('.' + s.o.closeClass).bind('click.simplemodal touchend.simplemodal', function (e) {
+            $('.' + s.o.closeClass).bind('click.simplemodal', function (e) {
                 e.preventDefault();
                 s.close();
             });
 
             // bind the overlay click to the close function, if enabled
             if (s.o.modal && s.o.close && s.o.overlayClose) {
-                s.d.overlay.bind('click.simplemodal touchend.simplemodal', function (e) {
+                s.d.overlay.bind('click.simplemodal', function (e) {
                     e.preventDefault();
                     s.close();
                 });
@@ -447,10 +447,10 @@
          * Unbind events
          */
         unbindEvents: function () {
-            $('.' + this.o.closeClass).unbind('click.simplemodal touchend.simplemodal');
+            $('.' + this.o.closeClass).unbind('click.simplemodal');
             doc.unbind('keydown.simplemodal');
             wndw.unbind('.simplemodal');
-            this.d.overlay.unbind('click.simplemodal touchend.simplemodal');
+            this.d.overlay.unbind('click.simplemodal');
         },
         /*
          * Fix issues in IE6 and IE7 in quirks mode
@@ -810,7 +810,7 @@ var methods = {
             $table.append($tr);
         }
 
-        $table.on('click touchend', 'td', function(){
+        $table.on('click', 'td', function(){
             obj.value = $(this).data('color');
             obj.change.call(obj);
         });
@@ -2484,16 +2484,39 @@ iChart.indicators = {
                 hspace: 50
             }
         };
+        this.prevX = null;
+        this.prevY = null;
+        this.prevValueX = null;
+        this.prevValueY = null;
+        this.xIndex = null;
+        this.xPoint = null;
+        this.yPoint = null;
 
         if(typeof settings != "undefined") {
             for (var widget in settings) {
                 this.widget[widget] = $.extend(this.widget[widget], settings[widget]);
             }
         }
+
+        $(chart.container).off('mousedown.WidgetLayer').off('mouseup.WidgetLayer').off('mousemove.WidgetLayer').off('mouseout.WidgetLayer');
+        $(chart.container).on('mousedown.WidgetLayer', $.proxy(this.onMouseDown, this)).
+        on('mouseup.WidgetLayer', $.proxy(this.onMouseUp, this)).
+        on('mousemove.WidgetLayer', $.proxy(this.onMouseMove, this)).
+        on('mouseout.WidgetLayer', $.proxy(this.onMmouseOut, this));
+
     };
 
     iChart.Charting.ChartWidgetLayer.prototype.clear = function ()
     {
+        if(!this.context) {
+            console.log("ERROR: No context for render");
+            return 0;
+        }
+
+        var context = this.context;
+        this.context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        this.drawWidgets(context);
+
     };
 
     iChart.Charting.ChartWidgetLayer.prototype.render = function (context)
@@ -2514,6 +2537,7 @@ iChart.indicators = {
 
         context.save();
         this.drawWidgets(context);
+        this.drawCrosshair(context, {});
         context.restore();
 
         if (typeof FlashCanvas !== "undefined")
@@ -2569,6 +2593,58 @@ iChart.indicators = {
             }
         }
     };
+
+    iChart.Charting.ChartWidgetLayer.prototype.onMouseDown = function (e) {
+
+    };
+    iChart.Charting.ChartWidgetLayer.prototype.onMouseUp = function (e) {
+
+    };
+    iChart.Charting.ChartWidgetLayer.prototype.onMmouseOut = function (e) {
+        this.clear();
+    };
+    iChart.Charting.ChartWidgetLayer.prototype.onMouseMove = function (e) {
+
+        if (typeof this.offset === "undefined")
+        {
+            return;
+        }
+
+        var pageX = e.pageX;
+        var pageY = e.pageY;
+
+        if (pageX === this.pageX && pageY === this.pageY)
+        {
+            return;
+        }
+
+        this.pageX = pageX;
+        this.pageY = pageY;
+
+
+        var x = Math.round(e.pageX - this.offset.left - this.area.innerOffset.left);
+        var y = Math.round(e.pageY - this.offset.top - this.area.innerOffset.top);
+
+        if (x === this.prevX && y === this.prevY)
+        {
+            // Minor performance optimization: do not handle the same coordinates twice in a row.
+            return;
+        }
+
+        this.prevX = x;
+        this.prevY = y;
+
+        var valueX = 1000 * this.area.getXValue(x);
+        var valueY = this.area.getYValue(y);
+
+        this.prevValueX = valueX;
+        this.prevValueY = valueY;
+
+
+
+        this.render();
+    };
+
 
     iChart.Charting.ChartWidgetLayer.prototype.widgetCurPrice = function (ctx, options)
     {
@@ -2733,6 +2809,254 @@ iChart.indicators = {
 
         ctx.restore();
 
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawCrosshair = function (ctx, options) {
+
+        var offset = {};
+        offset.left = Math.round(this.pageX - this.offset.left);
+        offset.top = Math.round(this.pageY - this.offset.top);
+
+        var inside = {};
+        inside.x = false;
+        inside.y = false;
+
+        for (var i = 0; i < this.chart.areas.length; ++i)
+        {
+            var area = this.chart.areas[i];
+            if (area.enabled === false || area.isLayer || area.isScroller)
+            {
+                continue;
+            }
+
+            if(area.chart.chartOptions.tooltipPosition == 'top') {
+                var top = area.innerOffset.top - 20;
+            } else if(area.chart.chartOptions.tooltipPosition == 'bottom') {
+                var top = area.innerOffset.top - 38 + area.innerHeight;
+            }
+
+            inside[i] = {};
+            inside.x = (inside[i].x = offset.left >= area.innerOffset.left && offset.left <= area.innerOffset.left + area.innerWidth) || inside.x;
+            inside.y = (inside[i].y = offset.top >= area.innerOffset.top && offset.top <= area.innerOffset.top + area.innerHeight) || inside.y;
+        }
+
+        if (!inside.x || !inside.y)
+        {
+            return;
+        }
+
+
+        var area = this.chart.areas[0];
+        if (area.xSeries.length === 0)
+        {
+            return;
+        }
+
+        var xIndex = area.getXIndex(offset.left - area.innerOffset.left);
+        if (xIndex < area.viewport.x.bounded.min || xIndex > area.viewport.x.bounded.max)
+        {
+            return;
+        }
+
+        this.xIndex = Math.max(area.viewport.x.bounded.min, Math.min(area.viewport.x.bounded.max, Math.round(xIndex)));
+
+        this.xPoint = Math.round(this.area.getXPositionByIndex(this.xIndex));
+        this.yPoint = this.prevY;
+
+        ctx.save();
+        ctx.translate(0.5, 0.5);
+        this.drawCrossLines(ctx);
+        ctx.restore();
+
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawCrossLines = function (ctx, xPoint, yPoint) {
+
+        var areas = this.chart.areas;
+
+        for (var area_i = 0; area_i < areas.length; ++area_i)
+        {
+            var area = areas[area_i];
+
+            if (area.enabled === false || area.isScroller || area.name == "VolumeByPriceArea")
+            {
+                continue;
+            }
+
+            if(area.isLayer) {
+                var parentArea = $.grep(areas, function (x) { return x.name === area.parentName })[0];
+                area.textOffset = parentArea.textOffset;
+            } else {
+                area.textOffset = 0;
+            };
+
+            if(!area.isLayer) {
+                ctx.save();
+
+                if (ctx.setLineDash) {
+                    ctx.setLineDash([4, 3]);
+                }
+
+                ctx.strokeStyle = "#999999";
+                ctx.beginPath();
+                ctx.moveTo(this.xPoint, area.offset.top);
+                ctx.lineTo(this.xPoint, area.offset.top + area.innerHeight);
+
+                if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
+                    if (ctx.setLineDash) {
+                        ctx.setLineDash([4, 3]);
+                    }
+
+                    ctx.moveTo(area.offset.left, this.yPoint);
+                    ctx.lineTo(area.offset.left + area.innerWidth, this.yPoint);
+                }
+                ctx.stroke();
+                ctx.closePath();
+                ctx.restore();
+
+
+                if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
+                    var yValue = area.getYValue(this.yPoint - area.offset.top);
+
+                    if(yValue < 100) {
+                        yValue = iChart.formatNumber( yValue, { decimalPlaces: null, decimalPrecision: 6, "scale": 0 });
+                    } else {
+                        yValue = iChart.formatNumber( yValue, { decimalPlaces: 2, decimalPrecision: null, "scale": 0 });
+                    }
+
+                    var x = area.offset.left + area.innerWidth;
+                    var y = this.yPoint;
+
+                    ctx.fillStyle = this.chart.chartOptions.labelColor;
+                    ctx.fillRect(x + 8, y - 8, ctx.measureText(yValue).width + 10, 15);
+                    ctx.beginPath();
+                    ctx.moveTo(x + 9, y - 9);
+                    ctx.lineTo(x + 9, y + 8);
+                    ctx.lineTo(x, y);
+                    ctx.lineTo(x + 9, y - 9);
+                    ctx.lineTo(x + 9, y + 8);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillText(yValue, x + 8, y - 6);
+                }
+            }
+
+            ctx.save();
+
+            var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
+
+            if(area_i == 0 && !area.isLayer) {
+                var dateLabel = iChart.formatDateTime(dateTime, this.chart.dateFormat);
+                var dateLabelArr = dateLabel.split("\n");
+
+                var width = ctx.measureText(dateLabelArr[0] + " " + dateLabelArr[1]).width;
+                ctx.fillStyle = this.chart.chartOptions.labelColor;
+                ctx.fillRect(this.xPoint - Math.round(width / 2) - 4, area.offset.top + area.innerHeight + 2, width + 4, 12);
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.font = 'normal ' + 8 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.fillText(dateLabelArr[0] + " " + dateLabelArr[1], this.xPoint - Math.round(width / 2), area.offset.top + area.innerHeight + 3);
+            }
+
+            if(!area.isLayer) {
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillRect(area.offset.left, area.offset.top + area.innerHeight - 15, 100, 15);
+                ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+
+                var tooltips = iChart.formatDateTime(dateTime, "dd.MM.yyyy" + (this.chart.showTime() ? " HH:mm" : ""));
+                area.textOffset += ctx.measureText(tooltips).width + 20;
+                ctx.fillStyle = this.chart.chartOptions.labelColor;
+                ctx.fillText(tooltips, area.offset.left, area.offset.top + area.innerHeight - 12);
+            }
+
+            for(var j = 0; j < area.ySeries.length; j++) {
+                var ySeries = area.ySeries[j];
+
+                if(!ySeries.points[this.xIndex] || ySeries.points[this.xIndex].length == 4 && ySeries.points[this.xIndex][0] == null) {
+                    continue;
+                }
+
+                if(ySeries.valuesPerPoint > 1) {
+                    var yValue = ySeries.points[this.xIndex] ? ySeries.points[this.xIndex][ySeries.dotIndex] : null;
+                } else {
+                    var yValue = ySeries.points[this.xIndex] ? ySeries.points[this.xIndex][0] : null;
+                }
+
+                if(yValue) {
+
+                    ctx.beginPath();
+                    ctx.fillStyle = ySeries.color;
+                    ctx.arc(this.xPoint, area.offset.top + Math.round(area.getYPosition(yValue)), 4, 0, 2 * Math.PI, true);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillRect(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 15, 15, 15);
+
+                ctx.beginPath();
+                ctx.fillStyle = ySeries.color;
+                ctx.arc(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
+                ctx.closePath();
+                ctx.fill();
+                area.textOffset += 15;
+
+                tooltips = (ySeries.labels[0] && ySeries.labels[0][2] ? ySeries.labels[0][2] : ySeries.name)  + " ";
+
+                if(ySeries.points[this.xIndex]) {
+
+                    if (ySeries.valuesPerPoint === 4) {
+                        if (this.chart.isComparison) {
+                            tooltips += ySeries.points[this.xIndex][3];
+                        } else {
+                            tooltips += " H: " + ySeries.points[this.xIndex][0]
+                                + " L: " + ySeries.points[this.xIndex][1]
+                                + " O: " + ySeries.points[this.xIndex][2]
+                                + " C: " + ySeries.points[this.xIndex][3];
+                        }
+                    } else if (ySeries.valuesPerPoint == 2) {
+                        tooltips += " " + _t('2589', "Мин:") + " " + ySeries.points[this.xIndex][0]
+                                 + " " + _t('2590', "Макс:") + " " + ySeries.points[this.xIndex][0];
+                    } else {
+                        var pointYValue = ySeries.points[this.xIndex][0];
+                        if(pointYValue < 100) {
+                            pointYValue = iChart.formatNumber( pointYValue, { decimalPlaces: null, decimalPrecision: 6, "scale": 0 });
+                        } else {
+                            pointYValue = iChart.formatNumber( pointYValue, { decimalPlaces: 2, decimalPrecision: null, "scale": 0 });
+                        }
+                        tooltips += pointYValue;
+                    }
+
+                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillRect(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 15, ctx.measureText(tooltips).width + 20, 15);
+
+                    ctx.fillStyle = this.chart.chartOptions.labelColor;
+                    ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.fillText(tooltips, area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 12);
+
+
+                    area.textOffset += ctx.measureText(tooltips).width + 20;
+                }
+
+            }
+
+            ctx.restore();
+
+            //console.log(area);
+        }
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawPoints = function (ctx) {
+
     }
 
 })();
@@ -2863,6 +3187,8 @@ iChart.indicators = {
                 return new iChart.Charting.ChartLevel(this);
             case "Range":
                 return new iChart.Charting.ChartRange(this);
+            case "HorizontalRange":
+                return new iChart.Charting.ChartHorizontalRange(this);
             default:
                 return undefined;
         }
@@ -3803,6 +4129,8 @@ iChart.indicators = {
                 return new iChart.Charting.ChartLevel(this);
             case "Range":
                 return new iChart.Charting.ChartRange(this);
+            case "HorizontalRange":
+                return new iChart.Charting.ChartHorizontalRange(this);
             default:
                 return undefined;
         }
@@ -4315,6 +4643,23 @@ iChart.indicators = {
         }
 
         context.save();
+        context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
+
+        context.beginPath();
+        context.moveTo(0, this.area.innerHeight);
+        context.lineTo(this.area.outerWidth, this.area.innerHeight);
+        context.lineTo(this.area.outerWidth, 0);
+        context.lineTo(0, 0);
+        context.closePath();
+        context.clip();
+
+        for (var i = 0; i < this.history.length; ++i)
+        {
+            this.history[i].drawExtended(context, -1);
+        }
+        context.restore();
+
+        context.save();
         context.translate(this.area.innerOffset.left + 0.5, this.area.innerOffset.top + 0.5);
         //context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
 
@@ -4341,22 +4686,6 @@ iChart.indicators = {
         }
         context.restore();
 
-        context.save();
-        context.translate(this.area.innerOffset.left, this.area.innerOffset.top);
-
-        context.beginPath();
-        context.moveTo(0, this.area.innerHeight);
-        context.lineTo(this.area.outerWidth, this.area.innerHeight);
-        context.lineTo(this.area.outerWidth, 0);
-        context.lineTo(0, 0);
-        context.closePath();
-        context.clip();
-
-        for (var i = 0; i < this.history.length; ++i)
-        {
-            this.history[i].drawExtended(context, -1);
-        }
-        context.restore();
 
         if (typeof FlashCanvas !== "undefined")
         {
@@ -5661,6 +5990,39 @@ iChart.indicators = {
         this.hasPopupSettings = true;
         this.settings = {mark: 'smileUp'};
 
+        this.img = {};
+
+        this.img["up"] = new Image();
+        this.img["up"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'up' + ".png";
+        this.img["left"] = new Image();
+        this.img["left"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'left' + ".png";
+        this.img["leftUp"] = new Image();
+        this.img["leftUp"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'leftUp' + ".png";
+        this.img["rightUp"] = new Image();
+        this.img["rightUp"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'rightUp' + ".png";
+        this.img["smileUp"] = new Image();
+        this.img["smileUp"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'smileUp' + ".png";
+        this.img["exclamation"] = new Image();
+        this.img["exclamation"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'exclamation' + ".png";
+        this.img["buy"] = new Image();
+        this.img["buy"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'buy' + ".png";
+        this.img["down"] = new Image();
+        this.img["down"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'down' + ".png";
+        this.img["right"] = new Image();
+        this.img["right"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'right' + ".png";
+        this.img["leftDown"] = new Image();
+        this.img["leftDown"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'leftDown' + ".png";
+        this.img["rightDown"] = new Image();
+        this.img["rightDown"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'rightDown' + ".png";
+        this.img["smileDown"] = new Image();
+        this.img["smileDown"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'smileDown' + ".png";
+        this.img["question"] = new Image();
+        this.img["question"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'question' + ".png";
+        this.img["sell"] = new Image();
+        this.img["sell"].src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + 'sell' + ".png";
+
+
+
         $('#elementSettings').remove();
 
     };
@@ -5677,10 +6039,8 @@ iChart.indicators = {
         if(this.settings != undefined) {
             var settings = this.settings;
 
-            var img = new Image();
-
-            img.src = this.layer.chart.env.lib_path + "/images/" + 'icon-' + settings.mark + ".png";
-            ctx.save();
+            var img = this.img[settings.mark];
+                ctx.save();
             ctx.translate(- 0.5, - 0.5);
             ctx.drawImage(img,coords[0].x-img.width/2, coords[0].y- img.height/2, img.width, img.height);
             ctx.restore();
@@ -6217,14 +6577,14 @@ iChart.indicators = {
     }*/
 
     iChart.Charting.ChartTrade.prototype.onOut = function (ctx) {
-        $('#chart-element-tooltip').hide();
+        $('[chart-element-tooltip]').hide();
     }
 
     iChart.Charting.ChartTrade.prototype.drawTooltip = function (data, top, left) {
 
-        if($('#chart-element-tooltip').length == 0) {
+        if(this.layer.chart.env.wrapper.find('[chart-element-tooltip]').length == 0) {
             $(this.layer.chart.container).append('' +
-            '<div id="chart-element-tooltip" class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
+            '<div chart-element-tooltip class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
                 '<div class="qtip-tip" style="background-color: transparent ! important; border: 0px none ! important; height: 6px; width: 6px; line-height: 6px; top: 50%; margin-top: -3px; right: -6px;"><canvas style="background-color: transparent ! important; border: 0px none ! important;" height="6" width="6"></canvas></div>' +
                 '<div class="qtip-content" id="qtip-34-content" aria-atomic="true">' +
                 '</div>' +
@@ -6243,8 +6603,8 @@ iChart.indicators = {
                 (parseFloat(data.profit)==0 ? '' : (parseFloat(data.profit)>0 ? 'Прибыль: ' : 'Убыток: ')) + (parseFloat(data.profit)!=0 ? (iChart.formatNumber( parseFloat(data.profit), { decimalPlaces: 2, decimalPrecision: 2, "scale": 0 }) + '<br/>') : '') +
             '</div>');
 
-        $('#chart-element-tooltip .qtip-content').html(dataView);
-        $('#chart-element-tooltip').css({top: Math.max(top - $('#chart-element-tooltip').height() - 12 , 0) +'px', left: left + 12 + 'px'}).show();
+        $('[chart-element-tooltip] .qtip-content').html(dataView);
+        $('[chart-element-tooltip]').css({top: Math.max(top - $('[chart-element-tooltip]').height() - 12 , 0) +'px', left: left + 12 + 'px'}).show();
 
     }
 
@@ -8577,7 +8937,9 @@ iChart.indicators = {
             shape: 'disk', //[disk,circle,square,diamond,triangle]
             pointFormatter: function () {
                 return '';
-            }
+            },
+            onHover: function () {},
+            onOut: function () {}
         };
     };
 
@@ -8706,17 +9068,24 @@ iChart.indicators = {
         var left = coords[0].x + /*$(iChart.viewData.chart.container).position().left + */$(this.layer.chart.container).offset().left;
 
         this.drawTooltip(this.settings, top, left);
+
+        if(typeof this.settings.onHover == "function") {
+            this.settings.onHover.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.onOut = function (ctx) {
-        $('#chart-element-tooltip').hide();
+        $('[chart-element-tooltip]').hide();
+        if(typeof this.settings.onOut == "function") {
+            this.settings.onOut.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.drawTooltip = function (data, top, left) {
 
-        if($('#chart-element-tooltip').length == 0) {
+        if(this.layer.chart.env.wrapper.find('[chart-element-tooltip]').length == 0) {
             $('body').append('' +
-            '<div id="chart-element-tooltip" class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
+            '<div chart-element-tooltip class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
                 '<div class="qtip-tip" style="background-color: transparent ! important; border: 0px none ! important; height: 6px; width: 6px; line-height: 6px; top: 50%; margin-top: -3px; right: -6px;"><canvas style="background-color: transparent ! important; border: 0px none ! important;" height="6" width="6"></canvas></div>' +
                 '<div class="qtip-content" id="qtip-34-content" aria-atomic="true">' +
                 '</div>' +
@@ -8727,9 +9096,9 @@ iChart.indicators = {
         var dataView = this.settings.pointFormatter.call(this.settings);
 
         if(dataView) {
-            $('#chart-element-tooltip .qtip-content').html(dataView);
-            $('#chart-element-tooltip').css({
-                top: top - $('#chart-element-tooltip').height() - 0 + 'px',
+            $('[chart-element-tooltip] .qtip-content').html(dataView);
+            $('[chart-element-tooltip]').css({
+                top: top - $('[chart-element-tooltip]').height() - 0 + 'px',
                 left: left + 12 + 'px'
             }).show();
         }
@@ -9404,6 +9773,9 @@ iChart.indicators = {
 
             this.drawCancelButton(ctx, x, y-10);
 
+            ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
+            ctx.textAlign = "left";
+            ctx.textBaseline = "middle";
             ctx.fillStyle = textColor;
             ctx.fillText(settings.profitText, x-width, y);
         }
@@ -10937,6 +11309,95 @@ iChart.indicators = {
     };
 
 
+})();
+/**
+ * @company  Tradernet
+ * @package  iguanaChart
+ */
+
+
+(function ()
+{
+    "use strict";
+
+    iChart.Charting.ChartHorizontalRange = function (layer)
+    {
+        iChart.Charting.ChartElement.prototype.constructor.call(this, layer);
+
+        this.elementType = "HorizontalRange";
+        this.drawType = 'manually';
+        this.maxPointCount = 2;
+        this.hasSettings = true;
+        this.settings = $.extend({}, layer.chart.env.userSettings.chartSettings.contextSettings);
+    };
+
+    inheritPrototype(iChart.Charting.ChartHorizontalRange, iChart.Charting.ChartElement);
+
+    iChart.Charting.ChartHorizontalRange.prototype.drawInternal = function (ctx, coords)
+    {
+        if (coords.length < 2)
+        {
+            return;
+        }
+
+        var point = this.layer.area.getXValue(ctx.canvas.width - 200);
+        this.points[0].x = point * 1000;
+        coords[0].x = ctx.canvas.width - 200;
+        this.points[1].x = point * 1000;
+        coords[1].x = ctx.canvas.width - 200;
+
+        ctx.save();
+        ctx.beginPath();
+        this.initDrawSettings(ctx, this.settings);
+
+        ctx.moveTo(0, coords[0].y);
+        ctx.lineTo(ctx.canvas.width, coords[0].y);
+        ctx.stroke();
+        ctx.moveTo(0, coords[1].y);
+        ctx.lineTo(ctx.canvas.width, coords[1].y);
+        ctx.stroke();
+
+        ctx.moveTo(0, coords[0].y);
+        ctx.lineTo(ctx.canvas.width, coords[0].y);
+        ctx.lineTo(ctx.canvas.width, coords[1].y);
+        ctx.lineTo(0, coords[1].y);
+        ctx.lineTo(0, coords[0].y);
+        ctx.fill();
+
+        ctx.restore();
+
+    };
+
+    iChart.Charting.ChartHorizontalRange.prototype.drawExtended = function (ctx)
+    {
+        if(this.settings.drawLabel) {
+            var pointCoords = this.getCoordinates(ctx, this.points);
+
+            if (pointCoords.length < 2) {
+                return;
+            }
+            var settings = this.settings;
+            var label = this.layer.chart.renderer.formatNumber(this.layer.area.getYValue(pointCoords[0].y), {
+                "decimalPrecision": this.layer.chart.labelPrecision,
+                "scale": 0
+            });
+            this.layer.chart.renderer.drawLable(ctx, settings.strokeStyle, 0, this.layer.area.innerWidth, pointCoords[0].y, label);
+        }
+    };
+
+    iChart.Charting.ChartHorizontalRange.prototype.setTestSegments = function ()
+    {
+        this.testContext.segments = [
+            [
+                { "x": this.layer.area.innerOffset.left, "y": this.testContext.points[0].y },
+                { "x": this.layer.area.innerOffset.left + this.layer.area.innerWidth, "y": this.testContext.points[0].y }
+            ],
+            [
+                { "x": this.layer.area.innerOffset.left, "y": this.testContext.points[1].y },
+                { "x": this.layer.area.innerOffset.left + this.layer.area.innerWidth, "y": this.testContext.points[1].y }
+            ]
+        ];
+    };
 })();
 /**
  * @company  Tradernet
@@ -12683,13 +13144,6 @@ iChart.indicators = {
             {
                 this.overlay.update();
             }
-
-            if(/*!this.selection.selection && */this.chartOptions.crosshairEnable) {
-                this.crosshair = $(context.canvas).crosshair({ "areas": $.grep(this.areas, function (x) { return !x.rotate; }), "showTime": this.showTime() }, this.container);
-                this.crosshair = this.crosshair.data("crosshair");
-                var mousePos = $(window).data();
-                this.crosshair.render(mousePos.mousePosX, mousePos.mousePosY, true);
-            }
         }
 
         if (typeof FlashCanvas !== "undefined")
@@ -14307,7 +14761,7 @@ iChart.indicators = {
             var color = series.color ? series.color.replace(/rgba\((.+),[^,]+\)/, "rgb($1)") : '';
             var $label = $("<span/>", { "class": "m-chart-legend-color" }).css({ "background-color": color }).html("&nbsp;");
             $label = $label.add($("<span/>", { "class": "m-chart-legend-name" }).css({ "color": color }).text(series.name));
-
+            var labelText = series.name;
             var labelHtml = $("<div/>").append($label).html();
             if (series.valuesPerPoint === 4)
             {
@@ -14327,7 +14781,7 @@ iChart.indicators = {
             }
             else
             {
-                series.labels = [[0, labelHtml]];
+                series.labels = [[0, labelHtml, labelText]];
             }
         }
 
@@ -17482,6 +17936,9 @@ $.templates("iChart_topToolBarTmpl", '' +
                         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="FibonacciCorrection" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17394', 'Fibonacci Retracement') + '">' +
                             '<i class="sprite sprite-icon-f-fibonacci-correction"></i>' +
                         '</div>' +
+                        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="instrumentForm" data-value="HorizontalRange" data-uk-tooltip="{pos:\'top\'}" title="' + _t('17912', 'Горизонтальный диапазон') + '">' +
+                            '<i class="sprite sprite-icon-h-line-double"></i>' +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
@@ -18950,16 +19407,16 @@ IguanaChart = function (options) {
 
         this.uiGraphIndicatorsWindow2.show();
 
-        $(".indicators-set").off("click touchend");
-        $(".indicators-close").off("click touchend");
-        $(".indicators-set").on('click touchend', function () {
+        $(".indicators-set").off("click");
+        $(".indicators-close").off("click");
+        $(".indicators-set").on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
             _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.uiGraphIndicatorsWindow2.hide();
             return false;
         });
-        $(".indicators-close").on('click touchend', function () {
+        $(".indicators-close").on('click', function () {
             _this.uiGraphIndicatorsWindow2.hide();
             if(_this.timers.updateInterval) {_this.setScheduleUpdateState(1, _this.timers.updateInterval)}
             return false;
@@ -19114,10 +19571,11 @@ IguanaChart = function (options) {
         if(!data) { return;}
         var element = data;
         if(typeof this.viewData.chart != "undefined" && !!this.viewData.chart.areas && this.viewData.chart.canvas && !!this.viewData.chart.chartOptions.updateInterval && element.ltp) {
-            var chartDate = new Date(this.viewData.chart.areas[0].xSeries[this.viewData.chart.areas[0].xSeries.length-1]*1000);
+            var chartDate = new Date(this.viewData.chart.areas[0].xSeries[this.viewData.chart.areas[0].xSeries.length-this.viewData.chart.chartOptions.futureAmount-1]*1000);
             var curTmstmp = new Date();
-            var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate()) - this.viewData.chart._dataSettings.timeframe * 60000;
-            if(currentDate <= chartDate) {
+            //var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate()) - this.viewData.chart._dataSettings.timeframe * 60000;
+            var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate(), curTmstmp.getHours(), curTmstmp.getMinutes());
+            if(currentDate >= chartDate && currentDate < (chartDate + this.viewData.chart._dataSettings.timeframe * 60000)) {
                 var point = this.viewData.chart.areas[0].ySeries[0].points[this.viewData.chart.areas[0].ySeries[0].points.length-this.viewData.chart.chartOptions.futureAmount-1];
                 point[3] = element.ltp;
                 point[0] = Math.max(point[0], point[3]);
@@ -19128,6 +19586,28 @@ IguanaChart = function (options) {
                 var context = this.viewData.chart.canvas.getContext("2d");
                 this.viewData.chart.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
                 //this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
+            } else if(currentDate > (chartDate + this.viewData.chart._dataSettings.timeframe * 60000)) {
+
+                var point = this.getLastPoint();
+                var newPoint = {
+                    "hloc": {},
+                    "vl": {},
+                    "xSeries" : {}
+                };
+
+                var hloc = [];
+                hloc[0] = element.ltp;
+                hloc[1] = element.ltp;
+                hloc[2] = element.ltp;
+                hloc[3] = element.ltp;
+
+                newPoint["hloc"][Object.keys(point.xSeries)[0]] = [hloc];
+                newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol];
+
+                var tm = (chartDate.getTime() + Math.floor((currentDate.getTime() - chartDate.getTime()) / (this.viewData.chart._dataSettings.timeframe * 60000)) * this.viewData.chart._dataSettings.timeframe * 60000) / 1000;
+                newPoint["xSeries"][Object.keys(point.xSeries)[0]] = [tm];
+
+                this.addPoint(newPoint);
             }
         }
     };
@@ -19905,22 +20385,22 @@ IguanaChart = function (options) {
 //----------------------------------------------------------------------------------------------------------------------
 
     $(document).on("change", ".indicatorsSelect", this.indicator_onChange);
-    $(document).on("click touchend", ".js-indicator-remove", this.removeIndicator_onClick);
-    $(document).on("click touchend", ".js-indicator-add", this.addIndicator_onClick);
+    $(document).on("click", ".js-indicator-remove", this.removeIndicator_onClick);
+    $(document).on("click", ".js-indicator-add", this.addIndicator_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
-    $(document).on("click touchend", "[name='apply']", this.apply_onClick);
-    $(document).on("click touchend", "[name='clearIndicators']", this.clearIndicators_onClick);
+    $(document).on("click", "[name='apply']", this.apply_onClick);
+    $(document).on("click", "[name='clearIndicators']", this.clearIndicators_onClick);
     $(document).on("click", "[name='pan']", this.pan_onClick);
-    $(document).on("click touchend", ".js-lineWidth." + this.name, function(){
+    $(document).on("click", ".js-lineWidth." + this.name, function(){
         _this.setIndicatorWidth(this)
     });
     //    $(document).on("click", "[name='removeAllInstruments']", this.removeAllInstruments_onClick);
     //    $(document).on("click", "[name='removeSelectedInstrument']", this.removeSelectedInstrument_onClick);
-    $(document).on("click touchend", "[name='resetZoom']", this.resetZoom_onClick);
-    //$(document).on("click touchend", "[name='SelectInstrument']", this.selectInstrument_onClick);
-    $(document).on("click touchend", "[name='updateChart']", this.updateChart_onClick);
-    $(document).on("click touchend", "[name='zoom']", this.zoom_onClick);
+    $(document).on("click", "[name='resetZoom']", this.resetZoom_onClick);
+    //$(document).on("click", "[name='SelectInstrument']", this.selectInstrument_onClick);
+    $(document).on("click", "[name='updateChart']", this.updateChart_onClick);
+    $(document).on("click", "[name='zoom']", this.zoom_onClick);
     $(document).on("dblclick", function () {
         _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": true, "testForIntervalChange": false });
     });
@@ -19939,7 +20419,7 @@ IguanaChart = function (options) {
         }
     });
 
-    $(_this.wrapper).on("click touchend", ".iChart-indicator-description a", function(e){
+    $(_this.wrapper).on("click", ".iChart-indicator-description a", function(e){
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
@@ -19951,7 +20431,7 @@ IguanaChart = function (options) {
         _this.wrapper.trigger('iguanaChartEvents', ['chartResize']);
     });
 
-    $(document).on("click touchend", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
+    $(document).on("click", "[name='toggleVolumeByPrice']", this.toggleVolumeByPrice_onClick);
 
 };
 
@@ -20000,7 +20480,7 @@ IguanaChart = function (options) {
             //this.$topToolBarContainer.append(indicatorsDropdownHtml);
             this.chart.wrapper.find('.js-chart-ui-indicators').append(indicatorsDropdownHtml);
 
-            $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
+            $(this.chart.wrapper).off('click', '.js-add-indicator').on('click', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
                 var params = {};
                 iChart.indicators[ind].parameters.forEach(function(n){
@@ -20014,7 +20494,7 @@ IguanaChart = function (options) {
             });
 
 
-            $(this.chart.wrapper).off('click touchend', '.js-remove-indicator').on('click touchend', '.js-remove-indicator', function (e) {
+            $(this.chart.wrapper).off('click', '.js-remove-indicator').on('click', '.js-remove-indicator', function (e) {
                 var ind = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 ind.splice($(this).data('index'), 1);
                 _this.chart.dataSource.dataSettings.graphicIndicators = _this.chart.serializeIndicators(ind);
@@ -20024,7 +20504,7 @@ IguanaChart = function (options) {
                 e.preventDefault();
             });
 
-            $(this.chart.wrapper).off('click touchend', '.js-edit-indicator').on('click touchend', '.js-edit-indicator', function (e) {
+            $(this.chart.wrapper).off('click', '.js-edit-indicator').on('click', '.js-edit-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var inx = $(this).data('index');
 
@@ -20131,7 +20611,7 @@ IguanaChart = function (options) {
                 }
             }
 
-            $(document).off('click touchend', '.js-set-params-indicator').on('click touchend', '.js-set-params-indicator', function (e) {
+            $(document).off('click', '.js-set-params-indicator').on('click', '.js-set-params-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var newParams = $('.js-iChartTools-indicators-params input').serializeArray();
 
@@ -20194,7 +20674,7 @@ IguanaChart = function (options) {
             });
 
 
-            $themeConfig.on('click touchend','.js-chartOptions', function(){
+            $themeConfig.on('click','.js-chartOptions', function(){
                 switch ($(this).attr('data-value')) {
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
@@ -20211,13 +20691,13 @@ IguanaChart = function (options) {
                 }
             });
 
-            $themeConfig.on('click touchend', '.js-themeSelect', function(){
+            $themeConfig.on('click', '.js-themeSelect', function(){
                 _this.chart.wrapper.iguanaChart('setTheme', $(this).data('theme'));
                 $windowContent.find('.js-themeConfigOptions').empty().append(_this.renderThemeConfigOptions());
                 return false;
             });
 
-            $themeConfig.on('click touchend', '.js-themeSaveAs', function(){
+            $themeConfig.on('click', '.js-themeSaveAs', function(){
 
                 UIkit.modal.prompt(_t('5228', "Название") + ':', '', function(title){
                     if(title) {
@@ -20235,7 +20715,7 @@ IguanaChart = function (options) {
                 return false;
             });
 
-            $themeConfig.on('click touchend', '.js-themeDelete', function(e){
+            $themeConfig.on('click', '.js-themeDelete', function(e){
                 var name = $(this).data('name');
                 var pos = $.grep($iguanaChart.thems, function(n, i){ return (n.name == name) ? (n.i = i) : null})[0];
                 $iguanaChart.thems.splice(pos,1);
@@ -20292,7 +20772,7 @@ IguanaChart = function (options) {
                         show: function(event, api) {
                             $(this).find('.js-widthSlectorWrapper').each(function(){
                                 var $wrapper = $(this);
-                                $wrapper.off().on('click touchend', '.js-lineWidth', function(){
+                                $wrapper.off().on('click', '.js-lineWidth', function(){
                                     var value = $(this).attr('data-style');
                                     _this.chart.wrapper.iguanaChart('chartOptions', $wrapper.attr('data-option'), value);
                                     $this.find('.js-widthSlectorValue').attr('data-style', value);
@@ -20369,7 +20849,7 @@ IguanaChart = function (options) {
                 });
             });
 
-            $themeConfigOptions.find('.js-checkbox').on('click touchend', '.js-flag', function(){
+            $themeConfigOptions.find('.js-checkbox').on('click', '.js-flag', function(){
                 _this.chart.wrapper.iguanaChart('chartOptions', $(this).attr('data-option'), $(this).prop('checked'));
             });
 
@@ -20460,7 +20940,7 @@ IguanaChart = function (options) {
         };
 
         this.bindUiControls = function () {
-            this.$uiContainer.off('click touchend', '.js-chart-ui-control').on('click touchend', '.js-chart-ui-control', function (e) {
+            this.$uiContainer.off('click', '.js-chart-ui-control').on('click', '.js-chart-ui-control', function (e) {
                 var $this = $(this);
 
                 var property  = $this.data('property');
@@ -20760,6 +21240,9 @@ IguanaChart = function (options) {
                 case 'FibonacciCorrection':
                     uiClass = 'sprite-icon-f-fibonacci-correction';
                     break;
+                case 'HorizontalRange':
+                    uiClass = 'sprite-icon-h-line-double';
+                    break;
             }
 
             if(state) {
@@ -20911,6 +21394,36 @@ IguanaChart = function (options) {
         }
     };
 
+    $iguanaChart.getTemplate = function(containerId, name) {
+        return '' +
+            '<div class="iChart-control-form" style="min-height: 200px">' +
+                '<div class="js-chartContainerWrapper">' +
+                    '<div class="iChartToolsContainer"><div class="iChartToolsTop" style="display: none;">' +
+                    '</div></div>' +
+                    '<div id="' + containerId + '" class="m-chart-container" style="height: 100%;">' +
+                    '</div>' +
+                '</div>' +
+                    '<div data-uk-modal="{center:true}" class="uk-modal iChart-form-simple-v js-chartTADialog uk-padding-remove ' + name + '" id="iChart-tech-analysis-dialog" style="display: none;">' +
+                        '<div class="uk-modal-dialog">' +
+                            '<a class="uk-modal-close uk-close"></a>' +
+                                '<div class="uk-modal-header">' + _t('3101', "Индикаторы") + '</div>' +
+                                '<div class="js-chartTADialogContainer"></div>' +
+                                '<div class="uk-modal-footer">' +
+                                '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
+                                    '<div class="js-indicator-add md-btn md-btn-small md-btn-success">' +
+                                        _t('15460', 'Добавить индикатор') +
+                                    '</div>' +
+                                '<div class="md-btn-group"><a class="md-btn md-btn-small md-btn-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
+                                '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
+                                '<a class="md-btn md-btn-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="chart-loader-wrapper" style="top: 0; width: 100%; height: 100%;"><div class="chart-loader"></div></div>' +
+            '</div>'
+    };
+
     $iguanaChart.init = function (chartObj, params) {
 
         function initReadyCallback (chartOptions) {
@@ -20957,7 +21470,8 @@ IguanaChart = function (options) {
 
                 var name = 'chart' + n + '_' + (new Date().getTime()),
                     containerId = name + '_container',
-                    template = $.render.iChart_mainTmpl({id: containerId, name: name}),
+                    //template = $.render.iChart_mainTmpl({id: containerId, name: name}),
+                    template = $iguanaChart.getTemplate(containerId, name),
                     lib_path = params.lib_path || '',
                     chartObj = new IguanaChart({name: name, container: "#" + containerId, wrapper: $wrapper, lib_path: lib_path, dataSource: $.extend(true, {}, params.dataSource)});
 
@@ -26959,7 +27473,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
         var $label = $("<span/>", { "class": "m-chart-legend-color" }).css({ "background-color": color }).html("&nbsp;");
         $label = $label.add($("<span/>", { "class": "m-chart-legend-name" }).css({ "color": color }).text(Series.name + legendParams + sufix));
         var labelHtml = $("<div/>").append($label).html();
-        return [[0, labelHtml]];
+        return [[0, labelHtml, Series.name + legendParams + sufix]];
 
     };
 
@@ -28432,640 +28946,860 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
         }
     };
 
+})();
 
-    iChart.Charting.TA.prototype.analyseResistSupport = function (TimePeriod) {
 
-        TimePeriod = TimePeriod || 8;
+/**
+ * Created by gti on 09.02.17.
+ */
 
-        var data = this.getData();
+iChart.Charting.TA.prototype.analyseResistSupport = function (TimePeriod , offset) {
+
+    TimePeriod = TimePeriod || 8;
+    offset = offset || 0;
+
+    var data = this.getData();
+    var data = data.slice(0,data.length-offset);
+    var low = [], high = [];
+
+    var dataRsi = [];
+
+    try {
         var dataRsi = TA.RSI.justifyCalculate(0, data.length-1, data, {TimePeriod: TimePeriod});
-        var low = [], high = [];
-
-        $.each(data, function(i,n) {
-            low.push(n[TA.LOW]);
-            high.push(n[TA.HIGH]);
-        });
-
-        var Distans = 13.0;     // Смещение уровня RSI
-        var Period_Trade = 1;//this.chart..userSettings.dataSettings.timeframe;
-        var Low_RSI = 35.0;  // Нижний уровень RSI для нахождения экстремумов
-        var High_RSI= 65.0;  // Верхний уровень RSI для нахождения экстремумов
-
-        var First_Ext;
-
-        var Candles_Ext = {
-            p_1: false,
-            p_2: false,
-            p_3: false,
-            p_4: false
-        };
-
-        function Ext_1( low, high, candles, dataRsi, distans)
-        {
-            var m_rsi = [], m_high = [], m_low = []; //инициализация массивов
-
-            for(var i=candles.length-1; i>=0; i--) {
-                m_low.push(candles[i][TA.LOW]);
-                m_high.push(candles[i][TA.HIGH]);
-                m_rsi.push(dataRsi[i]);
-            };
-
-            //console.log(m_low, m_high, m_rsi);
-
-            var index = -1;     //инициализация переменной, которая будет содержать индекс искомого бара
-            var flag=false;        //эта переменная нужна, чтобы не анализировать свечи на текущем незавершенном тренде
-            var ext_max = true;    //переменные типа bool используются для того, чтобы в нужный момент прекратить анализ баров
-            var ext_min = true;
-            var min=100000000.0;  //переменные для выявления максимальных и минимальных цен
-            var max= 0.0;
-
-            for(var i=0;i<candles.length;i++) //цикл по барам
-            {
-                var rsi = m_rsi[i];                                   //получаем значения индикатора RSI
-                var price_max = m_high[i]; //NormalizeDouble(m_high[i], digits);   //цены High
-                var price_min = m_low[i]; //NormalizeDouble(m_low[i], digits);    //цены Low выбранного бара
-
-                if(flag==false) //условие для того, чтобы не начать искать экстремум на незавершившемся тренде
-                {
-                    if(rsi<=low||rsi>=high) //если первые бары в зонах перекупл. или перепрод.,
-                        continue;            //то переходим к следующему бару
-                    else flag = true;       //если нет, то продолжаем анализ
-                }
-                if(rsi<low) //если найдено пересечение RSI c уровнем low
-                {
-                    if(ext_min==true) //если RSI еще не пересекал уровень high
-                    {
-                        if(ext_max==true) //если еще не выставлен запрет на поиск максимального экстремума,
-                        {
-                            ext_max=false; //то запрещаем искать максимальный экстремум
-                            if(distans>=0) high=high-distans; //изменяем уровень high, по которому потом
-                        }                                  //будет производиться поиск второго бара
-                        if(price_min<min) //ищем и замоминаем индекс первого бара
-                        {               //сравнивая цены Low свечей
-                            min=price_min;
-                            index=i;
-                        }
-                    }
-                    else break; //Выходим из цикла, поскольку раз искать минимальный экстремум уже запрещено,значит найден уже максимальный
-                }
-                if(rsi>high) //далее алгоритм тот же, только по поиску максимального экстремума
-                {
-                    if(ext_max==true)
-                    {
-                        if(ext_min==true)
-                        {
-                            ext_min=false; //если нужно, запрещаем искать минимальный экстремум
-                            if(distans>=0) low=low+distans;
-                        }
-                        if(price_max>max) //ищем и запоминаем экстремум
-                        {
-                            max=price_max;
-                            index=i;
-                        }
-                    }
-                    else break; //Выходим из цикла, поскольку раз искать максимальный экстремум уже запрещено, значит найден уже минимальный
-                }
-            }
-            //console.log(index, m_rsi[index]);
-            return(index);
-        }
-
-        function Ext_2( low, high, candles, dataRsi, candles_ext, n_bar, distans, first_ext)
-        {
-            var m_rsi = [], m_high = [], m_low = []; //инициализация массивов
-
-            var rev_candles = [];
-            for(var i=candles.length-1; i>=0; i--) {
-                rev_candles.push(candles[i]);
-            }
-            candles = rev_candles;
-
-            for(var i=0; i<candles.length; i++) {
-                m_low.push(candles[i][TA.LOW]);
-                m_high.push(candles[i][TA.HIGH]);
-                m_rsi.push(dataRsi[dataRsi.length-1 - i]);
-            };
-
-            //console.log(m_low, m_high, m_rsi);
-
-            var index=-1;
-            var p_1=-1;    //индекс искомого бара, индекс предыдущего бара
-            var high_level=false; //переменные для определения типа искомого бара
-            var low_level = false;
-            var _start=false;    //переменные типа bool используются для того, чтобы в нужный момент прекратить анализ баров
-            var rsi,min,max,price_max,price_min;
-            min=100000000.0; max=0.0;
-
-            //--- в данном блоке определяем, на какой линии (сопротивления или поддержки) должен лежать искомый экстремум
-            if(n_bar!=3)
-            {
-                if(first_ext==true)//если первая точка была максимальной
-                {
-                    low_level=true;//то эта должна быть минимальной
-                    if(distans>=0) low=low+distans;
-                }
-                else //если минимальной
-                {
-                    high_level = true;
-                    if(distans>=0) high = high-distans;
-                }
-            }
-            else
-            {
-                if(first_ext==false)//если первая точка была минимальной
-                {
-                    low_level=true;//то  и эта должна быть минимальной
-                    if(distans>=0) high=high-distans;
-                }
-                else //если максимальной
-                {
-                    high_level = true;
-                    if(distans>=0) low = low+distans;
-                }
-            }
-
-            switch(n_bar) //находим индекс предыдущего бара
-            {
-                case 2: p_1 = candles_ext.p_1; break;
-                case 3: p_1 = candles_ext.p_2; break;
-                case 4: p_1 = candles_ext.p_3; break;
-            }
-
-            for(var i=p_1;i<candles.length;i++) //анализируем оставшиеся бары
-            {
-                rsi=m_rsi[i];
-                price_max = m_high[i];
-                price_min = m_low[i];
-                if(_start==true && ((low_level==true && rsi>=high) || (high_level==true && rsi<=low)))
-                {
-                    break; //выходим из цикла, если второй экстремум уже найден, а RSI уже пересек противоположный уровень
-                }
-                if(low_level==true) //если ищем минимальный экстремум
-                {
-                    if(rsi<=low)
-                    {
-                        if(_start==false) _start=true;
-                        if(price_min<min)
-                        {
-                            min=price_min;
-                            index=i;
-                        }
-                    }
-                }
-                else //если ищем максимальный экстремум
-                {
-                    if(rsi>=high)
-                    {
-                        if(_start==false) _start=true;
-                        if(price_max>=max)
-                        {
-                            max=price_max;
-                            index=i;
-                        }
-                    }
-                }
-            }
-
-            return(index);
-        }
-
-        function One_ext(candles_ext, //переменная типа структуры для получения индекса первого бара
-            dataRsi,         //хэндл индикатора
-            low)        //заданный уровень перепроданности RSI (можно использовать и high уровень)
-        {
-            var m_rsi = [];               //инициализация массива данных индикатора
-
-            for(var i=dataRsi.length-1; i>=0; i--) {
-                if(typeof dataRsi[i] != "undefined") {
-                    m_rsi.push(dataRsi[i]);
-                }
-            }
-
-
-            var rsi=m_rsi[candles_ext.p_1]; //определяем значение RSI на баре с первым экстремумом
-
-            if(rsi<=low)                      //если значение меньше нижнего уровня,
-                return(false);                 //то первый экстремум был минимальным
-            else                              //если нет,
-                return(true);                     //то максимальным
-        }
-
-
-        function calculate()
-        {
-            Candles_Ext.p_1=Ext_1(Low_RSI,High_RSI,data,dataRsi,Distans,Period_Trade); //находим индекс бара первого экстремума
-            if(Candles_Ext.p_1<0)
-            {
-                console.log("analyseResistSupport: В истории недостаточно баров для анализа 1");
-                return 0;
-            }
-            if(Candles_Ext.p_1>0) First_Ext=One_ext(Candles_Ext, dataRsi,Low_RSI,Period_Trade);
-            Candles_Ext.p_2=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,2,Distans,First_Ext,Period_Trade); //находим индекс бара второго экстремума
-            if(Candles_Ext.p_2<0)
-            {
-                console.log("analyseResistSupport: В истории недостаточно баров для анализа 2");
-                return 0;
-            }
-            Candles_Ext.p_3=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,3,Distans,First_Ext,Period_Trade); //находим индекс бара третьего экстремума
-            if(Candles_Ext.p_3<0)
-            {
-                console.log("analyseResistSupport: В истории недостаточно баров для анализа 3");
-                return 0;
-            }
-            Candles_Ext.p_4=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,4,Distans,First_Ext,Period_Trade); //находим индекс бара последнего экстремума
-            if(Candles_Ext.p_4<0)
-            {
-                console.log("analyseResistSupport: В истории недостаточно баров для анализа 4");
-                return 0;
-            }
-            return 1;
-        }
-
-        //Candles_Ext.p_1=Ext_1(Low_RSI,High_RSI,data,dataRsi,Distans,Period_Trade); //находим индекс бара первого экстремума
-        //
-        //if(Candles_Ext.p_1>0) {
-        //    First_Ext=One_ext(Candles_Ext, dataRsi,Low_RSI,Period_Trade);
-        //}
-        //
-        //Candles_Ext.p_2=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,2,Distans,First_Ext,Period_Trade); //находим индекс бара второго экстремума
-        //console.log(Candles_Ext, First_Ext);
-
-        //var idx = Ext_1(Low_RSI, High_RSI, data, dataRsi, Distans, Period_Trade);
-
-        function findChannel (data, section) {
-            var channelHeight = 0;
-            for(var i=section[0].x; i<= Math.min(section[1].x,data.length-1); i++) {
-                var linePt = iChart.getThirdPoint({'x':section[0].x, 'y':section[0].y}, {'x':section[1].x, 'y':section[1].y}, i);
-                channelHeight = Math.max(channelHeight, Math.abs(linePt.y - (data[i][TA.OPEN] + data[i][TA.CLOSE])/2));
-            }
-            return channelHeight;
-        }
-
-        function findExts (data, section, sectionType, param, accuracy) {
-
-            param = param || "d";
-            var dParam = "d" + param;
-
-            var prevPoint = {},
-                currPoint = {},
-                extPionts = [],
-                needTurn = false;
-
-            var channelHeight = findChannel(data, section);
-
-            for(var i=data.length-1; i>=section[0].x; i--) {
-                currPoint = {
-                    index: i,
-                    time: data[i][TA.FULLTIME],
-                    h: data[i][TA.HIGH],
-                    l: data[i][TA.LOW],
-                    o: data[i][TA.OPEN],
-                    c: data[i][TA.CLOSE],
-                    av1: (data[i][TA.OPEN] + data[i][TA.CLOSE]) / 2,
-                    av2: (data[i][TA.HIGH] + data[i][TA.LOW]) / 2
-                };
-
-                var linePt = iChart.getThirdPoint({'x':section[0].x, 'y':section[0].y}, {'x':section[1].x, 'y':section[1].y}, i);
-                currPoint['dh'] =  Math.abs(linePt.y - currPoint.h);
-                currPoint['dl'] =  Math.abs(linePt.y - currPoint.l);
-                currPoint['do'] =  Math.abs(linePt.y - currPoint.o);
-                currPoint['dc'] =  Math.abs(linePt.y - currPoint.c);
-                currPoint['dav1'] =  Math.abs(linePt.y - currPoint.av1);
-                currPoint['dav2'] =  Math.abs(linePt.y - currPoint.av2);
-
-
-                if(i == section[2].x || i == section[3].x) {
-                    extPionts.push(currPoint);
-                    prevPoint = $.extend({}, currPoint);
-                    needTurn = true;
-                    i--;
-                } else {
-
-                    if ($.isEmptyObject(prevPoint)) {
-                        prevPoint = $.extend({}, currPoint);
-                        if (currPoint[dParam] / channelHeight < accuracy) {
-                            extPionts.push(currPoint);
-                            needTurn = true;
-                        }
-                        continue;
-                    } else {
-
-                        if (currPoint[dParam] > prevPoint[dParam] && !needTurn) {
-                            if (prevPoint[dParam] / channelHeight < accuracy) {
-                                extPionts.push(prevPoint);
-                                needTurn = true;
-                            }
-                        }
-
-                        if(sectionType == "support") {
-                            if (currPoint[dParam] < prevPoint[dParam] && needTurn) {
-                                if (Math.abs(extPionts[extPionts.length - 1][param] - prevPoint[param]) / channelHeight > 0.15) {
-                                    needTurn = false;
-                                }
-                            }
-                        } else if(sectionType == "resist") {
-                            if (currPoint[dParam] > prevPoint[dParam] && needTurn) {
-                                if (Math.abs(extPionts[extPionts.length - 1][param] - prevPoint[param]) / channelHeight > 0.15) {
-                                    needTurn = false;
-                                }
-                            }
-                        }
-
-                        prevPoint = $.extend({}, currPoint);
-                    }
-                }
-
-            }
-
-            if(sectionType == "support") {
-                //удаление точек у которых разница с соседними очень мала
-                for (var i = 0; i < extPionts.length; i++) {
-                    if ((typeof data[extPionts[i].index - 1] != "undefined" && Math.abs(data[extPionts[i].index - 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005) ||
-                        (typeof data[extPionts[i].index + 1] != "undefined" && Math.abs(data[extPionts[i].index + 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005)
-                    ) {
-                        extPionts.splice(i, 1);
-                        --i;
-                    }
-                }
-            } else if(sectionType == "resist") {
-                //удаление точек у которых разница с соседними очень мала
-                for (var i = 0; i < extPionts.length; i++) {
-                    if ((typeof data[extPionts[i].index - 1] != "undefined" && Math.abs(data[extPionts[i].index - 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005) ||
-                        (typeof data[extPionts[i].index + 1] != "undefined" && Math.abs(data[extPionts[i].index + 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005)
-                    ) {
-                        extPionts.splice(i, 1);
-                        --i;
-                    }
-                }
-
-            }
-
-            return extPionts;
-        }
-
-        if(calculate()) {
-            //console.log(Candles_Ext);
-            var points = [];
-
-            if(First_Ext) {
-                points[0] = [data[data.length - 1 - Candles_Ext.p_1][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_1][TA.HIGH], data.length - 1 - Candles_Ext.p_1];
-                points[1] = [data[data.length - 1 - Candles_Ext.p_2][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_2][TA.LOW], data.length - 1 - Candles_Ext.p_2];
-                points[2] = [data[data.length - 1 - Candles_Ext.p_3][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_3][TA.HIGH], data.length - 1 - Candles_Ext.p_3];
-                points[3] = [data[data.length - 1 - Candles_Ext.p_4][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_4][TA.LOW], data.length - 1 - Candles_Ext.p_4];
-            } else {
-                points[0] = [data[data.length - 1 - Candles_Ext.p_1][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_1][TA.LOW], data.length - 1 - Candles_Ext.p_1];
-                points[1] = [data[data.length - 1 - Candles_Ext.p_2][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_2][TA.HIGH], data.length - 1 - Candles_Ext.p_2];
-                points[2] = [data[data.length - 1 - Candles_Ext.p_3][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_3][TA.LOW], data.length - 1 - Candles_Ext.p_3];
-                points[3] = [data[data.length - 1 - Candles_Ext.p_4][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_4][TA.HIGH], data.length - 1 - Candles_Ext.p_4];
-            }
-
-            var itPnts = iChart.getIntersection(
-                {'x':points[0][2], 'y':points[0][1]},
-                {'x':points[2][2], 'y':points[2][1]},
-                {'x':points[1][2], 'y':points[1][1]},
-                {'x':points[3][2], 'y':points[3][1]}
-            );
-
-            //console.log('points', points);
-            //console.log('Intersection', itPnts);
-
-            var fromAll = points[3][2] - (points[0][2]-points[3][2]);
-            fromAll = Math.max(fromAll, 0);
-            var to = points[0][2] + (points[0][2]-points[3][2]);
-            to = Math.min(to, this.chart.areas[0].xSeries.length-1);
-
-            var restrict1 = 0,
-                restrict2 = this.chart.areas[0].xSeries.length-1;
-
-            //пересечение слева
-            if(itPnts.x < points[3][2]) {
-                restrict1 = itPnts.x;
-            }
-
-            //пересечение справа
-            if(itPnts.x > points[0][2]) {
-                restrict2 = itPnts.x;
-            }
-
-            fromAll = Math.floor(Math.max(fromAll, restrict1));
-            to = Math.ceil(Math.min(to, restrict2, this.chart.areas[0].xSeries.length-1, (restrict1 ? (data.length + 15) : data.length + 30)));
-
-            //console.log(fromAll, to);
-
-            var supportFound = false,
-                supportPoints = [],
-                resistFound = false,
-                resistPoints = [];
-
-            if(First_Ext) {
-                for(var i=points[3][2]; i>=fromAll; i--) {
-                    var supportTest = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, i);
-                    if(Math.max(data[i][TA.OPEN], data[i][TA.CLOSE]) < supportTest.y) {
-                        supportFound = true;
-                    }
-                    if(!supportFound) {
-                        supportTest['time'] = data[i][TA.FULLTIME];
-                        supportPoints[0] = supportTest;
-                    }
-
-                    var resistTest = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, i);
-                    if(!resistFound) {
-                        resistTest['time'] = data[i][TA.FULLTIME];
-                        resistPoints[0] = resistTest;
-                    }
-                    if(Math.min(data[i][TA.OPEN], data[i][TA.CLOSE]) > resistTest.y) {
-                        resistFound = true;
-                    }
-
-                }
-
-                supportPoints[1] = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, to);
-                supportPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
-                supportPoints[2] = {'x':points[1][2], 'y':points[1][1], time: points[1][0]};
-                supportPoints[3] = {'x':points[3][2], 'y':points[3][1], time: points[3][0]};
-                resistPoints[1] = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, to);
-                resistPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
-                resistPoints[2] = {'x':points[0][2], 'y':points[0][1], time: points[0][0]};
-                resistPoints[3] = {'x':points[2][2], 'y':points[2][1], time: points[2][0]};
-
-            } else {
-                for(var i=points[3][2]; i>=fromAll; i--) {
-                    var supportTest = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, i);
-                    if(!supportFound) {
-                        supportTest['time'] = data[i][TA.FULLTIME];
-                        supportPoints[0] = supportTest;
-                    }
-
-                    if(Math.max(data[i][TA.OPEN], data[i][TA.CLOSE]) < supportTest.y || supportTest.y < 0) {
-                        supportFound = true;
-                    }
-
-                    var resistTest = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, i);
-                    if(Math.min(data[i][TA.OPEN], data[i][TA.CLOSE]) > resistTest.y) {
-                        resistFound = true;
-                    }
-                    if(!resistFound) {
-                        resistTest['time'] = data[i][TA.FULLTIME];
-                        resistPoints[0] = resistTest;
-                    }
-                }
-
-                supportPoints[1] = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, to);
-                supportPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
-                supportPoints[2] = {'x':points[0][2], 'y':points[0][1], time: points[0][0]};
-                supportPoints[3] = {'x':points[2][2], 'y':points[2][1], time: points[2][0]};
-                resistPoints[1] = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, to);
-                resistPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
-                resistPoints[2] = {'x':points[1][2], 'y':points[1][1], time: points[1][0]};
-                resistPoints[3] = {'x':points[3][2], 'y':points[3][1], time: points[3][0]};
-
-            }
-
-            var channelHeightSup = findChannel(data, supportPoints);
-            var channelHeightRes = findChannel(data, resistPoints);
-
-            //console.log(supportPoints, resistPoints);
-            //console.log(channelHeightSup, channelHeightRes);
-
-            var extTypeSup = "l",
-                extTypeRes = "h",
-                accuracy = 0.05,
-                extSupportPionts = findExts(data, supportPoints, 'support', extTypeSup, accuracy),
-                extResistPionts = findExts(data, resistPoints, 'resist', extTypeRes, accuracy);
-
-
-            /*
-             //SupportChannel
-             var element = this.chart.overlay.createElement("Line");
-             element.settings = {fillStyle: '#FF0000',
-             strokeStyle: '#FF0000',
-             lineWidth: 2};
-             element.points = [{'x':supportPoints[0].time, 'y':supportPoints[0].y+channelHeightSup},{'x':supportPoints[1].time,'y':supportPoints[1].y+channelHeightSup}];
-
-             this.chart.overlay.history.push(element);
-
-             //ResistChannel
-             var element = this.chart.overlay.createElement("Line");
-             element.settings = {fillStyle: '#FF0000',
-             strokeStyle: '#FF0000',
-             lineWidth: 2};
-             element.points = [{'x':resistPoints[0].time, 'y':resistPoints[0].y-channelHeightRes},{'x':resistPoints[1].time,'y':resistPoints[1].y-channelHeightRes}];
-
-             this.chart.overlay.history.push(element);
-            */
-
-            //console.log(idx, dataRsi[idx]);
-            return {
-                extremeSupports: extSupportPionts,
-                extremeResist: extResistPionts,
-                supportPoints: supportPoints,
-                resistPoints: resistPoints,
-                points: points
-            };
-        } else {
-            return false;
-        }
+    } catch (e) {
+        console.log(e);
+    }
+
+
+    $.each(data, function(i,n) {
+        low.push(n[TA.LOW]);
+        high.push(n[TA.HIGH]);
+    });
+
+    var Distans = 13.0;     // Смещение уровня RSI
+    var Period_Trade = 1;//this.chart..userSettings.dataSettings.timeframe;
+    var Low_RSI = 35.0;  // Нижний уровень RSI для нахождения экстремумов
+    var High_RSI= 65.0;  // Верхний уровень RSI для нахождения экстремумов
+
+    var First_Ext;
+
+    var Candles_Ext = {
+        p_1: false,
+        p_2: false,
+        p_3: false,
+        p_4: false
     };
 
-    iChart.Charting.TA.prototype.autoResistSupport = function (debug) {
-        debug = !!debug;
-        var dataRS = this.analyseResistSupport();
-        if(dataRS) {
-            this.clearResistSupport();
-            var extTypeSup = "l",
-                extTypeRes = "h";
+    function Ext_1( low, high, candles, dataRsi, distans)
+    {
+        var m_rsi = [], m_high = [], m_low = []; //инициализация массивов
 
-            if(dataRS.extremeSupports.length > 2 || debug) {
-                var element = this.chart.overlay.createElement("Line");
-                element.points = [{'x': dataRS.supportPoints[0].time, 'y': dataRS.supportPoints[0].y}, {
-                    'x': dataRS.supportPoints[1].time,
-                    'y': dataRS.supportPoints[1].y
-                }];
-                element.drawType = 'auto';
-                element.storageEnable = false;
-                element.controlEnable = false;
-                element.id = 'SR_analyzer';
-                this.chart.overlay.history.push(element);
+        for(var i=candles.length-1; i>=0; i--) {
+            m_low.push(candles[i][TA.LOW]);
+            m_high.push(candles[i][TA.HIGH]);
+            m_rsi.push(dataRsi[i]);
+        };
+
+        //console.log(m_low, m_high, m_rsi);
+
+        var index = -1;     //инициализация переменной, которая будет содержать индекс искомого бара
+        var flag=false;        //эта переменная нужна, чтобы не анализировать свечи на текущем незавершенном тренде
+        var ext_max = true;    //переменные типа bool используются для того, чтобы в нужный момент прекратить анализ баров
+        var ext_min = true;
+        var min=100000000.0;  //переменные для выявления максимальных и минимальных цен
+        var max= 0.0;
+
+        for(var i=0;i<candles.length;i++) //цикл по барам
+        {
+            var rsi = m_rsi[i];                                   //получаем значения индикатора RSI
+            var price_max = m_high[i]; //NormalizeDouble(m_high[i], digits);   //цены High
+            var price_min = m_low[i]; //NormalizeDouble(m_low[i], digits);    //цены Low выбранного бара
+
+            if(flag==false) //условие для того, чтобы не начать искать экстремум на незавершившемся тренде
+            {
+                if(rsi<=low||rsi>=high) //если первые бары в зонах перекупл. или перепрод.,
+                    continue;            //то переходим к следующему бару
+                else flag = true;       //если нет, то продолжаем анализ
+            }
+            if(rsi<low) //если найдено пересечение RSI c уровнем low
+            {
+                if(ext_min==true) //если RSI еще не пересекал уровень high
+                {
+                    if(ext_max==true) //если еще не выставлен запрет на поиск максимального экстремума,
+                    {
+                        ext_max=false; //то запрещаем искать максимальный экстремум
+                        if(distans>=0) high=high-distans; //изменяем уровень high, по которому потом
+                    }                                  //будет производиться поиск второго бара
+                    if(price_min<min) //ищем и замоминаем индекс первого бара
+                    {               //сравнивая цены Low свечей
+                        min=price_min;
+                        index=i;
+                    }
+                }
+                else break; //Выходим из цикла, поскольку раз искать минимальный экстремум уже запрещено,значит найден уже максимальный
+            }
+            if(rsi>high) //далее алгоритм тот же, только по поиску максимального экстремума
+            {
+                if(ext_max==true)
+                {
+                    if(ext_min==true)
+                    {
+                        ext_min=false; //если нужно, запрещаем искать минимальный экстремум
+                        if(distans>=0) low=low+distans;
+                    }
+                    if(price_max>max) //ищем и запоминаем экстремум
+                    {
+                        max=price_max;
+                        index=i;
+                    }
+                }
+                else break; //Выходим из цикла, поскольку раз искать максимальный экстремум уже запрещено, значит найден уже минимальный
+            }
+        }
+        //console.log(index, m_rsi[index]);
+        return(index);
+    }
+
+    function Ext_2( low, high, candles, dataRsi, candles_ext, n_bar, distans, first_ext)
+    {
+        var m_rsi = [], m_high = [], m_low = []; //инициализация массивов
+
+        var rev_candles = [];
+        for(var i=candles.length-1; i>=0; i--) {
+            rev_candles.push(candles[i]);
+        }
+        candles = rev_candles;
+
+        for(var i=0; i<candles.length; i++) {
+            m_low.push(candles[i][TA.LOW]);
+            m_high.push(candles[i][TA.HIGH]);
+            m_rsi.push(dataRsi[dataRsi.length-1 - i]);
+        };
+
+        //console.log(m_low, m_high, m_rsi);
+
+        var index=-1;
+        var p_1=-1;    //индекс искомого бара, индекс предыдущего бара
+        var high_level=false; //переменные для определения типа искомого бара
+        var low_level = false;
+        var _start=false;    //переменные типа bool используются для того, чтобы в нужный момент прекратить анализ баров
+        var rsi,min,max,price_max,price_min;
+        min=100000000.0; max=0.0;
+
+        //--- в данном блоке определяем, на какой линии (сопротивления или поддержки) должен лежать искомый экстремум
+        if(n_bar!=3)
+        {
+            if(first_ext==true)//если первая точка была максимальной
+            {
+                low_level=true;//то эта должна быть минимальной
+                if(distans>=0) low=low+distans;
+            }
+            else //если минимальной
+            {
+                high_level = true;
+                if(distans>=0) high = high-distans;
+            }
+        }
+        else
+        {
+            if(first_ext==false)//если первая точка была минимальной
+            {
+                low_level=true;//то  и эта должна быть минимальной
+                if(distans>=0) high=high-distans;
+            }
+            else //если максимальной
+            {
+                high_level = true;
+                if(distans>=0) low = low+distans;
+            }
+        }
+
+        switch(n_bar) //находим индекс предыдущего бара
+        {
+            case 2: p_1 = candles_ext.p_1; break;
+            case 3: p_1 = candles_ext.p_2; break;
+            case 4: p_1 = candles_ext.p_3; break;
+        }
+
+        for(var i=p_1;i<candles.length;i++) //анализируем оставшиеся бары
+        {
+            rsi=m_rsi[i];
+            price_max = m_high[i];
+            price_min = m_low[i];
+            if(_start==true && ((low_level==true && rsi>=high) || (high_level==true && rsi<=low)))
+            {
+                break; //выходим из цикла, если второй экстремум уже найден, а RSI уже пересек противоположный уровень
+            }
+            if(low_level==true) //если ищем минимальный экстремум
+            {
+                if(rsi<=low)
+                {
+                    if(_start==false) _start=true;
+                    if(price_min<min)
+                    {
+                        min=price_min;
+                        index=i;
+                    }
+                }
+            }
+            else //если ищем максимальный экстремум
+            {
+                if(rsi>=high)
+                {
+                    if(_start==false) _start=true;
+                    if(price_max>=max)
+                    {
+                        max=price_max;
+                        index=i;
+                    }
+                }
+            }
+        }
+
+        return(index);
+    }
+
+    function One_ext(candles_ext, //переменная типа структуры для получения индекса первого бара
+                     dataRsi,         //хэндл индикатора
+                     low)        //заданный уровень перепроданности RSI (можно использовать и high уровень)
+    {
+        var m_rsi = [];               //инициализация массива данных индикатора
+
+        for(var i=dataRsi.length-1; i>=0; i--) {
+            if(typeof dataRsi[i] != "undefined") {
+                m_rsi.push(dataRsi[i]);
+            }
+        }
+
+
+        var rsi=m_rsi[candles_ext.p_1]; //определяем значение RSI на баре с первым экстремумом
+
+        if(rsi<=low)                      //если значение меньше нижнего уровня,
+            return(false);                 //то первый экстремум был минимальным
+        else                              //если нет,
+            return(true);                     //то максимальным
+    }
+
+
+    function calculate()
+    {
+        Candles_Ext.p_1=Ext_1(Low_RSI,High_RSI,data,dataRsi,Distans,Period_Trade); //находим индекс бара первого экстремума
+        if(Candles_Ext.p_1<0)
+        {
+            console.log("analyseResistSupport: В истории недостаточно баров для анализа 1");
+            return 0;
+        }
+        if(Candles_Ext.p_1>0) First_Ext=One_ext(Candles_Ext, dataRsi,Low_RSI,Period_Trade);
+        Candles_Ext.p_2=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,2,Distans,First_Ext,Period_Trade); //находим индекс бара второго экстремума
+        if(Candles_Ext.p_2<0)
+        {
+            console.log("analyseResistSupport: В истории недостаточно баров для анализа 2");
+            return 0;
+        }
+        Candles_Ext.p_3=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,3,Distans,First_Ext,Period_Trade); //находим индекс бара третьего экстремума
+        if(Candles_Ext.p_3<0)
+        {
+            console.log("analyseResistSupport: В истории недостаточно баров для анализа 3");
+            return 0;
+        }
+        Candles_Ext.p_4=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,4,Distans,First_Ext,Period_Trade); //находим индекс бара последнего экстремума
+        if(Candles_Ext.p_4<0)
+        {
+            console.log("analyseResistSupport: В истории недостаточно баров для анализа 4");
+            return 0;
+        }
+        return 1;
+    }
+
+    //Candles_Ext.p_1=Ext_1(Low_RSI,High_RSI,data,dataRsi,Distans,Period_Trade); //находим индекс бара первого экстремума
+    //
+    //if(Candles_Ext.p_1>0) {
+    //    First_Ext=One_ext(Candles_Ext, dataRsi,Low_RSI,Period_Trade);
+    //}
+    //
+    //Candles_Ext.p_2=Ext_2(Low_RSI,High_RSI,data,dataRsi,Candles_Ext,2,Distans,First_Ext,Period_Trade); //находим индекс бара второго экстремума
+    //console.log(Candles_Ext, First_Ext);
+
+    //var idx = Ext_1(Low_RSI, High_RSI, data, dataRsi, Distans, Period_Trade);
+
+    function findChannel (data, section) {
+        var channelHeight = 0;
+        for(var i=section[0].x; i<= Math.min(section[1].x,data.length-1); i++) {
+            var linePt = iChart.getThirdPoint({'x':section[0].x, 'y':section[0].y}, {'x':section[1].x, 'y':section[1].y}, i);
+            channelHeight = Math.max(channelHeight, Math.abs(linePt.y - (data[i][TA.OPEN] + data[i][TA.CLOSE])/2));
+        }
+        return channelHeight;
+    }
+
+    function findExts (data, section, sectionType, param, accuracy) {
+
+        param = param || "d";
+        var dParam = "d" + param;
+
+        var prevPoint = {},
+            currPoint = {},
+            extPionts = [],
+            needTurn = false;
+
+        var channelHeight = findChannel(data, section);
+
+        for(var i=data.length-1; i>=section[0].x; i--) {
+            currPoint = {
+                index: i,
+                time: data[i][TA.FULLTIME],
+                h: data[i][TA.HIGH],
+                l: data[i][TA.LOW],
+                o: data[i][TA.OPEN],
+                c: data[i][TA.CLOSE],
+                av1: (data[i][TA.OPEN] + data[i][TA.CLOSE]) / 2,
+                av2: (data[i][TA.HIGH] + data[i][TA.LOW]) / 2
+            };
+
+            var linePt = iChart.getThirdPoint({'x':section[0].x, 'y':section[0].y}, {'x':section[1].x, 'y':section[1].y}, i);
+            currPoint['dh'] =  Math.abs(linePt.y - currPoint.h);
+            currPoint['dl'] =  Math.abs(linePt.y - currPoint.l);
+            currPoint['do'] =  Math.abs(linePt.y - currPoint.o);
+            currPoint['dc'] =  Math.abs(linePt.y - currPoint.c);
+            currPoint['dav1'] =  Math.abs(linePt.y - currPoint.av1);
+            currPoint['dav2'] =  Math.abs(linePt.y - currPoint.av2);
+
+
+            if(i == section[2].x || i == section[3].x) {
+                extPionts.push(currPoint);
+                prevPoint = $.extend({}, currPoint);
+                needTurn = true;
+                i--;
+            } else {
+
+                if ($.isEmptyObject(prevPoint)) {
+                    prevPoint = $.extend({}, currPoint);
+                    if (currPoint[dParam] / channelHeight < accuracy) {
+                        extPionts.push(currPoint);
+                        needTurn = true;
+                    }
+                    continue;
+                } else {
+
+                    if (currPoint[dParam] > prevPoint[dParam] && !needTurn) {
+                        if (prevPoint[dParam] / channelHeight < accuracy) {
+                            extPionts.push(prevPoint);
+                            needTurn = true;
+                        }
+                    }
+
+                    if(sectionType == "support") {
+                        if (currPoint[dParam] < prevPoint[dParam] && needTurn) {
+                            if (Math.abs(extPionts[extPionts.length - 1][param] - prevPoint[param]) / channelHeight > 0.15) {
+                                needTurn = false;
+                            }
+                        }
+                    } else if(sectionType == "resist") {
+                        if (currPoint[dParam] > prevPoint[dParam] && needTurn) {
+                            if (Math.abs(extPionts[extPionts.length - 1][param] - prevPoint[param]) / channelHeight > 0.15) {
+                                needTurn = false;
+                            }
+                        }
+                    }
+
+                    prevPoint = $.extend({}, currPoint);
+                }
             }
 
-            if(dataRS.extremeResist.length > 2 || debug) {
-                var element = this.chart.overlay.createElement("Line");
-                element.points = [{'x': dataRS.resistPoints[0].time, 'y': dataRS.resistPoints[0].y}, {
-                    'x': dataRS.resistPoints[1].time,
-                    'y': dataRS.resistPoints[1].y
-                }];
-                element.drawType = 'auto';
-                element.storageEnable = false;
-                element.controlEnable = false;
-                element.id = 'SR_analyzer';
-                this.chart.overlay.history.push(element);
+        }
+
+        if(sectionType == "support") {
+            //удаление точек у которых разница с соседними очень мала
+            for (var i = 0; i < extPionts.length; i++) {
+                if ((typeof data[extPionts[i].index - 1] != "undefined" && Math.abs(data[extPionts[i].index - 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005) ||
+                    (typeof data[extPionts[i].index + 1] != "undefined" && Math.abs(data[extPionts[i].index + 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005)
+                ) {
+                    extPionts.splice(i, 1);
+                    --i;
+                }
+            }
+        } else if(sectionType == "resist") {
+            //удаление точек у которых разница с соседними очень мала
+            for (var i = 0; i < extPionts.length; i++) {
+                if ((typeof data[extPionts[i].index - 1] != "undefined" && Math.abs(data[extPionts[i].index - 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005) ||
+                    (typeof data[extPionts[i].index + 1] != "undefined" && Math.abs(data[extPionts[i].index + 1][TA.HIGH] - extPionts[i].l) / channelHeight < 0.005)
+                ) {
+                    extPionts.splice(i, 1);
+                    --i;
+                }
             }
 
-            if (debug) {
+        }
 
-                var element = this.chart.overlay.createElement("Polygon");
-                element.points = [
-                    {'x': dataRS.points[2][0], 'y': dataRS.points[2][1]},
-                    {'x': dataRS.points[0][0], 'y': dataRS.points[0][1]},
-                    {'x': dataRS.points[1][0], 'y': dataRS.points[1][1]},
-                    {'x': dataRS.points[3][0], 'y': dataRS.points[3][1]}
-                ];
-                element.storageEnable = false;
-                element.drawType = 'auto';
-                element.id = 'SR_analyzer';
-                this.chart.overlay.history.push(element);
+        return extPionts;
+    }
 
+    if(calculate()) {
+        //console.log(Candles_Ext);
+        var points = [];
 
-                for (var i = 0; i < dataRS.extremeSupports.length; i++) {
-                    var element = this.chart.overlay.createElement("Trade");
-                    element.hasSettings = true;
-                    element.settings = {
-                        "type_id": 1,
-                        "qb": "",
-                        "mode": 1,
-                        "date_time": '',
-                        summ: dataRS.extremeSupports[i]["d" + extTypeSup] / dataRS.extremeSupports[i][extTypeSup] * 100
-                    };
-                    element.points = [{'x': dataRS.extremeSupports[i].time, 'y': dataRS.extremeSupports[i][extTypeSup]}];
-                    element.id = 'SR_analyzer';
-                    this.chart.overlay.history.push(element);
+        if(First_Ext) {
+            points[0] = [data[data.length - 1 - Candles_Ext.p_1][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_1][TA.HIGH], data.length - 1 - Candles_Ext.p_1];
+            points[1] = [data[data.length - 1 - Candles_Ext.p_2][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_2][TA.LOW], data.length - 1 - Candles_Ext.p_2];
+            points[2] = [data[data.length - 1 - Candles_Ext.p_3][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_3][TA.HIGH], data.length - 1 - Candles_Ext.p_3];
+            points[3] = [data[data.length - 1 - Candles_Ext.p_4][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_4][TA.LOW], data.length - 1 - Candles_Ext.p_4];
+        } else {
+            points[0] = [data[data.length - 1 - Candles_Ext.p_1][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_1][TA.LOW], data.length - 1 - Candles_Ext.p_1];
+            points[1] = [data[data.length - 1 - Candles_Ext.p_2][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_2][TA.HIGH], data.length - 1 - Candles_Ext.p_2];
+            points[2] = [data[data.length - 1 - Candles_Ext.p_3][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_3][TA.LOW], data.length - 1 - Candles_Ext.p_3];
+            points[3] = [data[data.length - 1 - Candles_Ext.p_4][TA.FULLTIME], data[data.length - 1 - Candles_Ext.p_4][TA.HIGH], data.length - 1 - Candles_Ext.p_4];
+        }
+
+        var itPnts = iChart.getIntersection(
+            {'x':points[0][2], 'y':points[0][1]},
+            {'x':points[2][2], 'y':points[2][1]},
+            {'x':points[1][2], 'y':points[1][1]},
+            {'x':points[3][2], 'y':points[3][1]}
+        );
+
+        //console.log('points', points);
+        //console.log('Intersection', itPnts);
+
+        var fromAll = points[3][2] - (points[0][2]-points[3][2]);
+        fromAll = Math.max(fromAll, 0);
+        var to = points[0][2] + (points[0][2]-points[3][2]);
+        to = Math.min(to, this.chart.areas[0].xSeries.length-1);
+
+        var restrict1 = 0,
+            restrict2 = this.chart.areas[0].xSeries.length-1;
+
+        //пересечение слева
+        if(itPnts.x < points[3][2]) {
+            restrict1 = itPnts.x;
+        }
+
+        //пересечение справа
+        if(itPnts.x > points[0][2]) {
+            restrict2 = itPnts.x;
+        }
+
+        fromAll = Math.floor(Math.max(fromAll, restrict1));
+        to = Math.ceil(Math.min(to, restrict2, this.chart.areas[0].xSeries.length-1, (restrict1 ? (data.length + 15) : data.length + 30)));
+
+        //console.log(fromAll, to);
+
+        var supportFound = false,
+            supportPoints = [],
+            resistFound = false,
+            resistPoints = [];
+
+        if(First_Ext) {
+            for(var i=points[3][2]; i>=fromAll; i--) {
+                var supportTest = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, i);
+                if(Math.max(data[i][TA.OPEN], data[i][TA.CLOSE]) < supportTest.y) {
+                    supportFound = true;
+                }
+                if(!supportFound) {
+                    supportTest['time'] = data[i][TA.FULLTIME];
+                    supportPoints[0] = supportTest;
                 }
 
+                var resistTest = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, i);
+                if(!resistFound) {
+                    resistTest['time'] = data[i][TA.FULLTIME];
+                    resistPoints[0] = resistTest;
+                }
+                if(Math.min(data[i][TA.OPEN], data[i][TA.CLOSE]) > resistTest.y) {
+                    resistFound = true;
+                }
 
-                for (var i = 0; i < dataRS.extremeResist.length; i++) {
-                    var element = this.chart.overlay.createElement("Trade");
-                    element.hasSettings = true;
+            }
+
+            supportPoints[1] = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, to);
+            supportPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
+            supportPoints[2] = {'x':points[1][2], 'y':points[1][1], time: points[1][0]};
+            supportPoints[3] = {'x':points[3][2], 'y':points[3][1], time: points[3][0]};
+            resistPoints[1] = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, to);
+            resistPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
+            resistPoints[2] = {'x':points[0][2], 'y':points[0][1], time: points[0][0]};
+            resistPoints[3] = {'x':points[2][2], 'y':points[2][1], time: points[2][0]};
+
+        } else {
+            for(var i=points[3][2]; i>=fromAll; i--) {
+                var supportTest = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, i);
+                if(!supportFound) {
+                    supportTest['time'] = data[i][TA.FULLTIME];
+                    supportPoints[0] = supportTest;
+                }
+
+                if(Math.max(data[i][TA.OPEN], data[i][TA.CLOSE]) < supportTest.y || supportTest.y < 0) {
+                    supportFound = true;
+                }
+
+                var resistTest = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, i);
+                if(Math.min(data[i][TA.OPEN], data[i][TA.CLOSE]) > resistTest.y) {
+                    resistFound = true;
+                }
+                if(!resistFound) {
+                    resistTest['time'] = data[i][TA.FULLTIME];
+                    resistPoints[0] = resistTest;
+                }
+            }
+
+            supportPoints[1] = iChart.getThirdPoint({'x':points[0][2], 'y':points[0][1]}, {'x':points[2][2], 'y':points[2][1]}, to);
+            supportPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
+            supportPoints[2] = {'x':points[0][2], 'y':points[0][1], time: points[0][0]};
+            supportPoints[3] = {'x':points[2][2], 'y':points[2][1], time: points[2][0]};
+            resistPoints[1] = iChart.getThirdPoint({'x':points[1][2], 'y':points[1][1]}, {'x':points[3][2], 'y':points[3][1]}, to);
+            resistPoints[1]['time'] = this.chart.areas[0].xSeries[to]*1000;
+            resistPoints[2] = {'x':points[1][2], 'y':points[1][1], time: points[1][0]};
+            resistPoints[3] = {'x':points[3][2], 'y':points[3][1], time: points[3][0]};
+
+        }
+
+        var channelHeightSup = findChannel(data, supportPoints);
+        var channelHeightRes = findChannel(data, resistPoints);
+
+        //console.log(supportPoints, resistPoints);
+        //console.log(channelHeightSup, channelHeightRes);
+
+        var extTypeSup = "l",
+            extTypeRes = "h",
+            accuracy = 0.05,
+            extSupportPionts = findExts(data, supportPoints, 'support', extTypeSup, accuracy),
+            extResistPionts = findExts(data, resistPoints, 'resist', extTypeRes, accuracy);
+
+
+        /*
+         //SupportChannel
+         var element = this.chart.overlay.createElement("Line");
+         element.settings = {fillStyle: '#FF0000',
+         strokeStyle: '#FF0000',
+         lineWidth: 2};
+         element.points = [{'x':supportPoints[0].time, 'y':supportPoints[0].y+channelHeightSup},{'x':supportPoints[1].time,'y':supportPoints[1].y+channelHeightSup}];
+
+         this.chart.overlay.history.push(element);
+
+         //ResistChannel
+         var element = this.chart.overlay.createElement("Line");
+         element.settings = {fillStyle: '#FF0000',
+         strokeStyle: '#FF0000',
+         lineWidth: 2};
+         element.points = [{'x':resistPoints[0].time, 'y':resistPoints[0].y-channelHeightRes},{'x':resistPoints[1].time,'y':resistPoints[1].y-channelHeightRes}];
+
+         this.chart.overlay.history.push(element);
+         */
+
+        //console.log(idx, dataRsi[idx]);
+        return {
+            extremeSupports: extSupportPionts,
+            extremeResist: extResistPionts,
+            supportPoints: supportPoints,
+            resistPoints: resistPoints,
+            points: points,
+            lastPoint: {x: data.length - 1, y: data[data.length - 1][TA.CLOSE], time: data[data.length - 1][TA.FULLTIME]}
+        };
+    } else {
+        return false;
+    }
+};
+
+iChart.Charting.TA.prototype.autoResistSupport = function (debug, offset) {
+    debug = !!debug;
+    var dataRS = this.analyseResistSupport(8, offset);
+    if(dataRS) {
+        this.clearResistSupport();
+        var extTypeSup = "l",
+            extTypeRes = "h";
+
+        if(dataRS.extremeSupports.length > 2 || debug) {
+            var element = this.chart.overlay.createElement("Line");
+            element.points = [{'x': dataRS.supportPoints[0].time, 'y': dataRS.supportPoints[0].y}, {
+                'x': dataRS.supportPoints[1].time,
+                'y': dataRS.supportPoints[1].y
+            }];
+            element.drawType = 'auto';
+            element.storageEnable = false;
+            element.controlEnable = false;
+            element.id = 'SR_analyzer';
+            this.chart.overlay.history.push(element);
+        }
+
+        if(dataRS.extremeResist.length > 2 || debug) {
+            var element = this.chart.overlay.createElement("Line");
+            element.points = [{'x': dataRS.resistPoints[0].time, 'y': dataRS.resistPoints[0].y}, {
+                'x': dataRS.resistPoints[1].time,
+                'y': dataRS.resistPoints[1].y
+            }];
+            element.drawType = 'auto';
+            element.storageEnable = false;
+            element.controlEnable = false;
+            element.id = 'SR_analyzer';
+            this.chart.overlay.history.push(element);
+        }
+
+        this.analyser(dataRS);
+
+        if (debug) {
+
+            var data = this.getData();
+            var data = data.slice(0,data.length-offset);
+
+
+            var element = this.chart.overlay.createElement("Event");
+            element.hasSettings = true;
+            element.drawType = 'auto';
+            element.settings = {
+                color: 'blue',
+                size: 5,
+                shape: 'triangle'
+            };
+
+            element.id = 'SR_analyzer';
+            element.points = [{'x': dataRS.lastPoint.time, 'y': dataRS.lastPoint.y}];
+            this.chart.overlay.history.push(element);
+
+
+            var element = this.chart.overlay.createElement("Polygon");
+            element.points = [
+                {'x': dataRS.points[2][0], 'y': dataRS.points[2][1]},
+                {'x': dataRS.points[0][0], 'y': dataRS.points[0][1]},
+                {'x': dataRS.points[1][0], 'y': dataRS.points[1][1]},
+                {'x': dataRS.points[3][0], 'y': dataRS.points[3][1]}
+            ];
+            element.storageEnable = false;
+            element.drawType = 'auto';
+            element.id = 'SR_analyzer';
+            this.chart.overlay.history.push(element);
+
+
+            for (var i = 0; i < dataRS.extremeSupports.length; i++) {
+                var element = this.chart.overlay.createElement("Trade");
+                element.hasSettings = true;
+                element.settings = {
+                    "type_id": 1,
+                    "qb": "",
+                    "mode": 1,
+                    "date_time": '',
+                    summ: dataRS.extremeSupports[i]["d" + extTypeSup] / dataRS.extremeSupports[i][extTypeSup] * 100
+                };
+                element.points = [{'x': dataRS.extremeSupports[i].time, 'y': dataRS.extremeSupports[i][extTypeSup]}];
+                element.id = 'SR_analyzer';
+                this.chart.overlay.history.push(element);
+            }
+
+
+            for (var i = 0; i < dataRS.extremeResist.length; i++) {
+                var element = this.chart.overlay.createElement("Trade");
+                element.hasSettings = true;
+                element.drawType = 'auto';
+                element.settings = {
+                    "type_id": 0,
+                    "qb": "",
+                    "mode": 1,
+                    "date_time": '',
+                    summ: dataRS.extremeResist[i]["d" + extTypeRes] / dataRS.extremeResist[i][extTypeRes] * 100
+                };
+
+                element.points = [{'x': dataRS.extremeResist[i].time, 'y': dataRS.extremeResist[i][extTypeRes]}];
+                element.id = 'SR_analyzer';
+                this.chart.overlay.history.push(element);
+            }
+        }
+
+        this.chart.overlay.render();
+    }
+};
+
+iChart.Charting.TA.prototype.clearResistSupport = function () {
+    var overlayHistory = this.chart.overlay.history;
+    for(var i=0; i < overlayHistory.length; i++) {
+        var element = overlayHistory[i];
+        if(element.id == "SR_analyzer") {
+            overlayHistory.splice(i, 1);
+            i--;
+        }
+    }
+    this.chart.overlay.render();
+};
+
+
+iChart.Charting.TA.prototype.testInPast = function (offset) {
+    this.clearResistSupport();
+    this.autoResistSupport(1, offset);
+};
+
+iChart.Charting.TA.prototype.analyser = function (dataRS, invert) {
+    invert = invert || 0;
+
+    var pResist = iChart.getLineEquation(dataRS.resistPoints[0], dataRS.resistPoints[1], dataRS.lastPoint.x);
+    var pSupport = iChart.getLineEquation(dataRS.supportPoints[0], dataRS.supportPoints[1], dataRS.lastPoint.x);
+
+
+
+    var dtResistSupport = Math.abs(pResist.y - pSupport.y);
+
+    var dtResist = pResist.y - dataRS.lastPoint.y;
+    var dtSupport = dataRS.lastPoint.y - pSupport.y;
+
+    var dtpResist = dtResist / dtResistSupport * 100;
+    var dtpSupport = dtSupport / dtResistSupport * 100;
+
+    // console.log(pSupport);
+    // console.log(dataRS.resistPoints[0], dataRS.resistPoints[1]);
+    // console.log(dataRS.supportPoints[0], dataRS.supportPoints[1]);
+    // console.log(dtpResist, dtpSupport);
+
+    // if(dtpResist < 10 && dtpResist > 0) {
+    //     return invert ? 2 : 1;
+    // } else if (dtpSupport < 10 && dtpSupport > 0) {
+    //     return invert ? 1: 2;
+    // }
+    if(Math.abs(dtpResist) < 10) {
+        return invert ? 2 : 1;
+    } else if (Math.abs(dtpSupport) < 10) {
+        return invert ? 1: 2;
+    }
+
+    return false;
+};
+
+iChart.Charting.TA.prototype.analyserSearch = function (offset, invert) {
+    offset = offset || this.chart.areas[0].xSeries.length - 100;
+
+    var currentSignal = 0;
+    var firstSignal = 0;
+    var lastSignal = 0;
+    var summ = 0;
+    var lastSumm = 0;
+
+    for(var i=offset;i>0;i--) {
+        var dataRS = this.analyseResistSupport(8, i);
+
+        if(!dataRS) {
+            continue;
+        }
+
+        var advice = this.analyser(dataRS, invert);
+        if(advice) {
+
+            if(!firstSignal) {
+                firstSignal = advice;
+            }
+
+            var element = this.chart.overlay.createElement("Event");
+            element.hasSettings = true;
+            element.drawType = 'auto';
+            element.setSettings({
+                color: advice == 1 ? '#f742d0' : '#085fff',
+                size: 5,
+                shape: 'triangle',
+                dataRS: dataRS,
+                pointFormatter: function () {
+                    //console.log(this.dataRS);
+                },
+                onHover: function () {
+                    var element = this.layer.chart.overlay.createElement("Line");
+                    element.points = [{'x': this.settings.dataRS.resistPoints[0].time, 'y': this.settings.dataRS.resistPoints[0].y}, {
+                        'x': this.settings.dataRS.resistPoints[1].time,
+                        'y': this.settings.dataRS.resistPoints[1].y
+                    }];
                     element.drawType = 'auto';
-                    element.settings = {
-                        "type_id": 0,
-                        "qb": "",
-                        "mode": 1,
-                        "date_time": '',
-                        summ: dataRS.extremeResist[i]["d" + extTypeRes] / dataRS.extremeResist[i][extTypeRes] * 100
-                    };
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_view';
+                    this.layer.chart.overlay.history.push(element);
 
-                    element.points = [{'x': dataRS.extremeResist[i].time, 'y': dataRS.extremeResist[i][extTypeRes]}];
-                    element.id = 'SR_analyzer';
-                    this.chart.overlay.history.push(element);
+                    var element = this.layer.chart.overlay.createElement("Line");
+                    element.points = [{'x': this.settings.dataRS.supportPoints[0].time, 'y': this.settings.dataRS.supportPoints[0].y}, {
+                        'x': this.settings.dataRS.supportPoints[1].time,
+                        'y': this.settings.dataRS.supportPoints[1].y
+                    }];
+                    element.drawType = 'auto';
+                    element.storageEnable = false;
+                    element.controlEnable = false;
+                    element.id = 'SR_view';
+                    this.layer.chart.overlay.history.push(element);
+
+                    var extTypeSup = "l",
+                        extTypeRes = "h";
+
+                    for (var i = 0; i < this.settings.dataRS.extremeSupports.length; i++) {
+                        var element = this.layer.chart.overlay.createElement("Trade");
+                        element.hasSettings = true;
+                        element.settings = {
+                            "type_id": 1,
+                            "qb": "",
+                            "mode": 1,
+                            "date_time": '',
+                            summ: this.settings.dataRS.extremeSupports[i]["d" + extTypeSup] / this.settings.dataRS.extremeSupports[i][extTypeSup] * 100
+                        };
+                        element.points = [{'x': this.settings.dataRS.extremeSupports[i].time, 'y': this.settings.dataRS.extremeSupports[i][extTypeSup]}];
+                        element.id = 'SR_view';
+                        this.layer.chart.overlay.history.push(element);
+                    }
+
+
+                    for (var i = 0; i < this.settings.dataRS.extremeResist.length; i++) {
+                        var element = this.layer.chart.overlay.createElement("Trade");
+                        element.hasSettings = true;
+                        element.drawType = 'auto';
+                        element.settings = {
+                            "type_id": 0,
+                            "qb": "",
+                            "mode": 1,
+                            "date_time": '',
+                            summ: this.settings.dataRS.extremeResist[i]["d" + extTypeRes] / this.settings.dataRS.extremeResist[i][extTypeRes] * 100
+                        };
+
+                        element.points = [{'x': this.settings.dataRS.extremeResist[i].time, 'y': this.settings.dataRS.extremeResist[i][extTypeRes]}];
+                        element.id = 'SR_view';
+                        this.layer.chart.overlay.history.push(element);
+                    }
+
+
+                },
+                onOut: function () {
+                    var overlayHistory = this.layer.chart.overlay.history;
+                    for(var i=0; i < overlayHistory.length; i++) {
+                        var element = overlayHistory[i];
+                        if(element.id == "SR_view") {
+                            overlayHistory.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    this.layer.chart.overlay.render();
                 }
+            });
+
+            element.id = 'SR_analyserSearch';
+            element.points = [{'x': dataRS.lastPoint.time, 'y': dataRS.lastPoint.y}];
+            this.chart.overlay.history.push(element);
+
+
+            if(currentSignal != advice) {
+
+                if(advice == 1) {
+                    summ += dataRS.lastPoint.y
+                } else {
+                    summ -= dataRS.lastPoint.y
+                }
+                console.log(advice, dataRS.lastPoint, summ);
+                lastSumm = dataRS.lastPoint.y;
+
+                currentSignal = advice;
+                lastSignal = advice;
             }
 
             this.chart.overlay.render();
         }
-    };
+    }
 
-    iChart.Charting.TA.prototype.clearResistSupport = function () {
-        var overlayHistory = this.chart.overlay.history;
-        for(var i=0; i < overlayHistory.length; i++) {
-            var element = overlayHistory[i];
-            if(element.id == "SR_analyzer") {
-                overlayHistory.splice(i, 1);
-                i--;
-            }
+    if(firstSignal == lastSignal) {
+        if(firstSignal == 1) {
+            summ -= lastSumm;
+        } else {
+            summ += lastSumm;
         }
-        this.chart.overlay.render();
     }
 
 
-})();
+    console.log("Profit: ", summ);
+
+};
+
 

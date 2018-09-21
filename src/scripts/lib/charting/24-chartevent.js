@@ -25,7 +25,9 @@
             shape: 'disk', //[disk,circle,square,diamond,triangle]
             pointFormatter: function () {
                 return '';
-            }
+            },
+            onHover: function () {},
+            onOut: function () {}
         };
     };
 
@@ -154,17 +156,24 @@
         var left = coords[0].x + /*$(iChart.viewData.chart.container).position().left + */$(this.layer.chart.container).offset().left;
 
         this.drawTooltip(this.settings, top, left);
+
+        if(typeof this.settings.onHover == "function") {
+            this.settings.onHover.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.onOut = function (ctx) {
-        $('#chart-element-tooltip').hide();
+        $('[chart-element-tooltip]').hide();
+        if(typeof this.settings.onOut == "function") {
+            this.settings.onOut.call(this);
+        }
     };
 
     iChart.Charting.ChartEvent.prototype.drawTooltip = function (data, top, left) {
 
-        if($('#chart-element-tooltip').length == 0) {
+        if(this.layer.chart.env.wrapper.find('[chart-element-tooltip]').length == 0) {
             $('body').append('' +
-            '<div id="chart-element-tooltip" class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
+            '<div chart-element-tooltip class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
                 '<div class="qtip-tip" style="background-color: transparent ! important; border: 0px none ! important; height: 6px; width: 6px; line-height: 6px; top: 50%; margin-top: -3px; right: -6px;"><canvas style="background-color: transparent ! important; border: 0px none ! important;" height="6" width="6"></canvas></div>' +
                 '<div class="qtip-content" id="qtip-34-content" aria-atomic="true">' +
                 '</div>' +
@@ -175,9 +184,9 @@
         var dataView = this.settings.pointFormatter.call(this.settings);
 
         if(dataView) {
-            $('#chart-element-tooltip .qtip-content').html(dataView);
-            $('#chart-element-tooltip').css({
-                top: top - $('#chart-element-tooltip').height() - 0 + 'px',
+            $('[chart-element-tooltip] .qtip-content').html(dataView);
+            $('[chart-element-tooltip]').css({
+                top: top - $('[chart-element-tooltip]').height() - 0 + 'px',
                 left: left + 12 + 'px'
             }).show();
         }

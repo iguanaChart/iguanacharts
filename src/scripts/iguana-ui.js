@@ -43,7 +43,7 @@
             //this.$topToolBarContainer.append(indicatorsDropdownHtml);
             this.chart.wrapper.find('.js-chart-ui-indicators').append(indicatorsDropdownHtml);
 
-            $(this.chart.wrapper).off('click touchend', '.js-add-indicator').on('click touchend', '.js-add-indicator', function () {
+            $(this.chart.wrapper).off('click', '.js-add-indicator').on('click', '.js-add-indicator', function () {
                 var ind = $(this).data('value');
                 var params = {};
                 iChart.indicators[ind].parameters.forEach(function(n){
@@ -57,7 +57,7 @@
             });
 
 
-            $(this.chart.wrapper).off('click touchend', '.js-remove-indicator').on('click touchend', '.js-remove-indicator', function (e) {
+            $(this.chart.wrapper).off('click', '.js-remove-indicator').on('click', '.js-remove-indicator', function (e) {
                 var ind = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 ind.splice($(this).data('index'), 1);
                 _this.chart.dataSource.dataSettings.graphicIndicators = _this.chart.serializeIndicators(ind);
@@ -67,7 +67,7 @@
                 e.preventDefault();
             });
 
-            $(this.chart.wrapper).off('click touchend', '.js-edit-indicator').on('click touchend', '.js-edit-indicator', function (e) {
+            $(this.chart.wrapper).off('click', '.js-edit-indicator').on('click', '.js-edit-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var inx = $(this).data('index');
 
@@ -174,7 +174,7 @@
                 }
             }
 
-            $(document).off('click touchend', '.js-set-params-indicator').on('click touchend', '.js-set-params-indicator', function (e) {
+            $(document).off('click', '.js-set-params-indicator').on('click', '.js-set-params-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var newParams = $('.js-iChartTools-indicators-params input').serializeArray();
 
@@ -237,7 +237,7 @@
             });
 
 
-            $themeConfig.on('click touchend','.js-chartOptions', function(){
+            $themeConfig.on('click','.js-chartOptions', function(){
                 switch ($(this).attr('data-value')) {
                     case 'ok':
                         _this.chart.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
@@ -254,13 +254,13 @@
                 }
             });
 
-            $themeConfig.on('click touchend', '.js-themeSelect', function(){
+            $themeConfig.on('click', '.js-themeSelect', function(){
                 _this.chart.wrapper.iguanaChart('setTheme', $(this).data('theme'));
                 $windowContent.find('.js-themeConfigOptions').empty().append(_this.renderThemeConfigOptions());
                 return false;
             });
 
-            $themeConfig.on('click touchend', '.js-themeSaveAs', function(){
+            $themeConfig.on('click', '.js-themeSaveAs', function(){
 
                 UIkit.modal.prompt(_t('5228', "Название") + ':', '', function(title){
                     if(title) {
@@ -278,7 +278,7 @@
                 return false;
             });
 
-            $themeConfig.on('click touchend', '.js-themeDelete', function(e){
+            $themeConfig.on('click', '.js-themeDelete', function(e){
                 var name = $(this).data('name');
                 var pos = $.grep($iguanaChart.thems, function(n, i){ return (n.name == name) ? (n.i = i) : null})[0];
                 $iguanaChart.thems.splice(pos,1);
@@ -335,7 +335,7 @@
                         show: function(event, api) {
                             $(this).find('.js-widthSlectorWrapper').each(function(){
                                 var $wrapper = $(this);
-                                $wrapper.off().on('click touchend', '.js-lineWidth', function(){
+                                $wrapper.off().on('click', '.js-lineWidth', function(){
                                     var value = $(this).attr('data-style');
                                     _this.chart.wrapper.iguanaChart('chartOptions', $wrapper.attr('data-option'), value);
                                     $this.find('.js-widthSlectorValue').attr('data-style', value);
@@ -412,7 +412,7 @@
                 });
             });
 
-            $themeConfigOptions.find('.js-checkbox').on('click touchend', '.js-flag', function(){
+            $themeConfigOptions.find('.js-checkbox').on('click', '.js-flag', function(){
                 _this.chart.wrapper.iguanaChart('chartOptions', $(this).attr('data-option'), $(this).prop('checked'));
             });
 
@@ -503,7 +503,7 @@
         };
 
         this.bindUiControls = function () {
-            this.$uiContainer.off('click touchend', '.js-chart-ui-control').on('click touchend', '.js-chart-ui-control', function (e) {
+            this.$uiContainer.off('click', '.js-chart-ui-control').on('click', '.js-chart-ui-control', function (e) {
                 var $this = $(this);
 
                 var property  = $this.data('property');
@@ -802,6 +802,9 @@
                     break;
                 case 'FibonacciCorrection':
                     uiClass = 'sprite-icon-f-fibonacci-correction';
+                    break;
+                case 'HorizontalRange':
+                    uiClass = 'sprite-icon-h-line-double';
                     break;
             }
 

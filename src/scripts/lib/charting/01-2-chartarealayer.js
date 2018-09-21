@@ -124,6 +124,8 @@
                 return new iChart.Charting.ChartLevel(this);
             case "Range":
                 return new iChart.Charting.ChartRange(this);
+            case "HorizontalRange":
+                return new iChart.Charting.ChartHorizontalRange(this);
             default:
                 return undefined;
         }

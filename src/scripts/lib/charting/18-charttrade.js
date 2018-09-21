@@ -167,14 +167,14 @@
     }*/
 
     iChart.Charting.ChartTrade.prototype.onOut = function (ctx) {
-        $('#chart-element-tooltip').hide();
+        $('[chart-element-tooltip]').hide();
     }
 
     iChart.Charting.ChartTrade.prototype.drawTooltip = function (data, top, left) {
 
-        if($('#chart-element-tooltip').length == 0) {
+        if(this.layer.chart.env.wrapper.find('[chart-element-tooltip]').length == 0) {
             $(this.layer.chart.container).append('' +
-            '<div id="chart-element-tooltip" class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
+            '<div chart-element-tooltip class="qtip qtip-default qtip-tipsy qtip-pos-rc" tracking="false" role="alert" aria-live="polite" aria-atomic="false" style="z-index: 15002;">' +
                 '<div class="qtip-tip" style="background-color: transparent ! important; border: 0px none ! important; height: 6px; width: 6px; line-height: 6px; top: 50%; margin-top: -3px; right: -6px;"><canvas style="background-color: transparent ! important; border: 0px none ! important;" height="6" width="6"></canvas></div>' +
                 '<div class="qtip-content" id="qtip-34-content" aria-atomic="true">' +
                 '</div>' +
@@ -193,8 +193,8 @@
                 (parseFloat(data.profit)==0 ? '' : (parseFloat(data.profit)>0 ? 'Прибыль: ' : 'Убыток: ')) + (parseFloat(data.profit)!=0 ? (iChart.formatNumber( parseFloat(data.profit), { decimalPlaces: 2, decimalPrecision: 2, "scale": 0 }) + '<br/>') : '') +
             '</div>');
 
-        $('#chart-element-tooltip .qtip-content').html(dataView);
-        $('#chart-element-tooltip').css({top: Math.max(top - $('#chart-element-tooltip').height() - 12 , 0) +'px', left: left + 12 + 'px'}).show();
+        $('[chart-element-tooltip] .qtip-content').html(dataView);
+        $('[chart-element-tooltip]').css({top: Math.max(top - $('[chart-element-tooltip]').height() - 12 , 0) +'px', left: left + 12 + 'px'}).show();
 
     }
 
