@@ -542,8 +542,10 @@
 
                 ctx.beginPath();
                 ctx.fillStyle = ySeries.color;
+                ctx.strokeStyle = ySeries.color;
                 ctx.arc(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
                 ctx.closePath();
+                ctx.stroke();
                 ctx.fill();
                 area.textOffset += 15;
 
@@ -590,11 +592,126 @@
 
             ctx.restore();
 
-            //console.log(area);
+        }
+
+        if(this.chart.chartOptions.floatingLegend) {
+            this.drawTooltip(ctx);
         }
     };
 
     iChart.Charting.ChartWidgetLayer.prototype.drawPoints = function (ctx) {
+
+    };
+
+    iChart.Charting.ChartWidgetLayer.prototype.drawTooltip = function (ctx) {
+        ctx.save();
+
+        var areas = this.chart.areas;
+
+        for (var area_i = 0; area_i < areas.length; ++area_i) {
+            var area = areas[area_i];
+
+            if (area.enabled === false || area.isScroller || area.name == "VolumeByPriceArea" || area.isLayer) {
+                continue;
+            }
+
+            if (this.yPoint >= area.innerOffset.top && this.yPoint <= area.innerOffset.top + area.innerHeight) {
+
+                var ySeries = area.ySeries[0];
+
+                var hPositionRight = true;
+
+                var floatingLegendFontSize = this.chart.chartOptions.floatingLegendFontSize;
+                var floatingLegendPadding = floatingLegendFontSize / 2;
+
+                ctx.font = 'normal ' + floatingLegendFontSize + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+
+                var points = area.ySeries[0].points[this.xIndex];
+
+                if( ySeries.kind == 'HLOC' ) {
+
+                    var text1L = ctx.measureText(_t('', 'open:') + points[2]).width;
+                    var text2L = ctx.measureText(_t('', 'close:') + points[3]).width;
+                    var text3L = ctx.measureText(_t('', 'low:') + points[1]).width;
+                    var text4L = ctx.measureText(_t('', 'high:') + points[0]).width;
+
+                    var textWidth = Math.max(text1L,text2L,text3L,text4L) + 10;
+                    var textHeight = (floatingLegendFontSize + 2) * 4 + floatingLegendPadding;
+                } else {
+
+                    var textWidth = ctx.measureText(ySeries.name + ': ' + iChart.formatNumber(points[ySeries.closeValueIndex], ySeries.formatProvider)).width + 10;
+                    var textHeight = (floatingLegendFontSize + 2) + floatingLegendPadding;
+                }
+
+                var cursorY = area.getYPosition(points[ySeries.closeValueIndex]) + area.innerOffset.top;
+                var yPointPosition = cursorY - 20;
+
+                if(this.xPoint  > (area.offset.left + area.innerWidth) / 2) {
+                    hPositionRight = false;
+                }
+
+                var cursorXDir = 9 * (hPositionRight ? 1: -1);
+
+                if(hPositionRight) {
+                    var xPointPosition = this.xPoint + cursorXDir;
+                } else {
+                    xPointPosition = this.xPoint - textWidth + cursorXDir;
+                }
+
+                var yOffset = 0;
+
+                if(yPointPosition + textHeight > area.innerOffset.top + area.innerHeight) {
+                    yOffset = (yPointPosition + textHeight) - (area.innerOffset.top + area.innerHeight);
+                }
+
+                ctx.fillStyle = this.chart.chartOptions.floatingLegendBorderColor;
+                ctx.beginPath();
+                ctx.moveTo(this.xPoint + cursorXDir, cursorY - 9);
+                ctx.lineTo(this.xPoint + cursorXDir, cursorY + 8);
+                ctx.lineTo(this.xPoint, cursorY);
+                ctx.lineTo(this.xPoint + cursorXDir, cursorY - 9);
+                ctx.lineTo(this.xPoint + cursorXDir, cursorY + 8);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = this.chart.chartOptions.floatingLegendBorderColor;
+
+                var radius = 5;
+                ctx.beginPath();
+                ctx.moveTo(xPointPosition + radius, yPointPosition - yOffset);
+                ctx.lineTo(xPointPosition + textWidth - radius, yPointPosition - yOffset);
+                ctx.quadraticCurveTo(xPointPosition + textWidth, yPointPosition - yOffset, xPointPosition + textWidth, yPointPosition - yOffset + radius);
+                ctx.lineTo(xPointPosition + textWidth, yPointPosition - yOffset + textHeight - radius);
+                ctx.quadraticCurveTo(xPointPosition + textWidth, yPointPosition - yOffset + textHeight, xPointPosition + textWidth - radius, yPointPosition - yOffset + textHeight);
+                ctx.lineTo(xPointPosition + radius, yPointPosition - yOffset + textHeight);
+                ctx.quadraticCurveTo(xPointPosition, yPointPosition - yOffset + textHeight, xPointPosition, yPointPosition - yOffset + textHeight - radius);
+                ctx.lineTo(xPointPosition, yPointPosition - yOffset + radius);
+                ctx.quadraticCurveTo(xPointPosition, yPointPosition - yOffset, xPointPosition + radius, yPointPosition - yOffset);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.fillStyle = this.chart.chartOptions.floatingLegendBackground;
+                ctx.fill();
+
+                ctx.fillStyle = this.chart.chartOptions.floatingLegendTextColor;
+                if( ySeries.kind == 'HLOC' ) {
+                    var yTextPosition = yPointPosition - yOffset + floatingLegendPadding;
+
+                    ctx.fillText(_t('', 'open:') + points[2], xPointPosition, yTextPosition);
+                    ctx.fillText(_t('', 'close:') + points[3], xPointPosition, yTextPosition + floatingLegendFontSize + 2);
+                    ctx.fillText(_t('', 'low:') + points[1], xPointPosition, yTextPosition + floatingLegendFontSize*2 + 2);
+                    ctx.fillText(_t('', 'high:') + points[0], xPointPosition, yTextPosition + floatingLegendFontSize*3 + 2);
+                } else {
+                    var yTextPosition = yPointPosition - yOffset + floatingLegendPadding;
+                    ctx.fillText(ySeries.name + ': ' + iChart.formatNumber(points[ySeries.closeValueIndex], ySeries.formatProvider), xPointPosition, yTextPosition);
+
+                }
+            }
+        }
+
+        ctx.restore();
 
     }
 

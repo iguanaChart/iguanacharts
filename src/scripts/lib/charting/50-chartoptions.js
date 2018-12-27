@@ -96,6 +96,11 @@
          */
         this._showVolume =  'hidden';
         this.showVolumeByPrice =  false;
+        this.floatingLegend =  false;
+        this.floatingLegendFontSize =  12;
+        this.floatingLegendTextColor =  '#444444';
+        this.floatingLegendBorderColor =  'rgba(82,175,201,1)';
+        this.floatingLegendBackground =  'rgba(82,175,201,.6)';
 
         this.elementStyle = {
             'Arrow': {
