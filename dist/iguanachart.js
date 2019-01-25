@@ -19694,10 +19694,8 @@ IguanaChart = function (options) {
         var element = data;
         if(typeof this.viewData.chart != "undefined" && !!this.viewData.chart.areas && this.viewData.chart.canvas && !!this.viewData.chart.chartOptions.updateInterval && element.ltp) {
             var chartDate = new Date(this.viewData.chart.areas[0].xSeries[this.viewData.chart.areas[0].xSeries.length-this.viewData.chart.chartOptions.futureAmount-1]*1000);
-            var curTmstmp = new Date();
-            //var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate()) - this.viewData.chart._dataSettings.timeframe * 60000;
-            var currentDate = new Date(curTmstmp.getFullYear(), curTmstmp.getMonth(), curTmstmp.getDate(), curTmstmp.getHours(), curTmstmp.getMinutes());
-            if(currentDate >= chartDate && currentDate < (chartDate + this.viewData.chart._dataSettings.timeframe * 60000)) {
+            var currentDate = new Date(data.ltt);
+            if(currentDate.getTime() >= chartDate.getTime() && currentDate.getTime() < (chartDate.getTime() + this.viewData.chart._dataSettings.timeframe * 60000)) {
                 var point = this.viewData.chart.areas[0].ySeries[0].points[this.viewData.chart.areas[0].ySeries[0].points.length-this.viewData.chart.chartOptions.futureAmount-1];
                 point[3] = element.ltp;
                 point[0] = Math.max(point[0], point[3]);
@@ -19707,8 +19705,7 @@ IguanaChart = function (options) {
 
                 var context = this.viewData.chart.canvas.getContext("2d");
                 this.viewData.chart.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
-                //this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
-            } else if(currentDate > (chartDate + this.viewData.chart._dataSettings.timeframe * 60000)) {
+            } else if(currentDate.getTime() > (chartDate.getTime() + this.viewData.chart._dataSettings.timeframe * 60000)) {
 
                 var point = this.getLastPoint();
                 var newPoint = {
@@ -19726,7 +19723,7 @@ IguanaChart = function (options) {
                 newPoint["hloc"][Object.keys(point.xSeries)[0]] = [hloc];
                 newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol];
 
-                var tm = (chartDate.getTime() + Math.floor((currentDate.getTime() - chartDate.getTime()) / (this.viewData.chart._dataSettings.timeframe * 60000)) * this.viewData.chart._dataSettings.timeframe * 60000) / 1000;
+                var tm = ((currentDate.getTime() - currentDate.getTime() % (this.viewData.chart._dataSettings.timeframe * 60000)) / 1000) - getTimeOffsetServer(tzOffsetMoscow);
                 newPoint["xSeries"][Object.keys(point.xSeries)[0]] = [tm];
 
                 this.addPoint(newPoint);
