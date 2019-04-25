@@ -3093,10 +3093,10 @@ iChart.indicators = {
 
                 if( ySeries.kind == 'HLOC' ) {
 
-                    var text1L = ctx.measureText(_t('', 'open:') + points[2]).width;
-                    var text2L = ctx.measureText(_t('', 'close:') + points[3]).width;
-                    var text3L = ctx.measureText(_t('', 'low:') + points[1]).width;
-                    var text4L = ctx.measureText(_t('', 'high:') + points[0]).width;
+                    var text1L = ctx.measureText(_t('21962', 'open:') + points[2]).width;
+                    var text2L = ctx.measureText(_t('21963', 'close:') + points[3]).width;
+                    var text3L = ctx.measureText(_t('21964', 'low:') + points[1]).width;
+                    var text4L = ctx.measureText(_t('21965', 'high:') + points[0]).width;
 
                     var textWidth = Math.max(text1L,text2L,text3L,text4L) + 10;
                     var textHeight = (floatingLegendFontSize + 2) * 4 + floatingLegendPadding;
@@ -3160,10 +3160,10 @@ iChart.indicators = {
                 if( ySeries.kind == 'HLOC' ) {
                     var yTextPosition = yPointPosition - yOffset + floatingLegendPadding;
 
-                    ctx.fillText(_t('', 'open:') + points[2], xPointPosition, yTextPosition);
-                    ctx.fillText(_t('', 'close:') + points[3], xPointPosition, yTextPosition + floatingLegendFontSize + 2);
-                    ctx.fillText(_t('', 'low:') + points[1], xPointPosition, yTextPosition + floatingLegendFontSize*2 + 2);
-                    ctx.fillText(_t('', 'high:') + points[0], xPointPosition, yTextPosition + floatingLegendFontSize*3 + 2);
+                    ctx.fillText(_t('21962', 'open:') + points[2], xPointPosition, yTextPosition);
+                    ctx.fillText(_t('21963', 'close:') + points[3], xPointPosition, yTextPosition + floatingLegendFontSize + 2);
+                    ctx.fillText(_t('21964', 'low:') + points[1], xPointPosition, yTextPosition + floatingLegendFontSize*2 + 2);
+                    ctx.fillText(_t('21965', 'high:') + points[0], xPointPosition, yTextPosition + floatingLegendFontSize*3 + 2);
                 } else {
                     var yTextPosition = yPointPosition - yOffset + floatingLegendPadding;
                     ctx.fillText(ySeries.name + ': ' + iChart.formatNumber(points[ySeries.closeValueIndex], ySeries.formatProvider), xPointPosition, yTextPosition);
@@ -19721,7 +19721,7 @@ IguanaChart = function (options) {
                 hloc[3] = element.ltp;
 
                 newPoint["hloc"][Object.keys(point.xSeries)[0]] = [hloc];
-                newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol];
+                newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol_diff || 0];
 
                 var tm = ((currentDate.getTime() - currentDate.getTime() % (this.viewData.chart._dataSettings.timeframe * 60000)) / 1000) - getTimeOffsetServer(tzOffsetMoscow);
                 newPoint["xSeries"][Object.keys(point.xSeries)[0]] = [tm];
