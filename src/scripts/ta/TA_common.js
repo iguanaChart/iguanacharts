@@ -301,7 +301,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
         if(enable) {
             var amount = 80;
             var c = $('<canvas>').get(0);
-            var ctx = c.getContext("2d");
+            var ctx = iChart.adaptCanvasToDpi(c);
             var grd = ctx.createLinearGradient(0, 0, amount, 0);
             grd.addColorStop(1, "#016D06");
             grd.addColorStop(0.5, "#FF9B08");

@@ -1817,6 +1817,20 @@ function intervalShortNames(interval) {
                 return 1440;
         }
     };
+    /**
+     *
+     * @param canvas
+     * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
+     */
+    w.iChart.adaptCanvasToDpi = function (canvas) {
+        var dpr = window.devicePixelRatio || 1;
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        var ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        return ctx;
+    }
 
 })(window);
 
@@ -2575,7 +2589,7 @@ iChart.indicators = {
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = this.canvas.getContext("2d");
+            this.context = iChart.adaptCanvasToDpi(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
@@ -4079,7 +4093,7 @@ iChart.indicators = {
         var $canvas = $('canvas#' + area.name);
         if($canvas.length) {
             this.canvas = $canvas.get(0);
-            this.context = this.canvas.getContext("2d");
+            this.context = iChart.adaptCanvasToDpi(this.canvas);
             this.offset = this.chart._containerSize.offset;
         } else {
             this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
@@ -4102,7 +4116,7 @@ iChart.indicators = {
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = this.canvas.getContext("2d");
+            this.context = iChart.adaptCanvasToDpi(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
@@ -5031,7 +5045,7 @@ iChart.indicators = {
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = this.canvas.getContext("2d");
+            this.context = iChart.adaptCanvasToDpi(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
@@ -13226,7 +13240,7 @@ iChart.indicators = {
                 return false;
             }
 
-            context = this.canvas.getContext("2d");
+            context = iChart.adaptCanvasToDpi(this.canvas);
 
             areaViewport = {};
             areaViewport.x = {};
@@ -13683,7 +13697,7 @@ iChart.indicators = {
 
         canvas.width = this.canvas.width;
         canvas.height = this.canvas.height;
-        var context = canvas.getContext("2d");
+        var context = iChart.adaptCanvasToDpi(canvas);
         this.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
         this.overlay.render(context);
         this.renderer.renderLegends(context);
@@ -19703,7 +19717,7 @@ IguanaChart = function (options) {
                 point[4] = element.bap;
                 point[5] = element.bbp;
 
-                var context = this.viewData.chart.canvas.getContext("2d");
+                var context = iChart.adaptCanvasToDpi(this.viewData.chart.canvas);
                 this.viewData.chart.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
             } else if(currentDate.getTime() > (chartDate.getTime() + this.viewData.chart._dataSettings.timeframe * 60000)) {
 
@@ -19721,7 +19735,7 @@ IguanaChart = function (options) {
                 hloc[3] = element.ltp;
 
                 newPoint["hloc"][Object.keys(point.xSeries)[0]] = [hloc];
-                newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol_diff || 0];
+                newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol];
 
                 var tm = ((currentDate.getTime() - currentDate.getTime() % (this.viewData.chart._dataSettings.timeframe * 60000)) / 1000) - getTimeOffsetServer(tzOffsetMoscow);
                 newPoint["xSeries"][Object.keys(point.xSeries)[0]] = [tm];
@@ -27505,7 +27519,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
         if(enable) {
             var amount = 80;
             var c = $('<canvas>').get(0);
-            var ctx = c.getContext("2d");
+            var ctx = iChart.adaptCanvasToDpi(c);
             var grd = ctx.createLinearGradient(0, 0, amount, 0);
             grd.addColorStop(1, "#016D06");
             grd.addColorStop(0.5, "#FF9B08");

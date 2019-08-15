@@ -952,5 +952,19 @@ function intervalShortNames(interval) {
                 return 1440;
         }
     };
+    /**
+     *
+     * @param canvas
+     * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
+     */
+    w.iChart.adaptCanvasToDpi = function (canvas) {
+        var dpr = window.devicePixelRatio || 1;
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        var ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        return ctx;
+    }
 
 })(window);
