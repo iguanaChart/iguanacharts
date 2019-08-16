@@ -957,14 +957,14 @@ function intervalShortNames(interval) {
      * @param canvas
      * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
      */
-    w.iChart.adaptCanvasToDpi = function (canvas) {
-        var dpr = window.devicePixelRatio || 1;
-        var rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
+    w.iChart.getContext = function (canvas) {
         var ctx = canvas.getContext('2d');
-        ctx.scale(dpr, dpr);
+        if(!ctx.scaled) {
+            var dpr = window.devicePixelRatio || 1;
+            ctx.scale(dpr, dpr);
+            ctx.scaled = 1;
+        }
         return ctx;
-    }
+    };
 
 })(window);

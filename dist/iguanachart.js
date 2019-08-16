@@ -1822,15 +1822,15 @@ function intervalShortNames(interval) {
      * @param canvas
      * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
      */
-    w.iChart.adaptCanvasToDpi = function (canvas) {
-        var dpr = window.devicePixelRatio || 1;
-        var rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
+    w.iChart.getContext = function (canvas) {
         var ctx = canvas.getContext('2d');
-        ctx.scale(dpr, dpr);
+        if(!ctx.scaled) {
+            var dpr = window.devicePixelRatio || 1;
+            ctx.scale(dpr, dpr);
+            ctx.scaled = 1;
+        }
         return ctx;
-    }
+    };
 
 })(window);
 
@@ -2386,6 +2386,10 @@ iChart.indicators = {
             return;
         }
 
+        var dpr = window.devicePixelRatio || 1;
+        newWidth = newWidth * dpr;
+        newHeight =  newHeight * dpr;
+
         if (oldCanvas)
         {
             if (oldCanvas.width === newWidth && oldCanvas.height === newHeight)
@@ -2573,8 +2577,8 @@ iChart.indicators = {
         }
 
         this.area = this.chart.areas[0];
-
-        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+        var $container = $(this.chart.container);
+        this._initCanvas($container.width(), $container.height());
         this.render();
     };
 
@@ -2589,7 +2593,7 @@ iChart.indicators = {
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
@@ -4093,10 +4097,11 @@ iChart.indicators = {
         var $canvas = $('canvas#' + area.name);
         if($canvas.length) {
             this.canvas = $canvas.get(0);
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         } else {
-            this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+            var $container = $(this.chart.container);
+            this._initCanvas($container.width(), $container.height());
             if (this.canvas) {
                 $(this.canvas).attr('id', this.area.name)
             }
@@ -4116,7 +4121,7 @@ iChart.indicators = {
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
@@ -5030,7 +5035,8 @@ iChart.indicators = {
         {
             delete this.history[i].testContext;
         }
-        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+        var $container = $(this.chart.container);
+        this._initCanvas($container.width(), $container.height());
         this.render();
     };
 
@@ -5045,7 +5051,7 @@ iChart.indicators = {
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
@@ -13240,7 +13246,7 @@ iChart.indicators = {
                 return false;
             }
 
-            context = iChart.adaptCanvasToDpi(this.canvas);
+            context = iChart.getContext(this.canvas);
 
             areaViewport = {};
             areaViewport.x = {};
@@ -13697,7 +13703,7 @@ iChart.indicators = {
 
         canvas.width = this.canvas.width;
         canvas.height = this.canvas.height;
-        var context = iChart.adaptCanvasToDpi(canvas);
+        var context = iChart.getContext(canvas);
         this.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
         this.overlay.render(context);
         this.renderer.renderLegends(context);
@@ -19717,7 +19723,7 @@ IguanaChart = function (options) {
                 point[4] = element.bap;
                 point[5] = element.bbp;
 
-                var context = iChart.adaptCanvasToDpi(this.viewData.chart.canvas);
+                var context = iChart.getContext(this.viewData.chart.canvas);
                 this.viewData.chart.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
             } else if(currentDate.getTime() > (chartDate.getTime() + this.viewData.chart._dataSettings.timeframe * 60000)) {
 
@@ -27519,7 +27525,7 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
         if(enable) {
             var amount = 80;
             var c = $('<canvas>').get(0);
-            var ctx = iChart.adaptCanvasToDpi(c);
+            var ctx = iChart.getContext(c);
             var grd = ctx.createLinearGradient(0, 0, amount, 0);
             grd.addColorStop(1, "#016D06");
             grd.addColorStop(0.5, "#FF9B08");
