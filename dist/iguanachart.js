@@ -2401,6 +2401,9 @@ iChart.indicators = {
             {
                 oldCanvas.width = newWidth;
                 oldCanvas.height = newHeight;
+                var ctx = oldCanvas.getContext('2d');
+                ctx.scaled = 0;
+
                 return oldCanvas;
             }
 
