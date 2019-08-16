@@ -920,6 +920,8 @@
                 _this.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
             }
         });
+
+        return p;
     };
 
     this.updateLastCandle = function (data) {

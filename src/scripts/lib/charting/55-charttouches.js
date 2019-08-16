@@ -36,12 +36,18 @@
                     var startPointX = e.gesture.pointers[0].pageX - e.gesture.deltaX - offset.left;
                     _this.startTouchIndexes.push(area.getXIndex(startPointX));
                     _this.lastGesture = e.gesture;
-                    _this.chart.selection.data = {};
+
+                    if(typeof _this.chart.selection.data == "undefined") {
+                        _this.chart.selection.data = {};
+                    }
                     _this.chart.selection.data.timeStampLast = e.timeStamp;
                     _this.chart.selection.data.timeStamp = e.timeStamp;
                     _this.chart.selection.data.xPrev = startPointX;
                     _this.chart.selection.data.x = startPointX;
 
+                    if(typeof _this.chart.selection.data.animate != 'undefined') {
+                        _this.chart.selection.data.animate.stop();
+                    }
 
                     break;
                 case "panend":
@@ -52,9 +58,9 @@
                         var selection = _this.chart.selection.data;
                         var dX = selection.xSpeed * 10 * (selection.xSpeed, _this.chart.viewport.x.max - _this.chart.viewport.x.min) / 50;
                         if (selection.xPrev > selection.x) {
-                            _this.chart.env.scrollTo(dX);
+                            _this.chart.selection.data.animate = _this.chart.env.scrollTo(dX);
                         } else if (selection.xPrev < selection.x) {
-                            _this.chart.env.scrollTo(-dX);
+                            _this.chart.selection.data.animate = _this.chart.env.scrollTo(-dX);
                         }
                     }
 
