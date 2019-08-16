@@ -936,7 +936,7 @@
                 point[4] = element.bap;
                 point[5] = element.bbp;
 
-                var context = iChart.adaptCanvasToDpi(this.viewData.chart.canvas);
+                var context = iChart.getContext(this.viewData.chart.canvas);
                 this.viewData.chart.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
             } else if(currentDate.getTime() > (chartDate.getTime() + this.viewData.chart._dataSettings.timeframe * 60000)) {
 

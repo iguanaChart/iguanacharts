@@ -509,7 +509,7 @@
                 return false;
             }
 
-            context = iChart.adaptCanvasToDpi(this.canvas);
+            context = iChart.getContext(this.canvas);
 
             areaViewport = {};
             areaViewport.x = {};
@@ -966,7 +966,7 @@
 
         canvas.width = this.canvas.width;
         canvas.height = this.canvas.height;
-        var context = iChart.adaptCanvasToDpi(canvas);
+        var context = iChart.getContext(canvas);
         this.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
         this.overlay.render(context);
         this.renderer.renderLegends(context);

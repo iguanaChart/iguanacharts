@@ -164,6 +164,10 @@
             return;
         }
 
+        var dpr = window.devicePixelRatio || 1;
+        newWidth = newWidth * dpr;
+        newHeight =  newHeight * dpr;
+
         if (oldCanvas)
         {
             if (oldCanvas.width === newWidth && oldCanvas.height === newHeight)

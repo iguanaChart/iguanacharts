@@ -906,7 +906,8 @@
         {
             delete this.history[i].testContext;
         }
-        this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+        var $container = $(this.chart.container);
+        this._initCanvas($container.width(), $container.height());
         this.render();
     };
 
@@ -921,7 +922,7 @@
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
