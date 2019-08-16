@@ -899,10 +899,11 @@
         var $canvas = $('canvas#' + area.name);
         if($canvas.length) {
             this.canvas = $canvas.get(0);
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         } else {
-            this._initCanvas(this.chart.canvas.width, this.chart.canvas.height);
+            var $container = $(this.chart.container);
+            this._initCanvas($container.width(), $container.height());
             if (this.canvas) {
                 $(this.canvas).attr('id', this.area.name)
             }
@@ -922,7 +923,7 @@
         this.canvas = iChart.Charting.initCanvas(this.chart.container, this.canvas, width, height);
         if (this.canvas)
         {
-            this.context = iChart.adaptCanvasToDpi(this.canvas);
+            this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
         }
     };
