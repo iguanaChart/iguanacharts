@@ -888,6 +888,40 @@
         });
     };
 
+    this.scrollTo = function (toX) {
+        if (toX == 0) {
+            return false;
+        }
+        this.viewData.chart.viewport.x.min = this.viewData.chart.areas[0].viewport.x.min;
+        this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max;
+
+        var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
+        if(toX > 0) {
+            var max = Math.min(this.viewData.chart.areas[0].xSeries.length-1, this.viewData.chart.viewport.x.max + toX);
+        } else {
+            var max = Math.max(0, this.viewData.chart.viewport.x.max + toX);
+        }
+
+        var p  = $('<p>').css({width: this.viewData.chart.viewport.x.max});
+        var duration = 1000;
+
+        p.animate({
+            width: max
+        }, {
+            easing: 'easeOutCirc',
+            duration: duration,
+            step: function(now, fx){
+                _this.viewData.chart.viewport.x.max = now;
+                _this.viewData.chart.viewport.x.min = now - length;
+                _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
+            },
+            complete: function() {
+                _this.viewData.chart.onDataSettingsChange.call(_this.viewData.chart);
+                _this.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
+            }
+        });
+    };
+
     this.updateLastCandle = function (data) {
         if(!data) { return;}
         var element = data;

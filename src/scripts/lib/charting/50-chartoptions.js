@@ -117,6 +117,8 @@
         this.uiTools = {
             top: false,
         };
+
+        this.inertialScrolling = true
     };
 
     iChart.Charting.ChartOptions.themesParams = [

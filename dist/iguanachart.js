@@ -12637,6 +12637,8 @@ iChart.indicators = {
         this.uiTools = {
             top: false,
         };
+
+        this.inertialScrolling = true
     };
 
     iChart.Charting.ChartOptions.themesParams = [
@@ -14744,6 +14746,17 @@ iChart.indicators = {
         this.viewport.areaName = area.name;
         this.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
         this.loadMissingData();
+
+
+        if(selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
+            var dX = selection.xSpeed * 10 * (selection.xSpeed, this.viewport.x.max - this.viewport.x.min) / 50;
+            if (selection.x1 > selection.x2) {
+                this.env.scrollTo(dX);
+            } else if (selection.x1 < selection.x2) {
+                this.env.scrollTo(-dX);
+            }
+        }
+
     };
 
     iChart.Charting.Chart.prototype._setData = function (data, params)
@@ -17128,6 +17141,12 @@ iChart.indicators = {
             e.data.recalculateContainerPosition();
             e.data.x1 = e.pageX - e.data.containerOffset.left;
             e.data.y1 = e.pageY - e.data.containerOffset.top;
+
+            e.data.timeStampLast = e.timeStamp;
+            e.data.timeStamp = e.timeStamp;
+            e.data.xPrev = e.data.x1;
+            e.data.yPrev = e.data.y1;
+
             if (e.data.movestart)
             {
                 e.data.movestart(e.data);
@@ -17163,8 +17182,16 @@ iChart.indicators = {
                 return;
             }
 
+            e.data.xPrev = e.data.x2;
+            e.data.yPrev = e.data.y2;
+
             e.data.x2 = x2;
             e.data.y2 = y2;
+
+            e.data.timeStampLast = e.data.timeStamp;
+            e.data.timeStamp = e.timeStamp;
+            e.data.xSpeed = Math.abs(e.data.xPrev-x2) / (e.data.timeStamp - e.data.timeStampLast);
+
             if (e.data.x2 >= 0 && e.data.x2 <= e.data.containerWidth && e.data.y2 >= 0 && e.data.y2 <= e.data.containerHeight)
             {
                 var showSelection = true;
@@ -19696,6 +19723,40 @@ IguanaChart = function (options) {
         p.animate({
             width: max
         }, {
+            duration: duration,
+            step: function(now, fx){
+                _this.viewData.chart.viewport.x.max = now;
+                _this.viewData.chart.viewport.x.min = now - length;
+                _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
+            },
+            complete: function() {
+                _this.viewData.chart.onDataSettingsChange.call(_this.viewData.chart);
+                _this.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
+            }
+        });
+    };
+
+    this.scrollTo = function (toX) {
+        if (toX == 0) {
+            return false;
+        }
+        this.viewData.chart.viewport.x.min = this.viewData.chart.areas[0].viewport.x.min;
+        this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max;
+
+        var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
+        if(toX > 0) {
+            var max = Math.min(this.viewData.chart.areas[0].xSeries.length-1, this.viewData.chart.viewport.x.max + toX);
+        } else {
+            var max = Math.max(0, this.viewData.chart.viewport.x.max + toX);
+        }
+
+        var p  = $('<p>').css({width: this.viewData.chart.viewport.x.max});
+        var duration = 1000;
+
+        p.animate({
+            width: max
+        }, {
+            easing: 'easeOutCirc',
             duration: duration,
             step: function(now, fx){
                 _this.viewData.chart.viewport.x.max = now;

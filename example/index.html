@@ -27,6 +27,7 @@
                 'jsrender': "http://iguanacharts.com/iguana_charts/dependencies/jsrender.min",
                 'jquery.minicolors': 'http://iguanacharts.com/iguana_charts/dependencies/jquery-minicolors/jquery.minicolors.min',
                 'jquery.qtip': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.qtip.min',
+                'jquery.easing': 'https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min',
                 'iguanachart': '/dist/iguanachart',
                 'hammerjs': 'http://iguanacharts.com/iguana_charts/dependencies/hammer.min'
             },
@@ -49,7 +50,8 @@
                         'jquery.hammer',
                         'jsrender',
                         'jquery.minicolors',
-                        'jquery.qtip'
+                        'jquery.qtip',
+                        'jquery.easing'
                     ]
                 }
             }
@@ -60,7 +62,7 @@
 
 <br/>
 
-<div class="iChart" style="position: relative; height: 550px; width: 1000px"></div>
+<div class="iChart" style="position: relative; height: 550px; width: 100%"></div>
 
 <script type="text/javascript">
     require(['jquery', 'iguanachart'], function ($) {
@@ -72,7 +74,7 @@
                     period: "1M",
                     lib_path: "/dist",
                     chartOptions: {
-                        minHeight: 500,
+                        minHeight: 800,
                         showVolume: 'inside',
                         uiTools: {top: true}
                     },

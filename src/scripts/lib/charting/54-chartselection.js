@@ -62,6 +62,12 @@
             e.data.recalculateContainerPosition();
             e.data.x1 = e.pageX - e.data.containerOffset.left;
             e.data.y1 = e.pageY - e.data.containerOffset.top;
+
+            e.data.timeStampLast = e.timeStamp;
+            e.data.timeStamp = e.timeStamp;
+            e.data.xPrev = e.data.x1;
+            e.data.yPrev = e.data.y1;
+
             if (e.data.movestart)
             {
                 e.data.movestart(e.data);
@@ -97,8 +103,16 @@
                 return;
             }
 
+            e.data.xPrev = e.data.x2;
+            e.data.yPrev = e.data.y2;
+
             e.data.x2 = x2;
             e.data.y2 = y2;
+
+            e.data.timeStampLast = e.data.timeStamp;
+            e.data.timeStamp = e.timeStamp;
+            e.data.xSpeed = Math.abs(e.data.xPrev-x2) / (e.data.timeStamp - e.data.timeStampLast);
+
             if (e.data.x2 >= 0 && e.data.x2 <= e.data.containerWidth && e.data.y2 >= 0 && e.data.y2 <= e.data.containerHeight)
             {
                 var showSelection = true;
