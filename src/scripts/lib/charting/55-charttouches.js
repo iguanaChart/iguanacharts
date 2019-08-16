@@ -36,11 +36,28 @@
                     var startPointX = e.gesture.pointers[0].pageX - e.gesture.deltaX - offset.left;
                     _this.startTouchIndexes.push(area.getXIndex(startPointX));
                     _this.lastGesture = e.gesture;
+                    _this.chart.selection.data = {};
+                    _this.chart.selection.data.timeStampLast = e.timeStamp;
+                    _this.chart.selection.data.timeStamp = e.timeStamp;
+                    _this.chart.selection.data.xPrev = startPointX;
+                    _this.chart.selection.data.x = startPointX;
+
 
                     break;
                 case "panend":
                     _this.startTouchIndexes = [];
                     _this.lastGesture = null;
+
+                    if( _this.chart.chartOptions.inertialScrolling) {
+                        var selection = _this.chart.selection.data;
+                        var dX = selection.xSpeed * 10 * (selection.xSpeed, _this.chart.viewport.x.max - _this.chart.viewport.x.min) / 50;
+                        if (selection.xPrev > selection.x) {
+                            _this.chart.env.scrollTo(dX);
+                        } else if (selection.xPrev < selection.x) {
+                            _this.chart.env.scrollTo(-dX);
+                        }
+                    }
+
                     break;
                 case "panmove":
                     //console.log(e);
@@ -62,6 +79,12 @@
 
                     _this.chart.viewport.x.min += -dX;
                     _this.chart.viewport.x.max += -dX;
+
+                    _this.chart.selection.data.xPrev = _this.chart.selection.data.x;
+                    _this.chart.selection.data.x = x;
+                    _this.chart.selection.data.timeStampLast = _this.chart.selection.data.timeStamp;
+                    _this.chart.selection.data.timeStamp = e.timeStamp;
+                    _this.chart.selection.data.xSpeed = Math.abs( _this.chart.selection.data.xPrev-x) / (_this.chart.selection.data.timeStamp - _this.chart.selection.data.timeStampLast);
 
                     _this.chart._fixViewportBounds();
 
