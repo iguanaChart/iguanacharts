@@ -14753,10 +14753,12 @@ iChart.indicators = {
 
         if(selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
             var dX = selection.xSpeed * 10 * (selection.xSpeed, this.viewport.x.max - this.viewport.x.min) / 50;
-            if (selection.x1 > selection.x2) {
-                selection.animate = this.env.scrollTo(dX);
-            } else if (selection.x1 < selection.x2) {
-                selection.animate = this.env.scrollTo(-dX);
+            if(dX >= 1) {
+                if (selection.x1 > selection.x2) {
+                    selection.animate = this.env.scrollTo(dX);
+                } else if (selection.x1 < selection.x2) {
+                    selection.animate = this.env.scrollTo(-dX);
+                }
             }
         }
 
@@ -17150,7 +17152,7 @@ iChart.indicators = {
             e.data.xPrev = e.data.x1;
             e.data.yPrev = e.data.y1;
 
-            if(typeof e.data.animate != 'undefined') {
+            if(typeof e.data.animate == 'function') {
                 e.data.animate.stop();
             }
 
@@ -17357,6 +17359,11 @@ iChart.indicators = {
                         _this.chart.selection.data.animate.stop();
                     }
 
+                    _this.chart.selection.setAnchor(
+                        area.viewport.x.min,
+                        area.viewport.y.min);
+
+
                     break;
                 case "panend":
                     _this.startTouchIndexes = [];
@@ -17380,19 +17387,13 @@ iChart.indicators = {
 
                     if (_this.chart.viewport.x.min === null)
                     {
-                        _this.chart.viewport.x.min = area.viewport.x.bounded.min;
+                        _this.chart.viewport.x.min = area.viewport.x.min;
                     }
                     if (_this.chart.viewport.x.max === null)
                     {
-                        _this.chart.viewport.x.max = area.viewport.x.bounded.max;
+                        _this.chart.viewport.x.max = area.viewport.x.max;
                     }
                     _this.chart.viewport.areaName = area.name;
-
-                    var deltaX = e.gesture.deltaX - _this.lastGesture.deltaX;
-                    var dX = deltaX / ( area.innerWidth / (area.viewport.x.max - area.viewport.x.min));
-
-                    _this.chart.viewport.x.min += -dX;
-                    _this.chart.viewport.x.max += -dX;
 
                     _this.chart.selection.data.xPrev = _this.chart.selection.data.x;
                     _this.chart.selection.data.x = x;
@@ -17400,11 +17401,20 @@ iChart.indicators = {
                     _this.chart.selection.data.timeStamp = e.timeStamp;
                     _this.chart.selection.data.xSpeed = Math.abs( _this.chart.selection.data.xPrev-x) / (_this.chart.selection.data.timeStamp - _this.chart.selection.data.timeStampLast);
 
-                    _this.chart._fixViewportBounds();
+                    var deltaX = e.gesture.deltaX - _this.lastGesture.deltaX;
+                    deltaX = area.getXIndex(deltaX) - area.getXIndex(0);
 
+                    if(((_this.chart.viewport.x.max - _this.chart.viewport.x.min) - deltaX) > 1) {
+                        _this.chart.viewport.x.min += - deltaX;
+                    }
+
+                    if(((_this.chart.viewport.x.max) - deltaX) - _this.chart.viewport.x.min > 1) {
+                        _this.chart.viewport.x.max += - deltaX;
+                    }
+
+                    _this.chart._fixViewportBounds();
                     _this.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
                     _this.chart.loadMissingData();
-
 
                     _this.lastGesture = e.gesture;
 
@@ -19776,8 +19786,8 @@ IguanaChart = function (options) {
         if (toX == 0) {
             return false;
         }
-        this.viewData.chart.viewport.x.min = this.viewData.chart.areas[0].viewport.x.min;
-        this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max;
+        this.viewData.chart.viewport.x.min = this.viewData.chart.viewport.x.min === null ? this.viewData.chart.areas[0].viewport.x.min : this.viewData.chart.viewport.x.min;
+        this.viewData.chart.viewport.x.max = this.viewData.chart.viewport.x.max === null ? this.viewData.chart.areas[0].viewport.x.max : this.viewData.chart.viewport.x.max ;
 
         var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
         if(toX > 0) {
@@ -19795,8 +19805,20 @@ IguanaChart = function (options) {
             easing: 'easeOutCirc',
             duration: duration,
             step: function(now, fx){
-                _this.viewData.chart.viewport.x.max = now;
-                _this.viewData.chart.viewport.x.min = now - length;
+
+                var area = _this.viewData.chart.areas[0];
+                var deltaX = _this.viewData.chart.viewport.x.max - now;
+
+                deltaX = area.getXIndex(deltaX) - area.getXIndex(0);
+                if(((_this.viewData.chart.viewport.x.max - _this.viewData.chart.viewport.x.min) - deltaX) > 1) {
+                    _this.viewData.chart.viewport.x.min += - deltaX;
+                }
+
+                if(((_this.viewData.chart.viewport.x.max) - deltaX) - _this.viewData.chart.viewport.x.min > 1) {
+                    _this.viewData.chart.viewport.x.max += - deltaX;
+                }
+
+                _this.viewData.chart._fixViewportBounds();
                 _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
             },
             complete: function() {

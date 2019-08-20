@@ -68,7 +68,7 @@
             e.data.xPrev = e.data.x1;
             e.data.yPrev = e.data.y1;
 
-            if(typeof e.data.animate != 'undefined') {
+            if(typeof e.data.animate == 'function') {
                 e.data.animate.stop();
             }
 

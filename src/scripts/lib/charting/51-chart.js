@@ -2011,10 +2011,12 @@
 
         if(selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
             var dX = selection.xSpeed * 10 * (selection.xSpeed, this.viewport.x.max - this.viewport.x.min) / 50;
-            if (selection.x1 > selection.x2) {
-                selection.animate = this.env.scrollTo(dX);
-            } else if (selection.x1 < selection.x2) {
-                selection.animate = this.env.scrollTo(-dX);
+            if(dX >= 1) {
+                if (selection.x1 > selection.x2) {
+                    selection.animate = this.env.scrollTo(dX);
+                } else if (selection.x1 < selection.x2) {
+                    selection.animate = this.env.scrollTo(-dX);
+                }
             }
         }
 
