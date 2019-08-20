@@ -892,8 +892,8 @@
         if (toX == 0) {
             return false;
         }
-        this.viewData.chart.viewport.x.min = this.viewData.chart.areas[0].viewport.x.min;
-        this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max;
+        this.viewData.chart.viewport.x.min = this.viewData.chart.viewport.x.min === null ? this.viewData.chart.areas[0].viewport.x.min : this.viewData.chart.viewport.x.min;
+        this.viewData.chart.viewport.x.max = this.viewData.chart.viewport.x.max === null ? this.viewData.chart.areas[0].viewport.x.max : this.viewData.chart.viewport.x.max ;
 
         var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
         if(toX > 0) {
@@ -911,8 +911,20 @@
             easing: 'easeOutCirc',
             duration: duration,
             step: function(now, fx){
-                _this.viewData.chart.viewport.x.max = now;
-                _this.viewData.chart.viewport.x.min = now - length;
+
+                var area = _this.viewData.chart.areas[0];
+                var deltaX = _this.viewData.chart.viewport.x.max - now;
+
+                deltaX = area.getXIndex(deltaX) - area.getXIndex(0);
+                if(((_this.viewData.chart.viewport.x.max - _this.viewData.chart.viewport.x.min) - deltaX) > 1) {
+                    _this.viewData.chart.viewport.x.min += - deltaX;
+                }
+
+                if(((_this.viewData.chart.viewport.x.max) - deltaX) - _this.viewData.chart.viewport.x.min > 1) {
+                    _this.viewData.chart.viewport.x.max += - deltaX;
+                }
+
+                _this.viewData.chart._fixViewportBounds();
                 _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
             },
             complete: function() {

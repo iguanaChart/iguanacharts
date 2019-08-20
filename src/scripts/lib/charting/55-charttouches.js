@@ -49,6 +49,11 @@
                         _this.chart.selection.data.animate.stop();
                     }
 
+                    _this.chart.selection.setAnchor(
+                        area.viewport.x.min,
+                        area.viewport.y.min);
+
+
                     break;
                 case "panend":
                     _this.startTouchIndexes = [];
@@ -72,19 +77,13 @@
 
                     if (_this.chart.viewport.x.min === null)
                     {
-                        _this.chart.viewport.x.min = area.viewport.x.bounded.min;
+                        _this.chart.viewport.x.min = area.viewport.x.min;
                     }
                     if (_this.chart.viewport.x.max === null)
                     {
-                        _this.chart.viewport.x.max = area.viewport.x.bounded.max;
+                        _this.chart.viewport.x.max = area.viewport.x.max;
                     }
                     _this.chart.viewport.areaName = area.name;
-
-                    var deltaX = e.gesture.deltaX - _this.lastGesture.deltaX;
-                    var dX = deltaX / ( area.innerWidth / (area.viewport.x.max - area.viewport.x.min));
-
-                    _this.chart.viewport.x.min += -dX;
-                    _this.chart.viewport.x.max += -dX;
 
                     _this.chart.selection.data.xPrev = _this.chart.selection.data.x;
                     _this.chart.selection.data.x = x;
@@ -92,11 +91,20 @@
                     _this.chart.selection.data.timeStamp = e.timeStamp;
                     _this.chart.selection.data.xSpeed = Math.abs( _this.chart.selection.data.xPrev-x) / (_this.chart.selection.data.timeStamp - _this.chart.selection.data.timeStampLast);
 
-                    _this.chart._fixViewportBounds();
+                    var deltaX = e.gesture.deltaX - _this.lastGesture.deltaX;
+                    deltaX = area.getXIndex(deltaX) - area.getXIndex(0);
 
+                    if(((_this.chart.viewport.x.max - _this.chart.viewport.x.min) - deltaX) > 1) {
+                        _this.chart.viewport.x.min += - deltaX;
+                    }
+
+                    if(((_this.chart.viewport.x.max) - deltaX) - _this.chart.viewport.x.min > 1) {
+                        _this.chart.viewport.x.max += - deltaX;
+                    }
+
+                    _this.chart._fixViewportBounds();
                     _this.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
                     _this.chart.loadMissingData();
-
 
                     _this.lastGesture = e.gesture;
 
