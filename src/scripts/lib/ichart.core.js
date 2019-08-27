@@ -960,7 +960,7 @@ function intervalShortNames(interval) {
     w.iChart.getContext = function (canvas) {
         var ctx = canvas.getContext('2d');
         if(!ctx.scaled) {
-            var dpr = window.devicePixelRatio || 1;
+            var dpr = Math.max(window.devicePixelRatio || 1, 1);
             ctx.scale(dpr, dpr);
             ctx.scaled = 1;
         }
