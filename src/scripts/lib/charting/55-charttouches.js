@@ -45,8 +45,8 @@
                     _this.chart.selection.data.xPrev = startPointX;
                     _this.chart.selection.data.x = startPointX;
 
-                    if(typeof _this.chart.selection.data.animate != 'undefined') {
-                        _this.chart.selection.data.animate.stop();
+                    if(_this.chart.selection.data.animate) {
+                        $(_this.chart.selection.data.animate).stop();
                     }
 
                     _this.chart.selection.setAnchor(

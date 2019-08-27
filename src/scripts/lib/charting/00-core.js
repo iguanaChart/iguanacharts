@@ -164,7 +164,7 @@
             return;
         }
 
-        var dpr = window.devicePixelRatio || 1;
+        var dpr = Math.max(window.devicePixelRatio || 1, 1);
         newWidth = newWidth * dpr;
         newHeight =  newHeight * dpr;
 

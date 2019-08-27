@@ -1825,7 +1825,7 @@ function intervalShortNames(interval) {
     w.iChart.getContext = function (canvas) {
         var ctx = canvas.getContext('2d');
         if(!ctx.scaled) {
-            var dpr = window.devicePixelRatio || 1;
+            var dpr = Math.max(window.devicePixelRatio || 1, 1);
             ctx.scale(dpr, dpr);
             ctx.scaled = 1;
         }
@@ -2386,7 +2386,7 @@ iChart.indicators = {
             return;
         }
 
-        var dpr = window.devicePixelRatio || 1;
+        var dpr = Math.max(window.devicePixelRatio || 1, 1);
         newWidth = newWidth * dpr;
         newHeight =  newHeight * dpr;
 
@@ -17152,8 +17152,8 @@ iChart.indicators = {
             e.data.xPrev = e.data.x1;
             e.data.yPrev = e.data.y1;
 
-            if(typeof e.data.animate == 'function') {
-                e.data.animate.stop();
+            if(e.data.animate) {
+                $(e.data.animate).stop();
             }
 
             if (e.data.movestart)
@@ -17355,8 +17355,8 @@ iChart.indicators = {
                     _this.chart.selection.data.xPrev = startPointX;
                     _this.chart.selection.data.x = startPointX;
 
-                    if(typeof _this.chart.selection.data.animate != 'undefined') {
-                        _this.chart.selection.data.animate.stop();
+                    if(_this.chart.selection.data.animate) {
+                        $(_this.chart.selection.data.animate).stop();
                     }
 
                     _this.chart.selection.setAnchor(
