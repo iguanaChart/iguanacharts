@@ -14752,8 +14752,8 @@ iChart.indicators = {
 
 
         if(selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
-            var dX = selection.xSpeed * 10 * (selection.xSpeed, this.viewport.x.max - this.viewport.x.min) / 50;
-            if(dX >= 1) {
+            var dX = selection.xSpeed * (this.viewport.x.max - this.viewport.x.min) / Math.PI;
+            if(dX >= 1 && (this.areas[0].innerWidth / (this.areas[0].viewport.x.max - this.areas[0].viewport.x.min)) >= 0.6) {
                 if (selection.x1 > selection.x2) {
                     selection.animate = this.env.scrollTo(dX);
                 } else if (selection.x1 < selection.x2) {
