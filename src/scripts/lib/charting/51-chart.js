@@ -2008,18 +2008,9 @@
         this.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
         this.loadMissingData();
 
-
-        if(selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
-            var dX = selection.xSpeed * (this.viewport.x.max - this.viewport.x.min) / Math.PI;
-            if ( dX >= 1 && (this.areas[0].innerWidth / (this.areas[0].viewport.x.max - this.areas[0].viewport.x.min)) >= 0.6 ) {
-                if (selection.x1 > selection.x2) {
-                    selection.animate = this.env.scrollTo(dX);
-                } else if (selection.x1 < selection.x2) {
-                    selection.animate = this.env.scrollTo(-dX);
-                }
-            }
+        if (selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
+            this.env.scrollTo(selection);
         }
-
     };
 
     iChart.Charting.Chart.prototype._setData = function (data, params)

@@ -58,6 +58,10 @@
                 return;
             }
 
+            if(iChart.animateId) {
+                cancelAnimationFrame(iChart.animateId);
+            }
+
             e.data.selection = true;
             e.data.recalculateContainerPosition();
             e.data.x1 = e.pageX - e.data.containerOffset.left;
@@ -67,10 +71,6 @@
             e.data.timeStamp = e.timeStamp;
             e.data.xPrev = e.data.x1;
             e.data.yPrev = e.data.y1;
-
-            if(e.data.animate) {
-                $(e.data.animate).stop();
-            }
 
             if (e.data.movestart)
             {

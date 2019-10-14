@@ -888,52 +888,54 @@
         });
     };
 
-    this.scrollTo = function (toX) {
-        if (toX == 0) {
+    this.scrollTo = function (selection) {
+
+        var xSpeed = selection.xSpeed;
+
+        if(xSpeed < 0.05) {
             return false;
         }
-        this.viewData.chart.viewport.x.min = this.viewData.chart.viewport.x.min === null ? this.viewData.chart.areas[0].viewport.x.min : this.viewData.chart.viewport.x.min;
-        this.viewData.chart.viewport.x.max = this.viewData.chart.viewport.x.max === null ? this.viewData.chart.areas[0].viewport.x.max : this.viewData.chart.viewport.x.max ;
 
-        var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
-        if(toX > 0) {
-            var max = Math.min(this.viewData.chart.areas[0].xSeries.length-1, this.viewData.chart.viewport.x.max + toX);
-        } else {
-            var max = Math.max(0, this.viewData.chart.viewport.x.max + toX);
-        }
+        var t = 1000 + xSpeed * 100;
+        var V0 = xSpeed;
+        var a = -V0 / t;
 
-        var p  = $('<p>').css({width: this.viewData.chart.viewport.x.max});
-        var duration = 1000;
+        var _this = this;
+        var startViewportXMin =  this.viewData.chart.viewport.x.min;
+        var startViewportXMax =  this.viewData.chart.viewport.x.max;
 
-        p.animate({
-            width: max
-        }, {
-            easing: 'easeOutCirc',
-            duration: duration,
-            step: function(now, fx){
-
-                var area = _this.viewData.chart.areas[0];
-                var deltaX = _this.viewData.chart.viewport.x.max - now;
-
-                deltaX = area.getXIndex(deltaX) - area.getXIndex(0);
-                if(((_this.viewData.chart.viewport.x.max - _this.viewData.chart.viewport.x.min) - deltaX) > 1) {
-                    _this.viewData.chart.viewport.x.min += - deltaX;
-                }
-
-                if(((_this.viewData.chart.viewport.x.max) - deltaX) - _this.viewData.chart.viewport.x.min > 1) {
-                    _this.viewData.chart.viewport.x.max += - deltaX;
-                }
-
-                _this.viewData.chart._fixViewportBounds();
-                _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
+        iChart.animate({
+            duration: t,
+            timing: function (timeFraction) {
+                return timeFraction;
             },
-            complete: function() {
-                _this.viewData.chart.onDataSettingsChange.call(_this.viewData.chart);
-                _this.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
+            draw: function (progress) {
+
+                if( !isNaN(progress) && progress > 0) {
+                    var ms = t * progress;
+
+                    var V1 = V0 + a * ms;
+                    var scrollX1 = (V0 * ms) + ((a * ms * ms) / 2);
+
+                    var viewportDx = _this.viewData.chart.areas[0].getXIndexByValue(_this.viewData.chart.areas[0].getXValue(_this.viewData.chart.areas[0].getXPositionByIndex(0) + scrollX1));
+
+                    if (selection.x1 > selection.x2) {
+                        _this.viewData.chart.viewport.x.min = startViewportXMin + viewportDx;
+                        _this.viewData.chart.viewport.x.max = startViewportXMax + viewportDx;
+                    } else if (selection.x1 < selection.x2) {
+                        _this.viewData.chart.viewport.x.min = startViewportXMin - viewportDx;
+                        _this.viewData.chart.viewport.x.max = startViewportXMax - viewportDx;
+                    }
+
+                    _this.viewData.chart._fixViewportBounds();
+                    _this.viewData.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": true});
+
+                }
+            },
+            complete: function () {
+                _this.viewData.chart.loadMissingData();
             }
         });
-
-        return p;
     };
 
     this.updateLastCandle = function (data) {
