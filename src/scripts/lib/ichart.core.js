@@ -967,4 +967,30 @@ function intervalShortNames(interval) {
         return ctx;
     };
 
+    w.iChart.animateId = null;
+    w.iChart.animate = function (options) {
+
+        var start = performance.now();
+
+        w.iChart.animateId = requestAnimationFrame(function animate(time) {
+            // timeFraction от 0 до 1
+            var timeFraction = (time - start) / options.duration;
+            if (timeFraction > 1) timeFraction = 1;
+
+            // текущее состояние анимации
+            var progress = options.timing(timeFraction);
+
+            options.draw(progress);
+
+            if (timeFraction < 1) {
+                w.iChart.animateId = requestAnimationFrame(animate);
+            } else {
+                cancelAnimationFrame(w.iChart.animateId);
+                if(typeof options.complete === 'function') {
+                    options.complete();
+                }
+            }
+        });
+    }
+
 })(window);

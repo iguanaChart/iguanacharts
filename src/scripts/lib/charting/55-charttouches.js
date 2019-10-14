@@ -42,11 +42,12 @@
                     }
                     _this.chart.selection.data.timeStampLast = e.timeStamp;
                     _this.chart.selection.data.timeStamp = e.timeStamp;
+                    _this.chart.selection.data.x1 = startPointX;
                     _this.chart.selection.data.xPrev = startPointX;
                     _this.chart.selection.data.x = startPointX;
 
-                    if(_this.chart.selection.data.animate) {
-                        $(_this.chart.selection.data.animate).stop();
+                    if(iChart.animateId) {
+                        cancelAnimationFrame(iChart.animateId);
                     }
 
                     _this.chart.selection.setAnchor(
@@ -60,13 +61,7 @@
                     _this.lastGesture = null;
 
                     if( _this.chart.chartOptions.inertialScrolling) {
-                        var selection = _this.chart.selection.data;
-                        var dX = selection.xSpeed * 10 * (selection.xSpeed, _this.chart.viewport.x.max - _this.chart.viewport.x.min) / 50;
-                        if (selection.xPrev > selection.x) {
-                            _this.chart.selection.data.animate = _this.chart.env.scrollTo(dX);
-                        } else if (selection.xPrev < selection.x) {
-                            _this.chart.selection.data.animate = _this.chart.env.scrollTo(-dX);
-                        }
+                        _this.chart.env.scrollTo(_this.chart.selection.data);
                     }
 
                     break;
@@ -87,6 +82,7 @@
 
                     _this.chart.selection.data.xPrev = _this.chart.selection.data.x;
                     _this.chart.selection.data.x = x;
+                    _this.chart.selection.data.x2 = x;
                     _this.chart.selection.data.timeStampLast = _this.chart.selection.data.timeStamp;
                     _this.chart.selection.data.timeStamp = e.timeStamp;
                     _this.chart.selection.data.xSpeed = Math.abs( _this.chart.selection.data.xPrev-x) / (_this.chart.selection.data.timeStamp - _this.chart.selection.data.timeStampLast);

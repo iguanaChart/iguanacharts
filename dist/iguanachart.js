@@ -1832,6 +1832,32 @@ function intervalShortNames(interval) {
         return ctx;
     };
 
+    w.iChart.animateId = null;
+    w.iChart.animate = function (options) {
+
+        var start = performance.now();
+
+        w.iChart.animateId = requestAnimationFrame(function animate(time) {
+            // timeFraction от 0 до 1
+            var timeFraction = (time - start) / options.duration;
+            if (timeFraction > 1) timeFraction = 1;
+
+            // текущее состояние анимации
+            var progress = options.timing(timeFraction);
+
+            options.draw(progress);
+
+            if (timeFraction < 1) {
+                w.iChart.animateId = requestAnimationFrame(animate);
+            } else {
+                cancelAnimationFrame(w.iChart.animateId);
+                if(typeof options.complete === 'function') {
+                    options.complete();
+                }
+            }
+        });
+    }
+
 })(window);
 
 /**
@@ -14750,18 +14776,9 @@ iChart.indicators = {
         this.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
         this.loadMissingData();
 
-
-        if(selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
-            var dX = selection.xSpeed * (this.viewport.x.max - this.viewport.x.min) / Math.PI;
-            if(dX >= 1 && (this.areas[0].innerWidth / (this.areas[0].viewport.x.max - this.areas[0].viewport.x.min)) >= 0.6) {
-                if (selection.x1 > selection.x2) {
-                    selection.animate = this.env.scrollTo(dX);
-                } else if (selection.x1 < selection.x2) {
-                    selection.animate = this.env.scrollTo(-dX);
-                }
-            }
+        if (selection.mode == 'pan' && !area.isScroller && this.chartOptions.inertialScrolling) {
+            this.env.scrollTo(selection);
         }
-
     };
 
     iChart.Charting.Chart.prototype._setData = function (data, params)
@@ -17142,6 +17159,10 @@ iChart.indicators = {
                 return;
             }
 
+            if(iChart.animateId) {
+                cancelAnimationFrame(iChart.animateId);
+            }
+
             e.data.selection = true;
             e.data.recalculateContainerPosition();
             e.data.x1 = e.pageX - e.data.containerOffset.left;
@@ -17151,10 +17172,6 @@ iChart.indicators = {
             e.data.timeStamp = e.timeStamp;
             e.data.xPrev = e.data.x1;
             e.data.yPrev = e.data.y1;
-
-            if(e.data.animate) {
-                $(e.data.animate).stop();
-            }
 
             if (e.data.movestart)
             {
@@ -17352,11 +17369,12 @@ iChart.indicators = {
                     }
                     _this.chart.selection.data.timeStampLast = e.timeStamp;
                     _this.chart.selection.data.timeStamp = e.timeStamp;
+                    _this.chart.selection.data.x1 = startPointX;
                     _this.chart.selection.data.xPrev = startPointX;
                     _this.chart.selection.data.x = startPointX;
 
-                    if(_this.chart.selection.data.animate) {
-                        $(_this.chart.selection.data.animate).stop();
+                    if(iChart.animateId) {
+                        cancelAnimationFrame(iChart.animateId);
                     }
 
                     _this.chart.selection.setAnchor(
@@ -17370,13 +17388,7 @@ iChart.indicators = {
                     _this.lastGesture = null;
 
                     if( _this.chart.chartOptions.inertialScrolling) {
-                        var selection = _this.chart.selection.data;
-                        var dX = selection.xSpeed * 10 * (selection.xSpeed, _this.chart.viewport.x.max - _this.chart.viewport.x.min) / 50;
-                        if (selection.xPrev > selection.x) {
-                            _this.chart.selection.data.animate = _this.chart.env.scrollTo(dX);
-                        } else if (selection.xPrev < selection.x) {
-                            _this.chart.selection.data.animate = _this.chart.env.scrollTo(-dX);
-                        }
+                        _this.chart.env.scrollTo(_this.chart.selection.data);
                     }
 
                     break;
@@ -17397,6 +17409,7 @@ iChart.indicators = {
 
                     _this.chart.selection.data.xPrev = _this.chart.selection.data.x;
                     _this.chart.selection.data.x = x;
+                    _this.chart.selection.data.x2 = x;
                     _this.chart.selection.data.timeStampLast = _this.chart.selection.data.timeStamp;
                     _this.chart.selection.data.timeStamp = e.timeStamp;
                     _this.chart.selection.data.xSpeed = Math.abs( _this.chart.selection.data.xPrev-x) / (_this.chart.selection.data.timeStamp - _this.chart.selection.data.timeStampLast);
@@ -19782,52 +19795,54 @@ IguanaChart = function (options) {
         });
     };
 
-    this.scrollTo = function (toX) {
-        if (toX == 0) {
+    this.scrollTo = function (selection) {
+
+        var xSpeed = selection.xSpeed;
+
+        if(xSpeed < 0.05) {
             return false;
         }
-        this.viewData.chart.viewport.x.min = this.viewData.chart.viewport.x.min === null ? this.viewData.chart.areas[0].viewport.x.min : this.viewData.chart.viewport.x.min;
-        this.viewData.chart.viewport.x.max = this.viewData.chart.viewport.x.max === null ? this.viewData.chart.areas[0].viewport.x.max : this.viewData.chart.viewport.x.max ;
 
-        var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
-        if(toX > 0) {
-            var max = Math.min(this.viewData.chart.areas[0].xSeries.length-1, this.viewData.chart.viewport.x.max + toX);
-        } else {
-            var max = Math.max(0, this.viewData.chart.viewport.x.max + toX);
-        }
+        var t = 1000 + xSpeed * 100;
+        var V0 = xSpeed;
+        var a = -V0 / t;
 
-        var p  = $('<p>').css({width: this.viewData.chart.viewport.x.max});
-        var duration = 1000;
+        var _this = this;
+        var startViewportXMin =  this.viewData.chart.viewport.x.min;
+        var startViewportXMax =  this.viewData.chart.viewport.x.max;
 
-        p.animate({
-            width: max
-        }, {
-            easing: 'easeOutCirc',
-            duration: duration,
-            step: function(now, fx){
-
-                var area = _this.viewData.chart.areas[0];
-                var deltaX = _this.viewData.chart.viewport.x.max - now;
-
-                deltaX = area.getXIndex(deltaX) - area.getXIndex(0);
-                if(((_this.viewData.chart.viewport.x.max - _this.viewData.chart.viewport.x.min) - deltaX) > 1) {
-                    _this.viewData.chart.viewport.x.min += - deltaX;
-                }
-
-                if(((_this.viewData.chart.viewport.x.max) - deltaX) - _this.viewData.chart.viewport.x.min > 1) {
-                    _this.viewData.chart.viewport.x.max += - deltaX;
-                }
-
-                _this.viewData.chart._fixViewportBounds();
-                _this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
+        iChart.animate({
+            duration: t,
+            timing: function (timeFraction) {
+                return timeFraction;
             },
-            complete: function() {
-                _this.viewData.chart.onDataSettingsChange.call(_this.viewData.chart);
-                _this.wrapper.trigger('iguanaChartEvents', ['hashChanged']);
+            draw: function (progress) {
+
+                if( !isNaN(progress) && progress > 0) {
+                    var ms = t * progress;
+
+                    var V1 = V0 + a * ms;
+                    var scrollX1 = (V0 * ms) + ((a * ms * ms) / 2);
+
+                    var viewportDx = _this.viewData.chart.areas[0].getXIndexByValue(_this.viewData.chart.areas[0].getXValue(_this.viewData.chart.areas[0].getXPositionByIndex(0) + scrollX1));
+
+                    if (selection.x1 > selection.x2) {
+                        _this.viewData.chart.viewport.x.min = startViewportXMin + viewportDx;
+                        _this.viewData.chart.viewport.x.max = startViewportXMax + viewportDx;
+                    } else if (selection.x1 < selection.x2) {
+                        _this.viewData.chart.viewport.x.min = startViewportXMin - viewportDx;
+                        _this.viewData.chart.viewport.x.max = startViewportXMax - viewportDx;
+                    }
+
+                    _this.viewData.chart._fixViewportBounds();
+                    _this.viewData.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": true});
+
+                }
+            },
+            complete: function () {
+                _this.viewData.chart.loadMissingData();
             }
         });
-
-        return p;
     };
 
     this.updateLastCandle = function (data) {
