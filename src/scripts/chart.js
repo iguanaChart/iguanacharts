@@ -1039,7 +1039,7 @@
                     element.hasSettings = true;
                     element.settings = data[i];
                     element.settings.mode = mode;
-                    element.points = [{'x':iChart.parseDateTime(data[i].date_time, "yyyy-MM-dd HH:mm:ss").getTime(), 'y':data[i].splitPrice}];
+                    element.points = [{'x':new Date(data[i].date_time).getTime(), 'y':data[i].price}];
                     element.id = data[i].id;
                     this.viewData.chart.overlay.history.push(element);
                     this.userTransactionAmount++;
