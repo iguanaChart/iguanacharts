@@ -563,9 +563,9 @@
                 ctx.strokeStyle = ySeries.color;
 
                 if (legendXPos === 'top') {
-                    ctx.arc(area.offset.left + area.textOffset, areaOffsetTop + 7, 7, 0, 2 * Math.PI, true);
+                    ctx.arc(area.offset.left + area.textOffset, areaOffsetTop + 5, 6, 0, 2 * Math.PI, true);
                 } else {
-                    ctx.arc(area.offset.left + area.textOffset, areaOffsetTop + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
+                    ctx.arc(area.offset.left + area.textOffset, areaOffsetTop + area.innerHeight - 6, 6, 0, 2 * Math.PI, true);
                 }
 
                 ctx.closePath();
