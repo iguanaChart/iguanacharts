@@ -427,9 +427,9 @@
             if(area.isLayer) {
                 var parentArea = $.grep(areas, function (x) { return x.name === area.parentName })[0];
                 area.textOffset = parentArea.textOffset;
-                var areaOffsetTop = legendXPos === 'top' ? parentArea.offset.top : area.offset.top;
+                var areaOffsetTop = legendXPos === 'top' ? parentArea.offset.top + 2 : area.offset.top;
             } else {
-                var areaOffsetTop = area.offset.top;
+                var areaOffsetTop = area.offset.top + (legendXPos === 'top' ? 2 : 0);
                 area.textOffset = 0;
             };
 
