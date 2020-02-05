@@ -413,6 +413,8 @@
 
         var areas = this.chart.areas;
 
+        var legendXPos = this.chart.chartOptions.legendAlign;
+
         for (var area_i = 0; area_i < areas.length; ++area_i)
         {
             var area = areas[area_i];
@@ -425,7 +427,9 @@
             if(area.isLayer) {
                 var parentArea = $.grep(areas, function (x) { return x.name === area.parentName })[0];
                 area.textOffset = parentArea.textOffset;
+                var areaOffsetTop = legendXPos === 'top' ? parentArea.offset.top : area.offset.top;
             } else {
+                var areaOffsetTop = area.offset.top;
                 area.textOffset = 0;
             };
 
@@ -504,7 +508,12 @@
 
             if(!area.isLayer) {
                 ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                ctx.fillRect(area.offset.left, area.offset.top + area.innerHeight - 15, 100, 15);
+                if (legendXPos === 'top') {
+                    ctx.fillRect(area.offset.left, areaOffsetTop, 100, 15);
+                } else {
+                    ctx.fillRect(area.offset.left, areaOffsetTop + area.innerHeight - 15, 100, 15);
+                }
+
                 ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
@@ -512,7 +521,12 @@
                 var tooltips = iChart.formatDateTime(dateTime, "dd.MM.yyyy" + (this.chart.showTime() ? " HH:mm" : ""));
                 area.textOffset += ctx.measureText(tooltips).width + 20;
                 ctx.fillStyle = this.chart.chartOptions.labelColor;
-                ctx.fillText(tooltips, area.offset.left, area.offset.top + area.innerHeight - 12);
+                if (legendXPos === 'top') {
+                    ctx.fillText(tooltips, area.offset.left, areaOffsetTop);
+                } else {
+                    ctx.fillText(tooltips, area.offset.left, areaOffsetTop + area.innerHeight - 12);
+                }
+
             }
 
             for(var j = 0; j < area.ySeries.length; j++) {
@@ -538,12 +552,22 @@
                 }
 
                 ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                ctx.fillRect(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 15, 15, 15);
+                if (legendXPos === 'top') {
+                    ctx.fillRect(area.offset.left + area.textOffset, areaOffsetTop, 15, 15);
+                } else {
+                    ctx.fillRect(area.offset.left + area.textOffset, areaOffsetTop + area.innerHeight - 15, 15, 15);
+                }
 
                 ctx.beginPath();
                 ctx.fillStyle = ySeries.color;
                 ctx.strokeStyle = ySeries.color;
-                ctx.arc(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
+
+                if (legendXPos === 'top') {
+                    ctx.arc(area.offset.left + area.textOffset, areaOffsetTop + 7, 7, 0, 2 * Math.PI, true);
+                } else {
+                    ctx.arc(area.offset.left + area.textOffset, areaOffsetTop + area.innerHeight - 6, 7, 0, 2 * Math.PI, true);
+                }
+
                 ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
@@ -576,14 +600,21 @@
                     }
 
                     ctx.fillStyle = this.chart.chartOptions.backgroundColor;
-                    ctx.fillRect(area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 15, ctx.measureText(tooltips).width + 20, 15);
+                    if (legendXPos === 'top') {
+                        ctx.fillRect(area.offset.left + area.textOffset, areaOffsetTop, ctx.measureText(tooltips).width + 20, 15);
+                    } else {
+                        ctx.fillRect(area.offset.left + area.textOffset, areaOffsetTop + area.innerHeight - 15, ctx.measureText(tooltips).width + 20, 15);
+                    }
 
                     ctx.fillStyle = this.chart.chartOptions.labelColor;
                     ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                     ctx.textAlign = "left";
                     ctx.textBaseline = "top";
-                    ctx.fillText(tooltips, area.offset.left + area.textOffset, area.offset.top + area.innerHeight - 12);
-
+                    if (legendXPos === 'top') {
+                        ctx.fillText(tooltips, area.offset.left + area.textOffset, areaOffsetTop);
+                    } else {
+                        ctx.fillText(tooltips, area.offset.left + area.textOffset, areaOffsetTop + area.innerHeight - 12);
+                    }
 
                     area.textOffset += ctx.measureText(tooltips).width + 20;
                 }

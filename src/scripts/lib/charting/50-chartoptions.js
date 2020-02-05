@@ -101,6 +101,7 @@
         this.floatingLegendTextColor =  '#444444';
         this.floatingLegendBorderColor =  'rgba(82,175,201,1)';
         this.floatingLegendBackground =  'rgba(82,175,201,.6)';
+        this.legendAlign = 'top';
 
         this.elementStyle = {
             'Arrow': {
