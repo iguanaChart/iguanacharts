@@ -66,7 +66,6 @@
 
                     break;
                 case "panmove":
-                    //console.log(e);
 
                     var x = e.gesture.pointers[0].pageX - offset.left;
 
@@ -101,6 +100,9 @@
                     _this.chart._fixViewportBounds();
                     _this.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": true });
                     _this.chart.loadMissingData();
+
+                    var deltaY = e.gesture.deltaY - _this.lastGesture.deltaY;
+                    window.scroll(0, window.pageYOffset - deltaY);
 
                     _this.lastGesture = e.gesture;
 
