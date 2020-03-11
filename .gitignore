@@ -1,3 +1,7 @@
 /.idea
 /dependencies
 /node_modules
+
+/src/styles/_toolbar.css
+/src/styles/md_colors.css
+/src/styles/sprite.css
