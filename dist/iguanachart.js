@@ -6579,6 +6579,17 @@ iChart.indicators = {
  * @package  iguanaChart
  */
 
+function getTradeLabelText(trade, price) {
+    var postfix = parseInt(trade.volume) + '@' + price;
+
+    if(trade.type_id === 1) return 'B' + ': ' + postfix;
+
+    if(trade.type_id === 2) return 'S' + ': ' + postfix;
+
+    if(trade.type_id === 3) return 'TP' + ': ' + postfix;
+
+    if(trade.type_id === 4) return 'SL' + ': ' + postfix;
+}
 
 (function ()
 {
@@ -6609,7 +6620,7 @@ iChart.indicators = {
         ctx.beginPath();
 
         ctx.arc(coords[0].x, coords[0].y, 5, 0, 2 * Math.PI, true);
-        if(this.settings.type_id == 1) {
+        if(this.settings.type_id == 1 || this.settings.type_id == 3) {
             ctx.fillStyle = '#00ff00';
         } else {
             ctx.fillStyle = '#ff0000';
@@ -6650,7 +6661,7 @@ iChart.indicators = {
             price = iChart.formatNumber( price, { decimalPlaces: 2, decimalPrecision: null, "scale": 0 });
         }
 
-        var text = ((trade.type_id==1)?'B':'S') + ': ' +  parseInt(trade.volume) +'@'+price;
+        var text = getTradeLabelText(trade, price)
         context.save();
 
         context.font = 'normal 11px Arial,Helvetica,sans-serif';
