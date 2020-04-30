@@ -1602,17 +1602,17 @@
         if(periodRegs) {
             switch (periodRegs[1]) {
                 case "D":
-                    date_from.setDate(date_to.getDate() - +(periodRegs[2]));
+                    date_from.setDate(date_from.getDate() - +(periodRegs[2]) + 1);
                     break;
                 case "M":
-                    date_from.setMonth(date_to.getMonth() - +(periodRegs[2]));
+                    date_from.setMonth(date_from.getMonth() - +(periodRegs[2]));
                     break;
                 case "Y":
-                    date_from.setFullYear(date_to.getFullYear() - +(periodRegs[2]));
+                    date_from.setFullYear(date_from.getFullYear() - +(periodRegs[2]));
                     break;
             }
         } else {
-            date_from.setMonth(date_to.getMonth() - +(3));
+            date_from.setMonth(date_from.getMonth() - +(3));
         }
 
         return {
