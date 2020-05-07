@@ -18772,7 +18772,7 @@ var iChartDataSource = {
         graphicIndicators: '',
         timeframe: 1440,
         hash: '',
-        id: "MICEX:SBER",
+        id: "AAPL.US",
         interval: "D1",
 
         compareIds: "",
