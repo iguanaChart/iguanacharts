@@ -166,6 +166,13 @@
 
             if ($wrapper.data('iguanaChart')) {
 
+                var chart = $wrapper.data('iguanaChart');
+                for (var timer in chart.timers) {
+                    clearTimeout(chart.timers[timer]);
+                }
+                chart.ajaxDataRequest.abort();
+                chart.viewData.chart._dataLoading = false;
+
                 $iguanaChart.init($wrapper.data('iguanaChart'), params);
 
             } else {

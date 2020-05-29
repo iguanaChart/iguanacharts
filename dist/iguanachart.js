@@ -18857,32 +18857,33 @@ var iChartDataSource = {
                     };
                     _chart.viewData.chart.chartOptions.watermarkText = stockInfo.nt_ticker;
                     _chart.viewData.chart.chartOptions.watermarkSubText = stockInfo.short_name;
+
+                    data = _this.dataAdapter(data, $params);
+
+                    clearTimeout(_chart.timers.loading);
+
+                    _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
+                    _chart.viewData.chart.setSelectionMode('pan');
+
+                    if(data.success == false) {
+                        console.log('ERROR:', data.d.Message);
+                    }
+                    if (data) {
+                        callback(data);
+                    }
+                    else {
+                        callback({ "warnings":[_t('2125', 'Ошибка: пустой ответ.')], "success":false });
+                    }
+                    _chart.response = data.d;
+
+                    _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
+                    _chart.dataRequestCounter++;
+
+                    _chart.fixViewport();
+                    _chart.updateUnlocked = true;
+                } else  {
+                    callback({"success":false });
                 }
-
-                data = _this.dataAdapter(data, $params);
-
-                clearTimeout(_chart.timers.loading);
-
-                _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
-                _chart.viewData.chart.setSelectionMode('pan');
-
-                if(data.success == false) {
-                    console.log('ERROR:', data.d.Message);
-                }
-                if (data) {
-                    callback(data);
-                }
-                else {
-                    callback({ "warnings":[_t('2125', 'Ошибка: пустой ответ.')], "success":false });
-                }
-                _chart.response = data.d;
-
-                _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
-                _chart.dataRequestCounter++;
-
-                _chart.fixViewport();
-                _chart.updateUnlocked = true;
-
             },
             //"type":"POST",
             "url": iChartDataSource.getUrl(params)
@@ -21783,6 +21784,13 @@ IguanaChart = function (options) {
             var $wrapper = this;
 
             if ($wrapper.data('iguanaChart')) {
+
+                var chart = $wrapper.data('iguanaChart');
+                for (var timer in chart.timers) {
+                    clearTimeout(chart.timers[timer]);
+                }
+                chart.ajaxDataRequest.abort();
+                chart.viewData.chart._dataLoading = false;
 
                 $iguanaChart.init($wrapper.data('iguanaChart'), params);
 
