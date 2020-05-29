@@ -407,7 +407,7 @@
                     at: 'center right',
                     my: 'left center',
                     effect: false,
-                    viewport: $(window),
+                    viewport: $('html'),
                     adjust: {
                         method: 'shift none'
                     }
