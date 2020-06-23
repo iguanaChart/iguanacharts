@@ -18838,7 +18838,8 @@ var iChartDataSource = {
                 _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
                 _chart.viewData.chart.setSelectionMode('pan');
 
-                callback({ "warnings":["Ошибка: " + textStatus + "."], "success":false });
+                console.log("Error: " + textStatus);
+                callback({"success":false });
             },
             "success": function (data, textStatus, xhr)
             {
