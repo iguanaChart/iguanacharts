@@ -101,6 +101,11 @@ var iChartDataSource = {
                     if (data.success == false) {
                         console.log("ERROR:", data.d.Message)
                     }
+                    if (data) {
+                        callback(data)
+                    } else {
+                        callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
+                    }
                     _chart.response = data.d;
                     _chart.dataRequestCounter++;
 
@@ -119,8 +124,6 @@ var iChartDataSource = {
                     _chart.updateUnlocked = true
                     //_chart.wrapper.trigger("iguanaChartEvents", ["chartDataReady", data]);
                     _chart.fixViewport();
-
-                    callback({success: false})
                 }
             }, url: iChartDataSource.getUrl(params)
         })
