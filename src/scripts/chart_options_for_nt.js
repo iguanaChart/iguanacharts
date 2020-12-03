@@ -101,11 +101,6 @@ var iChartDataSource = {
                     if (data.success == false) {
                         console.log("ERROR:", data.d.Message)
                     }
-                    if (data) {
-                        callback(data)
-                    } else {
-                        callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
-                    }
                     _chart.response = data.d;
                     _chart.dataRequestCounter++;
 
