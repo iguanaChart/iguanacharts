@@ -18861,7 +18861,6 @@ var iChartDataSource = {
                     } else {
                         callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
                     }
-                    debugger
                     _chart.response = data.d;
                     _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReady", data]);
                     _chart.dataRequestCounter++;
@@ -18893,11 +18892,9 @@ var iChartDataSource = {
                         _chart.viewData.chart._dataSettings.date_from,
                         _chart.viewData.chart._dataSettings.date_to);
 
-                    //_chart.setInterval(_chart.viewData.chart._dataSettings.interval);
                     _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
                     _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
                     _chart.updateUnlocked = true
-                    //_chart.wrapper.trigger("iguanaChartEvents", ["chartDataReady", data]);
                     _chart.fixViewport();
                 }
             }, url: iChartDataSource.getUrl(params)
