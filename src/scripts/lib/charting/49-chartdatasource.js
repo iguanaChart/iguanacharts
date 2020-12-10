@@ -80,7 +80,8 @@
             hash: '',
             id: "",
             interval: "D1",
-            timeframe: 1440
+            timeframe: 1440,
+            strategies: []
         };
 
         settings = settings || {};

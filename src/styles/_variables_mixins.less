@@ -1,0 +1,144 @@
+@import "_md_colors";
+
+// colors
+@text_primary_color:			#212121;
+@text_secondary_color:			#727272;
+@text_muted:                    #aaa;
+@site_background:               #fff;
+
+@border_color:                  rgba(0,0,0,0.12);
+@border_color_hex:              #e0e0e0;
+@border_color_light:            rgba(0,0,0,0.08);
+@background_color_default:      rgba(0,0,0,0.085);
+@background_color_default_hex:  #ededed;
+@hover_bg:                      #f5f5f5;
+
+@white:                         #fff;
+
+@danger_color:                  @md-color-red-600;
+@primary_color:                 @md-color-blue-500;
+@primary_color_dark:            @md-color-blue-700;
+@success_color:                 @md-color-light-green-600;
+@warning_color:                 @md-color-amber-700;
+@muted_color:                   @md-color-grey-400;
+
+// theme
+@theme_primary_color:           @md-color-blue-500;
+@theme_light_color:             @md-color-blue-50;
+@theme_dark_color:              @md-color-blue-700;
+@accent_color:                  @md-color-light-green-600;
+
+/* md buttons */
+@hover_btn:                     rgba(153,153,153,0.2);
+@active_btn:                    rgba(153,153,153,0.4);
+
+// input colors
+@input_on_color:                @md-color-teal-500;
+@input_off_color:               rgba(0,0,0,.54);
+@input_disabled_color:          rgba(0,0,0,.26);
+@input_disabled_color_hex:      #bdbdbd;
+
+// swiftOut easing
+@md_easing:                     cubic-bezier(0.4,0,0.2,1);
+
+// main header
+@header_main_height:            64px;
+@header_main_mobile_height:     48px;
+@header_main_height_double:     (@header_main_height*2)+10;
+@header_main_zIndex:            1104;
+
+// top bar
+@top_bar_height:                40px;
+
+// main sidebar
+@sidebar_main_width:            240px;
+@sidebar_main_width_mini:       60px;
+
+// secondary sidebar
+@sidebar_secondary_width:       280px;
+
+// media queries
+@screen_xlarge:                 ~"only screen and (min-width: 1220px)";
+@screen_large:                  ~"only screen and (min-width: 960px)";
+@screen_medium:                 ~"only screen and (min-width: 768px)";
+@screen_small:                  ~"only screen and (min-width: 480px)";
+
+@screen_xlarge_max:             ~"only screen and (max-width: 1219px)";
+@screen_large_max:              ~"only screen and (max-width: 959px)";
+@screen_medium_max:             ~"only screen and (max-width: 767px)";
+@screen_small_max:              ~"only screen and (max-width: 479px)";
+
+@section_light: lighten(@md-color-blue-grey-50, 3%);
+@section_dark: #1e2837;
+
+.border-box() {
+  &,
+  &:before,
+  &:after,
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+}
+
+// Retina background-image support with non-retina fall back
+.retina_image(@file-1x, @file-2x, @width-1x, @height-1x) {
+  background-image: url("@{file-1x}");
+  background-repeat: no-repeat;
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and ( min--moz-device-pixel-ratio: 2),
+  only screen and ( -o-min-device-pixel-ratio: 2/1),
+  only screen and ( min-device-pixel-ratio: 2),
+  only screen and ( min-resolution: 192dppx),
+  only screen and ( min-resolution: 2dppx) {
+    background-image: url("@{file-2x}");
+    background-size: @width-1x @height-1x;
+  }
+}
+
+// remove default styles for ordered/unordered list
+.reset_list(@margin: 0, @padding: 0) {
+  margin: @margin;
+  padding: @padding;
+  list-style: none;
+  > li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+}
+
+// clearfix
+.clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// custom fonts
+.md_font(@weight: 400, @size: 14px, @height: 20px) {
+  font: @weight @size e('/') @height "Roboto", sans-serif;
+}
+.code_font(@weight: 400, @size: 14px, @height: 18px) {
+  font: @weight @size e('/') @height "Source Code Pro",Consolas, Monaco, 'Andale Mono', monospace !important;
+}
+
+.md_font_family() {
+  font-family: "Roboto", sans-serif;
+}
+
+// text truncate
+.truncate_line(@width: 100%) {
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+  width: @width;
+}

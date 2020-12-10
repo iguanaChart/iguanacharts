@@ -1,0 +1,344 @@
+@import "_md_colors";
+@import "_md_variables_mixins";
+@import "_variables_mixins";
+
+/* buttons */
+@fab_large_size: 64px;
+@fab_small_size: 48px;
+@fab_transition_delay: 50ms;
+
+.md-btn {
+  background: @white;
+  border: none;
+  border-radius: 2px;
+  .boxShadowHelper(1);
+  min-height: 31px;
+  min-width: 70px;
+  padding: 2px 15px;
+  text-align: center;
+  text-shadow: none;
+  text-transform: uppercase;
+  transition: all 280ms @md_easing;
+  color: @text_primary_color;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-appearance: none;
+  display: inline-block;
+  vertical-align: middle;
+  .md_font(500, 14px, 31px);
+  &:hover,
+  &:focus,
+  &:active,
+  .uk-button-dropdown.uk-open > & {
+    background: @white;
+    outline: none;
+    text-decoration: none;
+    color: @text_primary_color;
+    .boxShadowHelper(2);
+  }
+  &-flat {
+    .boxShadowHelper(0);
+    background: none;
+    &:hover,
+    &:focus {
+      background: @hover_btn;
+    }
+    &:active {
+      background: @active_btn;
+    }
+    &-danger {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @danger_color;
+      }
+      &:hover,
+      &:focus,
+      &:active {
+        background: lighten(@danger_color, 40%);
+      }
+    }
+    &-primary {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @primary_color_dark;
+      }
+      &:hover,
+      &:focus,
+      &:active {
+        background: lighten(@primary_color, 40%);
+      }
+    }
+    &-success {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @success_color;
+      }
+      &:hover,
+      &:focus,
+      &:active {
+        background: lighten(@success_color, 40%);
+      }
+    }
+    &-warning {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @warning_color;
+      }
+      &:hover,
+      &:focus,
+      &:active {
+        background: lighten(@warning_color, 40%);
+      }
+    }
+    &.disabled {
+      background: none !important;
+    }
+  }
+  &-danger {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @danger_color;
+      color: @white!important;
+    }
+  }
+  &-primary {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @primary_color;
+      color: @white!important;
+    }
+  }
+  &-success {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @success_color;
+      color: @white!important;;
+    }
+  }
+  &-warning {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @warning_color;
+      color: @white!important;
+    }
+  }
+  &.disabled {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      color: #a8a8a8;
+      background: #eaeaea;
+      box-shadow: none !important;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+  &-small {
+    line-height: 30px;
+    min-height: 30px;
+    //min-width: 14px;
+    min-width: 50px;
+    font-size: 11px;
+  }
+  &-large {
+    line-height: 42px;
+    font-size: 16px;
+  }
+  &-mini {
+    line-height: 18px;
+    min-height: 22px;
+    font-size: 11px;
+    font-weight: 400;
+  }
+  &-fat {
+    line-height: 38px;
+    min-height: 38px;
+  }
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+  + .md-btn {
+    margin-left: 2px;
+  }
+  &-block {
+    width: 100%;
+  }
+}
+
+.tm-theme-dark .md-btn {
+  background: @md-color-grey-700;
+  color: @md-color-grey-50;
+  .material-icons {
+    color: @md-color-grey-50;
+  }
+  &:hover,
+  &:focus,
+  &:active,
+  .uk-button-dropdown.uk-open > & {
+    background: darken(@md-color-grey-700, 3%);
+    color: @md-color-grey-50;
+  }
+  &-danger {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @danger_color !important;
+      color: @white !important;
+    }
+  }
+  &-primary {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @primary_color !important;
+      color: @white !important;
+    }
+  }
+  &-success {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @success_color !important;
+      color: @white !important;
+    }
+  }
+  &-warning {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @warning_color !important;
+      color: @white !important;
+    }
+  }
+  &.disabled {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      color: #606060 !important;
+      background: #2a2a2a !important;
+      box-shadow: none !important;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+  &-flat {
+    background-color: transparent;
+    color: @md-color-grey-50;
+    &:hover,
+    &:focus {
+      background: @black;
+    }
+    &:active {
+      background: @md-color-grey-900;
+    }
+    &-primary {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @md-color-grey-50;
+        background: @md-color-blue-800;
+      }
+    }
+  }
+}
+
+.tm-theme-freedom .md-btn {
+  &-primary {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @md-color-blue-500 !important;
+      color: @white !important;
+    }
+  }
+  &-success {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: @md-color-green-500 !important;
+      color: @white !important;
+    }
+  }
+}
+
+.md-btn-blue {
+  background-color: @vd-blue;
+  color: #fff !important;
+  cursor: pointer;
+  a {
+    color: #fff !important;
+  }
+  &:hover {
+    background-color: darken(@vd-blue, 3%);
+    color: #fff !important;
+  }
+}
+
+.md-btn-amber {
+  background-color: @md-color-amber-500;
+  color: #fff !important;
+  cursor: pointer;
+  a {
+    color: #fff !important;
+  }
+  &:hover {
+    background-color: darken(@md-color-amber-500, 3%);
+    color: #fff !important;
+  }
+}
+
+.md-btn-secondary {
+  background-color: #e8e8e8;
+  color: #000 !important;
+  cursor: pointer;
+  a {
+    color: #000 !important;
+  }
+  &:hover {
+    background-color: darken(#e8e8e8, 3%);
+    color: #000 !important;
+  }
+}
+
+.md-btn-left {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  margin-right: -1px;
+}
+
+.md-btn-center {
+  border-radius: 0;
+  margin: 0 -1px;
+}
+
+.md-btn-right {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  margin-left: -1px;
+}

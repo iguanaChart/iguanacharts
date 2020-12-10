@@ -1,8 +1,45 @@
-﻿IguanaChart = function (options) {
+﻿global.$ = $;
+import '@claviska/jquery-minicolors';
+import 'jquery.event.move';
+import 'jquery-mousewheel';
+import 'qtip2';
+import 'core-js';
+import 'jsrender';
+import 'uikit';
+
+import './jquery.simplemodal';
+import './jquery.palette';
+import './lib/ichart.core';
+import './lib/indicators.descr';
+import './lib/charting';
+import './templates';
+import './chart_options_for_nt';
+// chart.js
+import './iguana-ui';
+import './jquery.iguana-chart';
+import './ta/TA_prototypes';
+import './ta/functions';
+import './ta/TA_common.js';
+import './ta/TA_analyse_rs.js';
+
+import {
+    StrategiesContainer,
+    StrategiesList,
+    StrategiesListItem,
+    MODAL_CONTAINERS_MAP,
+} from './components/strategiesContainer';
+
+window.IguanaChart = function (options) {
 
     "use strict";
 
     var _this = this;
+
+    this.state = {
+        currentModal: 'indicators',
+        currentStrategy: 'default',
+        strategies: [],
+    };
 
     this.name = options.name || 'chart';
 
@@ -92,23 +129,25 @@
         /// Initializes the chart.
         /// </summary>
 
-        this.uiGraphIndicatorsWindow2 = {element : $(this.wrapper).find(".js-chartTADialog." + this.name)};
+        this.uiGraphIndicatorsWindow2 = {
+            element: $(this.wrapper).find(".js-chartTADialog." + this.name),
+        };
 
         this.loadHash();
 
-        if(typeof settings != "object") {
+        if (typeof settings != "object") {
             settings = {};
         }
 
         this.settings = {};
-        this.settings.paddingBottom      = typeof settings.paddingBottom != "undefined" ? settings.paddingBottom : 50;
+        this.settings.paddingBottom = typeof settings.paddingBottom != "undefined" ? settings.paddingBottom : 50;
 
-        if(typeof this.viewData.chart == "undefined") {
-
+        if (typeof this.viewData.chart == "undefined") {
             var chartOptions = {
-
                 onPostRender: function () {
-                    _this.checkDateInterval(new Date(this.areas[0].xSeries[this.areas[0].viewport.x.bounded.min] * 1000), new Date(this.areas[0].xSeries[this.areas[0].viewport.x.bounded.max] * 1000));
+                    const dateFrom = new Date(this.areas[0].xSeries[this.areas[0].viewport.x.bounded.min] * 1000);
+                    const dateTo = new Date(this.areas[0].xSeries[this.areas[0].viewport.x.bounded.max] * 1000);
+                    _this.checkDateInterval(dateFrom, dateTo);
                     $('#chartLoading').remove();
                     _this.wrapper.trigger('iguanaChartEvents', ['RenderChartSuccess']);
                 },
@@ -116,13 +155,10 @@
                 onDataSettingsChange: this.chart_onDataSettingsChange,
                 onIntervalChange: this.chart_onIntervalChange,
                 contextmenuCallback: settings.contextmenuCallback,
-
-                "container": $(this.container).get(0),
-
-                "dataSettings": this.getChartDataUserSettings(),
-
-                "widget": settings.widget,
-                "env": this
+                container: $(this.container).get(0),
+                dataSettings: this.getChartDataUserSettings(),
+                widget: settings.widget,
+                env: this,
             };
 
             chartOptions = $.extend(true, chartOptions, settings);
@@ -137,6 +173,10 @@
             this.viewData.chart.overlay.deserialize(iChart.parseQueryString((this.dataSource.dataSettings.hash|| "#").substr(1)));
             this.viewData.chart.setDataSettings(this.getChartDataUserSettings());
             this.dataRequestCounter = 0;
+        }
+
+        if (this.dataSource.dataSettings.strategies) {
+            this.state.strategies = this.dataSource.dataSettings.strategies;
         }
 
         this.ui.render();
@@ -194,7 +234,7 @@
         if(data.hloc) {
             var tickers = Object.keys(data.hloc);
 
-            if(tickers.length == 1) {
+            if (tickers.length === 1) {
                 chartData.d.ySeries[0] = $.extend(true,{},hloc);
                 chartData.d.ySeries[1] = $.extend(true,{},volume);
                 chartData.d.ySeries[0].name = tickers[0];
@@ -248,7 +288,7 @@
         /// Called when the chart data settings change.
         /// </summary>
 
-        var documentHash = _this.dataSource.dataSettings.useHash == false ? (_this.dataSource.dataSettings.hash || '#') : document.location.hash;
+        var documentHash = !_this.dataSource.dataSettings.useHash ? (_this.dataSource.dataSettings.hash || '#') : document.location.hash;
         var params = iChart.parseQueryString(documentHash.substr(1));
         var drawParams = _this.getDrawParams(params);
 
@@ -256,16 +296,14 @@
         var hash = "#" + iChart.toQueryString($.extend(_this.viewData.chart._dataSettings, drawParams));
 
         _this.viewData.hash = hash;
-        if(_this.dataSource.dataSettings.useHash == false) {
-            if(_this.dataSource.dataSettings.hash != hash) {
+        if(!_this.dataSource.dataSettings.useHash) {
+            if(_this.dataSource.dataSettings.hash !== hash) {
                 _this.dataSource.dataSettings.hash = hash;
                 $(this.container).trigger('iguanaChartEvents', ['hashChanged', hash]);
             }
-        } else {
-            if(document.location.hash != hash) {
-                document.location.hash = hash;
-                $(this.container).trigger('iguanaChartEvents', ['hashChanged', hash]);
-            }
+        } else if (document.location.hash !== hash) {
+            document.location.hash = hash;
+            $(this.container).trigger('iguanaChartEvents', ['hashChanged', hash]);
         }
     };
 
@@ -278,8 +316,10 @@
         var drawParams = {};
 
         for (var paramKey in params) {
-            if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
-                drawParams[paramKey] = params[paramKey];
+            if (params.hasOwnProperty(paramKey)) {
+                if (paramKey.match(/^L$/) || paramKey.match((/^L[0-9]{1,2}_/))) {
+                    drawParams[paramKey] = params[paramKey];
+                }
             }
         }
 
@@ -333,18 +373,19 @@
 
     this.VolumeByDate_onClick = function (state)
     {
-        if(state === true || state === false) {
+        if (state === true || state === false) {
             _this.viewData.chart.chartOptions.showVolume = state ? "inside" : "hidden";
         } else {
-            _this.viewData.chart.chartOptions.showVolume = (state == "inside" || state == "outside") ? state :
-            _this.viewData.chart.chartOptions.showVolume === "inside" || _this.viewData.chart.chartOptions.showVolume === "outside" ? "hidden" : "inside";
+            _this.viewData.chart.chartOptions.showVolume = (state === "inside" || state === "outside")
+                ? state
+                : _this.viewData.chart.chartOptions.showVolume === "inside" || _this.viewData.chart.chartOptions.showVolume === "outside"
+                    ? "hidden"
+                    : "inside";
         }
 
-        if (_this.viewData.chart && _this.viewData.chart.areas)
-        {
+        if (_this.viewData.chart && _this.viewData.chart.areas) {
             var volumeArea = $.grep(_this.viewData.chart.areas, function (x) { return x.name === "ChartArea2"; })[0];
-            if (volumeArea)
-            {
+            if (volumeArea) {
                 volumeArea.enabled = _this.viewData.chart.chartOptions.showVolume === "inside" || _this.viewData.chart.chartOptions.showVolume === "outside";
             }
             // Redraw the chart using new settings.
@@ -411,13 +452,14 @@
         //}
         //$.extend(params, iChart.parseQueryString(localStorage.userSettingsGraphicIndicators));
         $.extend(params, iChart.parseQueryString(this.dataSource.dataSettings.graphicIndicators));
+        // @todo add strategies
         return params;
     };
 
     this.getMinChartHeight = function ()
     {
         var container = $(this.container);
-        if (container.length != 0) {
+        if (container.length !== 0) {
             return $(window).height() - container.offset().top - (this.settings && this.settings.paddingBottom ? this.settings.paddingBottom : 0);
         }
         return $(window).height();
@@ -478,7 +520,7 @@
         /// Forces a full chart data update.
         /// </summary>
         var dataSettings = this.getChartDataUserSettings();
-        if (this.dataSource.dataSettings.useHash != false) {
+        if (!this.dataSource.dataSettings.useHash) {
             this.setHashValues(dataSettings);
         }
         if (this.viewData.chart) {
@@ -488,7 +530,7 @@
     };
     this.updateForce = function () {
         var dataSettings = this.getChartDataUserSettings();
-        if (this.dataSource.dataSettings.useHash != false) {
+        if (!this.dataSource.dataSettings.useHash) {
             this.setHashValues(dataSettings);
         }
         if (this.viewData.chart) {
@@ -510,6 +552,52 @@
         }
     };
 
+    this.createStrategiesContainer = () => {
+        return (new StrategiesContainer(
+          (new StrategiesList())
+            .addItems(this.state.strategies.map(({ name }) => new StrategiesListItem(name)))
+        )).render();
+    }
+
+    this.getIndicators = () => this.deserializeIndicators(this.uiGraphIndicatorsWindow2.element.find(':input').serialize(), false);
+
+    this.chooseStrategy_onClick = (event) => {
+        const modal = this.uiGraphIndicatorsWindow2.element[0];
+
+        if (!modal) {
+            throw new Error('There should be modal');
+        }
+
+        const indicatorsContainer = modal.querySelector('.js-chartTADialogContainer');
+        const { currentModal } = this.state;
+
+        const strategyButton = event.target;
+        const addIndicatorButton = modal.querySelector('.js-indicator-add');
+
+        let strategiesContainer = modal.querySelector('.js-chartTADialogContainerStrategies');
+
+        if (!strategiesContainer) {
+            strategiesContainer = this.createStrategiesContainer();
+
+            indicatorsContainer.parentNode.insertBefore(
+              strategiesContainer,
+              indicatorsContainer.nextSibling
+            )
+        }
+
+        const nextModal = currentModal === 'indicators'
+          ? 'strategies'
+          : 'indicators';
+        const modalSettings = MODAL_CONTAINERS_MAP[nextModal];
+
+        indicatorsContainer.style.display = modalSettings.indicatorsContainer;
+        strategiesContainer.style.display = modalSettings.strategiesContainer;
+        addIndicatorButton.style.display = modalSettings.addIndicatorButton;
+        strategyButton.innerText = modalSettings.strategyButton;
+
+        this.state.currentModal = nextModal;
+    };
+
     this.serializeIndicators = function (indicators) {
         var query = '';
         for(var i=0; i<indicators.length; i++) {
@@ -517,7 +605,9 @@
 
             if(indicators[i].params) {
                 for(var paramKey in indicators[i].params) {
-                    query += "i" + i + "_" + paramKey + "=" + indicators[i].params[paramKey] + "&";
+                    if (indicators[i].params.hasOwnProperty(paramKey)) {
+                        query += "i" + i + "_" + paramKey + "=" + indicators[i].params[paramKey] + "&";
+                    }
                 }
             }
         }
@@ -528,32 +618,32 @@
         resetKey = typeof resetKey != "undefined" ? !!resetKey : true;
         var params = iChart.parseQueryString(query);
         var indicators = [];
-        for (var paramKey in params)
-        {
-            if (paramKey === "fs" || paramKey.match(new RegExp("^i[0-9]+", "i")))
-            {
-                var regsIndParams = paramKey.match(new RegExp("^i([0-9])+_", "i"));
-                var regsInd = paramKey.match(new RegExp("^i([0-9])+$", "i"));
-                if (regsInd) {
-                    if(!indicators[+regsInd[1]]) {
-                        indicators[+regsInd[1]] = {};
+        for (var paramKey in params) {
+            if (params.hasOwnProperty(paramKey)) {
+                if (paramKey === "fs" || paramKey.match(new RegExp("^i[0-9]+", "i"))) {
+                    var regsIndParams = paramKey.match(new RegExp("^i([0-9])+_", "i"));
+                    var regsInd = paramKey.match(new RegExp("^i([0-9])+$", "i"));
+                    if (regsInd) {
+                        if(!indicators[+regsInd[1]]) {
+                            indicators[+regsInd[1]] = {};
+                        }
+                        indicators[+regsInd[1]].name = params[paramKey];
+                    } else if(regsIndParams) {
+                        if(!indicators[+regsIndParams[1]]) {
+                            indicators[+regsIndParams[1]] = {};
+                        }
+                        if(!indicators[+regsIndParams[1]].params) {
+                            indicators[+regsIndParams[1]].params = {};
+                        }
+                        indicators[+regsIndParams[1]].params[paramKey.replace(/i[0-9]+_/i, '')] = +(params[paramKey]);
                     }
-                    indicators[+regsInd[1]].name = params[paramKey];
-                } else if(regsIndParams) {
-                    if(!indicators[+regsIndParams[1]]) {
-                        indicators[+regsIndParams[1]] = {};
-                    }
-                    if(!indicators[+regsIndParams[1]].params) {
-                        indicators[+regsIndParams[1]].params = {};
-                    }
-                    indicators[+regsIndParams[1]].params[paramKey.replace(/i[0-9]+_/i, '')] = +(params[paramKey]);
                 }
             }
         }
 
-        if(resetKey) {
+        if (resetKey) {
             indicators = indicators.filter(function (n) {
-                return n != undefined
+                return n !== undefined
             });
         }
         return indicators;
@@ -569,8 +659,10 @@
             var indicatorOptions = '<option value="">'+  _t('14773', 'Выберите индикатор') +'</option>';
 
             for(var key in this.viewData.indicators) {
-                if(this.viewData.indicators[key].type == "TA_LIB") {
-                    indicatorOptions += '<option value="' + key + '" ' + ((key == indicator.name) ? 'selected' : '') + '>' + this.viewData.indicators[key].name + '</option>';
+                if (this.viewData.indicators.hasOwnProperty(key)) {
+                    if (this.viewData.indicators[key].type === "TA_LIB") {
+                        indicatorOptions += '<option value="' + key + '" ' + ((key === indicator.name) ? 'selected' : '') + '>' + this.viewData.indicators[key].name + '</option>';
+                    }
                 }
             }
 
@@ -677,7 +769,7 @@
             var indicators = iChart.parseQueryString(this.dataSource.dataSettings.graphicIndicators);
             $.each(indicators, function (n, i) {
                 var params = {};
-                if(i && n.match(/^i[0-9]+$/) && _this.viewData.indicators[i] && _this.viewData.indicators[i].type == "TA_LIB") {
+                if(i && n.match(/^i[0-9]+$/) && _this.viewData.indicators[i] && _this.viewData.indicators[i].type === "TA_LIB") {
                     var index = n.match(/^i([0-9]+)$/)[1];
                     for(var p = 0; p < _this.viewData.indicators[i].parameters.length; p++) {
                         var iParam = _this.viewData.indicators[i].parameters[p];
@@ -705,39 +797,37 @@
 
         this.uiGraphIndicatorsWindow2.element.find(".js-chartTADialogContainer").empty();
 
-        for(var i=0; i<indicators.length; i++) {
+        for (var i=0; i<indicators.length; i++) {
             this.updateIndicatorDetails(i, indicators[i], false);
 
-            for (var paramKey in indicators[i].params)
-            {
-                var name = "i" + i + "_" + paramKey;
-                this.uiGraphIndicatorsWindow2.element.find("[name='" + name + "']").val(indicators[i].params[paramKey]);
+            for (var paramKey in indicators[i].params) {
+                if (indicators[i].params.hasOwnProperty(paramKey)) {
+                    var name = "i" + i + "_" + paramKey;
+                    this.uiGraphIndicatorsWindow2.element.find("[name='" + name + "']").val(indicators[i].params[paramKey]);
+                }
             }
         }
 
-        if(!options.forAll) {
+        if (!options.forAll) {
             this.uiGraphIndicatorsWindow2.element.find('.indicators-default').hide();
         }
 
-        if(!this.uiGraphIndicatorsWindow2.UIkit) {
-
-            $(this.wrapper).find(".js-chartTADialog." + this.name).appendTo('body');
-            this.uiGraphIndicatorsWindow2 = UIkit.modal($(".js-chartTADialog." + this.name));
-
+        if (!this.uiGraphIndicatorsWindow2.UIkit) {
+            $(this.wrapper).find('.js-chartTADialog.' + this.name).appendTo('body');
+            this.uiGraphIndicatorsWindow2 = UIkit.modal($('.js-chartTADialog.' + this.name));
         }
 
         this.uiGraphIndicatorsWindow2.show();
 
-        $(".indicators-set").off("click");
-        $(".indicators-close").off("click");
-        $(".indicators-set").on('click', function () {
+        $('.indicators-set').off('click').on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
+            console.log(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.uiGraphIndicatorsWindow2.hide();
             return false;
         });
-        $(".indicators-close").on('click', function () {
+        $('.indicators-close').off('click').on('click', function () {
             _this.uiGraphIndicatorsWindow2.hide();
             if(_this.timers.updateInterval) {_this.setScheduleUpdateState(1, _this.timers.updateInterval)}
             return false;
@@ -747,10 +837,12 @@
     this.window_onHashChange = function () {
         if (typeof _this == 'undefined') return;
 
-        if(_this.dataSource.dataSettings.useHash == false) {
-            var hash = _this.dataSource.dataSettings.hash;
+        var hash;
+
+        if (!_this.dataSource.dataSettings.useHash) {
+            hash = _this.dataSource.dataSettings.hash;
         } else {
-            var hash = document.location.hash;
+            hash = document.location.hash;
         }
         if (decodeURIComponent(hash) !== decodeURIComponent(_this.viewData.hash)) {
             _this.loadHash();
@@ -827,28 +919,23 @@
     };
 
     this.setMousewheelZoomState = function (turnOn) {
-        if(turnOn) {
-            this.viewData.chart.chartOptions.mousewheelZoom = true;
-        } else {
-            this.viewData.chart.chartOptions.mousewheelZoom = false;
-        }
+        this.viewData.chart.chartOptions.mousewheelZoom = Boolean(turnOn);
     }
 
     this.setScheduleUpdateState = function (turnOn) {
-        if(turnOn) {
-            this.viewData.chart.chartOptions.updateInterval = true;
-            this.viewData.chart.scheduleUpdate();
-        } else {
-            this.viewData.chart.chartOptions.updateInterval = false;
-            this.viewData.chart.scheduleUpdate();
-        }
+        this.viewData.chart.chartOptions.updateInterval = Boolean(turnOn);
+        this.viewData.chart.scheduleUpdate();
     }
 
-    this.scrollBack = function () {
+    this.getScrollLength = function () {
         this.viewData.chart.viewport.x.min = this.viewData.chart.areas[0].viewport.x.min;
         this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max;
 
-        var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
+        return this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
+    }
+
+    this.scrollBack = function () {
+        var length = this.getScrollLength();
         var min = this.viewData.chart.viewport.x.min;
         var duration = 1500 + min;
         $('<p>').animate({
@@ -864,11 +951,8 @@
     }
 
     this.scrollForward = function () {
-        this.viewData.chart.viewport.x.min = this.viewData.chart.areas[0].viewport.x.min;
-        this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max;
-
-        var length = this.viewData.chart.viewport.x.max - this.viewData.chart.viewport.x.min;
-        var max = this.viewData.chart.areas[0].xSeries.length-1-this.viewData.chart.chartOptions.futureAmount;
+        var length = this.getScrollLength();
+        var max = this.viewData.chart.areas[0].xSeries.length - 1 - this.viewData.chart.chartOptions.futureAmount;
         var p  = $('<p>').css({width: this.viewData.chart.viewport.x.max});
         var duration = 1500 + (max - this.viewData.chart.viewport.x.max);
 
@@ -971,7 +1055,6 @@
 
                 newPoint["hloc"][Object.keys(point.xSeries)[0]] = [hloc];
                 newPoint["vl"][Object.keys(point.xSeries)[0]] = [element.vol];
-
                 var tm = ((currentDate.getTime() - currentDate.getTime() % (this.viewData.chart._dataSettings.timeframe * 60000)) / 1000) - getTimeOffsetServer(tzOffsetMoscow);
                 newPoint["xSeries"][Object.keys(point.xSeries)[0]] = [tm];
 
@@ -1755,6 +1838,7 @@
     $(document).on("change", ".indicatorsSelect", this.indicator_onChange);
     $(document).on("click", ".js-indicator-remove", this.removeIndicator_onClick);
     $(document).on("click", ".js-indicator-add", this.addIndicator_onClick);
+    $(document).on("click", ".js-strategy-choose", this.chooseStrategy_onClick);
     $(document).on("change", "[name='timeframe']", this.timeframe_onChange);
     //$(document).on("change", "[name=graphic_format]", this.chartType_onChange);
     $(document).on("click", "[name='apply']", this.apply_onClick);

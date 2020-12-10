@@ -1,4 +1,4 @@
-var iChartDataSource = {
+window.iChartDataSource = {
     data: {},
 
     dataSettings: {

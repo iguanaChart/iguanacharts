@@ -1,0 +1,63 @@
+@import "_md_colors";
+
+// shadows
+.boxShadowHelper(@level: 1){
+    & when (@level = 0) {
+        box-shadow: none !important;
+    }
+    & when (@level = 1) {
+        //box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.0), 0 1px 3px rgba(0,0,0,0.0);
+    }
+    & when (@level = 2) {
+        //box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.12);
+    }
+    & when (@level = 3) {
+        //box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.12);
+    }
+    & when (@level = 4) {
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    }
+    & when (@level = 5) {
+        box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    }
+}
+
+.md-box-shadow-left() {
+    box-shadow: -2px 2px 5px rgba(0,0,0,.26);
+}
+.md-box-shadow-right() {
+    box-shadow: 2px 2px 5px rgba(0,0,0,.26);
+}
+
+/* bg colors */
+.md-bg-cyan {
+    background-color: @md-color-cyan-600 !important;
+    color: @white;
+}
+.md-bg-light-green {
+    background-color: @md-color-light-green-600 !important;
+    color: @white;
+}
+.md-bg-grey {
+    background-color: @md-color-grey-700 !important;
+    color: @white;
+}
+.md-bg-red {
+    background-color: @md-color-red-700 !important;
+    color: @white;
+}
+.md-bg-light-blue {
+    background-color: @md-color-light-blue-700 !important;
+    color: @white;
+}
+.md-bg-teal {
+    background-color: @md-color-teal-600 !important;
+    color: @white;
+}
+.md-bg-purple {
+    background-color: @md-color-purple-600 !important;
+    color: @white;
+}

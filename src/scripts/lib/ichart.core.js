@@ -3,27 +3,27 @@
  * @package  iguanaChart
  */
 
-if(typeof tzOffsetMoscow == "undefined") {
-    tzOffsetMoscow = 10800;
+if(typeof window.tzOffsetMoscow == "undefined") {
+    window.tzOffsetMoscow = 10800;
 }
 
-if(typeof LANG_NAME == "undefined") {
-    LANG_NAME = 'en';
+if(typeof window.LANG_NAME == "undefined") {
+    window.LANG_NAME = 'en';
 }
 
-if(typeof TEXT_TRANSLATOR_MODE == "undefined") {
+// if(typeof TEXT_TRANSLATOR_MODE == "undefined") {
 //    TEXT_TRANSLATOR_MODE = 'ru';
+// }
+
+if(typeof window.IGUANACHART_THEME == "undefined") {
+    window.IGUANACHART_THEME = "White";
 }
 
-if(typeof IGUANACHART_THEME == "undefined") {
-    IGUANACHART_THEME = "White";
+if(typeof window.MOBILE_BROWSER_DETECTED == "undefined") {
+    window.MOBILE_BROWSER_DETECTED = false;
 }
 
-if(typeof MOBILE_BROWSER_DETECTED == "undefined") {
-    MOBILE_BROWSER_DETECTED = false;
-}
-
-function formatDate(offset, time) {
+window.formatDate = function (offset, time) {
     var date = new Date();
     var time = date.getTime();
     var changedDate = new Date(time + (+(offset) * 86400000/*24 * 60 * 60 * 1000*/));
@@ -69,7 +69,7 @@ Date.parse = function(input) {
     return new Date(input).getTime();
 }
 
-if(typeof _t == "undefined") {
+if(typeof window._t == "undefined") {
 
     /**
      *
@@ -188,7 +188,7 @@ if(typeof _t == "undefined") {
         }
     }
 
-    _t = function (id, txtOrig, variables)
+    window._t = function (id, txtOrig, variables)
     {
         var translate  = '';
         var itsOrig    = false;
@@ -228,13 +228,13 @@ if(typeof String.prototype.hashCode == "undefined") {
     };
 }
 
-if(typeof getTimeOffsetServer == "undefined") {
+if(typeof window.getTimeOffsetServer == "undefined") {
     /**
      * Получить разницу локального и серверного времени
      * @param serverOffset в секундах
      * @returns {number}  в милисекундах
      */
-    getTimeOffsetServer = function (serverOffset) {
+    window.getTimeOffsetServer = function (serverOffset) {
         serverOffset = serverOffset || 0;
         var d = new Date()
         var tzLocalOffset = d.getTimezoneOffset();
@@ -242,7 +242,7 @@ if(typeof getTimeOffsetServer == "undefined") {
     }
 }
 
-function intervalNames(interval) {
+const intervalNames = function (interval) {
     switch (interval) {
         case "S30":
             return _t('2072', "30 секундный");
@@ -263,7 +263,9 @@ function intervalNames(interval) {
     }
 }
 
-function intervalShortNames(interval) {
+window.intervalNames = intervalNames;
+
+const intervalShortNames = function (interval) {
     switch (interval) {
         case "S30":
             return _t('1176', "30c");
@@ -288,7 +290,9 @@ function intervalShortNames(interval) {
         default:
             return "";
     }
-}
+};
+
+window.intervalShortNames = intervalShortNames;
 
 (function (w)
 {

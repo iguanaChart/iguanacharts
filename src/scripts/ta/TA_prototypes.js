@@ -1,4 +1,4 @@
-TA = {
+window.TA = {
     TICKER: 0,
     PER: 1,
     DATE: 2,
