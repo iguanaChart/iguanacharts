@@ -1,3 +1,6 @@
+import { clearNode } from '../helpers/dom';
+import EventDispatcher from "../helpers/eventDispatcher";
+
 export const MODAL_CONTAINERS_MAP = {
   indicators: {
     indicatorsContainer: 'block',
@@ -13,11 +16,15 @@ export const MODAL_CONTAINERS_MAP = {
   },
 };
 
-export function StrategiesContainer(strategiesList) {
-  if (!(strategiesList instanceof StrategiesList)) {
-    throw new Error('StrategiesList was expected');
-  }
+const MAX_STRATEGIES = 10;
 
+export const EMPTY_STRATEGY = {
+  name: '',
+  indicators: [],
+  tickers: [],
+}
+
+export function StrategiesContainer(strategiesList) {
   this.strategiesList = strategiesList;
 }
 
@@ -29,15 +36,15 @@ StrategiesContainer.prototype.render = function () {
   header.innerText = _t('', 'Выбор стратегии');
 
   container.appendChild(header);
-  container.appendChild(
-    this.strategiesList.render()
-  );
+  container.appendChild(this.strategiesList.render());
 
   return container;
 };
 
-export function StrategiesList() {
+export function StrategiesList(addListItem) {
   this.items = [];
+
+  this.events = new EventDispatcher();
 }
 
 StrategiesList.prototype.addItem = function (item) {
@@ -59,46 +66,90 @@ StrategiesList.prototype.addItems = function (items) {
 StrategiesList.prototype.renderAddItem = function () {
   const item = document.createElement('li');
   const text = document.createElement('span');
-  const icon = document.createElement('i');
+  const input = document.createElement('input');
+  const iconPlus = document.createElement('i');
+  const iconCheck = document.createElement('i');
 
   text.innerText = _t('', 'Добавить стратегию');
-  icon.classList.add('uk-icon-plus', 'uk-margin-left');
+  iconPlus.classList.add('uk-icon-plus', 'uk-margin-left');
+  iconCheck.classList.add('uk-icon-check', 'uk-margin-left');
 
   item.appendChild(text);
-  item.appendChild(icon);
+  item.appendChild(iconPlus);
+
+  iconPlus.addEventListener('click', () => {
+    item.removeChild(text);
+    item.removeChild(iconPlus);
+    item.appendChild(input);
+    item.appendChild(iconCheck);
+    input.focus();
+  })
+
+  iconCheck.addEventListener('click', () => {
+    const value = input.value.trim();
+
+    if (value) {
+      this.events.dispatch('onSave', [value]);
+    } else {
+      input.value = '';
+      item.removeChild(input);
+      item.removeChild(iconCheck);
+      item.appendChild(text);
+      item.appendChild(iconPlus);
+    }
+  })
 
   return item;
 };
 
+
 StrategiesList.prototype.render = function () {
-  const list = document.createElement('ul');
-
-  list.classList.add('uk-list', 'uk-list-line');
-
-  this.items.forEach(item => list.appendChild(item.render()));
-
-  // @todo "10" to constant
-  if (this.items.length < 10) {
-    list.appendChild(this.renderAddItem());
+  if (!this.list) {
+    this.list = document.createElement('ul');
+    this.list.classList.add('uk-list', 'uk-list-line');
+  } else {
+    clearNode(this.list);
   }
 
-  return list;
+  this.items.forEach(item => this.list.appendChild(item.render()));
+
+  if (this.items.length < MAX_STRATEGIES) {
+    this.list.appendChild(this.renderAddItem());
+  }
+
+  return this.list;
 };
 
-export function StrategiesListItem(name, icons) {
+StrategiesList.prototype.listen = function (event, listener) {
+  this.events.listen(event, listener);
+
+  return this;
+};
+
+
+export function StrategiesListItem(item) {
+  const { name, id } = item;
+
   if (!name) {
     throw new Error('Name is required');
   }
 
+  this.id = id;
   this.name = name;
-  this.icons = icons;
+
+  this.events = new EventDispatcher();
 }
 
-StrategiesListItem.prototype.renderIcon = function (title, classNames) {
+StrategiesListItem.prototype.renderIcon = function (title, classNames, onClick) {
   const icon = document.createElement('i');
 
   icon.title = title;
   icon.classList.add(...classNames);
+  icon.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    onClick();
+  });
 
   return icon;
 };
@@ -116,13 +167,33 @@ StrategiesListItem.prototype.render = function () {
 
     item.appendChild(this.renderIcon(
       _t('', 'Переименовать'),
-      ['uk-icon-pencil', 'uk-margin-left']
+      ['uk-icon-pencil', 'uk-margin-left'],
+      () => {
+        // @fixme show edit form and on submit call next `this.events.dispatch()`
+
+        // form.onSubmit(() => {
+        //   this.events.dispatch('onEdit', [this]);
+        // })
+      }
     ));
     item.appendChild(this.renderIcon(
       _t('', 'Удалить'),
-      ['uk-icon-remove', 'uk-margin-left']
+      ['uk-icon-remove', 'uk-margin-left'],
+      () => {
+        // @fixme show confirmation and on submit call next `this.events.dispatch()`
+
+        // confirmation.onSubmit(() => {
+        //   this.events.dispatch('onDelete', [this]);
+        // });
+      }
     ));
   }
 
   return item;
+};
+
+StrategiesListItem.prototype.listen = function (event, listener) {
+  this.events.listen(event, listener);
+
+  return this;
 };

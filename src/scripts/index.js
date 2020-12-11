@@ -26,7 +26,7 @@ import {
     StrategiesContainer,
     StrategiesList,
     StrategiesListItem,
-    MODAL_CONTAINERS_MAP,
+    MODAL_CONTAINERS_MAP, EMPTY_STRATEGY,
 } from './components/strategiesContainer';
 
 window.IguanaChart = function (options) {
@@ -553,10 +553,36 @@ window.IguanaChart = function (options) {
     };
 
     this.createStrategiesContainer = () => {
-        return (new StrategiesContainer(
-          (new StrategiesList())
-            .addItems(this.state.strategies.map(({ name }) => new StrategiesListItem(name)))
-        )).render();
+        const createItem = strategy => (new StrategiesListItem(strategy))
+            .listen('onEdit', (item) => {
+                // @fixme update strategy
+                // this.state.strategies.findAndReplaceStrategyById(item.id);
+                // strategiesList.render();
+            })
+            .listen('onDelete', (item) => {
+                // @fixme delete strategy
+                // this.state.strategies.removeStrategyById(item.id)
+                // strategiesList.render();
+            });
+
+        const strategiesList = (new StrategiesList())
+            .addItems(this.state.strategies.map(createItem))
+            .listen('onSave', (name) => {
+                const id = this.state.strategies.length;
+                const newStrategy = {
+                    ...EMPTY_STRATEGY,
+                    name,
+                    id,
+                };
+
+                this.state.strategies.push(newStrategy);
+
+                strategiesList
+                    .addItem(createItem(newStrategy))
+                    .render();
+          });
+
+        return (new StrategiesContainer(strategiesList)).render();
     }
 
     this.getIndicators = () => this.deserializeIndicators(this.uiGraphIndicatorsWindow2.element.find(':input').serialize(), false);
