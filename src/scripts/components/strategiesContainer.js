@@ -1,5 +1,5 @@
 import { clearNode } from '../helpers/dom';
-import EventDispatcher from "../helpers/eventDispatcher";
+import EventDispatcher from '../helpers/eventDispatcher';
 
 export const MODAL_CONTAINERS_MAP = {
   indicators: {
@@ -41,8 +41,9 @@ StrategiesContainer.prototype.render = function () {
   return container;
 };
 
-export function StrategiesList(addListItem) {
+export function StrategiesList() {
   this.items = [];
+  this.selectedStrategy = null;
 
   this.events = new EventDispatcher();
 }
@@ -57,8 +58,21 @@ StrategiesList.prototype.addItem = function (item) {
   return this;
 };
 
+StrategiesList.prototype.removeItem = function (id) {
+
+  this.items.splice(id, 1);
+
+  return this;
+};
+
 StrategiesList.prototype.addItems = function (items) {
   items.forEach(item => this.addItem(item));
+
+  return this;
+};
+
+StrategiesList.prototype.setSelectedStrategy = function (selectedStrategy) {
+  this.selectedStrategy = selectedStrategy;
 
   return this;
 };
@@ -102,7 +116,6 @@ StrategiesList.prototype.renderAddItem = function () {
   return item;
 };
 
-
 StrategiesList.prototype.render = function () {
   if (!this.list) {
     this.list = document.createElement('ul');
@@ -111,7 +124,11 @@ StrategiesList.prototype.render = function () {
     clearNode(this.list);
   }
 
-  this.items.forEach(item => this.list.appendChild(item.render()));
+  this.items.forEach(item => this.list.appendChild(
+    item
+      .setIsSelected(item.getName() === this.selectedStrategy)
+      .render()
+  ));
 
   if (this.items.length < MAX_STRATEGIES) {
     this.list.appendChild(this.renderAddItem());
@@ -136,9 +153,24 @@ export function StrategiesListItem(item) {
 
   this.id = id;
   this.name = name;
+  this.state = {
+    isEditing: false,
+    isDeleting: false,
+    isSelected: false,
+  };
 
   this.events = new EventDispatcher();
 }
+
+StrategiesListItem.prototype.getName = function () {
+  return this.name;
+};
+
+StrategiesListItem.prototype.setIsSelected = function (isSelected) {
+  this.state.isSelected = Boolean(isSelected);
+
+  return this;
+};
 
 StrategiesListItem.prototype.renderIcon = function (title, classNames, onClick) {
   const icon = document.createElement('i');
@@ -154,42 +186,162 @@ StrategiesListItem.prototype.renderIcon = function (title, classNames, onClick) 
   return icon;
 };
 
-StrategiesListItem.prototype.render = function () {
-  const item = document.createElement('li');
+StrategiesListItem.prototype.renderShowing = function () {
   const text = document.createElement('span');
 
-  item.appendChild(text);
+  this.item.appendChild(text);
+
+  if (this.state.isSelected) {
+    text.classList.add('uk-text-bold');
+  }
+
+  text.addEventListener('click', () => {
+    this.events.dispatch('onSelect', [this.name, !this.state.isSelected]);
+  });
 
   if (this.name === 'default') {
     text.innerText = _t('', 'По умолчанию');
   } else {
     text.innerText = this.name;
 
-    item.appendChild(this.renderIcon(
+    this.item.appendChild(this.renderIcon(
       _t('', 'Переименовать'),
       ['uk-icon-pencil', 'uk-margin-left'],
       () => {
-        // @fixme show edit form and on submit call next `this.events.dispatch()`
-
-        // form.onSubmit(() => {
-        //   this.events.dispatch('onEdit', [this]);
-        // })
+        this.state.isEditing = true;
+        this.render();
       }
     ));
-    item.appendChild(this.renderIcon(
+    this.item.appendChild(this.renderIcon(
       _t('', 'Удалить'),
       ['uk-icon-remove', 'uk-margin-left'],
       () => {
-        // @fixme show confirmation and on submit call next `this.events.dispatch()`
-
-        // confirmation.onSubmit(() => {
-        //   this.events.dispatch('onDelete', [this]);
-        // });
+        this.state.isDeleting = true;
+        this.render();
       }
     ));
   }
+};
 
-  return item;
+StrategiesListItem.prototype.renderEditing = function () {
+  const input = document.createElement('input');
+
+  input.value = this.name;
+  this.item.appendChild(input);
+  input.focus();
+
+  this.item.appendChild(this.renderIcon(
+    _t('', 'Подтвердить'),
+    ['uk-icon-check', 'uk-margin-left'],
+    () => {
+      this.state.isEditing = false;
+
+      if (input.value && input.value !== this.name) {
+        this.name = input.value;
+        this.events.dispatch('onEdit', [input.value]);
+      }
+
+      this.render();
+    }
+  ));
+  this.item.appendChild(this.renderIcon(
+    _t('', 'Отмена'),
+    ['uk-icon-mail-reply', 'uk-margin-left'],
+    () => {
+      this.state.isEditing = false;
+      this.render();
+    }
+  ));
+};
+
+StrategiesListItem.prototype.renderDeleting = function () {
+  const span = document.createElement('span');
+
+  span.innerText = _t('', 'Вы уверены ?');
+  this.item.appendChild(span);
+
+  this.item.appendChild(this.renderIcon(
+    _t('', 'Подтвердить'),
+    ['uk-icon-check', 'uk-margin-left'],
+    () => {
+      this.events.dispatch('onDelete');
+    }
+  ));
+  this.item.appendChild(this.renderIcon(
+    _t('', 'Отмена'),
+    ['uk-icon-mail-reply', 'uk-margin-left'],
+    () => {
+      this.state.isDeleting = false;
+      this.render();
+    }
+  ));
+};
+
+StrategiesListItem.prototype.render = function () {
+  if (!this.item) {
+    this.item = document.createElement('li');
+  } else {
+    clearNode(this.item);
+  }
+
+  if (this.state.isEditing) {
+    this.renderEditing();
+  } else if (this.state.isDeleting) {
+    this.renderDeleting();
+  } else {
+    this.renderShowing();
+  }
+
+  return this.item;
+  // const item = document.createElement('li');
+  // const text = document.createElement('span');
+  // const input = document.createElement('input');
+  // const confirmSpan = document.createElement('span');
+  // confirmSpan.innerText = _t('', 'Are you sure?');
+  // const editConfirmIcon = this.renderIcon(
+  //   _t('', 'Подтвердить'),
+  //   ['uk-icon-mail-reply', 'uk-margin-left'],
+  //   () => {
+  //     this.events.dispatch('onEdit', )
+  //   }
+  // );
+  //
+  // item.appendChild(text);
+  //
+  // if (this.name === 'default') {
+  //   text.innerText = _t('', 'По умолчанию');
+  // } else if (this.state.isEditing) {
+  //   this.renderEditing();
+  // } else if (this.state.isDeleting) {
+  //   this.renderEditing();
+  // } else {
+  //   text.innerText = this.name;
+  //
+  //   item.appendChild(this.renderIcon(
+  //     _t('', 'Переименовать'),
+  //     ['uk-icon-pencil', 'uk-margin-left'],
+  //     () => {
+  //       // @fixme show edit form and on submit call next `this.events.dispatch()`
+  //
+  //       // form.onSubmit(() => {
+  //       //   this.events.dispatch('onEdit', [this]);
+  //       // })
+  //     }
+  //   ));
+  //   item.appendChild(this.renderIcon(
+  //     _t('', 'Удалить'),
+  //     ['uk-icon-remove', 'uk-margin-left'],
+  //     () => {
+  //       // @fixme show confirmation and on submit call next `this.events.dispatch()`
+  //
+  //       // confirmation.onSubmit(() => {
+  //       //   this.events.dispatch('onDelete', [this]);
+  //       // });
+  //     }
+  //   ));
+  // }
+  //
+  // return item;
 };
 
 StrategiesListItem.prototype.listen = function (event, listener) {

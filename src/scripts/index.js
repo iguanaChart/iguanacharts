@@ -553,32 +553,43 @@ window.IguanaChart = function (options) {
     };
 
     this.createStrategiesContainer = () => {
-        const createItem = strategy => (new StrategiesListItem(strategy))
-            .listen('onEdit', (item) => {
-                // @fixme update strategy
-                // this.state.strategies.findAndReplaceStrategyById(item.id);
-                // strategiesList.render();
+        const createItem = (strategy, id) => (new StrategiesListItem(strategy))
+            .listen('onSelect', (name, isSelected) => {
+                console.log(name, isSelected);
+                if (isSelected) {
+                    this.state.currentStrategy = name;
+
+                    strategiesList
+                      .setSelectedStrategy(name)
+                      .render();
+                }
             })
-            .listen('onDelete', (item) => {
-                // @fixme delete strategy
-                // this.state.strategies.removeStrategyById(item.id)
-                // strategiesList.render();
+            .listen('onEdit', (name) => {
+                this.state.strategies[id].name = name;
+                console.log(this.state.strategies);
+            })
+            .listen('onDelete', () => {
+                this.state.strategies.splice(id, 1);
+
+                strategiesList
+                  .removeItem(id)
+                  .render();
             });
 
         const strategiesList = (new StrategiesList())
             .addItems(this.state.strategies.map(createItem))
+            .setSelectedStrategy(this.state.currentStrategy)
             .listen('onSave', (name) => {
                 const id = this.state.strategies.length;
                 const newStrategy = {
                     ...EMPTY_STRATEGY,
                     name,
-                    id,
                 };
 
                 this.state.strategies.push(newStrategy);
 
                 strategiesList
-                    .addItem(createItem(newStrategy))
+                    .addItem(createItem(newStrategy, id))
                     .render();
           });
 

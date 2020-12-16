@@ -27,9 +27,6 @@
   iChartDataSource.host = "https://tradernet.ru";
 
   var dataSource = $.extend(true, {}, iChartDataSource);
-  if (!dataSource.dataSettings) {
-    dataSource.dataSettings = {};
-  }
   dataSource.dataSettings.graphicIndicators = window.localStorage.getItem('userSettingsGraphicIndicators');
   dataSource.dataSettings.strategies = [
     {
