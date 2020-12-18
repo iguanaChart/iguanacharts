@@ -294,7 +294,7 @@ const intervalShortNames = function (interval) {
 
 window.intervalShortNames = intervalShortNames;
 
-(function (w)
+(function ()
 {
     "use strict";
 
@@ -371,7 +371,7 @@ window.intervalShortNames = intervalShortNames;
         });
     };
 
-    w.inheritPrototype = function (subtype, supertype)
+    window.inheritPrototype = function (subtype, supertype)
     {
         /// <summary>
         /// Inherits the specifed subtype from the specified supertype.
@@ -390,17 +390,17 @@ window.intervalShortNames = intervalShortNames;
         return (input < 10 ? "0" + input : input);
     };
 
-    if (typeof w.iChart === "undefined")
+    if (typeof window.iChart === "undefined")
     {
-        w.iChart = {};
+        window.iChart = {};
     }
 
-    w.iChart.dayShortNames = [_t('2129', 'Пн'), _t('2130', 'Вт'), _t('2131', 'Ср'), _t('2132', 'Чт'), _t('2133', 'Пт'), _t('2134', 'Сб'), _t('2135', 'Вс')];
-    w.iChart.monthNames = [_t('3280', 'Январь'), _t('3281', 'Февраль'), _t('3282', 'Март'), _t('3283', 'Апрель'), _t('3284', 'Май'), _t('3285', 'Июнь'), _t('3286', 'Июль'), _t('3287', 'Август'), _t('3288', 'Сентябрь'), _t('3289', 'Октябрь'), _t('3290', 'Ноябрь'), _t('3291', 'Декабрь')];
-    w.iChart.monthRNames = [_t('1889', "января"), _t('1890', "февраля"), _t('1891', "марта"), _t('1892', "апреля"), _t('1893', "мая"), _t('1894', "июня"), _t('1895', "июля"), _t('1896', "августа"), _t('1897', "сентября"), _t('1898', "октября"), _t('1899', "ноября"), _t('1900', "декабря")];
-    w.iChart.monthShortNames = [_t('3502', 'янв'), _t('3503', 'фев'), _t('3504', 'мар'), _t('3505', 'апр'), _t('4939', "май"), _t('3507', 'июн'), _t('3508', 'июл'), _t('3509', 'авг'), _t('3510', 'сен'), _t('3511', 'окт'), _t('3512', 'ноя'), _t('3513', 'дек')];
+    window.iChart.dayShortNames = [_t('2129', 'Пн'), _t('2130', 'Вт'), _t('2131', 'Ср'), _t('2132', 'Чт'), _t('2133', 'Пт'), _t('2134', 'Сб'), _t('2135', 'Вс')];
+    window.iChart.monthNames = [_t('3280', 'Январь'), _t('3281', 'Февраль'), _t('3282', 'Март'), _t('3283', 'Апрель'), _t('3284', 'Май'), _t('3285', 'Июнь'), _t('3286', 'Июль'), _t('3287', 'Август'), _t('3288', 'Сентябрь'), _t('3289', 'Октябрь'), _t('3290', 'Ноябрь'), _t('3291', 'Декабрь')];
+    window.iChart.monthRNames = [_t('1889', "января"), _t('1890', "февраля"), _t('1891', "марта"), _t('1892', "апреля"), _t('1893', "мая"), _t('1894', "июня"), _t('1895', "июля"), _t('1896', "августа"), _t('1897', "сентября"), _t('1898', "октября"), _t('1899', "ноября"), _t('1900', "декабря")];
+    window.iChart.monthShortNames = [_t('3502', 'янв'), _t('3503', 'фев'), _t('3504', 'мар'), _t('3505', 'апр'), _t('4939', "май"), _t('3507', 'июн'), _t('3508', 'июл'), _t('3509', 'авг'), _t('3510', 'сен'), _t('3511', 'окт'), _t('3512', 'ноя'), _t('3513', 'дек')];
 
-    w.iChart.declineNoun = function (n, singular, dual, plural)
+    window.iChart.declineNoun = function (n, singular, dual, plural)
     {
         /// <summary>
         /// Declines the specified russian noun based on its singular, dual and plural forms.
@@ -428,7 +428,7 @@ window.intervalShortNames = intervalShortNames;
         return plural;
     };
 
-    w.iChart.formatDateTime = function (input, format)
+    window.iChart.formatDateTime = function (input, format)
     {
         /// <summary>
         /// Provides some basic formatting capabilities for the date/time objects.
@@ -512,10 +512,10 @@ window.intervalShortNames = intervalShortNames;
                     result += padLeft(input.getMonth() + 1);
                     break;
                 case "MMM":
-                    result += w.iChart.monthShortNames[input.getMonth()];
+                    result += window.iChart.monthShortNames[input.getMonth()];
                     break;
                 case "MMMM":
-                    result += w.iChart.monthRNames[input.getMonth()];
+                    result += window.iChart.monthRNames[input.getMonth()];
                     break;
                 case "yy":
                     result += input.getFullYear().toString().substr(2, 2);
@@ -550,7 +550,7 @@ window.intervalShortNames = intervalShortNames;
         return result;
     };
 
-    w.iChart.formatNumber = function (number, formatProvider)
+    window.iChart.formatNumber = function (number, formatProvider)
     {
         /// <summary>
         /// Converts the numeric value to its equivalent string representation using the specified format information.
@@ -581,7 +581,7 @@ window.intervalShortNames = intervalShortNames;
         var roundedNumber;
         if (fixedDecimalPlaces)
         {
-            roundedNumber = parseFloat(w.iChart.toFixed(number, formatProvider.decimalPlaces));
+            roundedNumber = parseFloat(window.iChart.toFixed(number, formatProvider.decimalPlaces));
         }
         else if (formatProvider.decimalPrecision !== null)
         {
@@ -628,7 +628,7 @@ window.intervalShortNames = intervalShortNames;
         return result;
     };
 
-    w.iChart.parseDateTime = function (input, format)
+    window.iChart.parseDateTime = function (input, format)
     {
         /// <summary>
         /// Tries to parse the specified string as a date/time in d.M.yyyy H:m:s format (hours/minutes/seconds are optional). Returns null if parsing fails.
@@ -686,7 +686,7 @@ window.intervalShortNames = intervalShortNames;
         return result;
     };
 
-    w.iChart.parseQueryString = function (queryString)
+    window.iChart.parseQueryString = function (queryString)
     {
         /// <summary>
         /// Parses a query string into an associative array.
@@ -733,7 +733,7 @@ window.intervalShortNames = intervalShortNames;
         return params;
     };
 /*
-    w.iChart.setHashValue = function (key, value)
+    window.iChart.setHashValue = function (key, value)
     {
         /// <summary>
         /// Sets value at the specified key in the location hash.
@@ -746,9 +746,9 @@ window.intervalShortNames = intervalShortNames;
         } else {
             var currentHash = document.location.hash;
         }
-        var values = w.iChart.parseQueryString(currentHash.substr(1));
+        var values = window.iChart.parseQueryString(currentHash.substr(1));
         values[key] = value;
-        var hash = "#" + w.iChart.toQueryString(values);
+        var hash = "#" + window.iChart.toQueryString(values);
         if (hash !== currentHash)
         {
             if (userSettings.dataSettings.useHash == false) {
@@ -759,7 +759,7 @@ window.intervalShortNames = intervalShortNames;
         }
     };
 
-    w.iChart.setHashValues = function (valuesNew)
+    window.iChart.setHashValues = function (valuesNew)
     {
         /// <summary>
         /// Sets values at the specified keys in the location hash.
@@ -772,15 +772,15 @@ window.intervalShortNames = intervalShortNames;
             var currentHash = document.location.hash;
         }
 
-        var values = w.iChart.parseQueryString(currentHash.substr(1));
+        var values = window.iChart.parseQueryString(currentHash.substr(1));
         for (var key in valuesNew)
         {
-            if (valuesNew.hasOwnProperty(key))
+            if (valuesNewindow.hasOwnProperty(key))
             {
                 values[key] = valuesNew[key];
             }
         }
-        var hash = "#" + w.iChart.toQueryString(values);
+        var hash = "#" + window.iChart.toQueryString(values);
         if (hash !== currentHash && !$.isEmptyObject(values))
         {
             if (userSettings.dataSettings.useHash == false) {
@@ -791,7 +791,7 @@ window.intervalShortNames = intervalShortNames;
         }
     };
 */
-    w.iChart.toFixed = function (number, decimalPlaces)
+    window.iChart.toFixed = function (number, decimalPlaces)
     {
         /// <remarks>
         /// IE6-8 bugfix: X.toFixed(0) wrongly rounds towards zero when |X| is in the range [0.50, 0.95).
@@ -808,7 +808,7 @@ window.intervalShortNames = intervalShortNames;
      * @param precision 0.01|0.5|0.025
      * @returns {float}
      */
-    w.iChart.roundToPrecision = function (number, precision)
+    window.iChart.roundToPrecision = function (number, precision)
     {
         precision = parseFloat(precision)
         if (precision < 1) {
@@ -820,7 +820,7 @@ window.intervalShortNames = intervalShortNames;
 
     }
 
-    w.iChart.toQueryString = function (params, questionMark)
+    window.iChart.toQueryString = function (params, questionMark)
     {
         /// <summary>
         /// Converts the specified associative array to HTTP query string (starting '?' is omitted by default).
@@ -869,7 +869,7 @@ window.intervalShortNames = intervalShortNames;
         return result;
     };
 
-    w.iChart.rgbToHex = function (rgb)
+    window.iChart.rgbToHex = function (rgb)
     {
         if(/^#[a-fA-F0-9]{3,6}$/.test(rgb)){
             if(rgb.length< 7){
@@ -886,7 +886,7 @@ window.intervalShortNames = intervalShortNames;
         return '#' + hex;
     };
 
-    w.iChart.rgbaGetAlfa = function (rgba)
+    window.iChart.rgbaGetAlfa = function (rgba)
     {
         var a = rgba.match(/\((.*),(.*),(.*),(.*)\)/);
         if(a && a[4]) {
@@ -895,7 +895,7 @@ window.intervalShortNames = intervalShortNames;
         return 1;
     };
 
-    w.iChart.hexToRGB = function (hex, a)
+    window.iChart.hexToRGB = function (hex, a)
     {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ?
@@ -907,13 +907,13 @@ window.intervalShortNames = intervalShortNames;
             : null;
     };
 
-    w.iChart.invertColor = function (rgb) {
+    window.iChart.invertColor = function (rgb) {
         rgb = [].slice.call(arguments).join(",").replace(/rgb\(|\)|rgba\(|\)|\s/gi, '').split(',');
         for (var i = 0; i < rgb.length; i++) rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
         return rgb.join(", ");
     };
 
-    w.iChart.getIntersection = function (p1, p2, p3, p4)
+    window.iChart.getIntersection = function (p1, p2, p3, p4)
     {
         if(((p1.y-p2.y)*(p4.x-p3.x)-(p3.y-p4.y)*(p2.x-p1.x)) != 0 && (p4.x-p3.x) != 0) {
             var x=-((p1.x*p2.y-p2.x*p1.y)*(p4.x-p3.x)-(p3.x*p4.y-p4.x*p3.y)*(p2.x-p1.x))/((p1.y-p2.y)*(p4.x-p3.x)-(p3.y-p4.y)*(p2.x-p1.x));
@@ -924,13 +924,13 @@ window.intervalShortNames = intervalShortNames;
         }
     }
 
-    w.iChart.getThirdPoint = function (point1, point2, x)
+    window.iChart.getThirdPoint = function (point1, point2, x)
     {
         var y = (((parseFloat(x)-parseFloat(point1.x))*(parseFloat(point2.y)-parseFloat(point1.y)))/(parseFloat(point2.x)-parseFloat(point1.x)))+parseFloat(point1.y);
         return {x: parseFloat(x), y: y};
     }
 
-    w.iChart.getLineEquation = function (point1, point2, x)
+    window.iChart.getLineEquation = function (point1, point2, x)
     {
         var k = (+(point2.y) - +(point1.y)) / (+(point2.x) - +(point1.x)),
             b = +(point1.y) - k * (point1.x);
@@ -938,7 +938,7 @@ window.intervalShortNames = intervalShortNames;
         return {x: +(x), y: y, k: k, b: b};
     }
 
-    w.iChart.getChartTimeframe = function (timeframe) {
+    window.iChart.getChartTimeframe = function (timeframe) {
         switch (timeframe) {
             case "I1":
                 return 1;
@@ -961,7 +961,7 @@ window.intervalShortNames = intervalShortNames;
      * @param canvas
      * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
      */
-    w.iChart.getContext = function (canvas) {
+    window.iChart.getContext = function (canvas) {
         var ctx = canvas.getContext('2d');
         if(!ctx.scaled) {
             var dpr = Math.max(window.devicePixelRatio || 1, 1);
@@ -971,12 +971,12 @@ window.intervalShortNames = intervalShortNames;
         return ctx;
     };
 
-    w.iChart.animateId = null;
-    w.iChart.animate = function (options) {
+    window.iChart.animateId = null;
+    window.iChart.animate = function (options) {
 
         var start = performance.now();
 
-        w.iChart.animateId = requestAnimationFrame(function animate(time) {
+        window.iChart.animateId = requestAnimationFrame(function animate(time) {
             // timeFraction от 0 до 1
             var timeFraction = (time - start) / options.duration;
             if (timeFraction > 1) timeFraction = 1;
@@ -987,9 +987,9 @@ window.intervalShortNames = intervalShortNames;
             options.draw(progress);
 
             if (timeFraction < 1) {
-                w.iChart.animateId = requestAnimationFrame(animate);
+                window.iChart.animateId = requestAnimationFrame(animate);
             } else {
-                cancelAnimationFrame(w.iChart.animateId);
+                cancelAnimationFrame(window.iChart.animateId);
                 if(typeof options.complete === 'function') {
                     options.complete();
                 }
@@ -997,4 +997,4 @@ window.intervalShortNames = intervalShortNames;
         });
     }
 
-})(window);
+})();

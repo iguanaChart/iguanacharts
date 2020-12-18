@@ -1,20 +1,18 @@
-﻿global.$ = $;
-import '@claviska/jquery-minicolors';
+﻿import 'imports-loader?additionalCode=var%20define%20=%20false;var%20exports%20=%20false;!@claviska/jquery-minicolors';
 import 'jquery.event.move';
-import 'jquery-mousewheel';
-import 'qtip2';
+import 'imports-loader?additionalCode=var%20define%20=%20false;var%20exports%20=%20false;!jquery-mousewheel';
+import 'imports-loader?additionalCode=var%20define%20=%20false;!qtip2';
 import 'core-js';
 import 'jsrender';
 import 'uikit';
 
-import './jquery.simplemodal';
+import 'imports-loader?additionalCode=var%20define%20=%20false;!./jquery.simplemodal';
 import './jquery.palette';
 import './lib/ichart.core';
 import './lib/indicators.descr';
 import './lib/charting';
 import './templates';
 import './chart_options_for_nt';
-// chart.js
 import './iguana-ui';
 import './jquery.iguana-chart';
 import './ta/TA_prototypes';
@@ -26,8 +24,14 @@ import {
     StrategiesContainer,
     StrategiesList,
     StrategiesListItem,
-    MODAL_CONTAINERS_MAP, EMPTY_STRATEGY,
+    DEFAULT_STRATEGIES,
+    DEFAULT_STRATEGY,
+    DEFAULT_STRATEGY_NAME,
+    EMPTY_STRATEGY,
+    MODAL_CONTAINERS_MAP,
+    MODAL_TYPES,
 } from './components/strategiesContainer';
+import { clearNode } from './helpers/dom';
 
 window.IguanaChart = function (options) {
 
@@ -36,9 +40,9 @@ window.IguanaChart = function (options) {
     var _this = this;
 
     this.state = {
-        currentModal: 'indicators',
-        currentStrategy: 'default',
-        strategies: [],
+        currentModal: MODAL_TYPES.INDICATORS,
+        currentStrategy: DEFAULT_STRATEGY_NAME,
+        strategies: DEFAULT_STRATEGIES,
     };
 
     this.name = options.name || 'chart';
@@ -123,15 +127,35 @@ window.IguanaChart = function (options) {
     this.userTransactionAmount = -1;
     this.updateUnlocked = true;
 
-    this.initChart = function (settings)
-    {
-        /// <summary>
-        /// Initializes the chart.
-        /// </summary>
+    this.initChart = function (settings) {
 
         this.uiGraphIndicatorsWindow2 = {
             element: $(this.wrapper).find(".js-chartTADialog." + this.name),
         };
+
+        if (
+          !this.dataSource.dataSettings.strategies
+          || !this.dataSource.dataSettings.strategies.length
+        ) {
+            this.state.strategies = [this.getDefaultStrategy()];
+        } else {
+            try {
+                this.state.strategies = JSON.parse(this.dataSource.dataSettings.strategies);
+            } catch (e) {
+                console.warn('Could not parse strategies, trying indicators')
+                this.state.strategies = [this.getDefaultStrategy()];
+            }
+        }
+
+        const ticker = this.dataSource.dataSettings.id;
+        const strategy = this.state.strategies.find(({ tickers }) => tickers && tickers.includes(ticker))
+            || this.state.strategies.find(({ name }) => name === DEFAULT_STRATEGY_NAME);
+        this.state.currentStrategy = strategy
+          ? strategy.name
+          : DEFAULT_STRATEGY_NAME;
+        this.dataSource.dataSettings.graphicIndicators = strategy
+          ? this.serializeIndicators(strategy.indicators)
+          : '';
 
         this.loadHash();
 
@@ -175,10 +199,6 @@ window.IguanaChart = function (options) {
             this.dataRequestCounter = 0;
         }
 
-        if (this.dataSource.dataSettings.strategies) {
-            this.state.strategies = this.dataSource.dataSettings.strategies;
-        }
-
         this.ui.render();
 
         $(window).off('mousemove').on('mousemove', function(e){
@@ -186,6 +206,15 @@ window.IguanaChart = function (options) {
             $(window).data('mousePosY', e.pageY);
         });
 
+    };
+
+    this.getDefaultStrategy = function () {
+        return {
+            ...DEFAULT_STRATEGY,
+            indicators: this.dataSource.dataSettings.graphicIndicators
+              ? this.deserializeIndicators(this.dataSource.dataSettings.graphicIndicators)
+              : '',
+        };
     };
 
     this.chart_dataAdapter = function (data, params) {
@@ -435,23 +464,23 @@ window.IguanaChart = function (options) {
         /// Gets current chart parameters from the user settings.
         /// </summary>
         var params = {};
-        params["id"] = this.dataSource.dataSettings.id;
+        params.id = this.dataSource.dataSettings.id;
         params.date_from = this.dataSource.dataSettings.date_from;
         params.date_to = this.dataSource.dataSettings.date_to;
         params.start = this.dataSource.dataSettings.date_from;
         params.end = this.dataSource.dataSettings.date_to;
         params.interval = this.dataSource.dataSettings.interval;
         params.timeframe = iChart.getChartTimeframe(this.dataSource.dataSettings.interval);
-        params["type"] = this.dataSource.dataSettings.type;
-        params["compareIds"] = this.dataSource.dataSettings.compareIds;
-        params["compareTickets"] = this.dataSource.dataSettings.compareTickets;
-        params["compareStocks"] = this.dataSource.dataSettings.compareStocks;
+        params.type = this.dataSource.dataSettings.type;
+        params.compareIds = this.dataSource.dataSettings.compareIds;
+        params.compareTickets = this.dataSource.dataSettings.compareTickets;
+        params.compareStocks = this.dataSource.dataSettings.compareStocks;
         //var p = $('[name=form_info_settings]').serializeArray();
         //for (var i = 0; i < p.length; i++) {
         //    params[p[i].name] = p[i].value;
         //}
         //$.extend(params, iChart.parseQueryString(localStorage.userSettingsGraphicIndicators));
-        $.extend(params, iChart.parseQueryString(this.dataSource.dataSettings.graphicIndicators));
+        params.graphicIndicators = this.dataSource.dataSettings.graphicIndicators;
         // @todo add strategies
         return params;
     };
@@ -552,28 +581,54 @@ window.IguanaChart = function (options) {
         }
     };
 
-    this.createStrategiesContainer = () => {
+    this.createStrategiesContainer = (modal) => {
+        const indicatorsContainer = modal.querySelector('.js-chartTADialogContainer');
+
         const createItem = (strategy, id) => (new StrategiesListItem(strategy))
             .listen('onSelect', (name, isSelected) => {
-                console.log(name, isSelected);
                 if (isSelected) {
+                    const ticker = this.dataSource.dataSettings.id;
+                    clearNode(indicatorsContainer);
+                    this.renderIndicators(this.state.strategies[id].indicators);
+
+                    this.state.strategies.forEach(({ name: strategyName, tickers }, index) => {
+                        if (strategyName !== DEFAULT_STRATEGY_NAME
+                            && strategyName !== name
+                            && tickers
+                            && tickers.includes(ticker)
+                        ) {
+                            this.state.strategies[index].tickers = tickers.filter(item => item !== ticker);
+                        }
+                    });
+
+                    if (name !== DEFAULT_STRATEGY_NAME) {
+                        this.state.strategies[id].tickers.push(ticker);
+                    }
+
                     this.state.currentStrategy = name;
 
                     strategiesList
-                      .setSelectedStrategy(name)
-                      .render();
+                        .setSelectedStrategy(name)
+                        .render();
                 }
             })
             .listen('onEdit', (name) => {
                 this.state.strategies[id].name = name;
-                console.log(this.state.strategies);
             })
-            .listen('onDelete', () => {
+            .listen('onDelete', (name) => {
                 this.state.strategies.splice(id, 1);
 
+                if (this.state.currentStrategy === name) {
+                    this.state.currentStrategy = DEFAULT_STRATEGY_NAME;
+
+                    strategiesList
+                        .setSelectedStrategy(DEFAULT_STRATEGY_NAME)
+                        .render()
+                }
+
                 strategiesList
-                  .removeItem(id)
-                  .render();
+                    .removeItem(id)
+                    .render();
             });
 
         const strategiesList = (new StrategiesList())
@@ -598,6 +653,15 @@ window.IguanaChart = function (options) {
 
     this.getIndicators = () => this.deserializeIndicators(this.uiGraphIndicatorsWindow2.element.find(':input').serialize(), false);
 
+    this.saveIndicatorsToCurrentStrategy = () => {
+        const { currentStrategy } = this.state;
+        const currentStrategyIndex = this.state.strategies.findIndex(({ name }) => name === currentStrategy);
+
+        if (this.state.strategies[currentStrategyIndex]) {
+            this.state.strategies[currentStrategyIndex].indicators = this.getIndicators();
+        }
+    };
+
     this.chooseStrategy_onClick = (event) => {
         const modal = this.uiGraphIndicatorsWindow2.element[0];
 
@@ -605,16 +669,22 @@ window.IguanaChart = function (options) {
             throw new Error('There should be modal');
         }
 
-        const indicatorsContainer = modal.querySelector('.js-chartTADialogContainer');
         const { currentModal } = this.state;
+        const nextModal = currentModal === MODAL_TYPES.INDICATORS
+          ? MODAL_TYPES.STRATEGIES
+          : MODAL_TYPES.INDICATORS;
 
+        const indicatorsContainer = modal.querySelector('.js-chartTADialogContainer');
         const strategyButton = event.target;
         const addIndicatorButton = modal.querySelector('.js-indicator-add');
-
         let strategiesContainer = modal.querySelector('.js-chartTADialogContainerStrategies');
 
+        if (nextModal === MODAL_TYPES.STRATEGIES) {
+            this.saveIndicatorsToCurrentStrategy();
+        }
+
         if (!strategiesContainer) {
-            strategiesContainer = this.createStrategiesContainer();
+            strategiesContainer = this.createStrategiesContainer(modal);
 
             indicatorsContainer.parentNode.insertBefore(
               strategiesContainer,
@@ -622,9 +692,6 @@ window.IguanaChart = function (options) {
             )
         }
 
-        const nextModal = currentModal === 'indicators'
-          ? 'strategies'
-          : 'indicators';
         const modalSettings = MODAL_CONTAINERS_MAP[nextModal];
 
         indicatorsContainer.style.display = modalSettings.indicatorsContainer;
@@ -796,7 +863,7 @@ window.IguanaChart = function (options) {
     };
 
     this.setIndicators = function(graphicIndicators) {
-
+// @fixme strategies support
         window.localStorage.setItem('userSettingsGraphicIndicators', graphicIndicators);
         this.dataSource.dataSettings.graphicIndicators = graphicIndicators;
 
@@ -824,26 +891,40 @@ window.IguanaChart = function (options) {
 
     };
 
-    this.showIndicators = function (options) {
-        options = options || {};
-        //$("#iChart-tech-analysis-dialog").show();
-        this.timers.updateInterval = this.viewData.chart.chartOptions.updateInterval;
-        this.setScheduleUpdateState(0);
-
-        var indicators = this.deserializeIndicators(this.dataSource.dataSettings.graphicIndicators);
-
-        this.uiGraphIndicatorsWindow2.element.find(".js-chartTADialogContainer").empty();
-
+    this.renderIndicators = function (indicators) {
         for (var i=0; i<indicators.length; i++) {
             this.updateIndicatorDetails(i, indicators[i], false);
 
             for (var paramKey in indicators[i].params) {
                 if (indicators[i].params.hasOwnProperty(paramKey)) {
                     var name = "i" + i + "_" + paramKey;
-                    this.uiGraphIndicatorsWindow2.element.find("[name='" + name + "']").val(indicators[i].params[paramKey]);
+                    this.uiGraphIndicatorsWindow2.element
+                      .find("[name='" + name + "']")
+                      .val(indicators[i].params[paramKey]);
                 }
             }
         }
+    }
+
+    this.getCurrentStrategyIndicators = function () {
+        const { strategies, currentStrategy } = this.state;
+
+        const strategy = strategies.find(({ name }) => name === currentStrategy);
+
+        return strategy ? strategy.indicators : [];
+    }
+
+    this.showIndicators = function (options) {
+        options = options || {};
+        //$("#iChart-tech-analysis-dialog").show();
+        this.timers.updateInterval = this.viewData.chart.chartOptions.updateInterval;
+        this.setScheduleUpdateState(0);
+
+        var indicators = this.getCurrentStrategyIndicators();
+
+        this.uiGraphIndicatorsWindow2.element.find(".js-chartTADialogContainer").empty();
+
+        this.renderIndicators(indicators);
 
         if (!options.forAll) {
             this.uiGraphIndicatorsWindow2.element.find('.indicators-default').hide();
@@ -859,9 +940,12 @@ window.IguanaChart = function (options) {
         $('.indicators-set').off('click').on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
-            console.log(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
+
+            _this.saveIndicatorsToCurrentStrategy();
             _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
             _this.uiGraphIndicatorsWindow2.hide();
+
+            _this.wrapper.trigger('iguanaChartEvents', ['saveIndicatorsAndStrategies', _this.state.strategies]);
             return false;
         });
         $('.indicators-close').off('click').on('click', function () {
@@ -1674,35 +1758,6 @@ window.IguanaChart = function (options) {
             }
         }
         return params;
-    };
-
-    this.setIndicator = function (indicator, params, number) {
-        number = number || 0;
-
-        if(typeof this.viewData.indicators[indicator] == "undefined") {
-            throw new Error("Indicator '" + indicator + "' is not supported.");
-        }
-
-        params = params || this.getIndicatorParameters(indicator);
-
-        var newIndicator = {};
-
-        newIndicator['i'+number] = indicator;
-        for(var param in params) {
-            newIndicator['i' + number + '_' + param] = params[param];
-        }
-
-        var oldIndicators = iChart.parseQueryString(this.dataSource.dataSettings.graphicIndicators);
-        for (var paramKey in oldIndicators)
-        {
-            if (paramKey.match(new RegExp("^i" + number + '_', "i"))) {
-                delete  oldIndicators[paramKey];
-            }
-        }
-
-        oldIndicators['i' + number] = '';
-        this.dataSource.dataSettings.graphicIndicators = iChart.toQueryString($.extend({}, oldIndicators, newIndicator));
-        this.updateForce();
     };
 
     this.getPeriodDates = function (period) {

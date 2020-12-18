@@ -108,7 +108,7 @@
                     '<div data-uk-modal="{center:true}" class="uk-modal iChart-form-simple-v js-chartTADialog uk-padding-remove ' + name + '" id="iChart-tech-analysis-dialog" style="display: none;">' +
                         '<div class="uk-modal-dialog">' +
                             '<a class="uk-modal-close uk-close"></a>' +
-                                '<div class="uk-modal-header">' + _t('3101', "Индикаторы") + '</div>' +
+                                '<div class="uk-modal-header">' + _t('', "Индикаторы и стратегии") + '</div>' +
                                 '<div class="js-chartTADialogContainer"></div>' +
                                 '<div class="uk-modal-footer">' +
                                 '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
@@ -116,7 +116,7 @@
                                         _t('15460', 'Добавить индикатор') +
                                     '</div>' +
                                     '<div class="js-strategy-choose md-btn md-btn-small md-btn-success">' +
-                                      _t('', 'Выбрать стратегию') +
+                                      _t('', 'Стратегии') +
                                     '</div>' +
                                 '<div class="md-btn-group"><a class="md-btn md-btn-small md-btn-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
                                 '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +

@@ -1,1 +1,5 @@
+# Browsers that we support
+
 defaults
+IE 11
+maintained node versions

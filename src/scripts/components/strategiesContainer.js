@@ -1,12 +1,12 @@
 import { clearNode } from '../helpers/dom';
 import EventDispatcher from '../helpers/eventDispatcher';
 
-export const MODAL_CONTAINERS_MAP = {
+const MODAL_CONTAINERS_MAP = {
   indicators: {
     indicatorsContainer: 'block',
     strategiesContainer: 'none',
     addIndicatorButton: 'block',
-    strategyButton: _t('', 'Выбрать стратегию'),
+    strategyButton: _t('', 'Стратегии'),
   },
   strategies: {
     indicatorsContainer: 'none',
@@ -16,15 +16,29 @@ export const MODAL_CONTAINERS_MAP = {
   },
 };
 
+const MODAL_TYPES = {
+  STRATEGIES: 'strategies',
+  INDICATORS: 'indicators',
+}
+
 const MAX_STRATEGIES = 10;
 
-export const EMPTY_STRATEGY = {
+const DEFAULT_STRATEGY_NAME = 'default';
+
+const EMPTY_STRATEGY = {
   name: '',
   indicators: [],
   tickers: [],
-}
+};
 
-export function StrategiesContainer(strategiesList) {
+const DEFAULT_STRATEGY = {
+  name: 'default',
+  indicators: [],
+};
+
+const DEFAULT_STRATEGIES = [DEFAULT_STRATEGY];
+
+function StrategiesContainer(strategiesList) {
   this.strategiesList = strategiesList;
 }
 
@@ -41,7 +55,7 @@ StrategiesContainer.prototype.render = function () {
   return container;
 };
 
-export function StrategiesList() {
+function StrategiesList() {
   this.items = [];
   this.selectedStrategy = null;
 
@@ -144,7 +158,7 @@ StrategiesList.prototype.listen = function (event, listener) {
 };
 
 
-export function StrategiesListItem(item) {
+function StrategiesListItem(item) {
   const { name, id } = item;
 
   if (!name) {
@@ -264,7 +278,7 @@ StrategiesListItem.prototype.renderDeleting = function () {
     _t('', 'Подтвердить'),
     ['uk-icon-check', 'uk-margin-left'],
     () => {
-      this.events.dispatch('onDelete');
+      this.events.dispatch('onDelete', [this.name]);
     }
   ));
   this.item.appendChild(this.renderIcon(
@@ -293,59 +307,22 @@ StrategiesListItem.prototype.render = function () {
   }
 
   return this.item;
-  // const item = document.createElement('li');
-  // const text = document.createElement('span');
-  // const input = document.createElement('input');
-  // const confirmSpan = document.createElement('span');
-  // confirmSpan.innerText = _t('', 'Are you sure?');
-  // const editConfirmIcon = this.renderIcon(
-  //   _t('', 'Подтвердить'),
-  //   ['uk-icon-mail-reply', 'uk-margin-left'],
-  //   () => {
-  //     this.events.dispatch('onEdit', )
-  //   }
-  // );
-  //
-  // item.appendChild(text);
-  //
-  // if (this.name === 'default') {
-  //   text.innerText = _t('', 'По умолчанию');
-  // } else if (this.state.isEditing) {
-  //   this.renderEditing();
-  // } else if (this.state.isDeleting) {
-  //   this.renderEditing();
-  // } else {
-  //   text.innerText = this.name;
-  //
-  //   item.appendChild(this.renderIcon(
-  //     _t('', 'Переименовать'),
-  //     ['uk-icon-pencil', 'uk-margin-left'],
-  //     () => {
-  //       // @fixme show edit form and on submit call next `this.events.dispatch()`
-  //
-  //       // form.onSubmit(() => {
-  //       //   this.events.dispatch('onEdit', [this]);
-  //       // })
-  //     }
-  //   ));
-  //   item.appendChild(this.renderIcon(
-  //     _t('', 'Удалить'),
-  //     ['uk-icon-remove', 'uk-margin-left'],
-  //     () => {
-  //       // @fixme show confirmation and on submit call next `this.events.dispatch()`
-  //
-  //       // confirmation.onSubmit(() => {
-  //       //   this.events.dispatch('onDelete', [this]);
-  //       // });
-  //     }
-  //   ));
-  // }
-  //
-  // return item;
 };
 
 StrategiesListItem.prototype.listen = function (event, listener) {
   this.events.listen(event, listener);
 
   return this;
+};
+
+export {
+  DEFAULT_STRATEGIES,
+  DEFAULT_STRATEGY,
+  DEFAULT_STRATEGY_NAME,
+  EMPTY_STRATEGY,
+  MODAL_CONTAINERS_MAP,
+  MODAL_TYPES,
+  StrategiesContainer,
+  StrategiesList,
+  StrategiesListItem,
 };

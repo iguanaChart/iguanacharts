@@ -5,7 +5,6 @@ window.iChartDataSource = {
         useHash: false,
         date_from: formatDate(-90),
         date_to: formatDate(0),
-        graphicIndicators: '',
         timeframe: 1440,
         hash: '',
         id: "AAPL.US",
@@ -56,8 +55,8 @@ window.iChartDataSource = {
 
         this.chart.wrapper.trigger('iguanaChartEvents', ['chartDataRequest', iChartDataSource.getUrl(params)]);
         this.chart.ajaxDataRequest = $.ajax({
-            "dataType":"text json",
-            "error":function (xhr, textStatus, errorThrown) {
+            dataType: 'text json',
+            error: function (xhr, textStatus, errorThrown) {
                 clearTimeout(_chart.timers.loading);
 
                 _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
@@ -66,8 +65,7 @@ window.iChartDataSource = {
                 console.log("Error: " + textStatus);
                 callback({"success":false });
             },
-            "success": function (data, textStatus, xhr)
-            {
+            success: function (data, textStatus, xhr) {
                 _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReceived', data]);
 
                 if(data.info && data.info[_chart.dataSource.dataSettings.id]) {
@@ -111,8 +109,7 @@ window.iChartDataSource = {
                     callback({"success":false });
                 }
             },
-            //"type":"POST",
-            "url": iChartDataSource.getUrl(params)
+            url: iChartDataSource.getUrl(params)
         });
     },
     preInitCallback: function(initReadyCallback, params) {
@@ -134,20 +131,6 @@ window.iChartDataSource = {
                     this.chart.dataSource.dataSettings[key] = hash[key];
                 }
             }
-            var graphicIndicators = [];
-            for (var paramKey in hash)
-            {
-                if (paramKey.match(new RegExp("^i[0-9]", "i")))
-                {
-                    var name = paramKey.charAt(0) + paramKey.substr(1);
-                    graphicIndicators[name] = hash[paramKey];
-                }
-            }
-
-            if(graphicIndicators.length) {
-                this.chart.dataSource.dataSettings.graphicIndicators = iChart.toQueryString(graphicIndicators);
-            }
-
             params.ticker = hash.id;
             params.interval = hash.interval;
         }

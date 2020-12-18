@@ -8,99 +8,85 @@
   <meta name="msapplication-tap-highlight" content="no"/>
 
   <title>Iguana Charts</title>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>
   <script type="text/javascript" src="/dist/i18n/i18n.en.js"></script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.26.4/css/uikit.css" media="all">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.1/basic/jquery.qtip.min.css" media="all">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-minicolors/2.3.5/jquery.minicolors.min.css" media="all">
+  <link rel="stylesheet" href="http://iguanacharts.com/iguana_charts/dependencies/uikit/css/uikit.min.css" media="all">
+  <link rel="stylesheet" href="http://iguanacharts.com/iguana_charts/dependencies/jquery.qtip.min.css" media="all">
+  <link rel="stylesheet" href="http://iguanacharts.com/iguana_charts/dependencies/jquery-minicolors/jquery.minicolors.css" media="all">
 
   <link rel="stylesheet" href="/dist/iguanachart.css" media="all">
   <script type="text/javascript">
-    // require.config({
-    //   paths: {
-    //     jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min',
-    //     uikit: 'http://iguanacharts.com/iguana_charts/dependencies/uikit/js/uikit.min',
-    //     'jquery.eventmove': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.event.move',
-    //     'jquery.hammer': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.hammer',
-    //     'jsrender': "http://iguanacharts.com/iguana_charts/dependencies/jsrender.min",
-    //     'jquery.minicolors': 'http://iguanacharts.com/iguana_charts/dependencies/jquery-minicolors/jquery.minicolors.min',
-    //     'jquery.qtip': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.qtip.min',
-    //     'jquery.mousewheel': 'https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min',
-    //     'iguanachart': '/dist/iguanachart',
-    //     'hammerjs': 'http://iguanacharts.com/iguana_charts/dependencies/hammer.min'
-    //   },
-    //   shim: {
-    //     'uikit': {
-    //       deps: [
-    //         'jquery'
-    //       ]
-    //     },
-    //     jsrender: {
-    //       deps: [
-    //         'jquery'
-    //       ]
-    //     },
-    //     iguanachart: {
-    //       deps: [
-    //         'jquery',
-    //         'uikit',
-    //         'jquery.eventmove',
-    //         'jquery.hammer',
-    //         'jsrender',
-    //         'jquery.minicolors',
-    //         'jquery.qtip',
-    //         'jquery.mousewheel'
-    //       ]
-    //     }
-    //   }
-    // })
+    require.config({
+      paths: {
+        jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min',
+        uikit: 'http://iguanacharts.com/iguana_charts/dependencies/uikit/js/uikit.min',
+        'jquery.eventmove': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.event.move',
+        'jquery.hammer': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.hammer',
+        'jsrender': "http://iguanacharts.com/iguana_charts/dependencies/jsrender.min",
+        'jquery.minicolors': 'http://iguanacharts.com/iguana_charts/dependencies/jquery-minicolors/jquery.minicolors.min',
+        'jquery.qtip': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.qtip.min',
+        //'jquery.easing': 'https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min',
+        'jquery.mousewheel': 'https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min',
+        'iguanachart': '/dist/iguanachart',
+        'hammerjs': 'http://iguanacharts.com/iguana_charts/dependencies/hammer.min'
+      },
+      shim: {
+        'uikit': {
+          deps: [
+            'jquery'
+          ]
+        },
+        jsrender: {
+          deps: [
+            'jquery'
+          ]
+        },
+        iguanachart: {
+          deps: [
+            'jquery',
+            'uikit',
+            'jquery.eventmove',
+            'jquery.hammer',
+            'jsrender',
+            'jquery.minicolors',
+            'jquery.qtip',
+            //'jquery.easing',
+            'jquery.mousewheel'
+          ]
+        }
+      }
+    })
   </script>
 </head>
 <body>
-<button class="js-show-chart-indicators">Show Indicators</button>
-<div class="iChart" style="position: relative"></div>
 
-<script src="/dist/iguanachart.js"></script>
+<br/>
+
+<div class="iChart" style="position: relative; width: 100%"></div>
+
 <script type="text/javascript">
-(function() {
-  var iChartDataSource = {};
-  iChartDataSource.host = "https://tradernet.ru";
+  require(['jquery', 'iguanachart'], function ($) {
+    iChartDataSource.host = "https://tradernet.ru";
 
-  var dataSource = $.extend(true, {}, iChartDataSource);
-  if (!dataSource.dataSettings) {
-    dataSource.dataSettings = {};
-  }
-  dataSource.dataSettings.graphicIndicators = window.localStorage.getItem('userSettingsGraphicIndicators');
-  dataSource.dataSettings.strategies = [
-    {
-      name: 'default',
-      indicators: [],
-    },
-    {
-      name: 'Дичь',
-      indicators: [],
-      tickers: ['AAPL.US'],
-    }
-  ];
-
-  $('.iChart').iguanaChart({
-    ticker: "AAPL.US",
-    period: "1M",
-    lib_path: "/dist",
-    chartOptions: {
-      minHeight: 600,
-      showVolume: 'inside',
-      uiTools: {top: true}
-    },
-    dataSource: dataSource
+    $('.iChart').iguanaChart(
+      {
+        ticker: "AAPL.US",
+        period: "1M",
+        lib_path: "/dist",
+        chartOptions: {
+          minHeight: 600,
+          showVolume: 'inside',
+          uiTools: {top: true}
+        },
+        dataSource: $.extend(true, {}, iChartDataSource)
+      }
+    );
   });
 
-  document.querySelector('.js-show-chart-indicators').addEventListener('click', function () {
-    $('.iChart').data('iguanaChart').showIndicators();
-  });
-})();
+
 </script>
+
 </body>
 </html>

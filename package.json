@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "example": "./node_modules/http-server/bin/http-server -a127.0.0.1 -p8000",
     "build": "gulp",
+    "build-webpack": "webpack",
+    "dev-server": "webpack serve",
     "watch": "gulp watchJs",
     "nt_release": "npm run build && cp -R ./dist/* ../iguanachart"
   },
@@ -15,7 +17,6 @@
   "dependencies": {
     "@claviska/jquery-minicolors": "2.3.5",
     "hammerjs": "^2.0.8",
-    "jquery": "^3.5.1",
     "jquery-hammerjs": "^2.0.0",
     "jquery-mousewheel": "3.1.13",
     "jquery.event.move": "stephband/jquery.event.move#2.0.0",
@@ -27,6 +28,7 @@
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
     "autoprefixer": "^10.0.4",
+    "babel-loader": "^8.2.2",
     "core-js": "^3.8.1",
     "cssnano": "^4.1.10",
     "gulp": "^4.0.2",
@@ -38,6 +40,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "http-server": "^0.12.3",
+    "imports-loader": "^1.2.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
