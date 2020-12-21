@@ -261,7 +261,7 @@
                 s.d.placeholder = false;
 
                 // if the object came from the DOM, keep track of its parent
-                if (data.parent().parent().size() > 0) {
+                if (data.parent().parent().length > 0) {
                     data.before($('<span></span>')
                         .attr('id', 'simplemodal-placeholder')
                         .css({display: 'none'}));
@@ -6610,6 +6610,17 @@ iChart.indicators = {
  * @package  iguanaChart
  */
 
+function getTradeLabelText(trade, price) {
+    var postfix = parseInt(trade.volume) + '@' + price;
+
+    if(trade.type_id === 1) return 'B' + ': ' + postfix;
+
+    if(trade.type_id === 2) return 'S' + ': ' + postfix;
+
+    if(trade.type_id === 3) return 'TP' + ': ' + postfix;
+
+    if(trade.type_id === 4) return 'SL' + ': ' + postfix;
+}
 
 (function ()
 {
@@ -6640,7 +6651,7 @@ iChart.indicators = {
         ctx.beginPath();
 
         ctx.arc(coords[0].x, coords[0].y, 5, 0, 2 * Math.PI, true);
-        if(this.settings.type_id == 1) {
+        if(this.settings.type_id == 1 || this.settings.type_id == 3) {
             ctx.fillStyle = '#00ff00';
         } else {
             ctx.fillStyle = '#ff0000';
@@ -6681,7 +6692,7 @@ iChart.indicators = {
             price = iChart.formatNumber( price, { decimalPlaces: 2, decimalPrecision: null, "scale": 0 });
         }
 
-        var text = ((trade.type_id==1)?'B':'S') + ': ' +  parseInt(trade.volume) +'@'+price;
+        var text = getTradeLabelText(trade, price);
         context.save();
 
         context.font = 'normal 11px Arial,Helvetica,sans-serif';
@@ -7223,7 +7234,7 @@ iChart.indicators = {
                     at: 'center right',
                     my: 'left center',
                     effect: false,
-                    viewport: $(window),
+                    viewport: $('html'),
                     adjust: {
                         method: 'shift none'
                     }
@@ -7634,7 +7645,7 @@ iChart.indicators = {
                     at: 'center right',
                     my: 'left center',
                     effect: false,
-                    viewport: $(window),
+                    viewport: $('html'),
                     adjust: {
                         method: 'shift none'
                     }
@@ -18807,33 +18818,25 @@ var iChartDataSource = {
         return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
     },
 
-    onRequestCallback: function(callback, params) {
-        if(!params.id) { return 0; }
-
-        //ключ для кеша nginx
+    onRequestCallback: function (callback, params) {
+        if (!params.id) {
+            return 0
+        }
         params.demo = typeof jNTUserinfo !== "undefined" && jNTUserinfo.isDemo ? 1 : 0;
-
         var $params = params;
-
         var _this = this;
         var _chart = this.chart;
-
-        this.chart.wrapper.trigger('iguanaChartEvents', ['chartDataRequest', iChartDataSource.getUrl(params)]);
+        this.chart.wrapper.trigger("iguanaChartEvents", ["chartDataRequest", iChartDataSource.getUrl(params)]);
         this.chart.ajaxDataRequest = $.ajax({
-            "dataType":"text json",
-            "error":function (xhr, textStatus, errorThrown) {
+            dataType: "text json", error: function (xhr, textStatus, errorThrown) {
                 clearTimeout(_chart.timers.loading);
-
-                _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
-                _chart.viewData.chart.setSelectionMode('pan');
-
-                callback({ "warnings":["Ошибка: " + textStatus + "."], "success":false });
-            },
-            "success": function (data, textStatus, xhr)
-            {
-                _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReceived', data]);
-
-                if(data.info && data.info[_chart.dataSource.dataSettings.id]) {
+                _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
+                _chart.viewData.chart.setSelectionMode("pan");
+                console.log("Error: " + textStatus);
+                callback({success: false})
+            }, success: function (data, textStatus, xhr) {
+                _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReceived", data]);
+                if (data.info && data.info[_chart.dataSource.dataSettings.id]) {
                     var stockInfo = data.info[_chart.dataSource.dataSettings.id];
                     _chart.userSettings.currentSecurity = {
                         id: stockInfo.nt_ticker,
@@ -18846,36 +18849,56 @@ var iChartDataSource = {
                     };
                     _chart.viewData.chart.chartOptions.watermarkText = stockInfo.nt_ticker;
                     _chart.viewData.chart.chartOptions.watermarkSubText = stockInfo.short_name;
+                    data = _this.dataAdapter(data, $params);
+                    clearTimeout(_chart.timers.loading);
+                    _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
+                    _chart.viewData.chart.setSelectionMode("pan");
+                    if (data.success == false) {
+                        console.log("ERROR:", data.d.Message)
+                    }
+                    if (data) {
+                        callback(data)
+                    } else {
+                        callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
+                    }
+                    _chart.response = data.d;
+                    _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReady", data]);
+                    _chart.dataRequestCounter++;
+                    _chart.fixViewport();
+                    _chart.updateUnlocked = true
+                } else {
+                    data.hloc = {};
+                    data = _this.dataAdapter(data, $params);
+                    clearTimeout(_chart.timers.loading);
+                    _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
+                    _chart.viewData.chart.setSelectionMode("pan");
+                    if (data.success == false) {
+                        console.log("ERROR:", data.d.Message)
+                    }
+                    if (data) {
+                        callback(data)
+                    } else {
+                        callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
+                    }
+                    _chart.response = data.d;
+                    _chart.dataRequestCounter++;
+
+                    _chart.userSettings.currentSecurity.firstDate = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, false);
+                    _chart.viewData.chart._dataSettings.date_from = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, true);
+                    _chart.viewData.chart._dataSettings.date_to = _chart.getDefaultDateTo(_chart.viewData.chart._dataSettings.interval, true);
+                    _chart.viewData.chart._dataSettings.date_end = _chart.getDefaultDateTo(_chart.viewData.chart._dataSettings.interval, true);
+
+                    _chart.setDatePeriod(_chart.viewData.chart._dataSettings.interval,
+                        _chart.viewData.chart._dataSettings.date_from,
+                        _chart.viewData.chart._dataSettings.date_to);
+
+                    _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
+                    _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
+                    _chart.updateUnlocked = true
+                    _chart.fixViewport();
                 }
-
-                data = _this.dataAdapter(data, $params);
-
-                clearTimeout(_chart.timers.loading);
-
-                _chart.wrapper.trigger('iguanaChartEvents', ['clearLoader']);
-                _chart.viewData.chart.setSelectionMode('pan');
-
-                if(data.success == false) {
-                    console.log('ERROR:', data.d.Message);
-                }
-                if (data) {
-                    callback(data);
-                }
-                else {
-                    callback({ "warnings":[_t('2125', 'Ошибка: пустой ответ.')], "success":false });
-                }
-                _chart.response = data.d;
-
-                _chart.wrapper.trigger('iguanaChartEvents', ['chartDataReady', data]);
-                _chart.dataRequestCounter++;
-
-                _chart.fixViewport();
-                _chart.updateUnlocked = true;
-
-            },
-            //"type":"POST",
-            "url": iChartDataSource.getUrl(params)
-        });
+            }, url: iChartDataSource.getUrl(params)
+        })
     },
     preInitCallback: function(initReadyCallback, params) {
         var _this = this;
@@ -20096,11 +20119,59 @@ IguanaChart = function (options) {
         return false;
     };
 
+    this.getDefaultDateFrom = function (Interval, enableMin){
+        var date_to = new Date();
+        var date_from = new Date();
+        var year, month, day;
+        switch (Interval) {
+            case"D1":
+                date_from.setDate(date_to.getDate() - 25);
+                break;
+            case"D7":
+                date_from.setMonth(date_to.getMonth() - 7);
+                break;
+            case"M1":
+                date_from.setMonth(date_to.getMonth() - 24);
+                break;
+            case"M3":
+                date_from.setMonth(date_to.getMonth() - 36);
+                break;
+            case"M6":
+                date_from.setMonth(date_to.getMonth() - 54);
+                break;
+            case"Y1":
+                date_from.setFullYear(date_to.getFullYear() - 5);
+                break;
+            case"Y5":
+                date_from.setFullYear(date_to.getFullYear() - 10);
+                break;
+            default:
+                date_from.setMonth(date_to.getMonth() - 3)
+        }
+        year = date_from.getFullYear();
+        month = '' + (date_from.getMonth() + 1);
+        day = '' + date_from.getDate();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        if (enableMin) {
+            return [day, month, year].join('.') + ' 00:00';
+        } else {
+            return [day, month, year].join('.');
+        }
+
+    };
 
     this.fixViewport = function () {
         if(typeof this.viewData.chart != "undefined" && this.viewData.chart.areas && this.viewData.chart.areas[0].viewport.x.max == this.viewData.chart.areas[0].viewport.x.min) {
             this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max - this.viewData.chart.chartOptions.futureAmount;
             this.viewData.chart.viewport.x.min = Math.max(this.viewData.chart.areas[0].viewport.x.max - this.viewData.chart.chartOptions.futureAmount - 30 ,0);
+            if (this.viewData.chart.viewport.x.min > this.viewData.chart.viewport.x.max) {
+                this.viewData.chart.viewport.x.max = 30;
+            }
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
         }
     };
@@ -20151,7 +20222,38 @@ IguanaChart = function (options) {
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
         }
     };
+    this.setDatePeriod = function (interval, start, end){
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.period = period;
+        this.dataSource.dataSettings.start = start;
+        this.dataSource.dataSettings.end = end;
+        this.dataSource.dataSettings.date_to = end;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
 
+        var period = "M1";
+        switch (interval) {
+            case"I1":
+                period = "D1";
+                break;
+            case"I5":
+                period = "D3";
+                break;
+            case"I15":
+                period = "D7";
+                break;
+            case"H1":
+                period = "D14";
+                break;
+            case"D1":
+                period = "M6";
+                break;
+            case"D7":
+                period = "Y1";
+                break
+        }
+
+        this.checkPeriod(period);
+    };
     this.checkDateInterval = function (new_date_from, new_date_to) {
 
         var date_from = iChart.formatDateTime(new Date(new_date_from), "dd.MM.yyyy HH:mm");
@@ -21132,7 +21234,7 @@ IguanaChart = function (options) {
                         at: 'center right',
                         my: 'left center',
                         effect: false,
-                        viewport: $(window),
+                        viewport: $('html'),
                         adjust: {
                             method: 'shift none'
                         }
@@ -21772,6 +21874,13 @@ IguanaChart = function (options) {
             var $wrapper = this;
 
             if ($wrapper.data('iguanaChart')) {
+
+                var chart = $wrapper.data('iguanaChart');
+                for (var timer in chart.timers) {
+                    clearTimeout(chart.timers[timer]);
+                }
+                chart.ajaxDataRequest.abort();
+                chart.viewData.chart._dataLoading = false;
 
                 $iguanaChart.init($wrapper.data('iguanaChart'), params);
 
