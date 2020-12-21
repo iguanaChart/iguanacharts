@@ -1155,11 +1155,59 @@
         return false;
     };
 
+    this.getDefaultDateFrom = function (Interval, enableMin){
+        var date_to = new Date();
+        var date_from = new Date();
+        var year, month, day;
+        switch (Interval) {
+            case"D1":
+                date_from.setDate(date_to.getDate() - 25);
+                break;
+            case"D7":
+                date_from.setMonth(date_to.getMonth() - 7);
+                break;
+            case"M1":
+                date_from.setMonth(date_to.getMonth() - 24);
+                break;
+            case"M3":
+                date_from.setMonth(date_to.getMonth() - 36);
+                break;
+            case"M6":
+                date_from.setMonth(date_to.getMonth() - 54);
+                break;
+            case"Y1":
+                date_from.setFullYear(date_to.getFullYear() - 5);
+                break;
+            case"Y5":
+                date_from.setFullYear(date_to.getFullYear() - 10);
+                break;
+            default:
+                date_from.setMonth(date_to.getMonth() - 3)
+        }
+        year = date_from.getFullYear();
+        month = '' + (date_from.getMonth() + 1);
+        day = '' + date_from.getDate();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        if (enableMin) {
+            return [day, month, year].join('.') + ' 00:00';
+        } else {
+            return [day, month, year].join('.');
+        }
+
+    };
 
     this.fixViewport = function () {
         if(typeof this.viewData.chart != "undefined" && this.viewData.chart.areas && this.viewData.chart.areas[0].viewport.x.max == this.viewData.chart.areas[0].viewport.x.min) {
             this.viewData.chart.viewport.x.max = this.viewData.chart.areas[0].viewport.x.max - this.viewData.chart.chartOptions.futureAmount;
             this.viewData.chart.viewport.x.min = Math.max(this.viewData.chart.areas[0].viewport.x.max - this.viewData.chart.chartOptions.futureAmount - 30 ,0);
+            if (this.viewData.chart.viewport.x.min > this.viewData.chart.viewport.x.max) {
+                this.viewData.chart.viewport.x.max = 30;
+            }
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
         }
     };
@@ -1210,7 +1258,38 @@
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
         }
     };
+    this.setDatePeriod = function (interval, start, end){
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.period = period;
+        this.dataSource.dataSettings.start = start;
+        this.dataSource.dataSettings.end = end;
+        this.dataSource.dataSettings.date_to = end;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
 
+        var period = "M1";
+        switch (interval) {
+            case"I1":
+                period = "D1";
+                break;
+            case"I5":
+                period = "D3";
+                break;
+            case"I15":
+                period = "D7";
+                break;
+            case"H1":
+                period = "D14";
+                break;
+            case"D1":
+                period = "M6";
+                break;
+            case"D7":
+                period = "Y1";
+                break
+        }
+
+        this.checkPeriod(period);
+    };
     this.checkDateInterval = function (new_date_from, new_date_to) {
 
         var date_from = iChart.formatDateTime(new Date(new_date_from), "dd.MM.yyyy HH:mm");

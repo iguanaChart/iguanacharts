@@ -10,13 +10,13 @@
     <title>Iguana Charts</title>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>
-    <script type="text/javascript" src="/dist/i18n/i18n.en.js"></script>
+    <script type="text/javascript" src="../dist/i18n/i18n.en.js"></script>
 
     <link rel="stylesheet" href="http://iguanacharts.com/iguana_charts/dependencies/uikit/css/uikit.min.css" media="all">
     <link rel="stylesheet" href="http://iguanacharts.com/iguana_charts/dependencies/jquery.qtip.min.css" media="all">
     <link rel="stylesheet" href="http://iguanacharts.com/iguana_charts/dependencies/jquery-minicolors/jquery.minicolors.css" media="all">
 
-    <link rel="stylesheet" href="/dist/iguanachart.css" media="all">
+    <link rel="stylesheet" href="../dist/iguanachart.css" media="all">
     <script type="text/javascript">
         require.config({
             paths: {
@@ -29,7 +29,7 @@
                 'jquery.qtip': 'http://iguanacharts.com/iguana_charts/dependencies/jquery.qtip.min',
                 //'jquery.easing': 'https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min',
                 'jquery.mousewheel': 'https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min',
-                'iguanachart': '/dist/iguanachart',
+                'iguanachart': '../dist/iguanachart',
                 'hammerjs': 'http://iguanacharts.com/iguana_charts/dependencies/hammer.min'
             },
             shim: {
@@ -74,7 +74,7 @@
                 {
                     ticker: "AAPL.US",
                     period: "1M",
-                    lib_path: "/dist",
+                    lib_path: "../dist",
                     chartOptions: {
                         minHeight: 600,
                         showVolume: 'inside',
