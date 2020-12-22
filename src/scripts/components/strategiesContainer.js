@@ -99,19 +99,23 @@ StrategiesList.prototype.renderAddItem = function () {
   const iconCheck = document.createElement('i');
 
   text.innerText = _t('', 'Добавить стратегию');
-  iconPlus.classList.add('uk-icon-plus', 'uk-margin-left');
-  iconCheck.classList.add('uk-icon-check', 'uk-margin-left');
+  text.classList.add('tm-strategy-item');
+  iconPlus.classList.add('uk-icon-plus', 'uk-margin-left', 'tm-icon');
+  iconCheck.classList.add('uk-icon-check', 'uk-margin-left', 'tm-icon');
 
   item.appendChild(text);
   item.appendChild(iconPlus);
 
-  iconPlus.addEventListener('click', () => {
+  const handleAddItem = () => {
     item.removeChild(text);
     item.removeChild(iconPlus);
     item.appendChild(input);
     item.appendChild(iconCheck);
     input.focus();
-  })
+  };
+
+  iconPlus.addEventListener('click', handleAddItem);
+  text.addEventListener('click', handleAddItem);
 
   iconCheck.addEventListener('click', () => {
     const value = input.value.trim();
@@ -202,6 +206,7 @@ StrategiesListItem.prototype.renderIcon = function (title, classNames, onClick) 
 
 StrategiesListItem.prototype.renderShowing = function () {
   const text = document.createElement('span');
+  text.classList.add('tm-strategy-item');
 
   this.item.appendChild(text);
 
@@ -220,7 +225,7 @@ StrategiesListItem.prototype.renderShowing = function () {
 
     this.item.appendChild(this.renderIcon(
       _t('', 'Переименовать'),
-      ['uk-icon-pencil', 'uk-margin-left'],
+      ['uk-icon-pencil', 'uk-margin-left', 'tm-icon'],
       () => {
         this.state.isEditing = true;
         this.render();
@@ -228,7 +233,7 @@ StrategiesListItem.prototype.renderShowing = function () {
     ));
     this.item.appendChild(this.renderIcon(
       _t('', 'Удалить'),
-      ['uk-icon-remove', 'uk-margin-left'],
+      ['uk-icon-remove', 'uk-margin-left', 'tm-icon'],
       () => {
         this.state.isDeleting = true;
         this.render();
@@ -246,7 +251,7 @@ StrategiesListItem.prototype.renderEditing = function () {
 
   this.item.appendChild(this.renderIcon(
     _t('', 'Подтвердить'),
-    ['uk-icon-check', 'uk-margin-left'],
+    ['uk-icon-check', 'uk-margin-left', 'tm-icon'],
     () => {
       this.state.isEditing = false;
 
@@ -260,7 +265,7 @@ StrategiesListItem.prototype.renderEditing = function () {
   ));
   this.item.appendChild(this.renderIcon(
     _t('', 'Отмена'),
-    ['uk-icon-mail-reply', 'uk-margin-left'],
+    ['uk-icon-mail-reply', 'uk-margin-left', 'tm-icon'],
     () => {
       this.state.isEditing = false;
       this.render();
@@ -276,14 +281,14 @@ StrategiesListItem.prototype.renderDeleting = function () {
 
   this.item.appendChild(this.renderIcon(
     _t('', 'Подтвердить'),
-    ['uk-icon-check', 'uk-margin-left'],
+    ['uk-icon-check', 'uk-margin-left', 'tm-icon'],
     () => {
       this.events.dispatch('onDelete', [this.name]);
     }
   ));
   this.item.appendChild(this.renderIcon(
     _t('', 'Отмена'),
-    ['uk-icon-mail-reply', 'uk-margin-left'],
+    ['uk-icon-mail-reply', 'uk-margin-left', 'tm-icon'],
     () => {
       this.state.isDeleting = false;
       this.render();
