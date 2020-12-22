@@ -110,8 +110,6 @@ var iChartDataSource = {
 
                     _chart.userSettings.currentSecurity.firstDate = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, false);
                     _chart.viewData.chart._dataSettings.date_from = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, true);
-                    _chart.viewData.chart._dataSettings.date_to = _chart.getDefaultDateTo(_chart.viewData.chart._dataSettings.interval, true);
-                    _chart.viewData.chart._dataSettings.date_end = _chart.getDefaultDateTo(_chart.viewData.chart._dataSettings.interval, true);
 
                     _chart.setDatePeriod(_chart.viewData.chart._dataSettings.interval,
                         _chart.viewData.chart._dataSettings.date_from,
