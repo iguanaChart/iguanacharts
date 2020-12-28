@@ -1258,6 +1258,14 @@
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
         }
     };
+    this.errorMessages = function () {
+        var text = _t('18104', 'Нет данных');
+        if (typeof $.jGrowl != 'function') {
+            alert(text);
+        } else {
+            $.jGrowl(text, {theme: '_red'});
+        }
+    };
     this.setDatePeriod = function (interval, start, end){
         this.dataSource.dataSettings.interval = interval;
         this.dataSource.dataSettings.period = period;
