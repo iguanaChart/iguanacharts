@@ -970,11 +970,10 @@
         this.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
         this.overlay.render(context);
         this.renderer.renderLegends(context);
-
         var data = canvas.toDataURL(mimeType);
         $(canvas).remove();
         var marker = ";base64,";
-        return data.substring(data.indexOf(marker) + marker.length);
+        return {'string':data.substring(data.indexOf(marker) + marker.length),'height':canvas.height, 'width': canvas.width};
     };
 
     iChart.Charting.Chart.prototype.update = function (bySchedule)
