@@ -13767,11 +13767,10 @@ function getTradeLabelText(trade, price) {
         this.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
         this.overlay.render(context);
         this.renderer.renderLegends(context);
-
         var data = canvas.toDataURL(mimeType);
         $(canvas).remove();
         var marker = ";base64,";
-        return data.substring(data.indexOf(marker) + marker.length);
+        return {'string':data.substring(data.indexOf(marker) + marker.length),'height':canvas.height, 'width': canvas.width};
     };
 
     iChart.Charting.Chart.prototype.update = function (bySchedule)
@@ -18372,10 +18371,15 @@ $.templates("indicatorDialogTmpl", '' +
 );
 
 $.templates("captureDialogTmpl", '' +
-    '<div class="iChartDialog" style="display: none;">' +
+    '<div class="iChartDialog " style="display: none;">' +
         '<img class="js-iChartTools-capture"/>' +
-        '<div class="uk-flex uk-flex-right">' +
-            '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button js-set-params-indicator">Ok</a>' +
+        '<div class="uk-flex uk-flex-right" style="max-width: 100%;">' +
+        '<span class="uk-margin-left">' +
+        '<a  href="javascript:void(0);" onclick="return false;" class="uk-button js-set-params-indicator">' + _t('1402', 'Сохранить') + '</a>' +
+        '</span>' +
+        '<span class="uk-margin-left">' +
+        '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button js-set-params-indicator">' + _t('534', 'Закрыть') + '</a>' +
+        '</span>' +
         '</div>' +
     '</div>'
 );
@@ -21459,12 +21463,39 @@ IguanaChart = function (options) {
             $('.iChartDialog').remove();
             var $captureDialogTmpl = $($.render.captureDialogTmpl());
 
-            $captureDialogTmpl.find('.js-iChartTools-capture').attr('src', 'data:image/png;base64, ' + dataImage);
+            $captureDialogTmpl.find('.js-iChartTools-capture').
+                attr('src', 'data:image/png;base64, ' + dataImage.string).
+                attr('height', dataImage.height).
+                attr('width', dataImage.width)
+            ;
 
+            $captureDialogTmpl.on('click', '.js-set-params-indicator', function () {
+                _this.saveScreenOnDisk();
+            });
             this.chart.wrapper.append($captureDialogTmpl);
 
-            var width = $captureDialogTmpl.find('.js-iChartTools-capture').get(0).width;
-            $('.iChartDialog').modal({modal: false, zIndex: 1500, maxWidth: width, title: _t('1724', 'Скачать картинку')});
+            var width = dataImage.width;
+            var height = dataImage.height;
+
+            width = width ? width : 120;
+            height = height > 0 ? height : 150;
+
+            $('.iChartDialog').
+                modal({
+                    modal: false,
+                    zIndex: 1500,
+                    close: true,
+                    minWidth: width,
+                    minHeight: height,
+                    title: _t('1724', 'Скачать картинку')
+                });
+        };
+
+        this.saveScreenOnDisk = function () {
+            var link = document.createElement('a');
+            link.href = $('.iChartDialog').find('.js-iChartTools-capture').attr('src');
+            link.download = 'tn-screen.png';
+            link.click();
         };
 
         this.onMinicolorsChange = function(value, opacity){

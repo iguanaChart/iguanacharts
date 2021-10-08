@@ -617,12 +617,39 @@
             $('.iChartDialog').remove();
             var $captureDialogTmpl = $($.render.captureDialogTmpl());
 
-            $captureDialogTmpl.find('.js-iChartTools-capture').attr('src', 'data:image/png;base64, ' + dataImage);
+            $captureDialogTmpl.find('.js-iChartTools-capture').
+                attr('src', 'data:image/png;base64, ' + dataImage.string).
+                attr('height', dataImage.height).
+                attr('width', dataImage.width)
+            ;
 
+            $captureDialogTmpl.on('click', '.js-set-params-indicator', function () {
+                _this.saveScreenOnDisk();
+            });
             this.chart.wrapper.append($captureDialogTmpl);
 
-            var width = $captureDialogTmpl.find('.js-iChartTools-capture').get(0).width;
-            $('.iChartDialog').modal({modal: false, zIndex: 1500, maxWidth: width, title: _t('1724', 'Скачать картинку')});
+            var width = dataImage.width;
+            var height = dataImage.height;
+
+            width = width ? width : 120;
+            height = height > 0 ? height : 150;
+
+            $('.iChartDialog').
+                modal({
+                    modal: false,
+                    zIndex: 1500,
+                    close: true,
+                    minWidth: width,
+                    minHeight: height,
+                    title: _t('1724', 'Скачать картинку')
+                });
+        };
+
+        this.saveScreenOnDisk = function () {
+            var link = document.createElement('a');
+            link.href = $('.iChartDialog').find('.js-iChartTools-capture').attr('src');
+            link.download = 'tn-screen.png';
+            link.click();
         };
 
         this.onMinicolorsChange = function(value, opacity){
