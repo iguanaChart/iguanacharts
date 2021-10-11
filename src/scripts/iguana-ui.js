@@ -608,7 +608,7 @@
         };
 
         this.uiSet_captureImage = function () {
-            var dataImage = this.chart.viewData.chart.toBase64('image/png');
+            var dataImage = this.chart.viewData.chart.toBase64withSize('image/png');
 
             if($.modal.impl.d.data) {
                 $.modal.impl.close();

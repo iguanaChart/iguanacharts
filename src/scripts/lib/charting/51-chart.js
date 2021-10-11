@@ -941,6 +941,11 @@
 
     iChart.Charting.Chart.prototype.toBase64 = function (mimeType)
     {
+        var data = this.toBase64Default(mimeType);
+        return data.string;
+    };
+    iChart.Charting.Chart.prototype.toBase64withSize = function (mimeType)
+    {
         /// <summary>
         /// Generates chart image with the specified MIME type encoded as a Base64 string.
         /// </summary>
@@ -967,13 +972,17 @@
         canvas.width = this.canvas.width;
         canvas.height = this.canvas.height;
         var context = iChart.getContext(canvas);
-        this.render({ "context": context, "forceRecalc": false, "resetViewport": false, "testForIntervalChange": false });
+        this.render({'context': context, 'forceRecalc': false, 'resetViewport': false, 'testForIntervalChange': false});
         this.overlay.render(context);
         this.renderer.renderLegends(context);
         var data = canvas.toDataURL(mimeType);
         $(canvas).remove();
-        var marker = ";base64,";
-        return {'string':data.substring(data.indexOf(marker) + marker.length),'height':canvas.height, 'width': canvas.width};
+        var marker = ';base64,';
+        return {
+            'string': data.substring(data.indexOf(marker) + marker.length),
+            'height': canvas.height,
+            'width': canvas.width
+        };
     };
 
     iChart.Charting.Chart.prototype.update = function (bySchedule)
