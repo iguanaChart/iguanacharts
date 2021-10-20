@@ -240,22 +240,53 @@ TA.INDICATOR_TEMPLATE = TA.BASE_TEMPLATE.Create();
 
 TA.INDICATOR_TEMPLATE.Create = function(settings) {
 	var newObject = TA.BASE_TEMPLATE.Create.apply(this);
-
+	var _lookback;
     newObject.justifyCalculate = function() {
         var result = this.calculate.apply(this, arguments);
 
         if ($.isArray(result)) {
-            var _lookback = this._lookback(this.Settings.TimePeriod);
+            _lookback = this._lookback(this.Settings.TimePeriod);
             for(var i = 0; i < _lookback; i++) {
                 result.unshift(0);
             }
-        } else {
-            var _lookback = this._lookback(this.Settings.TimePeriod);
-            for(var key in result) {
-                for(var i = 0; i < _lookback; i++) {
-                    result[key].unshift(0);
-                }
-            }
+        }
+		else {
+
+			switch (this.name) {
+				case 'MACD':
+					_lookback = this._lookback(this.Settings.SlowPeriod, this.Settings.FastPeriod,
+						this.Settings.SignalPeriod);
+					break;
+				case 'BBANDS':
+					_lookback = this._lookback(this.Settings.TimePeriod, this.Settings.DeviationsUp,
+						this.Settings.DeviationsDown, this.Settings.MAType);
+					break;
+				case 'PCH':
+					_lookback = this._lookback(this.Settings.TimePeriodLower, this.Settings.TimePeriodUpper);
+					break;
+				case 'ELDR':
+					_lookback = this._lookback(this.Settings.TimePeriod, this.Settings.MAType);
+					break;
+				case 'SAR':
+					_lookback = this._lookback(this.Settings.Acceleration, this.Settings.Maximum);
+					break;
+				case 'STOCH':
+					_lookback = this._lookback(this.Settings.PeriodFastK, this.Settings.PeriodSlowK,
+						this.Settings.PeriodSlowD
+						, this.Settings.SlowKMAType, this.Settings.SlowDMAType);
+					break;
+				case 'VAR':
+					_lookback = this._lookback(this.Settings.PeriodFastK, this.Settings.DeviationsUp);
+					break;
+				default:
+					_lookback = this._lookback(this.Settings.TimePeriod);
+			}
+
+			for (var key in result) {
+				for (var i = 0; i < _lookback; i++) {
+					result[key].unshift(0);
+				}
+			}
         }
         return result;
     };

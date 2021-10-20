@@ -1055,14 +1055,12 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             }
             indicatorArea.ySeries.push(Series[2]);
             //------------------------------------------------------------------------------------------------------------------------
-
             this.chart.areas.push(indicatorArea);
 
             for (var i = 0; i < this.chart.areas.length; ++i)
             {
                 this.chart.areas[i].setMinMax();
             }
-
             $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
             this.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": false});
         } else {
