@@ -319,10 +319,15 @@ $.templates("indicatorDialogTmpl", '' +
 );
 
 $.templates("captureDialogTmpl", '' +
-    '<div class="iChartDialog" style="display: none;">' +
+    '<div class="iChartDialog " style="display: none;">' +
         '<img class="js-iChartTools-capture"/>' +
-        '<div class="uk-flex uk-flex-right">' +
-            '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button js-set-params-indicator">Ok</a>' +
+        '<div class="uk-flex uk-flex-right" style="max-width: 100%;">' +
+        '<span class="uk-margin-left">' +
+        '<a  href="javascript:void(0);" onclick="return false;" class="uk-button js-set-params-indicator">' + _t('1402', 'Сохранить') + '</a>' +
+        '</span>' +
+        '<span class="uk-margin-left">' +
+        '<a  href="javascript:void(0);" onclick="$.modal.impl.close(); return false;" class="uk-button js-set-params-indicator">' + _t('534', 'Закрыть') + '</a>' +
+        '</span>' +
         '</div>' +
     '</div>'
 );
