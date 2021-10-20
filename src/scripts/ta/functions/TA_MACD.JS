@@ -43,8 +43,6 @@ TA.MACD.calculate = function(startIdx, endIdx, dataShape, settings){
        this.Settings.SlowPeriod = this.DefaultSettings.SlowPeriod;
     else if( (this.Settings.SlowPeriod < 2) || (this.Settings.SlowPeriod > 100000) )
        throw 'TA_BAD_PARAM';
- 
-    
     if( !this.Settings.SignalPeriod )
        this.Settings.SignalPeriod = this.DefaultSettings.SignalPeriod;
     else if( (this.Settings.SignalPeriod < 1) || (this.Settings.SignalPeriod > 100000) )
@@ -83,7 +81,6 @@ TA.MACD._lookback = function (optInFastPeriod, optInSlowPeriod, optInSignalPerio
         optInSlowPeriod = optInFastPeriod;
         optInFastPeriod = tempInteger;
     }
-
     return TA.EMA._lookback(optInSlowPeriod) + TA.EMA._lookback(optInSignalPeriod);
 };
 
@@ -221,7 +218,6 @@ TA.INT_MACD.calculate = function(startIdx, endIdx, dataShape, settings){
 
     /* Copy the result into the output for the caller. */
     outMACD = fastEMABuffer.slice(-fastEMABuffer.length+this.Settings.SignalPeriod_2-1);
-
     /* Calculate the signal/trigger line. */
     var fastEMABufferArr = [];
     for(var i=0; i< fastEMABuffer.length; i++) {
@@ -244,7 +240,7 @@ TA.INT_MACD.calculate = function(startIdx, endIdx, dataShape, settings){
 };
 
 TA.INT_MACD._lookback = function(optInTimePeriod) {
-    TA.EMA._lookback(optInTimePeriod)
+    TA.EMA._lookback(optInTimePeriod);
 };
 
 TA.INT_MACD.SetSettings(TA.INT_MACD.DefaultSettings);

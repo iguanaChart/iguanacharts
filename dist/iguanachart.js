@@ -22287,22 +22287,53 @@ TA.INDICATOR_TEMPLATE = TA.BASE_TEMPLATE.Create();
 
 TA.INDICATOR_TEMPLATE.Create = function(settings) {
 	var newObject = TA.BASE_TEMPLATE.Create.apply(this);
-
+	var _lookback;
     newObject.justifyCalculate = function() {
         var result = this.calculate.apply(this, arguments);
 
         if ($.isArray(result)) {
-            var _lookback = this._lookback(this.Settings.TimePeriod);
+            _lookback = this._lookback(this.Settings.TimePeriod);
             for(var i = 0; i < _lookback; i++) {
                 result.unshift(0);
             }
-        } else {
-            var _lookback = this._lookback(this.Settings.TimePeriod);
-            for(var key in result) {
-                for(var i = 0; i < _lookback; i++) {
-                    result[key].unshift(0);
-                }
-            }
+        }
+		else {
+
+			switch (this.name) {
+				case 'MACD':
+					_lookback = this._lookback(this.Settings.SlowPeriod, this.Settings.FastPeriod,
+						this.Settings.SignalPeriod);
+					break;
+				case 'BBANDS':
+					_lookback = this._lookback(this.Settings.TimePeriod, this.Settings.DeviationsUp,
+						this.Settings.DeviationsDown, this.Settings.MAType);
+					break;
+				case 'PCH':
+					_lookback = this._lookback(this.Settings.TimePeriodLower, this.Settings.TimePeriodUpper);
+					break;
+				case 'ELDR':
+					_lookback = this._lookback(this.Settings.TimePeriod, this.Settings.MAType);
+					break;
+				case 'SAR':
+					_lookback = this._lookback(this.Settings.Acceleration, this.Settings.Maximum);
+					break;
+				case 'STOCH':
+					_lookback = this._lookback(this.Settings.PeriodFastK, this.Settings.PeriodSlowK,
+						this.Settings.PeriodSlowD
+						, this.Settings.SlowKMAType, this.Settings.SlowDMAType);
+					break;
+				case 'VAR':
+					_lookback = this._lookback(this.Settings.PeriodFastK, this.Settings.DeviationsUp);
+					break;
+				default:
+					_lookback = this._lookback(this.Settings.TimePeriod);
+			}
+
+			for (var key in result) {
+				for (var i = 0; i < _lookback; i++) {
+					result[key].unshift(0);
+				}
+			}
         }
         return result;
     };
@@ -24549,7 +24580,7 @@ TA.MACD.type = 'line';
 TA.MACD.DefaultSettings = {
     FastPeriod: 12,
     SlowPeriod: 26,
-    SignalPeriod: 9,
+    SignalPeriod: 9, //todo fix to 9
     CandleValueIdx: TA.CLOSE
 };
 
@@ -24583,8 +24614,7 @@ TA.MACD.calculate = function(startIdx, endIdx, dataShape, settings){
        this.Settings.SlowPeriod = this.DefaultSettings.SlowPeriod;
     else if( (this.Settings.SlowPeriod < 2) || (this.Settings.SlowPeriod > 100000) )
        throw 'TA_BAD_PARAM';
- 
-    
+
     if( !this.Settings.SignalPeriod )
        this.Settings.SignalPeriod = this.DefaultSettings.SignalPeriod;
     else if( (this.Settings.SignalPeriod < 1) || (this.Settings.SignalPeriod > 100000) )
@@ -24623,7 +24653,6 @@ TA.MACD._lookback = function (optInFastPeriod, optInSlowPeriod, optInSignalPerio
         optInSlowPeriod = optInFastPeriod;
         optInFastPeriod = tempInteger;
     }
-
     return TA.EMA._lookback(optInSlowPeriod) + TA.EMA._lookback(optInSignalPeriod);
 };
 
@@ -24761,7 +24790,6 @@ TA.INT_MACD.calculate = function(startIdx, endIdx, dataShape, settings){
 
     /* Copy the result into the output for the caller. */
     outMACD = fastEMABuffer.slice(-fastEMABuffer.length+this.Settings.SignalPeriod_2-1);
-
     /* Calculate the signal/trigger line. */
     var fastEMABufferArr = [];
     for(var i=0; i< fastEMABuffer.length; i++) {
@@ -24784,7 +24812,7 @@ TA.INT_MACD.calculate = function(startIdx, endIdx, dataShape, settings){
 };
 
 TA.INT_MACD._lookback = function(optInTimePeriod) {
-    TA.EMA._lookback(optInTimePeriod)
+    TA.EMA._lookback(optInTimePeriod);
 };
 
 TA.INT_MACD.SetSettings(TA.INT_MACD.DefaultSettings);
@@ -28551,14 +28579,12 @@ TA.INDICATOR_TEMPLATE.prototype.SetSettings = function (settings) {
             }
             indicatorArea.ySeries.push(Series[2]);
             //------------------------------------------------------------------------------------------------------------------------
-
             this.chart.areas.push(indicatorArea);
 
             for (var i = 0; i < this.chart.areas.length; ++i)
             {
                 this.chart.areas[i].setMinMax();
             }
-
             $(this.chart.env.container).trigger('iguanaChartEvents', ['indicatorDataReady', {name: INDICATOR, params: params, data:taData}]);
             this.chart.render({"forceRecalc": true, "resetViewport": false, "testForIntervalChange": false});
         } else {
