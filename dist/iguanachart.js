@@ -22338,36 +22338,7 @@ TA.INDICATOR_TEMPLATE.Create = function(settings) {
             }
         }
 		else {
-
-			switch (this.name) {
-				case 'MACD':
-					_lookback = this._lookback(this.Settings.SlowPeriod, this.Settings.FastPeriod,
-						this.Settings.SignalPeriod);
-					break;
-				case 'BBANDS':
-					_lookback = this._lookback(this.Settings.TimePeriod, this.Settings.DeviationsUp,
-						this.Settings.DeviationsDown, this.Settings.MAType);
-					break;
-				case 'PCH':
-					_lookback = this._lookback(this.Settings.TimePeriodLower, this.Settings.TimePeriodUpper);
-					break;
-				case 'ELDR':
-					_lookback = this._lookback(this.Settings.TimePeriod, this.Settings.MAType);
-					break;
-				case 'SAR':
-					_lookback = this._lookback(this.Settings.Acceleration, this.Settings.Maximum);
-					break;
-				case 'STOCH':
-					_lookback = this._lookback(this.Settings.PeriodFastK, this.Settings.PeriodSlowK,
-						this.Settings.PeriodSlowD
-						, this.Settings.SlowKMAType, this.Settings.SlowDMAType);
-					break;
-				case 'VAR':
-					_lookback = this._lookback(this.Settings.PeriodFastK, this.Settings.DeviationsUp);
-					break;
-				default:
-					_lookback = this._lookback(this.Settings.TimePeriod);
-			}
+			_lookback = TA.INDICATOR_TEMPLATE.getLookBackParam(this);
 
 			for (var key in result) {
 				for (var i = 0; i < _lookback; i++) {
@@ -22383,6 +22354,39 @@ TA.INDICATOR_TEMPLATE.Create = function(settings) {
 	
 	return newObject;
 };
+
+TA.INDICATOR_TEMPLATE.getLookBackParam = function(that) {
+	var lookBack;
+	switch (that.name) {
+		case 'MACD':
+			lookBack = that._lookback(that.Settings.SlowPeriod, that.Settings.FastPeriod,
+				that.Settings.SignalPeriod);
+			break;
+		case 'BBANDS':
+			lookBack = that._lookback(that.Settings.TimePeriod, that.Settings.DeviationsUp,
+				that.Settings.DeviationsDown, that.Settings.MAType);
+			break;
+		case 'PCH':
+			lookBack = that._lookback(that.Settings.TimePeriodLower, that.Settings.TimePeriodUpper);
+			break;
+		case 'ELDR':
+			lookBack = that._lookback(that.Settings.TimePeriod, that.Settings.MAType);
+			break;
+		case 'SAR':
+			lookBack = that._lookback(that.Settings.Acceleration, that.Settings.Maximum);
+			break;
+		case 'STOCH':
+			lookBack = that._lookback(that.Settings.PeriodFastK, that.Settings.PeriodSlowK,
+				that.Settings.PeriodSlowD, that.Settings.SlowKMAType, that.Settings.SlowDMAType);
+			break;
+		case 'VAR':
+			lookBack = that._lookback(that.Settings.PeriodFastK, that.Settings.DeviationsUp);
+			break;
+		default:
+			lookBack = that._lookback(that.Settings.TimePeriod);
+	}
+	return lookBack;
+}
 
 /**
  * Шаблон для переопределяемой функции инициации вывода графика
