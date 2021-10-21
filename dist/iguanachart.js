@@ -2027,7 +2027,7 @@ iChart.indicators = {
         "parameters":[
             {"Code":"FastPeriod", "Name":_t('4819', 'Краткосрочный период'), "Value":12},
             {"Code":"SlowPeriod", "Name":_t('4820', 'Долгосрочный период'), "Value":26},
-            {"Code":"SignalPeriod", "Name":_t('4821', 'Период сигнальной линии'), "Value":9}
+            {"Code":"SignalPeriod", "Name":_t('4821', 'Период сигнальной линии'), "Value":9, "MinValue":2}
         ]
     },
     "MEDPRICE":{
@@ -21032,11 +21032,20 @@ IguanaChart = function (options) {
             $(document).off('click', '.js-set-params-indicator').on('click', '.js-set-params-indicator', function (e) {
                 var indicators = _this.chart.deserializeIndicators(_this.chart.dataSource.dataSettings.graphicIndicators);
                 var newParams = $('.js-iChartTools-indicators-params input').serializeArray();
+                var validParams = true;
 
-                newParams.forEach(function(param){
-                    indicators[index].params[param.name] = param.value;
+                newParams.forEach(function (param) {
+                    //check valid parameters
+                    if (!_this.checkValidParameters(param, iChart.indicators[indicators[index].name])) {
+                        validParams = false;
+                    }
+                    else {
+                        indicators[index].params[param.name] = param.value;
+                    }
                 });
-
+                if (!validParams) {
+                    return;
+                }
                 indicators = _this.chart.serializeIndicators(indicators);
                 _this.chart.setIndicators(indicators);
                 $.modal.impl.close();
@@ -21045,7 +21054,34 @@ IguanaChart = function (options) {
             this.chart.wrapper.append($indicatorDialogHtml);
             $('.iChartDialog').modal({modal: false, zIndex: 1500, title: _t('17398', 'Настройки индикатора')});
         };
+        this.checkValidParameters = function (newParams, indicator) {
+            var result = true;
+            indicator.parameters.forEach(function (param) {
+                if (param.Code === newParams.name) {
+                    if (param.MinValue !== undefined && parseInt(newParams.value) < param.MinValue) {
+                        _this.errorMessage(
+                            _t('', 'Неверный параметр') + param.Name + ', ' + _t('', 'он должен быть больше') +
+                            ' ' + (param.MinValue - 1));
+                        result = false;
+                    }
+                    if (param.MaxValue !== undefined && parseInt(newParams.value) < param.MaxValue) {
+                        _this.errorMessage(
+                            _t('', 'Неверный параметр') + param.Name + ', ' + _t('', 'он должен быть меньше') +
+                            ' ' + param.MaxValue);
+                        result = false;
+                    }
+                }
+            });
 
+            return result;
+        };
+        this.errorMessage = function (text) {
+            if ($.jGrowl === undefined) {
+                alert(text);
+            } else {
+                $.jGrowl(text, {theme: '_red'});
+            }
+        };
         this.renderThemeConfigDialog = function (additionButtons) {
             additionButtons = additionButtons || [];
             var $windowContent = $($.render.themeConfigTmpl());
