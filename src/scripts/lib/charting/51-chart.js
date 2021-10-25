@@ -941,7 +941,7 @@
 
     iChart.Charting.Chart.prototype.toBase64 = function (mimeType)
     {
-        var data = this.toBase64Default(mimeType);
+        var data = this.toBase64withSize(mimeType);
         return data.string;
     };
     iChart.Charting.Chart.prototype.toBase64withSize = function (mimeType)
