@@ -165,7 +165,7 @@ iChart.indicators = {
         "parameters":[
             {"Code":"FastPeriod", "Name":_t('4819', 'Краткосрочный период'), "Value":12},
             {"Code":"SlowPeriod", "Name":_t('4820', 'Долгосрочный период'), "Value":26},
-            {"Code":"SignalPeriod", "Name":_t('4821', 'Период сигнальной линии'), "Value":9}
+            {"Code":"SignalPeriod", "Name":_t('4821', 'Период сигнальной линии'), "Value":9, "MinValue":2}
         ]
     },
     "MEDPRICE":{
