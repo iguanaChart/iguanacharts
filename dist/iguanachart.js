@@ -21060,13 +21060,13 @@ IguanaChart = function (options) {
                 if (param.Code === newParams.name) {
                     if (param.MinValue !== undefined && parseInt(newParams.value) < param.MinValue) {
                         _this.errorMessage(
-                            _t('', 'Неверный параметр') + param.Name + ', ' + _t('', 'он должен быть больше') +
+                            _t('38021', 'Неверный параметр') + param.Name + ', ' + _t('38022', 'он должен быть больше') +
                             ' ' + (param.MinValue - 1));
                         result = false;
                     }
                     if (param.MaxValue !== undefined && parseInt(newParams.value) < param.MaxValue) {
                         _this.errorMessage(
-                            _t('', 'Неверный параметр') + param.Name + ', ' + _t('', 'он должен быть меньше') +
+                            _t('38021', 'Неверный параметр') + param.Name + ', ' + _t('38023', 'он должен быть меньше') +
                             ' ' + param.MaxValue);
                         result = false;
                     }
