@@ -21057,14 +21057,13 @@ IguanaChart = function (options) {
         this.checkValidParameters = function (newParams, indicator) {
             var result = true;
             indicator.parameters.forEach(function (param) {
-                if (param.Code === newParams.name) return;
+                if (param.Code !== newParams.name) return;
 
-                result = _this.getResultErrorOnMaxMinValue(newParams, param);
+                result = _this.getResultErrorOnMaxMinValue(newParams, param, result);
             });
             return result;
         };
-        this.getResultErrorOnMaxMinValue = function (newParams, param) {
-            var result;
+        this.getResultErrorOnMaxMinValue = function (newParams, param, result) {
             if (param.MinValue !== undefined && parseInt(newParams.value) < param.MinValue) {
                 _this.errorMessage(
                     _t('', 'Неверный параметр %name%, он должен быть больше %value%',
