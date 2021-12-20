@@ -211,7 +211,7 @@
         this.getResultErrorOnMaxMinValue = function (newParams, param, result) {
             if (param.MinValue !== undefined && parseInt(newParams.value) < param.MinValue) {
                 _this.errorMessage(
-                    _t('', 'Неверный параметр %name%, он должен быть больше %value%',
+                    _t('62392', 'Неверный параметр %name%, он должен быть больше %value%',
                         {name: param.Name, value: param.MinValue - 1})
                 );
                 result = false;
@@ -219,7 +219,7 @@
 
             if (param.MaxValue !== undefined && parseInt(newParams.value) < param.MaxValue) {
                 _this.errorMessage(
-                    _t('', 'Неверный параметр %name%, он должен быть меньше %value%',
+                    _t('62393', 'Неверный параметр %name%, он должен быть меньше %value%',
                         {name: param.Name, value: param.MaxValue})
                 );
                 result = false;
