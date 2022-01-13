@@ -733,7 +733,32 @@
         $(".indicators-set").on('click', function () {
             window.localStorage.setItem('userSettingsIndicatorsColor', JSON.stringify(_this.userSettings.chartSettings.indicatorsColor));
             window.localStorage.setItem('userSettingsIndicatorsWidth', JSON.stringify(_this.userSettings.chartSettings.indicatorsWidth));
-            _this.setIndicators(_this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
+
+            var indicators = _this.deserializeIndicators(
+                _this.uiGraphIndicatorsWindow2.element.find(':input').serialize());
+            var newParams = _this.uiGraphIndicatorsWindow2.element.find(':input').serializeArray();
+            var validParams = true;
+            var index = 0;
+            newParams.forEach(function (param) {
+                var fixParamForCheck = param;
+                if(param.name.search('_') !== -1){
+                    var paramSplit = param.name.split('_');
+                    fixParamForCheck.name = paramSplit[1];
+                    index = paramSplit[0].split(/\D/).join('');
+                }
+                if (!_this.ui.checkValidParameters(fixParamForCheck, iChart.indicators[indicators[index].name])) {
+                    validParams = false;
+                }
+                else {
+                    indicators[index].params[param.name] = param.value;
+                }
+            });
+            if (!validParams) {
+                return false;
+            }
+
+            indicators = _this.serializeIndicators(indicators);
+            _this.setIndicators(indicators);
             _this.uiGraphIndicatorsWindow2.hide();
             return false;
         });
