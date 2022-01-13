@@ -19704,7 +19704,7 @@ IguanaChart = function (options) {
             var index = 0;
             newParams.forEach(function (param) {
                 var fixParamForCheck = param;
-                if(param.name.search('_') !== -1){
+                if (param.name.search('_') !== -1) {
                     var paramSplit = param.name.split('_');
                     fixParamForCheck.name = paramSplit[1];
                     index = paramSplit[0].split(/\D/).join('');
