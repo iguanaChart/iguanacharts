@@ -22,6 +22,9 @@
     "uikit": "^2.27.4"
   },
   "devDependencies": {
+    "graceful-fs": {
+      "version": "4.2.2"
+    },
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.4.0",

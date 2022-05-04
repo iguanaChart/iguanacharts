@@ -20,7 +20,6 @@ var iChartDataSource = {
 
     host: "",
     url: "/api/get-hloc?",
-
     getUrl: function (params) {
         var cachedParams = {
             'id': params.id,

@@ -16798,6 +16798,54 @@ function getTradeLabelText(trade, price) {
         }
     };
 
+    iChart.Charting.ChartRenderer.prototype.renderMarketSessions = function (area, series, context, index) {
+        if (area.viewport.x.bounded.min > area.viewport.x.bounded.max)
+        {
+            return;
+        }
+
+        context.save();
+        context.fillStyle = "rgba(214,218,225,0.5)";
+        //console.log(area);
+        if (!area.isScroller && !area.isLayer) {
+
+            var marketOpenTime = '09:30';
+            var marketCloseTime = '16:00';
+
+            // var marketOpenTime = '08:00';
+            // var marketCloseTime = '17:30';
+
+
+            for (var i = 0; i < area.axisX.length; i++) {
+                var currentDate = new Date(area.getXValue(i) * 1000);
+
+                var currentTime = (currentDate.getHours() < 10 ? '0' + currentDate.getHours() : currentDate.getHours())
+                    + ':' + (currentDate.getMinutes() < 10 ? '0' + currentDate.getMinutes() : currentDate.getMinutes());
+
+                if (currentTime < marketOpenTime || currentTime > marketCloseTime) {
+
+                    for (var j = i+1; j < area.axisX.length; j++) {
+
+                        var currentDateEnd = new Date(area.getXValue(j) * 1000);
+
+                        var currentTimeEnd = (currentDateEnd.getHours() < 10 ? '0' + currentDateEnd.getHours() : currentDateEnd.getHours())
+                            + ':' + (currentDateEnd.getMinutes() < 10 ? '0' + currentDateEnd.getMinutes() : currentDateEnd.getMinutes());
+
+                        if (currentTimeEnd >= marketOpenTime && currentTimeEnd <= marketCloseTime) {
+                            i = j + 1;
+                            var x1Pos = area.getXPositionByValue(currentDate.getTime() / 1000);
+                            var x2Pos = area.getXPositionByValue(currentDateEnd.getTime() / 1000);
+                            context.fillRect(x1Pos, 0, x2Pos - x1Pos, area.axisY.length);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        context.restore();
+
+    }
+
     iChart.Charting.ChartRenderer.prototype.renderSeries = function (area, series, context, index)
     {
         /// <summary>
@@ -16914,6 +16962,7 @@ function getTradeLabelText(trade, price) {
 
         for (var j = 0; j < area.ySeries.length; ++j)
         {
+            this.renderMarketSessions(area, area.ySeries[j], context, j);
             this.renderSeries(area, area.ySeries[j], context, j);
         }
 
@@ -18794,7 +18843,6 @@ var iChartDataSource = {
 
     host: "",
     url: "/api/get-hloc?",
-
     getUrl: function (params) {
         var cachedParams = {
             'id': params.id,
