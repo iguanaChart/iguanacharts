@@ -194,15 +194,101 @@ function getTradeLabelText(trade, price) {
         }
 
         var dataView = $('' +
-            '<div>' +
-                (data.type_id == 1 ? 'Покупка' : 'Продажа') + '<br/>' +
-                'Дата: ' + (this.layer.chart._dataSettings.timeframe >= 1440 ? data.date_time.substr(0, 10) : data.date_time) + '<br/>' +
-                'Сделок: ' + data.count + '<br/>' +
-                'Количество: ' + iChart.formatNumber( parseFloat(data.volume), { decimalPlaces: 0, decimalPrecision: null, "scale": 0 }) + '<br/>' +
-                'Сумма: ' + (data.summ < 100 ? iChart.formatNumber( parseFloat(data.summ), { decimalPlaces: null, decimalPrecision: 6, "scale": 0 }) : iChart.formatNumber( parseFloat(data.summ), { decimalPlaces: 2, decimalPrecision: null, "scale": 0 }))  + '<br/>' +
-                'Цена: ' + (data.price < 100 ? iChart.formatNumber( parseFloat(data.price), { decimalPlaces: null, decimalPrecision: 6, "scale": 0 }) : iChart.formatNumber( parseFloat(data.price), { decimalPlaces: 2, decimalPrecision: null, "scale": 0 })) + '<br/>' +
-                (parseFloat(data.profit)==0 ? '' : (parseFloat(data.profit)>0 ? 'Прибыль: ' : 'Убыток: ')) + (parseFloat(data.profit)!=0 ? (iChart.formatNumber( parseFloat(data.profit), { decimalPlaces: 2, decimalPrecision: 2, "scale": 0 }) + '<br/>') : '') +
-            '</div>');
+            '<div>'
+            + (
+                data.type_id === 1
+                    ? _t('', 'Покупка')
+                    : _t('', 'Продажа')
+            )
+            + '<br/>'
+            + _t('','Дата') + ': '
+            + (
+                this.layer.chart._dataSettings.timeframe >= 1440
+                    ? data.date_time.substr(0, 10)
+                    : data.date_time
+            )
+            + '<br/>'
+            + _t('','Сделок') + ': '
+            + data.count
+            + '<br/>'
+            + _t('','Количество') + ': '
+            + iChart.formatNumber(
+                    parseFloat(data.volume),
+                    {
+                        decimalPlaces: 0,
+                        decimalPrecision: null,
+                        'scale': 0
+                    }
+                )
+            + '<br/>'
+            + _t('','Сумма') + ': '
+            + (
+                data.summ < 100
+                    ? iChart.formatNumber(
+                            parseFloat(data.summ),
+                            {
+                                decimalPlaces: null,
+                                decimalPrecision: 6,
+                                'scale': 0
+                            }
+                        )
+                    : iChart.formatNumber(
+                            parseFloat(data.summ),
+                            {
+                                decimalPlaces: 2,
+                                decimalPrecision: null,
+                                'scale': 0
+                            }
+                        )
+            )
+            + '<br/>'
+            + _t('','Цена') + ': '
+            + (
+                data.price < 100
+                    ? iChart.formatNumber(
+                        parseFloat(data.price),
+                        {
+                            decimalPlaces: null,
+                            decimalPrecision: 6,
+                            'scale': 0
+                        }
+                    )
+                    : iChart.formatNumber(
+                        parseFloat(data.price),
+                        {
+                            decimalPlaces: 2,
+                            decimalPrecision: null,
+                            'scale': 0
+                        }
+                    )
+            )
+            + '<br/>'
+            + (
+                parseFloat(data.profit) === 0
+                    ? ''
+                    : (
+                        parseFloat(data.profit) > 0
+                            ? _t('','Прибыль') + ': '
+                            : _t('','Убыток') + ': '
+                    )
+            )
+            + (
+                parseFloat(data.profit) !== 0
+                    ? (
+                        iChart.formatNumber(
+                            parseFloat(data.profit),
+                            {
+                                decimalPlaces: 2,
+                                decimalPrecision: 2,
+                                'scale': 0
+                            }
+                        )
+                        + '<br/>'
+                    )
+                    : ''
+            )
+            + '</div>'
+        );
 
         $('[chart-element-tooltip] .qtip-content').html(dataView);
         $('[chart-element-tooltip]').css({top: Math.max(top - $('[chart-element-tooltip]').height() - 12 , 0) +'px', left: left + 12 + 'px'}).show();
