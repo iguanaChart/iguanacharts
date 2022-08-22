@@ -6790,21 +6790,21 @@ function getTradeLabelText(trade, price) {
             '<div>'
             + (
                 data.type_id === 1
-                    ? _t('', 'Покупка')
-                    : _t('', 'Продажа')
+                    ? _t('4916', 'Покупка')
+                    : _t('4917', 'Продажа')
             )
             + '<br/>'
-            + _t('','Дата') + ': '
+            + _t('1510','Дата') + ': '
             + (
                 this.layer.chart._dataSettings.timeframe >= 1440
                     ? data.date_time.substr(0, 10)
                     : data.date_time
             )
             + '<br/>'
-            + _t('','Сделок') + ': '
+            + _t('3728','Сделок') + ': '
             + data.count
             + '<br/>'
-            + _t('','Количество') + ': '
+            + _t('1444','Количество') + ': '
             + iChart.formatNumber(
                     parseFloat(data.volume),
                     {
@@ -6814,7 +6814,7 @@ function getTradeLabelText(trade, price) {
                     }
                 )
             + '<br/>'
-            + _t('','Сумма') + ': '
+            + _t('1446','Сумма') + ': '
             + (
                 data.summ < 100
                     ? iChart.formatNumber(
@@ -6835,7 +6835,7 @@ function getTradeLabelText(trade, price) {
                         )
             )
             + '<br/>'
-            + _t('','Цена') + ': '
+            + _t('1445','Цена') + ': '
             + (
                 data.price < 100
                     ? iChart.formatNumber(
@@ -6861,8 +6861,8 @@ function getTradeLabelText(trade, price) {
                     ? ''
                     : (
                         parseFloat(data.profit) > 0
-                            ? _t('','Прибыль') + ': '
-                            : _t('','Убыток') + ': '
+                            ? _t('1448','Прибыль') + ': '
+                            : _t('67057','Убыток') + ': '
                     )
             )
             + (
