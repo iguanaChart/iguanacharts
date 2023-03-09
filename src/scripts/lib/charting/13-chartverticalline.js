@@ -32,7 +32,7 @@
         ctx.beginPath();
         this.initDrawSettings(ctx, this.settings);
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.height);
+        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
         ctx.stroke();
         ctx.restore();
     };

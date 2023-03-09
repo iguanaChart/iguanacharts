@@ -269,9 +269,9 @@
         /// </summary>
         /// <param name="context" type="CanvasRenderingContext2D">Canvas context to render to.</param>
 
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         context.fillStyle = this.chart.chartOptions.backgroundColor;
-        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        context.fillRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
 
         for (var i = 0; i < this.chart.areas.length; ++i)
         {

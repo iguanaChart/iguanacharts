@@ -2492,6 +2492,7 @@ iChart.indicators = {
         return iChart.Charting.pointToPointDistanceSquared(point, intersection);
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -2547,7 +2548,7 @@ iChart.indicators = {
         }
 
         var context = this.context;
-        this.context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        this.context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         this.drawWidgets(context);
 
     };
@@ -2565,7 +2566,7 @@ iChart.indicators = {
                 return 0;
             }
             context = this.context;
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         }
 
         context.save();
@@ -2617,7 +2618,7 @@ iChart.indicators = {
     {
         //ctx.save();
         //ctx.strokeStyle="#FF0000";
-        //ctx.strokeRect(0, 0, ctx.canvas.width-1, ctx.canvas.height-1);
+        //ctx.strokeRect(0, 0, ctx.canvas.offsetWidth-1, ctx.canvas.offsetHeight-1);
         //ctx.restore();
 
         for (var widget in this.widget) {
@@ -3881,7 +3882,7 @@ iChart.indicators = {
                 return 0;
             }
             context = this.context;
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         }
 
         context.save();
@@ -4821,7 +4822,7 @@ iChart.indicators = {
                 return 0;
             }
             context = this.context;
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         }
 
         context.save();
@@ -5718,7 +5719,7 @@ iChart.indicators = {
 
             ctx.beginPath();
             ctx.moveTo(coords[0].x, y);
-            ctx.lineTo(ctx.canvas.width, y);
+            ctx.lineTo(ctx.canvas.offsetWidth, y);
             ctx.stroke();
 
             if (this.percentages[i] != 0) {
@@ -5731,6 +5732,7 @@ iChart.indicators = {
         ctx.restore();
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -5778,11 +5780,12 @@ iChart.indicators = {
         {
             ctx.beginPath();
             ctx.moveTo(coords[0].x, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y + (this.percentages[i] * h * (ctx.canvas.width - coords[0].x)));
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y + (this.percentages[i] * h * (ctx.canvas.offsetWidth - coords[0].x)));
             ctx.stroke();
         }
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -5813,15 +5816,15 @@ iChart.indicators = {
             return;
         }
 
-        var point = this.layer.area.getXValue(ctx.canvas.width - 200);
+        var point = this.layer.area.getXValue(ctx.canvas.offsetWidth - 200);
         this.points[0].x = point * 1000;
-        coords[0].x = ctx.canvas.width - 200;
+        coords[0].x = ctx.canvas.offsetWidth - 200;
 
         ctx.save();
         ctx.beginPath();
         this.initDrawSettings(ctx, this.settings);
         ctx.moveTo(0, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[0].y);
+        ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
         ctx.stroke();
         ctx.restore();
 
@@ -5854,6 +5857,7 @@ iChart.indicators = {
         ];
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -6136,7 +6140,7 @@ iChart.indicators = {
         ctx.beginPath();
         this.initDrawSettings(ctx, this.settings);
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.height);
+        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
         ctx.stroke();
         ctx.restore();
     };
@@ -6653,7 +6657,7 @@ function getTradeLabelText(trade, price) {
             ctx.beginPath();
             ctx.strokeStyle = ctx.fillStyle;
             ctx.moveTo(coords[0].x+5, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.closePath();
             ctx.stroke();
         }
@@ -6765,7 +6769,7 @@ function getTradeLabelText(trade, price) {
 
         if (xIndex <= maxIndex && xIndex > minIndex ) {
 
-            this.layer.chart.renderer.drawLable(ctx, color, "#000", ctx.canvas.width, pointCoords[0].y, label);
+            this.layer.chart.renderer.drawLable(ctx, color, "#000", ctx.canvas.offsetWidth, pointCoords[0].y, label);
         }
 
     }*/
@@ -7880,7 +7884,7 @@ function getTradeLabelText(trade, price) {
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(0, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -7890,8 +7894,8 @@ function getTradeLabelText(trade, price) {
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            //for (var x = coords[0].x; x <= ctx.canvas.width; x += 20)
-            for (var x = 0; x <= ctx.canvas.width; x += 20)
+            //for (var x = coords[0].x; x <= ctx.canvas.offsetWidth; x += 20)
+            for (var x = 0; x <= ctx.canvas.offsetWidth; x += 20)
             {
                 ctx.moveTo(x, coords[0].y);
                 ctx.lineTo(x + 12, coords[0].y);
@@ -7950,7 +7954,7 @@ function getTradeLabelText(trade, price) {
         var textWidth = ctx.measureText(text).width;
 
         var width = textWidth;
-        var x = ctx.canvas.width - 120;
+        var x = ctx.canvas.offsetWidth - 120;
         ctx.beginPath();
         ctx.moveTo(x-width-5, y+5);
         ctx.lineTo(x-width-5, y-5);
@@ -8057,7 +8061,7 @@ function getTradeLabelText(trade, price) {
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
             var width = ctx.measureText(this.settings.text).width;
-            var x = ctx.canvas.width - 120;
+            var x = ctx.canvas.offsetWidth - 120;
             this.testContext.segments = [
                 [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
                 [{ "x": x, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y+4}],
@@ -8119,7 +8123,7 @@ function getTradeLabelText(trade, price) {
             if(state) {
                 $('#ichartOrderCancelCtrl').hide();
                 var ctx = this.layer.context;
-                var x = ctx.canvas.width - 120;
+                var x = ctx.canvas.offsetWidth - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartOrderCancelCtrl').length) {
                     $("<span/>", { id:'ichartOrderCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('2958', 'Снять') }).hide().appendTo(this.layer.chart.container);
@@ -8748,7 +8752,7 @@ function getTradeLabelText(trade, price) {
             ctx.strokeStyle = fillStyle;
             ctx.beginPath();
             ctx.moveTo(coords[type].x + this.priceControl.width + 8, coords[type].y);
-            ctx.lineTo(ctx.canvas.width, coords[type].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[type].y);
             ctx.moveTo(0, coords[type].y);
             ctx.lineTo(coords[type].x - 10, coords[type].y);
             ctx.closePath();
@@ -9645,7 +9649,7 @@ function getTradeLabelText(trade, price) {
             ctx.strokeStyle = fillStyle;
             ctx.beginPath();
             ctx.moveTo(coords[type].x + this.settings.width + 8, coords[type].y);
-            ctx.lineTo(ctx.canvas.width, coords[type].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[type].y);
             ctx.moveTo(0, coords[type].y);
             ctx.lineTo(coords[type].x - 10, coords[type].y);
             ctx.closePath();
@@ -9808,18 +9812,18 @@ function getTradeLabelText(trade, price) {
 
         ctx.beginPath();
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.height);
+        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.lineTo(coords[1].x, 0);
-        ctx.lineTo(coords[1].x, ctx.canvas.height);
+        ctx.lineTo(coords[1].x, ctx.canvas.offsetHeight);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.height);
-        ctx.lineTo(coords[1].x, ctx.canvas.height);
+        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
+        ctx.lineTo(coords[1].x, ctx.canvas.offsetHeight);
         ctx.lineTo(coords[1].x, 0);
         ctx.fill();
 
@@ -9848,6 +9852,7 @@ function getTradeLabelText(trade, price) {
         //];
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -9904,7 +9909,7 @@ function getTradeLabelText(trade, price) {
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.moveTo(start, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -9915,8 +9920,8 @@ function getTradeLabelText(trade, price) {
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            //for (var x = coords[0].x; x <= ctx.canvas.width; x += 20)
-            for (var x = 0; x <= ctx.canvas.width; x += 20)
+            //for (var x = coords[0].x; x <= ctx.canvas.offsetWidth; x += 20)
+            for (var x = 0; x <= ctx.canvas.offsetWidth; x += 20)
             {
                 ctx.moveTo(x, coords[0].y);
                 ctx.lineTo(x + 12, coords[0].y);
@@ -10016,8 +10021,8 @@ function getTradeLabelText(trade, price) {
 
 
         var width = ctx.measureText(settings.positionText + settings.profitText).width;
-        x = ctx.canvas.width - 120;
-        var _x = ctx.canvas.width - 120 - width;
+        x = ctx.canvas.offsetWidth - 120;
+        var _x = ctx.canvas.offsetWidth - 120 - width;
 
         ctx.beginPath();
         ctx.moveTo(x-width-5, y+5);
@@ -10130,7 +10135,7 @@ function getTradeLabelText(trade, price) {
              ctx.textAlign = "left";
              ctx.textBaseline = "middle";
              var width = ctx.measureText(this.settings.text).width;
-             var x = ctx.canvas.width - 120;
+             var x = ctx.canvas.offsetWidth - 120;
              this.testContext.segments = [
              [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
              [{ "x": x, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y+4}],
@@ -10193,7 +10198,7 @@ function getTradeLabelText(trade, price) {
             if(state) {
                 $('#ichartPositionCancelCtrl').hide();
                 var ctx = this.layer.context;
-                var x = ctx.canvas.width - 120;
+                var x = ctx.canvas.offsetWidth - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartPositionCancelCtrl').length) {
                     $("<span/>", { id:'ichartPositionCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('15807', 'Закрыть позицию по рынку') }).hide().appendTo(this.layer.chart.container);
@@ -10354,7 +10359,7 @@ function getTradeLabelText(trade, price) {
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(0, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -10699,7 +10704,7 @@ function getTradeLabelText(trade, price) {
     };
 
     iChart.Charting.ChartTrendorder.prototype.lineNormalizeCoords = function (ctx, coords) {
-        coords[1].x = ctx.canvas.width - 80;
+        coords[1].x = ctx.canvas.offsetWidth - 80;
         this.points[1].x = this.layer.area.getXValue(coords[1].x) * 1000;
 
         ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
@@ -10708,7 +10713,7 @@ function getTradeLabelText(trade, price) {
 
         var textWidth = ctx.measureText(this.settings.text).width;
 
-        coords[0].x = ctx.canvas.width - 80 - textWidth - 80;
+        coords[0].x = ctx.canvas.offsetWidth - 80 - textWidth - 80;
         this.points[0].x = this.layer.area.getXValue(coords[0].x) * 1000;
 
     };
@@ -10728,7 +10733,7 @@ function getTradeLabelText(trade, price) {
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(0, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -10743,8 +10748,8 @@ function getTradeLabelText(trade, price) {
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            //for (var x = coords[0].x; x <= ctx.canvas.width; x += 20)
-            for (var x = 0; x <= ctx.canvas.width; x += 20)
+            //for (var x = coords[0].x; x <= ctx.canvas.offsetWidth; x += 20)
+            for (var x = 0; x <= ctx.canvas.offsetWidth; x += 20)
             {
                 ctx.moveTo(x, coords[0].y);
                 ctx.lineTo(x + 12, coords[0].y);
@@ -10826,10 +10831,10 @@ function getTradeLabelText(trade, price) {
      */
     iChart.Charting.ChartTrendorder.prototype.getBorderPoints = function (coords) {
 
-        if(coords[0].y < 0 || coords[0].y > this.layer.canvas.height || coords[0].x < 0 || coords[0].x > this.layer.canvas.width) {
+        if(coords[0].y < 0 || coords[0].y > this.layer.canvas.offsetHeight || coords[0].x < 0 || coords[0].x > this.layer.canvas.offsetWidth) {
 
             var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
-            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.width);
+            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.offsetWidth);
 
         } else {
 
@@ -10837,17 +10842,17 @@ function getTradeLabelText(trade, price) {
             if (foundPoint1.y < 0) {
                 foundPoint1.y = 0;
                 foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
-            } else if (foundPoint1.y > this.layer.canvas.height) {
-                foundPoint1.y = this.layer.canvas.height;
+            } else if (foundPoint1.y > this.layer.canvas.offsetHeight) {
+                foundPoint1.y = this.layer.canvas.offsetHeight;
                 foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
             }
 
-            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.width);
+            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.offsetWidth);
             if(foundPoint2.y < 0 ) {
                 foundPoint2.y = 0;
                 foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
-            } else if(foundPoint2.y > this.layer.canvas.height ) {
-                foundPoint2.y = this.layer.canvas.height;
+            } else if(foundPoint2.y > this.layer.canvas.offsetHeight ) {
+                foundPoint2.y = this.layer.canvas.offsetHeight;
                 foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
             }
         }
@@ -11156,7 +11161,7 @@ function getTradeLabelText(trade, price) {
         var textWidth = ctx.measureText(text).width;
 
         var width = textWidth + 5;
-        var x = ctx.canvas.width - 120;
+        var x = ctx.canvas.offsetWidth - 120;
         ctx.beginPath();
         ctx.moveTo(x-width-5, y+5);
         ctx.lineTo(x-width-5, y-5);
@@ -11419,7 +11424,7 @@ function getTradeLabelText(trade, price) {
                 ctx.textAlign = "left";
                 ctx.textBaseline = "middle";
                 var width = ctx.measureText(this.settings.text).width;
-                var x = ctx.canvas.width - 120;
+                var x = ctx.canvas.offsetWidth - 120;
                 this.testContext.segments = [
                     [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
                     [{ "x": x-width, "y": this.testContext.points[0].y+4}, { "x": x, "y": this.testContext.points[0].y+4}],
@@ -11528,7 +11533,7 @@ function getTradeLabelText(trade, price) {
             if(state) {
                 $('#ichartOrderCancelCtrl').hide();
                 var ctx = this.layer.context;
-                var x = ctx.canvas.width - 120;
+                var x = ctx.canvas.offsetWidth - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartOrderCancelCtrl').length) {
                     $("<span/>", { id:'ichartOrderCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('2958', 'Снять') }).hide().appendTo(this.layer.chart.container);
@@ -11591,6 +11596,7 @@ function getTradeLabelText(trade, price) {
 
 
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -11621,26 +11627,26 @@ function getTradeLabelText(trade, price) {
             return;
         }
 
-        var point = this.layer.area.getXValue(ctx.canvas.width - 200);
+        var point = this.layer.area.getXValue(ctx.canvas.offsetWidth - 200);
         this.points[0].x = point * 1000;
-        coords[0].x = ctx.canvas.width - 200;
+        coords[0].x = ctx.canvas.offsetWidth - 200;
         this.points[1].x = point * 1000;
-        coords[1].x = ctx.canvas.width - 200;
+        coords[1].x = ctx.canvas.offsetWidth - 200;
 
         ctx.save();
         ctx.beginPath();
         this.initDrawSettings(ctx, this.settings);
 
         ctx.moveTo(0, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[0].y);
+        ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
         ctx.stroke();
         ctx.moveTo(0, coords[1].y);
-        ctx.lineTo(ctx.canvas.width, coords[1].y);
+        ctx.lineTo(ctx.canvas.offsetWidth, coords[1].y);
         ctx.stroke();
 
         ctx.moveTo(0, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[1].y);
+        ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
+        ctx.lineTo(ctx.canvas.offsetWidth, coords[1].y);
         ctx.lineTo(0, coords[1].y);
         ctx.lineTo(0, coords[0].y);
         ctx.fill();
@@ -11680,6 +11686,7 @@ function getTradeLabelText(trade, price) {
         ];
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart
@@ -13840,7 +13847,7 @@ function getTradeLabelText(trade, price) {
         canvas.id = "iChart-chart";
         canvas.style.left = 0;
         canvas.style.position = "absolute";
-        canvas.style.top = -this.canvas.height;
+        canvas.style.top = -this.canvas.offsetHeight;
         document.body.appendChild(canvas);
         if (typeof canvas.getContext === "undefined")
         {
@@ -16544,9 +16551,9 @@ function getTradeLabelText(trade, price) {
         /// </summary>
         /// <param name="context" type="CanvasRenderingContext2D">Canvas context to render to.</param>
 
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         context.fillStyle = this.chart.chartOptions.backgroundColor;
-        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        context.fillRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
 
         for (var i = 0; i < this.chart.areas.length; ++i)
         {
@@ -17223,6 +17230,7 @@ function getTradeLabelText(trade, price) {
         context.restore();
     };
 })();
+
 /**
  * @company  Tradernet
  * @package  iguanaChart

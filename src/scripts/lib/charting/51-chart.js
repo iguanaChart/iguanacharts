@@ -956,7 +956,7 @@
         canvas.id = "iChart-chart";
         canvas.style.left = 0;
         canvas.style.position = "absolute";
-        canvas.style.top = -this.canvas.height;
+        canvas.style.top = -this.canvas.offsetHeight;
         document.body.appendChild(canvas);
         if (typeof canvas.getContext === "undefined")
         {

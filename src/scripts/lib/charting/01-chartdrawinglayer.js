@@ -646,7 +646,7 @@
                 return 0;
             }
             context = this.context;
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
         }
 
         context.save();

@@ -49,7 +49,7 @@
 
             ctx.beginPath();
             ctx.moveTo(coords[0].x, y);
-            ctx.lineTo(ctx.canvas.width, y);
+            ctx.lineTo(ctx.canvas.offsetWidth, y);
             ctx.stroke();
 
             if (this.percentages[i] != 0) {

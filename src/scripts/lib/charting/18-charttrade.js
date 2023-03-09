@@ -60,7 +60,7 @@ function getTradeLabelText(trade, price) {
             ctx.beginPath();
             ctx.strokeStyle = ctx.fillStyle;
             ctx.moveTo(coords[0].x+5, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.closePath();
             ctx.stroke();
         }
@@ -172,7 +172,7 @@ function getTradeLabelText(trade, price) {
 
         if (xIndex <= maxIndex && xIndex > minIndex ) {
 
-            this.layer.chart.renderer.drawLable(ctx, color, "#000", ctx.canvas.width, pointCoords[0].y, label);
+            this.layer.chart.renderer.drawLable(ctx, color, "#000", ctx.canvas.offsetWidth, pointCoords[0].y, label);
         }
 
     }*/

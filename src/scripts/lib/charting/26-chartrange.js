@@ -38,18 +38,18 @@
 
         ctx.beginPath();
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.height);
+        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.lineTo(coords[1].x, 0);
-        ctx.lineTo(coords[1].x, ctx.canvas.height);
+        ctx.lineTo(coords[1].x, ctx.canvas.offsetHeight);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.height);
-        ctx.lineTo(coords[1].x, ctx.canvas.height);
+        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
+        ctx.lineTo(coords[1].x, ctx.canvas.offsetHeight);
         ctx.lineTo(coords[1].x, 0);
         ctx.fill();
 

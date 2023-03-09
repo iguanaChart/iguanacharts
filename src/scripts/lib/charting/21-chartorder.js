@@ -45,7 +45,7 @@
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(0, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -55,8 +55,8 @@
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            //for (var x = coords[0].x; x <= ctx.canvas.width; x += 20)
-            for (var x = 0; x <= ctx.canvas.width; x += 20)
+            //for (var x = coords[0].x; x <= ctx.canvas.offsetWidth; x += 20)
+            for (var x = 0; x <= ctx.canvas.offsetWidth; x += 20)
             {
                 ctx.moveTo(x, coords[0].y);
                 ctx.lineTo(x + 12, coords[0].y);
@@ -115,7 +115,7 @@
         var textWidth = ctx.measureText(text).width;
 
         var width = textWidth;
-        var x = ctx.canvas.width - 120;
+        var x = ctx.canvas.offsetWidth - 120;
         ctx.beginPath();
         ctx.moveTo(x-width-5, y+5);
         ctx.lineTo(x-width-5, y-5);
@@ -222,7 +222,7 @@
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
             var width = ctx.measureText(this.settings.text).width;
-            var x = ctx.canvas.width - 120;
+            var x = ctx.canvas.offsetWidth - 120;
             this.testContext.segments = [
                 [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
                 [{ "x": x, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y+4}],
@@ -284,7 +284,7 @@
             if(state) {
                 $('#ichartOrderCancelCtrl').hide();
                 var ctx = this.layer.context;
-                var x = ctx.canvas.width - 120;
+                var x = ctx.canvas.offsetWidth - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartOrderCancelCtrl').length) {
                     $("<span/>", { id:'ichartOrderCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('2958', 'Снять') }).hide().appendTo(this.layer.chart.container);
