@@ -117,7 +117,7 @@
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(0, coords[0].y);
-            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
+            ctx.lineTo(getElementSize(ctx.canvas).width, coords[0].y);
             ctx.stroke();
             ctx.restore();
 

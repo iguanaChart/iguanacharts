@@ -646,7 +646,8 @@
                 return 0;
             }
             context = this.context;
-            context.clearRect(0, 0, context.canvas.offsetWidth, context.canvas.offsetHeight);
+            var canvasSize = getElementSize(context.canvas);
+            context.clearRect(0, 0, canvasSize.width, canvasSize.height);
         }
 
         context.save();

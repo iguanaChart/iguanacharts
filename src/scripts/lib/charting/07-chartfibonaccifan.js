@@ -45,7 +45,8 @@
         {
             ctx.beginPath();
             ctx.moveTo(coords[0].x, coords[0].y);
-            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y + (this.percentages[i] * h * (ctx.canvas.offsetWidth - coords[0].x)));
+            var canvasSize = getElementSize(ctx.canvas);
+            ctx.lineTo(canvasSize.width, coords[0].y + (this.percentages[i] * h * (canvasSize.width - coords[0].x)));
             ctx.stroke();
         }
     };

@@ -140,7 +140,9 @@
     };
 
     iChart.Charting.ChartTrendorder.prototype.lineNormalizeCoords = function (ctx, coords) {
-        coords[1].x = ctx.canvas.offsetWidth - 80;
+        var canvasWidth = getElementSize(ctx.canvas).width;
+
+        coords[1].x = canvasWidth - 80;
         this.points[1].x = this.layer.area.getXValue(coords[1].x) * 1000;
 
         ctx.font = 'normal 13px Arial,Helvetica,sans-serif';
@@ -149,7 +151,7 @@
 
         var textWidth = ctx.measureText(this.settings.text).width;
 
-        coords[0].x = ctx.canvas.offsetWidth - 80 - textWidth - 80;
+        coords[0].x = canvasWidth - 80 - textWidth - 80;
         this.points[0].x = this.layer.area.getXValue(coords[0].x) * 1000;
 
     };
@@ -163,13 +165,14 @@
         //coords[0].x = this.layer.area.getXPositionByValue(point);
 
         var color = this.settings.fillStyle;
+        var canvasWidth = getElementSize(ctx.canvas).width;
 
         if(this.selected || ctx.inHover) {
             ctx.save();
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.moveTo(0, coords[0].y);
-            ctx.lineTo(ctx.canvas.offsetWidth, coords[0].y);
+            ctx.lineTo(canvasWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -184,8 +187,8 @@
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            //for (var x = coords[0].x; x <= ctx.canvas.offsetWidth; x += 20)
-            for (var x = 0; x <= ctx.canvas.offsetWidth; x += 20)
+            //for (var x = coords[0].x; x <= canvasWidth; x += 20)
+            for (var x = 0; x <= canvasWidth; x += 20)
             {
                 ctx.moveTo(x, coords[0].y);
                 ctx.lineTo(x + 12, coords[0].y);
@@ -266,11 +269,12 @@
      * @returns {*[]}
      */
     iChart.Charting.ChartTrendorder.prototype.getBorderPoints = function (coords) {
+        var canvasSize = getElementSize(this.layer.canvas);
 
-        if(coords[0].y < 0 || coords[0].y > this.layer.canvas.offsetHeight || coords[0].x < 0 || coords[0].x > this.layer.canvas.offsetWidth) {
+        if(coords[0].y < 0 || coords[0].y > canvasSize.height || coords[0].x < 0 || coords[0].x >canvasSize.width) {
 
             var foundPoint1 = iChart.getLineEquation(coords[0], coords[1], 0);
-            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.offsetWidth);
+            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], canvasSize.width);
 
         } else {
 
@@ -278,17 +282,17 @@
             if (foundPoint1.y < 0) {
                 foundPoint1.y = 0;
                 foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
-            } else if (foundPoint1.y > this.layer.canvas.offsetHeight) {
-                foundPoint1.y = this.layer.canvas.offsetHeight;
+            } else if (foundPoint1.y > canvasSize.height) {
+                foundPoint1.y = canvasSize.height;
                 foundPoint1.x = (foundPoint1.y - foundPoint1.b) / foundPoint1.k;
             }
 
-            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], this.layer.canvas.offsetWidth);
+            var foundPoint2 = iChart.getLineEquation(coords[0], coords[1], canvasSize.width);
             if(foundPoint2.y < 0 ) {
                 foundPoint2.y = 0;
                 foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
-            } else if(foundPoint2.y > this.layer.canvas.offsetHeight ) {
-                foundPoint2.y = this.layer.canvas.offsetHeight;
+            } else if(foundPoint2.y > canvasSize.height) {
+                foundPoint2.y = getElementSize(this.layer.canvas).height;
                 foundPoint2.x = (foundPoint2.y - foundPoint2.b) / foundPoint2.k;
             }
         }
@@ -597,7 +601,7 @@
         var textWidth = ctx.measureText(text).width;
 
         var width = textWidth + 5;
-        var x = ctx.canvas.offsetWidth - 120;
+        var x = getElementSize(ctx.canvas).width - 120;
         ctx.beginPath();
         ctx.moveTo(x-width-5, y+5);
         ctx.lineTo(x-width-5, y-5);
@@ -860,7 +864,7 @@
                 ctx.textAlign = "left";
                 ctx.textBaseline = "middle";
                 var width = ctx.measureText(this.settings.text).width;
-                var x = ctx.canvas.offsetWidth - 120;
+                var x = getElementSize(ctx.canvas).width - 120;
                 this.testContext.segments = [
                     [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
                     [{ "x": x-width, "y": this.testContext.points[0].y+4}, { "x": x, "y": this.testContext.points[0].y+4}],
@@ -969,7 +973,7 @@
             if(state) {
                 $('#ichartOrderCancelCtrl').hide();
                 var ctx = this.layer.context;
-                var x = ctx.canvas.offsetWidth - 120;
+                var x = getElementSize(ctx.canvas).width - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartOrderCancelCtrl').length) {
                     $("<span/>", { id:'ichartOrderCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('2958', 'Снять') }).hide().appendTo(this.layer.chart.container);

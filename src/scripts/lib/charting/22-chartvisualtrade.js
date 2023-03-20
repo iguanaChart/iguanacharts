@@ -577,7 +577,7 @@
             ctx.strokeStyle = fillStyle;
             ctx.beginPath();
             ctx.moveTo(coords[type].x + this.priceControl.width + 8, coords[type].y);
-            ctx.lineTo(ctx.canvas.offsetWidth, coords[type].y);
+            ctx.lineTo(getElementSize(ctx.canvas).width, coords[type].y);
             ctx.moveTo(0, coords[type].y);
             ctx.lineTo(coords[type].x - 10, coords[type].y);
             ctx.closePath();

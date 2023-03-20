@@ -49,7 +49,8 @@
 
             ctx.beginPath();
             ctx.moveTo(coords[0].x, y);
-            ctx.lineTo(ctx.canvas.offsetWidth, y);
+            var canvasSize = getElementSize(ctx.canvas);
+            ctx.lineTo(canvasSize.width, y);
             ctx.stroke();
 
             if (this.percentages[i] != 0) {

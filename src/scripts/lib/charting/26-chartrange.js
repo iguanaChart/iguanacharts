@@ -33,23 +33,22 @@
         this.initDrawSettings(ctx, this.settings);
 
 
-        var width = coords[1].x - coords[0].x;
-        var height = coords[1].y - coords[0].y;
+        var canvasHeight = getElementSize(ctx.canvas).height;
 
         ctx.beginPath();
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
+        ctx.lineTo(coords[0].x, canvasHeight);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.lineTo(coords[1].x, 0);
-        ctx.lineTo(coords[1].x, ctx.canvas.offsetHeight);
+        ctx.lineTo(coords[1].x, canvasHeight);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(coords[0].x, 0);
-        ctx.lineTo(coords[0].x, ctx.canvas.offsetHeight);
-        ctx.lineTo(coords[1].x, ctx.canvas.offsetHeight);
+        ctx.lineTo(coords[0].x, canvasHeight);
+        ctx.lineTo(coords[1].x, canvasHeight);
         ctx.lineTo(coords[1].x, 0);
         ctx.fill();
 
