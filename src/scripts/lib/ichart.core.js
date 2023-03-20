@@ -38,7 +38,7 @@ function getElementSize(element) {
             : element.width / window.devicePixelRatio,
         height: element.height === undefined
             ? element.offsetHeight
-            : element.height / window.devicePixelRatio;
+            : element.height / window.devicePixelRatio
     };
 }
 

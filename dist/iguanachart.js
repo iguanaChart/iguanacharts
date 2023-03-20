@@ -903,7 +903,7 @@ function getElementSize(element) {
             : element.width / window.devicePixelRatio,
         height: element.height === undefined
             ? element.offsetHeight
-            : element.height / window.devicePixelRatio;
+            : element.height / window.devicePixelRatio
     };
 }
 
@@ -16578,7 +16578,7 @@ function getTradeLabelText(trade, price) {
         /// </summary>
         /// <param name="context" type="CanvasRenderingContext2D">Canvas context to render to.</param>
 
-        var canvasSize = getElementSize(ctx.canvas).width;
+        var canvasSize = getElementSize(context.canvas);
 
         context.clearRect(0, 0, canvasSize.width, canvasSize.height);
         context.fillStyle = this.chart.chartOptions.backgroundColor;
