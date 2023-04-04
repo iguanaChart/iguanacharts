@@ -53,7 +53,8 @@
         }
 
         var context = this.context;
-        this.context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        var canvasSize = getElementSize(context.canvas);
+        this.context.clearRect(0, 0, canvasSize.width, canvasSize.height);
         this.drawWidgets(context);
 
     };
@@ -71,7 +72,8 @@
                 return 0;
             }
             context = this.context;
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            var canvasSize = getElementSize(context.canvas);
+            context.clearRect(0, 0, canvasSize.width, canvasSize.height);
         }
 
         context.save();
@@ -123,7 +125,8 @@
     {
         //ctx.save();
         //ctx.strokeStyle="#FF0000";
-        //ctx.strokeRect(0, 0, ctx.canvas.width-1, ctx.canvas.height-1);
+        //var canvasSize = getElementSize(ctx.canvas);
+        //ctx.strokeRect(0, 0, canvasSize.width-1, canvasSize.height-1);
         //ctx.restore();
 
         for (var widget in this.widget) {

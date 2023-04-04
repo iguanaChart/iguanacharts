@@ -31,6 +31,17 @@ function formatDate(offset, time) {
     return iChart.formatDateTime(date, "dd.MM.yyyy") + ((time)?' 23:59':'');
 }
 
+function getElementSize(element) {
+    return {
+        width: element.width === undefined 
+            ? element.offsetWidth
+            : element.width / window.devicePixelRatio,
+        height: element.height === undefined
+            ? element.offsetHeight
+            : element.height / window.devicePixelRatio
+    };
+}
+
 Date.parse = function(input) {
 
     if (!input)
