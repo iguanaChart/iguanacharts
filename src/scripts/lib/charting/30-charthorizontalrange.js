@@ -28,26 +28,27 @@
             return;
         }
 
-        var point = this.layer.area.getXValue(ctx.canvas.width - 200);
+        var canvasWidth = getElementSize(ctx.canvas).width;
+        var point = this.layer.area.getXValue(canvasWidth - 200);
         this.points[0].x = point * 1000;
-        coords[0].x = ctx.canvas.width - 200;
+        coords[0].x = canvasWidth - 200;
         this.points[1].x = point * 1000;
-        coords[1].x = ctx.canvas.width - 200;
+        coords[1].x = canvasWidth - 200;
 
         ctx.save();
         ctx.beginPath();
         this.initDrawSettings(ctx, this.settings);
 
         ctx.moveTo(0, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[0].y);
+        ctx.lineTo(canvasWidth, coords[0].y);
         ctx.stroke();
         ctx.moveTo(0, coords[1].y);
-        ctx.lineTo(ctx.canvas.width, coords[1].y);
+        ctx.lineTo(canvasWidth, coords[1].y);
         ctx.stroke();
 
         ctx.moveTo(0, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[0].y);
-        ctx.lineTo(ctx.canvas.width, coords[1].y);
+        ctx.lineTo(canvasWidth, coords[0].y);
+        ctx.lineTo(canvasWidth, coords[1].y);
         ctx.lineTo(0, coords[1].y);
         ctx.lineTo(0, coords[0].y);
         ctx.fill();

@@ -44,6 +44,8 @@
 
         var coordinates = this.getCoordinates(ctx, [{x: this.settings.time, y: 0}]);
         var start = 0;
+        var canvasWidth = getElementSize(ctx.canvas).width;
+
         if(coordinates.length) {
             start = coordinates[0].x;
         }
@@ -54,7 +56,7 @@
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.moveTo(start, coords[0].y);
-            ctx.lineTo(ctx.canvas.width, coords[0].y);
+            ctx.lineTo(canvasWidth, coords[0].y);
             ctx.stroke();
             ctx.restore();
 
@@ -65,8 +67,8 @@
             ctx.strokeStyle = color;
             ctx.lineWidth = 1;
             ctx.beginPath();
-            //for (var x = coords[0].x; x <= ctx.canvas.width; x += 20)
-            for (var x = 0; x <= ctx.canvas.width; x += 20)
+            //for (var x = coords[0].x; x <= canvasWidth; x += 20)
+            for (var x = 0; x <= canvasWidth; x += 20)
             {
                 ctx.moveTo(x, coords[0].y);
                 ctx.lineTo(x + 12, coords[0].y);
@@ -166,8 +168,9 @@
 
 
         var width = ctx.measureText(settings.positionText + settings.profitText).width;
-        x = ctx.canvas.width - 120;
-        var _x = ctx.canvas.width - 120 - width;
+        var canvasWidth = getElementSize(ctx.canvas).width;
+        x = canvasWidth - 120;
+        var _x = canvasWidth - 120 - width;
 
         ctx.beginPath();
         ctx.moveTo(x-width-5, y+5);
@@ -280,7 +283,7 @@
              ctx.textAlign = "left";
              ctx.textBaseline = "middle";
              var width = ctx.measureText(this.settings.text).width;
-             var x = ctx.canvas.width - 120;
+             var x = getElementSize(ctx.canvas).width - 120;
              this.testContext.segments = [
              [{ "x": x-width, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y-4}],
              [{ "x": x, "y": this.testContext.points[0].y-4}, { "x": x, "y": this.testContext.points[0].y+4}],
@@ -343,7 +346,7 @@
             if(state) {
                 $('#ichartPositionCancelCtrl').hide();
                 var ctx = this.layer.context;
-                var x = ctx.canvas.width - 120;
+                var x = getElementSize(ctx.canvas).width - 120;
                 var pointCoords = this.getCoordinates(ctx, this.points);
                 if(!$('#ichartPositionCancelCtrl').length) {
                     $("<span/>", { id:'ichartPositionCancelCtrl', "style": "color:transparent", "class": "m-chart-instrument-delete", "text": "✕", "title": _t('15807', 'Закрыть позицию по рынку') }).hide().appendTo(this.layer.chart.container);
