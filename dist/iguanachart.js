@@ -2977,7 +2977,7 @@ iChart.indicators = {
                     ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                     ctx.textAlign = "left";
                     ctx.textBaseline = "top";
-                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillStyle = this.chart.chartOptions.labelFontColor;
                     ctx.fillText(yValue, x + 8, y - 6);
                 }
             }
@@ -2986,6 +2986,7 @@ iChart.indicators = {
 
             var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
 
+           //label ось X
             if(area_i == 0 && !area.isLayer) {
                 var dateLabel = iChart.formatDateTime(dateTime, this.chart.dateFormat);
                 var dateLabelArr = dateLabel.split("\n");
@@ -2993,7 +2994,7 @@ iChart.indicators = {
                 var width = ctx.measureText(dateLabelArr[0] + " " + dateLabelArr[1]).width;
                 ctx.fillStyle = this.chart.chartOptions.labelColor;
                 ctx.fillRect(this.xPoint - Math.round(width / 2) - 4, area.offset.top + area.innerHeight + 2, width + 4, 12);
-                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillStyle = this.chart.chartOptions.labelFontColor;
                 ctx.font = 'normal ' + 8 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
@@ -12676,6 +12677,7 @@ function getTradeLabelText(trade, price) {
         this.backgroundColor = '#ffffff';
         this.axisColor =  '#999999';
         this.labelColor =  '#595959';
+        this.labelFontColor =  '#ffffff';
         this.labelFont =  "10px Arial";
         this.showLabels =  true;
         this.gridColor =  '#cccccc';
@@ -12791,6 +12793,7 @@ function getTradeLabelText(trade, price) {
         'axisColor',
         'showAxes',
         'labelColor',
+        'labelFontColor',
         'gridColor',
         'gridStyle',
         'watermarkColor',
@@ -16432,12 +16435,12 @@ function getTradeLabelText(trade, price) {
 
         if ( this.labelValue != null && labelValue < this.labelValue ) {
             var color = "#f44336";
-            this.labelColor = "#f44336";
+            this.chart.chartOptions.labelColor = "#f44336";
         } else if ( this.labelValue != null && labelValue > this.labelValue )  {
             var color = "#7cb342";
-            this.labelColor = "#7cb342";
-        } else if(this.labelColor) {
-            var color = this.labelColor;
+            this.chart.chartOptions.labelColor = "#7cb342";
+        } else if(this.chart.chartOptions.labelColor) {
+            var color = this.chart.chartOptions.labelColor;
         } else {
             var color = "#333";
         }
@@ -17017,7 +17020,7 @@ function getTradeLabelText(trade, price) {
 
         context.save();
         context.translate(0.5, area.axisY.length);
-
+//TODO KK
         context.fillStyle = this.chart.chartOptions.labelColor;
         context.font = this.chart.chartOptions.labelFont;
         context.textAlign = "center";
@@ -19438,6 +19441,7 @@ IguanaChart = function (options) {
             _this.viewData.chart.clearIndicators();
         }
     };
+
 
     this.getChartDataUserSettings = function () {
         /// <summary>
@@ -21906,7 +21910,8 @@ IguanaChart = function (options) {
             backgroundColor:'#ffffff',
             axisColor: '#999999',
             showAxes: false,
-            labelColor: '#595959',
+            labelColor: "#595959",
+            labelFontColor: "#ffffff",
             gridColor: '#cccccc',
             gridStyle: 'dashed', // [dashed|solid]
             watermarkColor: 'rgba(238,238,238,1)',
@@ -21929,7 +21934,7 @@ IguanaChart = function (options) {
             volumeStyle: 'rgba(119, 119, 119, 0.3)',
             scrollerOverlayColor: 'rgba(0,0,0, 0.1)',
             scrollerHandlerColor: 'rgba(255,255,255, 1)',
-            shadowColor: '#999999'
+            shadowColor: '#999999',
         }
     },{
         name: "Dark",
@@ -21937,7 +21942,8 @@ IguanaChart = function (options) {
             backgroundColor:'#1e222d',
             axisColor: '#2a2e39',
             showAxes: false,
-            labelColor: '#787b86',
+            labelColor: "#595959",
+            labelFontColor: "#ffffff",
             gridColor: '#2a2e39',
             gridStyle: 'dashed', // [dashed|solid]
             watermarkColor: '#2a2e39',

@@ -12,6 +12,7 @@
         this.backgroundColor = '#ffffff';
         this.axisColor =  '#999999';
         this.labelColor =  '#595959';
+        this.labelFontColor =  '#ffffff';
         this.labelFont =  "10px Arial";
         this.showLabels =  true;
         this.gridColor =  '#cccccc';
@@ -127,6 +128,7 @@
         'axisColor',
         'showAxes',
         'labelColor',
+        'labelFontColor',
         'gridColor',
         'gridStyle',
         'watermarkColor',

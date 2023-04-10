@@ -157,12 +157,12 @@
 
         if ( this.labelValue != null && labelValue < this.labelValue ) {
             var color = "#f44336";
-            this.labelColor = "#f44336";
+            this.chart.chartOptions.labelColor = "#f44336";
         } else if ( this.labelValue != null && labelValue > this.labelValue )  {
             var color = "#7cb342";
-            this.labelColor = "#7cb342";
-        } else if(this.labelColor) {
-            var color = this.labelColor;
+            this.chart.chartOptions.labelColor = "#7cb342";
+        } else if(this.chart.chartOptions.labelColor) {
+            var color = this.chart.chartOptions.labelColor;
         } else {
             var color = "#333";
         }
@@ -742,7 +742,7 @@
 
         context.save();
         context.translate(0.5, area.axisY.length);
-
+//TODO KK
         context.fillStyle = this.chart.chartOptions.labelColor;
         context.font = this.chart.chartOptions.labelFont;
         context.textAlign = "center";
