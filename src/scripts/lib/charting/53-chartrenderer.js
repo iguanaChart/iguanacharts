@@ -744,7 +744,6 @@
 
         context.save();
         context.translate(0.5, area.axisY.length);
-//TODO KK
         context.fillStyle = this.chart.chartOptions.labelColor;
         context.font = this.chart.chartOptions.labelFont;
         context.textAlign = "center";
