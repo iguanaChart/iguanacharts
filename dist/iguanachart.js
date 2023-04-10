@@ -17056,6 +17056,7 @@ function getTradeLabelText(trade, price) {
 
         context.save();
         context.translate(0.5, area.axisY.length);
+
         context.fillStyle = this.chart.chartOptions.labelColor;
         context.font = this.chart.chartOptions.labelFont;
         context.textAlign = "center";
@@ -18605,6 +18606,17 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
+                    _t('', 'Цвет текста лейблов') +
+                '</div>' +
+                '<div class="uk-width-1-4">' +
+                    '<div class="js-colorSelector" data-option="labelFontColor" style="background-color: {{: chartOptions.labelFontColor }}">' +
+                        '<div class="menuHolder" style="display: none; padding: 10px;">' +
+                            '<div class="js-colorPalette" data-option="labelFontColor"></div>' +
+                            '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="labelFontColor" data-element="canvas" value="{{: chartOptions.labelFontColor }}" size="10"/>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="uk-width-3-4">' +
                     _t('13647', 'Цвет сетки') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
@@ -19477,7 +19489,6 @@ IguanaChart = function (options) {
             _this.viewData.chart.clearIndicators();
         }
     };
-
 
     this.getChartDataUserSettings = function () {
         /// <summary>
