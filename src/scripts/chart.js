@@ -389,7 +389,6 @@
         }
     };
 
-
     this.getChartDataUserSettings = function () {
         /// <summary>
         /// Gets current chart parameters from the user settings.
