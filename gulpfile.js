@@ -87,7 +87,7 @@ gulp.task('watch', function () {
     gulp.watch(lessSource, gulp.series('less', 'css', 'css-minify'));
 })
 gulp.task('dev', (done) => {
-    gulp.parallel('webserver', 'watch','copy-resources')(done);
+    gulp.parallel('webserver', 'watch', 'copy-resources')(done);
 });
 
 

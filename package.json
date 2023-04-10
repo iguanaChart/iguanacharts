@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "example": "./node_modules/http-server/bin/http-server -a127.0.0.1 -p8000",
-    "build": "node ./index.js && node ./minify.js",
+    "build": "gulp",
+    "dev": "gulp dev",
     "nt_release": "npm run build && cp -R ./dist/* ../iguanachart"
   },
   "author": "",
