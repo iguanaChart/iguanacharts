@@ -157,10 +157,10 @@
 
         if ( this.labelValue != null && labelValue < this.labelValue ) {
             var color = "#f44336";
-            this.chart.chartOptions.labelColor = "#f44336";
+            this.labelColor = "#f44336";
         } else if ( this.labelValue != null && labelValue > this.labelValue )  {
             var color = "#7cb342";
-            this.chart.chartOptions.labelColor = "#7cb342";
+            this.labelColor = "#7cb342";
         } else if(this.chart.chartOptions.labelColor) {
             var color = this.chart.chartOptions.labelColor;
         } else {
