@@ -486,7 +486,7 @@
                     ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                     ctx.textAlign = "left";
                     ctx.textBaseline = "top";
-                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillStyle = this.chart.chartOptions.labelFontColor;
                     ctx.fillText(yValue, x + 8, y - 6);
                 }
             }
@@ -495,6 +495,7 @@
 
             var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
 
+           //label ось X
             if(area_i == 0 && !area.isLayer) {
                 var dateLabel = iChart.formatDateTime(dateTime, this.chart.dateFormat);
                 var dateLabelArr = dateLabel.split("\n");
@@ -502,7 +503,7 @@
                 var width = ctx.measureText(dateLabelArr[0] + " " + dateLabelArr[1]).width;
                 ctx.fillStyle = this.chart.chartOptions.labelColor;
                 ctx.fillRect(this.xPoint - Math.round(width / 2) - 4, area.offset.top + area.innerHeight + 2, width + 4, 12);
-                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillStyle = this.chart.chartOptions.labelFontColor;
                 ctx.font = 'normal ' + 8 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
