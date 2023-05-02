@@ -418,7 +418,7 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
-                    _t('', 'Цвет текста лейблов') +
+                    _t('87207', 'Цвет текста лейблов') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +
                     '<div class="js-colorSelector" data-option="labelFontColor" style="background-color: {{: chartOptions.labelFontColor }}">' +
