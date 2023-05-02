@@ -161,8 +161,8 @@
         } else if ( this.labelValue != null && labelValue > this.labelValue )  {
             var color = "#7cb342";
             this.labelColor = "#7cb342";
-        } else if(this.labelColor) {
-            var color = this.labelColor;
+        } else if(this.chart.chartOptions.labelColor) {
+            var color = this.chart.chartOptions.labelColor;
         } else {
             var color = "#333";
         }
