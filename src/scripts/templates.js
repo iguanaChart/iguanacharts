@@ -418,6 +418,17 @@ $.templates("themeConfigOptionsTmpl", '' +
                     '</div>' +
                 '</div>' +
                 '<div class="uk-width-3-4">' +
+                    _t('87207', 'Цвет текста лейблов') +
+                '</div>' +
+                '<div class="uk-width-1-4">' +
+                    '<div class="js-colorSelector" data-option="labelFontColor" style="background-color: {{: chartOptions.labelFontColor }}">' +
+                        '<div class="menuHolder" style="display: none; padding: 10px;">' +
+                            '<div class="js-colorPalette" data-option="labelFontColor"></div>' +
+                            '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="labelFontColor" data-element="canvas" value="{{: chartOptions.labelFontColor }}" size="10"/>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="uk-width-3-4">' +
                     _t('13647', 'Цвет сетки') +
                 '</div>' +
                 '<div class="uk-width-1-4">' +

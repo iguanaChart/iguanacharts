@@ -10,6 +10,7 @@
             axisColor: '#999999',
             showAxes: false,
             labelColor: '#595959',
+            labelFontColor: '#ffffff',
             gridColor: '#cccccc',
             gridStyle: 'dashed', // [dashed|solid]
             watermarkColor: 'rgba(238,238,238,1)',
@@ -32,7 +33,7 @@
             volumeStyle: 'rgba(119, 119, 119, 0.3)',
             scrollerOverlayColor: 'rgba(0,0,0, 0.1)',
             scrollerHandlerColor: 'rgba(255,255,255, 1)',
-            shadowColor: '#999999'
+            shadowColor: '#999999',
         }
     },{
         name: "Dark",
@@ -40,7 +41,8 @@
             backgroundColor:'#1e222d',
             axisColor: '#2a2e39',
             showAxes: false,
-            labelColor: '#787b86',
+            labelColor: '#595959',
+            labelFontColor: '#ffffff',
             gridColor: '#2a2e39',
             gridStyle: 'dashed', // [dashed|solid]
             watermarkColor: '#2a2e39',
