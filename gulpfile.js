@@ -5,9 +5,6 @@
 const gulp = require('gulp');
 const concat = require('gulp-concat');
 const less = require('gulp-less');
-const minify = require('gulp-uglify');
-const cssMinify = require('gulp-css-minify');
-const rename = require("gulp-rename");
 const webserver = require('gulp-webserver');
 
 const path = require('path');
@@ -52,28 +49,16 @@ gulp.task('js', function () {
         .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('js-minify', function () {
-    return gulp.src('./dist/iguanachart.js')
-        .pipe(minify())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('./dist/'));
-});
-
 gulp.task('copy-resources', function () {
     return gulp.src('./src/scripts/i18n/i18n.en.js').pipe(gulp.dest('./dist/i18n'));
 });
-gulp.task('css-minify', function () {
-    return gulp.src('./dist/iguanachart.css')
-        .pipe(cssMinify())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('./dist/'));
-});
+
 gulp.task('complete', function (cb) {
     console.log('\x1b[32m Build completed! \x1b[0m');
     cb();
 });
 
-gulp.task('default', gulp.series('less', 'css', 'js', 'js-minify', 'css-minify', 'copy-resources', 'complete'));
+gulp.task('default', gulp.series('less', 'css', 'js',  'complete'));
 
 gulp.task('webserver', function () {
     return gulp.src('./')
@@ -83,9 +68,9 @@ gulp.task('webserver', function () {
         }));
 });
 gulp.task('watch', function () {
-    gulp.watch(jsSources, gulp.series('js', 'js-minify'));
-    gulp.watch(lessSource, gulp.series('less', 'css', 'css-minify'));
+    gulp.watch(jsSources, gulp.series('js'));
+    gulp.watch(lessSource, gulp.series('less', 'css'));
 })
 gulp.task('dev', (done) => {
-    gulp.parallel('webserver', 'watch', 'copy-resources')(done);
+    gulp.parallel('webserver', 'watch')(done);
 });
