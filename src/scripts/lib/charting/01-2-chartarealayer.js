@@ -9,8 +9,11 @@
 
     iChart.Charting.ChartAreaLayer = function (chart)
     {
-        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": "Удалить инструмент" }).hide().appendTo(chart.container);
-        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = '' title = 'Свойства'><span class='elementSettingsHolder' style='position: relative'></span></span>").hide().appendTo(chart.container);
+        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": _t("", "Удалить инструмент") }).hide().appendTo(chart.container);
+        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = ''><span class='elementSettingsHolder' style='position: relative'></span></span>").hide();
+        this.$settingsButton.attr('title', _t("", "Свойства"));
+        this.$settingsButton.appendTo(chart.container);
+
         this.canvas = null;
         this.chart = chart;
         this.defaultCursor = "default";

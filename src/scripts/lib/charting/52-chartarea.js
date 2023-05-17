@@ -584,7 +584,7 @@
 
         if (!this.$closeButton)
         {
-            this.$closeButton = $("<button/>", { "class": "m-chart-area-close", "text": "×", "title": "Скрыть" }).appendTo(this.chart.container);
+            this.$closeButton = $("<button/>", { "class": "m-chart-area-close", "text": "×", "title": _t("", "Скрыть") }).appendTo(this.chart.container);
             this.$closeButton.on("click", $.proxy(this.onClose, this));
         }
 
