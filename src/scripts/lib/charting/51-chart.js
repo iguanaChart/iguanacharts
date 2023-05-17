@@ -962,7 +962,7 @@
         {
             if (typeof FlashCanvas === "undefined")
             {
-                alert("Ваш браузер не поддерживается.");
+                alert(_t("", "Ваш браузер не поддерживается."));
                 return;
             }
 

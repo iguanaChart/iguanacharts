@@ -358,7 +358,7 @@
                 }
                 else if (series.valuesPerPoint == 2)
                 {
-                    labels = [[1, "Мин: "], [0, "Макс: "]];
+                    labels = [[1, _t("", "Мин: ")], [0, _t("", "Макс: ")]];
                 }
                 else
                 {
