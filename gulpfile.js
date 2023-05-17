@@ -25,7 +25,8 @@ const jsSources = [
     './src/scripts/ta/TA_common.js',
     './src/scripts/ta/TA_analyse_rs.js',
 ];
-const i18nSources = './src/scripts/i18n/*.js';
+const i18nSources = './src/scripts/i18n/**/*';
+const i18nDist = './dist/i18n';
 
 const lessSource = './src/styles/*.less';
 gulp.task('less', function () {
@@ -50,7 +51,7 @@ gulp.task('js', function () {
 });
 
 gulp.task('copy-resources', function () {
-    return gulp.src('./src/scripts/i18n/i18n.en.js').pipe(gulp.dest('./dist/i18n'));
+    return gulp.src(i18nSources).pipe(gulp.dest(i18nDist));
 });
 
 gulp.task('complete', function (cb) {
@@ -58,7 +59,7 @@ gulp.task('complete', function (cb) {
     cb();
 });
 
-gulp.task('default', gulp.series('less', 'css', 'js',  'complete'));
+gulp.task('default', gulp.series('less', 'css', 'js', 'copy-resources', 'complete'));
 
 gulp.task('webserver', function () {
     return gulp.src('./')
