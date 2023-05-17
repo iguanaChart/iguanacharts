@@ -368,13 +368,12 @@ TA.ADX.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTota
 
 	//Приведение возврщаемого массива к общей длине
 	if(!dontFillTotalArray) {
-		if (outReal.length >= dataShape.length) {
-			throw _t("", "Ошибка расчета ADX");
-		} else if (outReal.length <= dataShape.length) {
-			while (outReal.length != dataShape.length) {
+		if(outReal.length >= dataShape.length)
+			throw 'Ошибка расчета ADX';
+		else if(outReal.length <= dataShape.length)
+			while(outReal.length != dataShape.length){
 				outReal.unshift(0);
 			}
-		}
 	}
 	
 	return outReal;

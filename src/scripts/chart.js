@@ -1814,7 +1814,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: _t("", "Трендовый приказ"),
+            text: 'Трендовый приказ',
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -1827,7 +1827,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: _t("", "Трендовый приказ"),
+            text: 'Трендовый приказ',
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -1841,7 +1841,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: _t("", "Трендовый приказ"),
+            text: 'Трендовый приказ',
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -1852,7 +1852,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: _t("", "Трендовый приказ"),
+            text: 'Трендовый приказ',
             mode: "line",
             onCancel: function() {console.log(this);}
         };

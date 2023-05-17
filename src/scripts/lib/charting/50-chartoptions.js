@@ -184,7 +184,7 @@
                 this['_chartType'] = data;
             } else {
                 this['_chartType'] = 'Candlestick';
-                console.warn("ChartOptions: Invalid value chartType:'%s'. Set to default: 'Candlestick'", data);
+                console.warn("ChartOptions: Недопустимое значение chartType:'%s'. Установлен по умлчанию: 'Candlestick'", data);
             }
         }
     });
@@ -199,7 +199,7 @@
                 this['_showVolume'] = data;
             } else {
                 this['_showVolume'] = 'hidden';
-                console.warn("ChartOptions: Invalid value showVolume. Set to default: 'hidden'");
+                console.warn("ChartOptions: Недопустимое значение showVolume. Установлен по умлчанию: 'hidden'");
             }
         }
     });
@@ -214,7 +214,7 @@
                 this['_gridStyle'] = data;
             } else {
                 this['_gridStyle'] = 'dashed';
-                console.warn("ChartOptions: Invalid value gridStyle. Set to default: 'dashed'");
+                console.warn("ChartOptions: Недопустимое значение gridStyle. Установлен по умлчанию: 'dashed'");
             }
         }
     });
