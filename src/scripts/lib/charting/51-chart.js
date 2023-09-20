@@ -69,6 +69,7 @@
         this.dataCountMin = 50;
         this.historyEnd = settings.historyEnd;
         this.labelPrecision = 5;
+        this.hasCalledUpdateCandles = false;
 
         this.dataCallback = settings.dataCallback;
         this.onCreateAreas = settings.onCreateAreas || $.noop;
@@ -606,6 +607,29 @@
 
             setTimeout(function() {self.scheduleUpdate();}, 2000);
             self._dataLoading = false;
+
+            if (!self.hasCalledUpdateCandles && self.chartOptions.minCandleCountPerView !== undefined) {
+              // Проверяем сколько у нас доступно свечей. Если меньше, чем указано в настройках - триггерим запрос следующих дат
+              var filteredPoints = self.areas[0].ySeries[0].points.reduce(function(acc, item) {
+                const filteredCandles = item.filter(function(candle) {
+                  return candle !== null;
+                });
+
+                // смотрим, есть ли все 4 значения в свече
+                if (filteredCandles.length === 4) {
+                  acc.push(filteredCandles);
+                }
+
+                return acc;
+              }, []);
+
+              // Если на канвасе у нас меньше заданного количества свечей - запрашиваем ещё
+              if (filteredPoints.length < self.chartOptions.minCandleCountPerView) {
+                self.pan("left");
+
+                self.hasCalledUpdateCandles = true;
+              }
+            }
 
             if(self && self.areas && amountUpdated) {
                 if (self.areas[0].xSeries.min > self.viewport.x.min) {
