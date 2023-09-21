@@ -13534,28 +13534,42 @@ function getTradeLabelText(trade, price) {
             setTimeout(function() {self.scheduleUpdate();}, 2000);
             self._dataLoading = false;
 
-            if (!self.hasCalledUpdateCandles && self.chartOptions.minCandleCountPerView !== undefined) {
-              // Проверяем сколько у нас доступно свечей. Если меньше, чем указано в настройках - триггерим запрос следующих дат
-              var filteredPoints = self.areas[0].ySeries[0].points.reduce(function(acc, item) {
-                const filteredCandles = item.filter(function(candle) {
-                  return candle !== null;
-                });
+          function updateView() {
+            const viewportX = self.areas[0].viewport.x;
+            const dates = self.areas[0].xSeries;
+            const points = self.areas[0].ySeries[0].points;
 
-                // смотрим, есть ли все 4 значения в свече
-                if (filteredCandles.length === 4) {
-                  acc.push(filteredCandles);
-                }
-
-                return acc;
-              }, []);
-
-              // Если на канвасе у нас меньше заданного количества свечей - запрашиваем ещё
-              if (filteredPoints.length < self.chartOptions.minCandleCountPerView) {
-                self.pan("left");
-
-                self.hasCalledUpdateCandles = true;
-              }
+            // если апишка не прислала данные по графику
+            if (!self._dataEnd) {
+              return false;
             }
+
+            // берём последнюю дату, у которой нет точки
+            const lastDateWithCandleIndex = dates.findIndex(function(_, index) {
+              return points[index][0] === null;
+            });
+
+            // получаем дату в секундах
+            const dateEndSeconds = self._dataEnd.getTime() / 1000;
+
+            // Если последняя дата меньше полученного времени по апи, то нужно двинуть график
+            return {
+              needToPan: dates[lastDateWithCandleIndex] < dateEndSeconds,
+              max: lastDateWithCandleIndex,
+            };
+          }
+
+          const updatedViewData = updateView();
+
+          console.log(self);
+
+          console.log(updatedViewData);
+
+          if (updatedViewData.needToPan) {
+            self.pan("left");
+            self.viewport.x.max = updatedViewData.max;
+            self.render({ "forceRecalc": true });
+          }
 
             if(self && self.areas && amountUpdated) {
                 if (self.areas[0].xSeries.min > self.viewport.x.min) {
