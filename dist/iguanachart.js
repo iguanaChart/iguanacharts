@@ -13534,42 +13534,41 @@ function getTradeLabelText(trade, price) {
             setTimeout(function() {self.scheduleUpdate();}, 2000);
             self._dataLoading = false;
 
-          function updateView() {
-            const viewportX = self.areas[0].viewport.x;
-            const dates = self.areas[0].xSeries;
-            const points = self.areas[0].ySeries[0].points;
+            if (self.chartOptions.fillGraphicViewport) {
+              function updateView() {
+                const viewportX = self.areas[0].viewport.x;
+                const dates = self.areas[0].xSeries;
+                const points = self.areas[0].ySeries[0].points;
 
-            // если апишка не прислала данные по графику
-            if (!self._dataEnd) {
-              return false;
+                // если апишка не прислала данные по графику
+                if (!self._dataEnd) {
+                  return false;
+                }
+
+                // берём последнюю дату, у которой нет точки
+                const lastDateWithCandleIndex = dates.findIndex(function(_, index) {
+                  return points[index][0] === null;
+                });
+
+                // получаем дату в секундах
+                const dateEndSeconds = self._dataEnd.getTime() / 1000;
+
+                return {
+                  needToPan: dates[lastDateWithCandleIndex] < dateEndSeconds, // Если последняя дата меньше полученного времени по апи, то нужно двинуть график
+                  max: lastDateWithCandleIndex, // индекс даты последней
+                };
+              }
+
+              const updatedViewData = updateView();
+
+              if (updatedViewData.needToPan) {
+                // обновляем положение элементов в вьюпорте
+                self.viewport.x.max = updatedViewData.max;
+
+                self.pan("left");
+                self.render({ "forceRecalc": true });
+              }
             }
-
-            // берём последнюю дату, у которой нет точки
-            const lastDateWithCandleIndex = dates.findIndex(function(_, index) {
-              return points[index][0] === null;
-            });
-
-            // получаем дату в секундах
-            const dateEndSeconds = self._dataEnd.getTime() / 1000;
-
-            // Если последняя дата меньше полученного времени по апи, то нужно двинуть график
-            return {
-              needToPan: dates[lastDateWithCandleIndex] < dateEndSeconds,
-              max: lastDateWithCandleIndex,
-            };
-          }
-
-          const updatedViewData = updateView();
-
-          console.log(self);
-
-          console.log(updatedViewData);
-
-          if (updatedViewData.needToPan) {
-            self.pan("left");
-            self.viewport.x.max = updatedViewData.max;
-            self.render({ "forceRecalc": true });
-          }
 
             if(self && self.areas && amountUpdated) {
                 if (self.areas[0].xSeries.min > self.viewport.x.min) {
