@@ -13496,6 +13496,35 @@ function getTradeLabelText(trade, price) {
         //this._dataSettings.end = iChart.parseDateTime(iChart.formatDateTime(new Date(this.areas[0].xSeries[this.areas[0].viewport.x.bounded.max] * 1000), "dd.MM.yyyy 23:59"));
     };
 
+    iChart.Charting.Chart.prototype.updateChartViewportPosition = function () {
+      const dates = this.areas[0].xSeries;
+      const points = this.areas[0].ySeries[0].points;
+
+      // берём последнюю дату, у которой нет точки
+      const lastDateWithCandleIndex = dates.findIndex(function(_, index) {
+        return points[index][0] === null;
+      });
+
+      // если апишка не прислала данные по графику
+      if (
+        !this._dataEnd
+        || lastDateWithCandleIndex === -1
+      ) {
+        return {};
+      }
+
+      // получаем дату в секундах
+      const dateEndSeconds = this._dataEnd.getTime() / 1000;
+
+      console.log(dates, points);
+      console.log(lastDateWithCandleIndex, dates[lastDateWithCandleIndex], this._dataEnd);
+
+      return {
+        needToPan: dates[lastDateWithCandleIndex - 1] < dateEndSeconds, // Если последняя дата меньше полученного времени по апи, то нужно двинуть график
+        max: lastDateWithCandleIndex - 1, // индекс даты последней
+      };
+    }
+
     iChart.Charting.Chart.prototype.requestData = function (params, resetData, resetViewport, bySchedule)
     {
         /// <summary>
@@ -13534,38 +13563,18 @@ function getTradeLabelText(trade, price) {
             setTimeout(function() {self.scheduleUpdate();}, 2000);
             self._dataLoading = false;
 
+            console.log(self);
+
             if (self.chartOptions.fillGraphicViewport) {
-              function updateView() {
-                const viewportX = self.areas[0].viewport.x;
-                const dates = self.areas[0].xSeries;
-                const points = self.areas[0].ySeries[0].points;
-
-                // если апишка не прислала данные по графику
-                if (!self._dataEnd) {
-                  return false;
-                }
-
-                // берём последнюю дату, у которой нет точки
-                const lastDateWithCandleIndex = dates.findIndex(function(_, index) {
-                  return points[index][0] === null;
-                });
-
-                // получаем дату в секундах
-                const dateEndSeconds = self._dataEnd.getTime() / 1000;
-
-                return {
-                  needToPan: dates[lastDateWithCandleIndex] < dateEndSeconds, // Если последняя дата меньше полученного времени по апи, то нужно двинуть график
-                  max: lastDateWithCandleIndex, // индекс даты последней
-                };
-              }
-
-              const updatedViewData = updateView();
+              const updatedViewData = self.updateChartViewportPosition();
 
               if (updatedViewData.needToPan) {
                 // обновляем положение элементов в вьюпорте
                 self.viewport.x.max = updatedViewData.max;
 
-                self.pan("left");
+                console.log(updatedViewData);
+
+                //self.pan("left");
                 self.render({ "forceRecalc": true });
               }
             }
