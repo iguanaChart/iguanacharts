@@ -2445,7 +2445,7 @@ iChart.indicators = {
         {
             if (typeof FlashCanvas === "undefined")
             {
-                alert("Ваш браузер не поддерживается.");
+                alert(_t("87550", "Ваш браузер не поддерживается."));
                 return null;
             }
 
@@ -3269,8 +3269,11 @@ iChart.indicators = {
 
     iChart.Charting.ChartAreaLayer = function (chart)
     {
-        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": "Удалить инструмент" }).hide().appendTo(chart.container);
-        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = '' title = 'Свойства'><span class='elementSettingsHolder' style='position: relative'></span></span>").hide().appendTo(chart.container);
+        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": _t("87551", "Удалить инструмент") }).hide().appendTo(chart.container);
+        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = ''><span class='elementSettingsHolder' style='position: relative'></span></span>").hide();
+        this.$settingsButton.attr('title', _t("87552", "Свойства"));
+        this.$settingsButton.appendTo(chart.container);
+
         this.canvas = null;
         this.chart = chart;
         this.defaultCursor = "default";
@@ -4207,9 +4210,11 @@ iChart.indicators = {
         /// <param name="chart" type="iChart.Charting.Chart">Chart this layer belongs to.</param>
         /// <field name="canvas" type="HTMLCanvasElement">Canvas used for drawing elements of this layer.</field>
         /// <field name="chart" type="iChart.Charting.Chart">Chart this layer belongs to.</field>
+        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": _t("87551", "Удалить инструмент") }).hide().appendTo(chart.container);
+        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = ''><span class='elementSettingsHolder' style='position: relative'></span></span>").hide();
+        this.$settingsButton.attr('title', _t("87552", "Свойства"));
+        this.$settingsButton.appendTo(chart.container);
 
-        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": "Удалить инструмент" }).hide().appendTo(chart.container);
-        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = '' title = 'Свойства'><span class='elementSettingsHolder' style='position: relative'></span></span>").hide().appendTo(chart.container);
         this.canvas = null;
         this.chart = chart;
         this.defaultCursor = "default";
@@ -12883,7 +12888,7 @@ function getTradeLabelText(trade, price) {
                 this['_chartType'] = data;
             } else {
                 this['_chartType'] = 'Candlestick';
-                console.warn("ChartOptions: Недопустимое значение chartType:'%s'. Установлен по умлчанию: 'Candlestick'", data);
+                console.warn("ChartOptions: Invalid value chartType:'%s'. Set to default: 'Candlestick'", data);
             }
         }
     });
@@ -12898,7 +12903,7 @@ function getTradeLabelText(trade, price) {
                 this['_showVolume'] = data;
             } else {
                 this['_showVolume'] = 'hidden';
-                console.warn("ChartOptions: Недопустимое значение showVolume. Установлен по умлчанию: 'hidden'");
+                console.warn("ChartOptions: Invalid value showVolume. Set to default: 'hidden'");
             }
         }
     });
@@ -12913,7 +12918,7 @@ function getTradeLabelText(trade, price) {
                 this['_gridStyle'] = data;
             } else {
                 this['_gridStyle'] = 'dashed';
-                console.warn("ChartOptions: Недопустимое значение gridStyle. Установлен по умлчанию: 'dashed'");
+                console.warn("ChartOptions: Invalid value gridStyle. Set to default: 'dashed'");
             }
         }
     });
@@ -12990,6 +12995,7 @@ function getTradeLabelText(trade, price) {
         this.dataCountMin = 50;
         this.historyEnd = settings.historyEnd;
         this.labelPrecision = 5;
+        this.hasCalledUpdateCandles = false;
 
         this.dataCallback = settings.dataCallback;
         this.onCreateAreas = settings.onCreateAreas || $.noop;
@@ -13490,6 +13496,35 @@ function getTradeLabelText(trade, price) {
         //this._dataSettings.end = iChart.parseDateTime(iChart.formatDateTime(new Date(this.areas[0].xSeries[this.areas[0].viewport.x.bounded.max] * 1000), "dd.MM.yyyy 23:59"));
     };
 
+    iChart.Charting.Chart.prototype.updateChartViewportPosition = function () {
+      const dates = this.areas[0].xSeries;
+      const points = this.areas[0].ySeries[0].points;
+
+      // берём последнюю дату, у которой нет точки
+      const lastDateWithCandleIndex = dates.findIndex(function(_, index) {
+        return points[index][0] === null;
+      });
+
+      // если апишка не прислала данные по графику
+      if (
+        !this._dataEnd
+        || lastDateWithCandleIndex === -1
+      ) {
+        return {};
+      }
+
+      // получаем дату в секундах
+      const dateEndSeconds = this._dataEnd.getTime() / 1000;
+
+      console.log(dates, points);
+      console.log(lastDateWithCandleIndex, dates[lastDateWithCandleIndex], this._dataEnd);
+
+      return {
+        needToPan: dates[lastDateWithCandleIndex - 1] < dateEndSeconds, // Если последняя дата меньше полученного времени по апи, то нужно двинуть график
+        max: lastDateWithCandleIndex - 1, // индекс даты последней
+      };
+    }
+
     iChart.Charting.Chart.prototype.requestData = function (params, resetData, resetViewport, bySchedule)
     {
         /// <summary>
@@ -13527,6 +13562,22 @@ function getTradeLabelText(trade, price) {
 
             setTimeout(function() {self.scheduleUpdate();}, 2000);
             self._dataLoading = false;
+
+            console.log(self);
+
+            if (self.chartOptions.fillGraphicViewport) {
+              const updatedViewData = self.updateChartViewportPosition();
+
+              if (updatedViewData.needToPan) {
+                // обновляем положение элементов в вьюпорте
+                self.viewport.x.max = updatedViewData.max;
+
+                console.log(updatedViewData);
+
+                //self.pan("left");
+                self.render({ "forceRecalc": true });
+              }
+            }
 
             if(self && self.areas && amountUpdated) {
                 if (self.areas[0].xSeries.min > self.viewport.x.min) {
@@ -13883,7 +13934,7 @@ function getTradeLabelText(trade, price) {
         {
             if (typeof FlashCanvas === "undefined")
             {
-                alert("Ваш браузер не поддерживается.");
+                alert(_t("87550", "Ваш браузер не поддерживается."));
                 return;
             }
 
@@ -16167,7 +16218,7 @@ function getTradeLabelText(trade, price) {
 
         if (!this.$closeButton)
         {
-            this.$closeButton = $("<button/>", { "class": "m-chart-area-close", "text": "×", "title": "Скрыть" }).appendTo(this.chart.container);
+            this.$closeButton = $("<button/>", { "class": "m-chart-area-close", "text": "×", "title": _t("5428", "Скрыть") }).appendTo(this.chart.container);
             this.$closeButton.on("click", $.proxy(this.onClose, this));
         }
 
@@ -16670,7 +16721,7 @@ function getTradeLabelText(trade, price) {
                 }
                 else if (series.valuesPerPoint == 2)
                 {
-                    labels = [[1, "Мин: "], [0, "Макс: "]];
+                    labels = [[1, _t("87553", "Мин: ")], [0, _t("87554", "Макс: ")]];
                 }
                 else
                 {
@@ -20915,7 +20966,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -20928,7 +20979,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -20942,7 +20993,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -20953,7 +21004,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "line",
             onCancel: function() {console.log(this);}
         };
@@ -23399,12 +23450,13 @@ TA.ADX.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTota
 
 	//Приведение возврщаемого массива к общей длине
 	if(!dontFillTotalArray) {
-		if(outReal.length >= dataShape.length)
-			throw 'Ошибка расчета ADX';
-		else if(outReal.length <= dataShape.length)
-			while(outReal.length != dataShape.length){
+		if (outReal.length >= dataShape.length) {
+			throw _t("", "Ошибка расчета ADX");
+		} else if (outReal.length <= dataShape.length) {
+			while (outReal.length != dataShape.length) {
 				outReal.unshift(0);
 			}
+		}
 	}
 	
 	return outReal;
