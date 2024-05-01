@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/iguanachart.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "example": "./node_modules/http-server/bin/http-server -a127.0.0.1 -p8000",
     "build": "gulp && node ./minify.js",
     "dev": "gulp dev",
