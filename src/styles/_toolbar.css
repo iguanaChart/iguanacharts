@@ -400,3 +400,15 @@
   left: 6px;
   background: #2196f3;
 }
+.tm-tool-bar-date-range {
+  width: 26px;
+  height: 26px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #C9DBE6;
+  color: #607D8B;
+  font-weight: 500;
+  font-size: 10px;
+}
