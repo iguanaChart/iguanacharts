@@ -1894,6 +1894,8 @@ function intervalShortNames(interval) {
             }
         }
 
+        dateTo.setDate(dateTo.getDate() + 1);
+
         dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
         dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
 
@@ -18443,6 +18445,7 @@ $.templates("iChart_topToolBarTmpl", '' +
         '</div>' +
 
         '<div class="uk-flex uk-flex-left">' +
+
         '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1|I1" data-uk-tooltip="{pos:\'top\'}" title="2 days in 1 minute intervals">' +
             '<span class="tm-tool-bar-date-range">1m</span>' +
         '</div>' +
