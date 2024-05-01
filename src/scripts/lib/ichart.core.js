@@ -1004,4 +1004,35 @@ function intervalShortNames(interval) {
         });
     }
 
+    w.iChart.periodToDateRange = function periodToDateRange(period) {
+        var dateTo = new Date();
+        var dateFrom = new Date();
+
+        var periodRegs = period.match(/([D,M,Y])(\d+)|YTD/);
+
+        if (periodRegs) {
+            if (periodRegs[0] === 'YTD') {
+                dateFrom.setDate(1);
+                dateFrom.setMonth(0);
+            } else {
+                switch (periodRegs[1]) {
+                    case "D":
+                        dateFrom.setDate(dateTo.getDate() - +(periodRegs[2]));
+                        break;
+                    case "M":
+                        dateFrom.setMonth(dateTo.getMonth() - +(periodRegs[2]));
+                        break;
+                    case "Y":
+                        dateFrom.setFullYear(dateTo.getFullYear() - +(periodRegs[2]));
+                        break;
+                }
+            }
+        }
+
+        dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
+        dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
+
+        return [dateFrom, dateTo];
+    }
+
 })(window);
