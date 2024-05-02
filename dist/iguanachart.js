@@ -19544,6 +19544,7 @@ IguanaChart = function (options) {
         params["compareIds"] = this.dataSource.dataSettings.compareIds;
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;
         params["compareStocks"] = this.dataSource.dataSettings.compareStocks;
+        params.intervalMode = this.dataSource.dataSettings.intervalMode;
         //var p = $('[name=form_info_settings]').serializeArray();
         //for (var i = 0; i < p.length; i++) {
         //    params[p[i].name] = p[i].value;
@@ -20922,6 +20923,7 @@ IguanaChart = function (options) {
         this.dataSource.dataSettings.date_to = range[1];
         this.dataSource.dataSettings.interval = interval;
         this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
+        this.dataSource.dataSettings.intervalMode = 'ClosedRay';
 
         this.updateForce();
     }
