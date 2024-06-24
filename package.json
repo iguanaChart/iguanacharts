@@ -25,7 +25,7 @@
     "@node-minify/core": "^8.0.6",
     "@node-minify/cssnano": "^8.0.6",
     "@node-minify/uglify-js": "^8.0.6",
-    "gulp": "4.0.2",
+    "gulp": "5.0.0",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.4.0",
     "gulp-webserver": "0.9.1"
