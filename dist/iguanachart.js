@@ -1869,6 +1869,39 @@ function intervalShortNames(interval) {
         });
     }
 
+    w.iChart.periodToDateRange = function periodToDateRange(period) {
+        var dateTo = new Date();
+        var dateFrom = new Date();
+
+        var periodRegs = period.match(/([D,M,Y])(\d+)|YTD/);
+
+        if (periodRegs) {
+            if (periodRegs[0] === 'YTD') {
+                dateFrom.setDate(1);
+                dateFrom.setMonth(0);
+            } else {
+                switch (periodRegs[1]) {
+                    case "D":
+                        dateFrom.setDate(dateTo.getDate() - +(periodRegs[2]));
+                        break;
+                    case "M":
+                        dateFrom.setMonth(dateTo.getMonth() - +(periodRegs[2]));
+                        break;
+                    case "Y":
+                        dateFrom.setFullYear(dateTo.getFullYear() - +(periodRegs[2]));
+                        break;
+                }
+            }
+        }
+
+        dateTo.setDate(dateTo.getDate() + 1);
+
+        dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
+        dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
+
+        return [dateFrom, dateTo];
+    }
+
 })(window);
 
 /**
@@ -13792,7 +13825,9 @@ function getTradeLabelText(trade, price) {
             date_from.setMinutes(0);
             date_from.setSeconds(0);
 
-            request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+            if (!force) {
+                request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+            }
         }
 
         delete request.end;
@@ -18413,28 +18448,28 @@ $.templates("iChart_topToolBarTmpl", '' +
 
         '<div class="uk-flex uk-flex-left">' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I1" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
-            '<i class="sprite sprite-icon-1m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1|I1" data-uk-tooltip="{pos:\'top\'}" title="2 days in 1 minute intervals">' +
+            '<span class="tm-tool-bar-date-range">1m</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I5" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
-            '<i class="sprite sprite-icon-5m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D3|I5" data-uk-tooltip="{pos:\'top\'}" title="3 days in 5 minutes intervals">' +
+            '<span class="tm-tool-bar-date-range">5m</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I15" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
-            '<i class="sprite sprite-icon-15m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="M3|H1" data-uk-tooltip="{pos:\'top\'}" title="3 months in 1 hour intervals">' +
+            '<span class="tm-tool-bar-date-range">3M</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="H1" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
-            '<i class="sprite sprite-icon-h"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="YTD|D1" data-uk-tooltip="{pos:\'top\'}" title="Year to day in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">YTD</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
-            '<i class="sprite sprite-icon-d"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="Y1|D1" data-uk-tooltip="{pos:\'top\'}" title="1 year in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">1Y</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D7" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
-            '<i class="sprite sprite-icon-w"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="Y5|D1" data-uk-tooltip="{pos:\'top\'}" title="5 years in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">5Y</span>' +
         '</div>' +
 
         '<i class="sprite sprite-icon-divider"></i>' +
@@ -20557,6 +20592,11 @@ IguanaChart = function (options) {
                 case "Y":
                     date_from.setFullYear(date_to.getFullYear() - +(periodRegs[2]));
                     break;
+                case 'YTD':
+                    date_from.setDate(1);
+                    date_from.setMonth(0);
+                    date_from.setFullYear(date_to.getFullYear())
+                    break;
             }
         } else {
             period = "D1";
@@ -20871,6 +20911,22 @@ IguanaChart = function (options) {
 
         this.userSettings.chartSettings.contextSettings.lineWidth = width;
     };
+
+    /**
+     *
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
+     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     */
+    this.setDateRange = function (period, interval) {
+        var range = iChart.periodToDateRange(period);
+
+        this.dataSource.dataSettings.date_from = range[0];
+        this.dataSource.dataSettings.date_to = range[1];
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
+
+        this.updateForce();
+    }
 
     if(typeof jNTChartTrading != 'undefined') {
         /*//РИСОВАНИЕ ПРИКАЗОВ*/
@@ -21668,7 +21724,9 @@ IguanaChart = function (options) {
         };
 
         this.uiSet_dataInterval = function (value) {
-            this.chart.setInterval(value);
+            var params = value.split('|');
+
+            this.chart.setDateRange(params[0], params[1]);
             this.setUiStateForDataInterval(value);
         };
 

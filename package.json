@@ -1,10 +1,9 @@
 {
   "name": "iguanachart",
-  "version": "1.0.6",
+  "version": "1.1.6",
   "description": "",
   "main": "dist/iguanachart.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "example": "./node_modules/http-server/bin/http-server -a127.0.0.1 -p8000",
     "build": "gulp && node ./minify.js",
     "dev": "gulp dev",
@@ -23,10 +22,12 @@
     "uikit": "^2.27.4"
   },
   "devDependencies": {
+    "@node-minify/core": "^8.0.6",
+    "@node-minify/cssnano": "^8.0.6",
+    "@node-minify/uglify-js": "^8.0.6",
     "gulp": "4.0.2",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.4.0",
-    "gulp-webserver": "0.9.1",
-    "node-minify": "^1.3.9"
+    "gulp-webserver": "0.9.1"
   }
 }
