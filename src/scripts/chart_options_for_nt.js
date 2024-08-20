@@ -97,8 +97,8 @@ var iChartDataSource = {
                     clearTimeout(_chart.timers.loading);
                     _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
                     _chart.viewData.chart.setSelectionMode("pan");
-                    if (data.success == false) {
-                        console.log("ERROR:", data.d.Message)
+                    if (data.success === false) {
+                        _chart.wrapper.trigger("iguanaChartEvents", ["chartDataError", data]);
                     }
                     if (data) {
                         callback(data)
@@ -119,8 +119,6 @@ var iChartDataSource = {
                     _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
                     _chart.updateUnlocked = true
                     _chart.fixViewport();
-                    _chart.errorMessages();
-
                 }
             }, url: iChartDataSource.getUrl(params)
         })
