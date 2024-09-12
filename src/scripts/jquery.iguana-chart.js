@@ -112,7 +112,7 @@
                                 '<div class="uk-modal-header">' + _t('3101', "Индикаторы") + '</div>' +
                                 '<div class="js-chartTADialogContainer"></div>' +
                                 '<div class="uk-modal-footer">' +
-                                '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
+                                '<div class="uk-flex uk-flex-middle uk-flex-space-between">' +
                                     '<div class="js-indicator-add uk-button uk-button-small uk-button-success">' +
                                         _t('15460', 'Добавить индикатор') +
                                     '</div>' +
