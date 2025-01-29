@@ -15,9 +15,11 @@
         /// <param name="chart" type="iChart.Charting.Chart">Chart this layer belongs to.</param>
         /// <field name="canvas" type="HTMLCanvasElement">Canvas used for drawing elements of this layer.</field>
         /// <field name="chart" type="iChart.Charting.Chart">Chart this layer belongs to.</field>
+        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": _t("87551", "Удалить инструмент") }).hide().appendTo(chart.container);
+        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = ''><span class='elementSettingsHolder' style='position: relative'></span></span>").hide();
+        this.$settingsButton.attr('title', _t("87552", "Свойства"));
+        this.$settingsButton.appendTo(chart.container);
 
-        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": "Удалить инструмент" }).hide().appendTo(chart.container);
-        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = '' title = 'Свойства'><span class='elementSettingsHolder' style='position: relative'></span></span>").hide().appendTo(chart.container);
         this.canvas = null;
         this.chart = chart;
         this.defaultCursor = "default";

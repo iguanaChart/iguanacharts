@@ -645,7 +645,9 @@
         };
 
         this.uiSet_dataInterval = function (value) {
-            this.chart.setInterval(value);
+            var params = value.split('|');
+
+            this.chart.setDateRange(params[0], params[1]);
             this.setUiStateForDataInterval(value);
         };
 

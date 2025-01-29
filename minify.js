@@ -2,12 +2,14 @@
  * Created by gti on 29.07.16.
  */
 
-var compressor = require('node-minify');
+const minify = require('@node-minify/core');
+const cssnano = require('@node-minify/cssnano');
+const uglifyjs = require('@node-minify/uglify-js');
 
-new compressor.minify({
-    type: 'yui-css',
-    fileIn: './dist/iguanachart.css',
-    fileOut: './dist/iguanachart.min.css',
+minify({
+    compressor: cssnano,
+    input: './dist/iguanachart.css',
+    output: './dist/iguanachart.min.css',
     callback: function(err, min){
         if(err) {
             console.log(err);
@@ -17,10 +19,10 @@ new compressor.minify({
     }
 });
 
-new compressor.minify({
-    type: 'uglifyjs',
-    fileIn: './dist/iguanachart.js',
-    fileOut: './dist/iguanachart.min.js',
+minify({
+    compressor: uglifyjs,
+    input: './dist/iguanachart.js',
+    output: './dist/iguanachart.min.js',
     callback: function(err, min){
         if(err) {
             console.log(err);

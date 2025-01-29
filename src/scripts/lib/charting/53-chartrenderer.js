@@ -161,8 +161,8 @@
         } else if ( this.labelValue != null && labelValue > this.labelValue )  {
             var color = "#7cb342";
             this.labelColor = "#7cb342";
-        } else if(this.labelColor) {
-            var color = this.labelColor;
+        } else if(this.chart.chartOptions.labelColor) {
+            var color = this.chart.chartOptions.labelColor;
         } else {
             var color = "#333";
         }
@@ -358,7 +358,7 @@
                 }
                 else if (series.valuesPerPoint == 2)
                 {
-                    labels = [[1, "Мин: "], [0, "Макс: "]];
+                    labels = [[1, _t("87553", "Мин: ")], [0, _t("87554", "Макс: ")]];
                 }
                 else
                 {

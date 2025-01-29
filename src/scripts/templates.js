@@ -220,28 +220,28 @@ $.templates("iChart_topToolBarTmpl", '' +
 
         '<div class="uk-flex uk-flex-left">' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I1" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
-            '<i class="sprite sprite-icon-1m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1|I1" data-uk-tooltip="{pos:\'top\'}" title="2 days in 1 minute intervals">' +
+            '<span class="tm-tool-bar-date-range">1m</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I5" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
-            '<i class="sprite sprite-icon-5m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D3|I5" data-uk-tooltip="{pos:\'top\'}" title="3 days in 5 minutes intervals">' +
+            '<span class="tm-tool-bar-date-range">5m</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I15" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
-            '<i class="sprite sprite-icon-15m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="M3|H1" data-uk-tooltip="{pos:\'top\'}" title="3 months in 1 hour intervals">' +
+            '<span class="tm-tool-bar-date-range">3M</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="H1" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
-            '<i class="sprite sprite-icon-h"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="YTD|D1" data-uk-tooltip="{pos:\'top\'}" title="Year to day in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">YTD</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
-            '<i class="sprite sprite-icon-d"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="Y1|D1" data-uk-tooltip="{pos:\'top\'}" title="1 year in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">1Y</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D7" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
-            '<i class="sprite sprite-icon-w"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="Y5|D1" data-uk-tooltip="{pos:\'top\'}" title="5 years in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">5Y</span>' +
         '</div>' +
 
         '<i class="sprite sprite-icon-divider"></i>' +
@@ -414,6 +414,17 @@ $.templates("themeConfigOptionsTmpl", '' +
                         '<div class="menuHolder" style="display: none; padding: 10px;">' +
                             '<div class="js-colorPalette" data-option="labelColor"></div>' +
                             '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="labelColor" data-element="canvas" value="{{: chartOptions.labelColor }}" size="10"/>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="uk-width-3-4">' +
+                    _t('87207', 'Цвет текста лейблов') +
+                '</div>' +
+                '<div class="uk-width-1-4">' +
+                    '<div class="js-colorSelector" data-option="labelFontColor" style="background-color: {{: chartOptions.labelFontColor }}">' +
+                        '<div class="menuHolder" style="display: none; padding: 10px;">' +
+                            '<div class="js-colorPalette" data-option="labelFontColor"></div>' +
+                            '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="labelFontColor" data-element="canvas" value="{{: chartOptions.labelFontColor }}" size="10"/>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +

@@ -12,6 +12,7 @@
         this.backgroundColor = '#ffffff';
         this.axisColor =  '#999999';
         this.labelColor =  '#595959';
+        this.labelFontColor =  '#ffffff';
         this.labelFont =  "10px Arial";
         this.showLabels =  true;
         this.gridColor =  '#cccccc';
@@ -127,6 +128,7 @@
         'axisColor',
         'showAxes',
         'labelColor',
+        'labelFontColor',
         'gridColor',
         'gridStyle',
         'watermarkColor',
@@ -182,7 +184,7 @@
                 this['_chartType'] = data;
             } else {
                 this['_chartType'] = 'Candlestick';
-                console.warn("ChartOptions: Недопустимое значение chartType:'%s'. Установлен по умлчанию: 'Candlestick'", data);
+                console.warn("ChartOptions: Invalid value chartType:'%s'. Set to default: 'Candlestick'", data);
             }
         }
     });
@@ -197,7 +199,7 @@
                 this['_showVolume'] = data;
             } else {
                 this['_showVolume'] = 'hidden';
-                console.warn("ChartOptions: Недопустимое значение showVolume. Установлен по умлчанию: 'hidden'");
+                console.warn("ChartOptions: Invalid value showVolume. Set to default: 'hidden'");
             }
         }
     });
@@ -212,7 +214,7 @@
                 this['_gridStyle'] = data;
             } else {
                 this['_gridStyle'] = 'dashed';
-                console.warn("ChartOptions: Недопустимое значение gridStyle. Установлен по умлчанию: 'dashed'");
+                console.warn("ChartOptions: Invalid value gridStyle. Set to default: 'dashed'");
             }
         }
     });

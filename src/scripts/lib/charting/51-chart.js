@@ -866,7 +866,9 @@
             date_from.setMinutes(0);
             date_from.setSeconds(0);
 
-            request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+            if (!force) {
+                request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+            }
         }
 
         delete request.end;
@@ -962,7 +964,7 @@
         {
             if (typeof FlashCanvas === "undefined")
             {
-                alert("Ваш браузер не поддерживается.");
+                alert(_t("87550", "Ваш браузер не поддерживается."));
                 return;
             }
 

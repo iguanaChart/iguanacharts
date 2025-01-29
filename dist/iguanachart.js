@@ -1129,7 +1129,7 @@ function intervalNames(interval) {
         case "I15":
             return _t('2075', "15 минутный");
         case "H1":
-            return _t('2076', "Часовик");
+            return _t('', "Часовой");
         case "D1":
             return _t('2077', "Дневной");
         case "D7":
@@ -1869,6 +1869,39 @@ function intervalShortNames(interval) {
         });
     }
 
+    w.iChart.periodToDateRange = function periodToDateRange(period) {
+        var dateTo = new Date();
+        var dateFrom = new Date();
+
+        var periodRegs = period.match(/([D,M,Y])(\d+)|YTD/);
+
+        if (periodRegs) {
+            if (periodRegs[0] === 'YTD') {
+                dateFrom.setDate(1);
+                dateFrom.setMonth(0);
+            } else {
+                switch (periodRegs[1]) {
+                    case "D":
+                        dateFrom.setDate(dateTo.getDate() - +(periodRegs[2]));
+                        break;
+                    case "M":
+                        dateFrom.setMonth(dateTo.getMonth() - +(periodRegs[2]));
+                        break;
+                    case "Y":
+                        dateFrom.setFullYear(dateTo.getFullYear() - +(periodRegs[2]));
+                        break;
+                }
+            }
+        }
+
+        dateTo.setDate(dateTo.getDate() + 1);
+
+        dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
+        dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
+
+        return [dateFrom, dateTo];
+    }
+
 })(window);
 
 /**
@@ -2445,7 +2478,7 @@ iChart.indicators = {
         {
             if (typeof FlashCanvas === "undefined")
             {
-                alert("Ваш браузер не поддерживается.");
+                alert(_t("87550", "Ваш браузер не поддерживается."));
                 return null;
             }
 
@@ -2992,7 +3025,7 @@ iChart.indicators = {
                     ctx.font = 'normal ' + 10 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                     ctx.textAlign = "left";
                     ctx.textBaseline = "top";
-                    ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                    ctx.fillStyle = this.chart.chartOptions.labelFontColor;
                     ctx.fillText(yValue, x + 8, y - 6);
                 }
             }
@@ -3001,6 +3034,7 @@ iChart.indicators = {
 
             var dateTime = new Date(1000 * area.xSeries[this.xIndex]);
 
+            //label ось X
             if(area_i == 0 && !area.isLayer) {
                 var dateLabel = iChart.formatDateTime(dateTime, this.chart.dateFormat);
                 var dateLabelArr = dateLabel.split("\n");
@@ -3008,7 +3042,7 @@ iChart.indicators = {
                 var width = ctx.measureText(dateLabelArr[0] + " " + dateLabelArr[1]).width;
                 ctx.fillStyle = this.chart.chartOptions.labelColor;
                 ctx.fillRect(this.xPoint - Math.round(width / 2) - 4, area.offset.top + area.innerHeight + 2, width + 4, 12);
-                ctx.fillStyle = this.chart.chartOptions.backgroundColor;
+                ctx.fillStyle = this.chart.chartOptions.labelFontColor;
                 ctx.font = 'normal ' + 8 + 'px ' + 'Verdana,Tahoma,Geneva,Arial,Sans-serif';
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
@@ -3268,8 +3302,11 @@ iChart.indicators = {
 
     iChart.Charting.ChartAreaLayer = function (chart)
     {
-        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": "Удалить инструмент" }).hide().appendTo(chart.container);
-        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = '' title = 'Свойства'><span class='elementSettingsHolder' style='position: relative'></span></span>").hide().appendTo(chart.container);
+        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": _t("87551", "Удалить инструмент") }).hide().appendTo(chart.container);
+        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = ''><span class='elementSettingsHolder' style='position: relative'></span></span>").hide();
+        this.$settingsButton.attr('title', _t("87552", "Свойства"));
+        this.$settingsButton.appendTo(chart.container);
+
         this.canvas = null;
         this.chart = chart;
         this.defaultCursor = "default";
@@ -4206,9 +4243,11 @@ iChart.indicators = {
         /// <param name="chart" type="iChart.Charting.Chart">Chart this layer belongs to.</param>
         /// <field name="canvas" type="HTMLCanvasElement">Canvas used for drawing elements of this layer.</field>
         /// <field name="chart" type="iChart.Charting.Chart">Chart this layer belongs to.</field>
+        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": _t("87551", "Удалить инструмент") }).hide().appendTo(chart.container);
+        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = ''><span class='elementSettingsHolder' style='position: relative'></span></span>").hide();
+        this.$settingsButton.attr('title', _t("87552", "Свойства"));
+        this.$settingsButton.appendTo(chart.container);
 
-        this.$deleteButton = $("<span/>", { "class": "m-chart-instrument-delete", "text": "✕", "title": "Удалить инструмент" }).hide().appendTo(chart.container);
-        this.$settingsButton = $("<span class ='m-chart-instrument-settings' href = '#' text = '' title = 'Свойства'><span class='elementSettingsHolder' style='position: relative'></span></span>").hide().appendTo(chart.container);
         this.canvas = null;
         this.chart = chart;
         this.defaultCursor = "default";
@@ -12710,6 +12749,7 @@ function getTradeLabelText(trade, price) {
         this.backgroundColor = '#ffffff';
         this.axisColor =  '#999999';
         this.labelColor =  '#595959';
+        this.labelFontColor =  '#ffffff';
         this.labelFont =  "10px Arial";
         this.showLabels =  true;
         this.gridColor =  '#cccccc';
@@ -12825,6 +12865,7 @@ function getTradeLabelText(trade, price) {
         'axisColor',
         'showAxes',
         'labelColor',
+        'labelFontColor',
         'gridColor',
         'gridStyle',
         'watermarkColor',
@@ -12880,7 +12921,7 @@ function getTradeLabelText(trade, price) {
                 this['_chartType'] = data;
             } else {
                 this['_chartType'] = 'Candlestick';
-                console.warn("ChartOptions: Недопустимое значение chartType:'%s'. Установлен по умлчанию: 'Candlestick'", data);
+                console.warn("ChartOptions: Invalid value chartType:'%s'. Set to default: 'Candlestick'", data);
             }
         }
     });
@@ -12895,7 +12936,7 @@ function getTradeLabelText(trade, price) {
                 this['_showVolume'] = data;
             } else {
                 this['_showVolume'] = 'hidden';
-                console.warn("ChartOptions: Недопустимое значение showVolume. Установлен по умлчанию: 'hidden'");
+                console.warn("ChartOptions: Invalid value showVolume. Set to default: 'hidden'");
             }
         }
     });
@@ -12910,7 +12951,7 @@ function getTradeLabelText(trade, price) {
                 this['_gridStyle'] = data;
             } else {
                 this['_gridStyle'] = 'dashed';
-                console.warn("ChartOptions: Недопустимое значение gridStyle. Установлен по умлчанию: 'dashed'");
+                console.warn("ChartOptions: Invalid value gridStyle. Set to default: 'dashed'");
             }
         }
     });
@@ -13784,7 +13825,9 @@ function getTradeLabelText(trade, price) {
             date_from.setMinutes(0);
             date_from.setSeconds(0);
 
-            request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+            if (!force) {
+                request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+            }
         }
 
         delete request.end;
@@ -13880,7 +13923,7 @@ function getTradeLabelText(trade, price) {
         {
             if (typeof FlashCanvas === "undefined")
             {
-                alert("Ваш браузер не поддерживается.");
+                alert(_t("87550", "Ваш браузер не поддерживается."));
                 return;
             }
 
@@ -16164,7 +16207,7 @@ function getTradeLabelText(trade, price) {
 
         if (!this.$closeButton)
         {
-            this.$closeButton = $("<button/>", { "class": "m-chart-area-close", "text": "×", "title": "Скрыть" }).appendTo(this.chart.container);
+            this.$closeButton = $("<button/>", { "class": "m-chart-area-close", "text": "×", "title": _t("5428", "Скрыть") }).appendTo(this.chart.container);
             this.$closeButton.on("click", $.proxy(this.onClose, this));
         }
 
@@ -16470,8 +16513,8 @@ function getTradeLabelText(trade, price) {
         } else if ( this.labelValue != null && labelValue > this.labelValue )  {
             var color = "#7cb342";
             this.labelColor = "#7cb342";
-        } else if(this.labelColor) {
-            var color = this.labelColor;
+        } else if(this.chart.chartOptions.labelColor) {
+            var color = this.chart.chartOptions.labelColor;
         } else {
             var color = "#333";
         }
@@ -16667,7 +16710,7 @@ function getTradeLabelText(trade, price) {
                 }
                 else if (series.valuesPerPoint == 2)
                 {
-                    labels = [[1, "Мин: "], [0, "Макс: "]];
+                    labels = [[1, _t("87553", "Мин: ")], [0, _t("87554", "Макс: ")]];
                 }
                 else
                 {
@@ -18405,28 +18448,28 @@ $.templates("iChart_topToolBarTmpl", '' +
 
         '<div class="uk-flex uk-flex-left">' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I1" data-uk-tooltip="{pos:\'top\'}" title="1 minute > day">' +
-            '<i class="sprite sprite-icon-1m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1|I1" data-uk-tooltip="{pos:\'top\'}" title="2 days in 1 minute intervals">' +
+            '<span class="tm-tool-bar-date-range">1m</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I5" data-uk-tooltip="{pos:\'top\'}" title="5 minutes > 3 days">' +
-            '<i class="sprite sprite-icon-5m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D3|I5" data-uk-tooltip="{pos:\'top\'}" title="3 days in 5 minutes intervals">' +
+            '<span class="tm-tool-bar-date-range">5m</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="I15" data-uk-tooltip="{pos:\'top\'}" title="15 minutes > week">' +
-            '<i class="sprite sprite-icon-15m"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="M3|H1" data-uk-tooltip="{pos:\'top\'}" title="3 months in 1 hour intervals">' +
+            '<span class="tm-tool-bar-date-range">3M</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="H1" data-uk-tooltip="{pos:\'top\'}" title="Hour">' +
-            '<i class="sprite sprite-icon-h"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="YTD|D1" data-uk-tooltip="{pos:\'top\'}" title="Year to day in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">YTD</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D1" data-uk-tooltip="{pos:\'top\'}" title="Day">' +
-            '<i class="sprite sprite-icon-d"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="Y1|D1" data-uk-tooltip="{pos:\'top\'}" title="1 year in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">1Y</span>' +
         '</div>' +
 
-        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="D7" data-uk-tooltip="{pos:\'top\'}" title="Week">' +
-            '<i class="sprite sprite-icon-w"></i>' +
+        '<div class="tm-graph-button uk-flex uk-flex-center uk-flex-middle js-chart-ui-control" data-property="dataInterval" data-value="Y5|D1" data-uk-tooltip="{pos:\'top\'}" title="5 years in 1 day intervals">' +
+            '<span class="tm-tool-bar-date-range">5Y</span>' +
         '</div>' +
 
         '<i class="sprite sprite-icon-divider"></i>' +
@@ -18599,6 +18642,17 @@ $.templates("themeConfigOptionsTmpl", '' +
                         '<div class="menuHolder" style="display: none; padding: 10px;">' +
                             '<div class="js-colorPalette" data-option="labelColor"></div>' +
                             '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="labelColor" data-element="canvas" value="{{: chartOptions.labelColor }}" size="10"/>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="uk-width-3-4">' +
+                    _t('87207', 'Цвет текста лейблов') +
+                '</div>' +
+                '<div class="uk-width-1-4">' +
+                    '<div class="js-colorSelector" data-option="labelFontColor" style="background-color: {{: chartOptions.labelFontColor }}">' +
+                        '<div class="menuHolder" style="display: none; padding: 10px;">' +
+                            '<div class="js-colorPalette" data-option="labelFontColor"></div>' +
+                            '<input type="hidden" class="js-colorPicker" data-opacity="1.0" data-option="labelFontColor" data-element="canvas" value="{{: chartOptions.labelFontColor }}" size="10"/>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -20538,6 +20592,11 @@ IguanaChart = function (options) {
                 case "Y":
                     date_from.setFullYear(date_to.getFullYear() - +(periodRegs[2]));
                     break;
+                case 'YTD':
+                    date_from.setDate(1);
+                    date_from.setMonth(0);
+                    date_from.setFullYear(date_to.getFullYear())
+                    break;
             }
         } else {
             period = "D1";
@@ -20853,6 +20912,22 @@ IguanaChart = function (options) {
         this.userSettings.chartSettings.contextSettings.lineWidth = width;
     };
 
+    /**
+     *
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
+     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     */
+    this.setDateRange = function (period, interval) {
+        var range = iChart.periodToDateRange(period);
+
+        this.dataSource.dataSettings.date_from = range[0];
+        this.dataSource.dataSettings.date_to = range[1];
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
+
+        this.updateForce();
+    }
+
     if(typeof jNTChartTrading != 'undefined') {
         /*//РИСОВАНИЕ ПРИКАЗОВ*/
 
@@ -20901,7 +20976,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -20914,7 +20989,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -20928,7 +21003,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -20939,7 +21014,7 @@ IguanaChart = function (options) {
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "line",
             onCancel: function() {console.log(this);}
         };
@@ -21649,7 +21724,9 @@ IguanaChart = function (options) {
         };
 
         this.uiSet_dataInterval = function (value) {
-            this.chart.setInterval(value);
+            var params = value.split('|');
+
+            this.chart.setDateRange(params[0], params[1]);
             this.setUiStateForDataInterval(value);
         };
 
@@ -21944,6 +22021,7 @@ IguanaChart = function (options) {
             axisColor: '#999999',
             showAxes: false,
             labelColor: '#595959',
+            labelFontColor: '#ffffff',
             gridColor: '#cccccc',
             gridStyle: 'dashed', // [dashed|solid]
             watermarkColor: 'rgba(238,238,238,1)',
@@ -21966,7 +22044,7 @@ IguanaChart = function (options) {
             volumeStyle: 'rgba(119, 119, 119, 0.3)',
             scrollerOverlayColor: 'rgba(0,0,0, 0.1)',
             scrollerHandlerColor: 'rgba(255,255,255, 1)',
-            shadowColor: '#999999'
+            shadowColor: '#999999',
         }
     },{
         name: "Dark",
@@ -21974,7 +22052,8 @@ IguanaChart = function (options) {
             backgroundColor:'#1e222d',
             axisColor: '#2a2e39',
             showAxes: false,
-            labelColor: '#787b86',
+            labelColor: '#595959',
+            labelFontColor: '#ffffff',
             gridColor: '#2a2e39',
             gridStyle: 'dashed', // [dashed|solid]
             watermarkColor: '#2a2e39',
@@ -23383,12 +23462,13 @@ TA.ADX.calculate = function (startIdx, endIdx, dataShape, settings, dontFillTota
 
 	//Приведение возврщаемого массива к общей длине
 	if(!dontFillTotalArray) {
-		if(outReal.length >= dataShape.length)
-			throw 'Ошибка расчета ADX';
-		else if(outReal.length <= dataShape.length)
-			while(outReal.length != dataShape.length){
+		if (outReal.length >= dataShape.length) {
+			throw _t("", "Ошибка расчета ADX");
+		} else if (outReal.length <= dataShape.length) {
+			while (outReal.length != dataShape.length) {
 				outReal.unshift(0);
 			}
+		}
 	}
 	
 	return outReal;

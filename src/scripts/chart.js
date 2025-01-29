@@ -1451,6 +1451,11 @@
                 case "Y":
                     date_from.setFullYear(date_to.getFullYear() - +(periodRegs[2]));
                     break;
+                case 'YTD':
+                    date_from.setDate(1);
+                    date_from.setMonth(0);
+                    date_from.setFullYear(date_to.getFullYear())
+                    break;
             }
         } else {
             period = "D1";
@@ -1766,6 +1771,22 @@
         this.userSettings.chartSettings.contextSettings.lineWidth = width;
     };
 
+    /**
+     *
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
+     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     */
+    this.setDateRange = function (period, interval) {
+        var range = iChart.periodToDateRange(period);
+
+        this.dataSource.dataSettings.date_from = range[0];
+        this.dataSource.dataSettings.date_to = range[1];
+        this.dataSource.dataSettings.interval = interval;
+        this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
+
+        this.updateForce();
+    }
+
     if(typeof jNTChartTrading != 'undefined') {
         /*//РИСОВАНИЕ ПРИКАЗОВ*/
 
@@ -1814,7 +1835,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -1827,7 +1848,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -1841,7 +1862,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "trend",
             onCancel: function() {console.log(this);}
         };
@@ -1852,7 +1873,7 @@
             fillStyle: '#7cb342',
             strokeStyle: '#36BDF4',
             textColor: '#ffffff',
-            text: 'Трендовый приказ',
+            text: _t("87549", "Трендовый приказ"),
             mode: "line",
             onCancel: function() {console.log(this);}
         };
