@@ -1778,8 +1778,8 @@
 
     /**
      *
-     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
-     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'|'MAX'} period
+     * @param {'I1'|'I5'|'H1'|'D1'|'D7'} interval
      */
     this.setDateRange = function (period, interval) {
         var range = iChart.periodToDateRange(period);
