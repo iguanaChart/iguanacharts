@@ -1,6 +1,6 @@
 {
   "name": "iguanachart",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "",
   "main": "dist/iguanachart.js",
   "scripts": {
@@ -29,5 +29,6 @@
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.4.0",
     "gulp-webserver": "0.9.1"
-  }
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
