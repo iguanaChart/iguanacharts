@@ -750,6 +750,11 @@
                     validParams = false;
                 }
                 else {
+                    // Не все индикаторы имеют настройки и в этом случае не будет существовать свойство params
+                    if (!indicators[index].params) {
+                        indicators[index].params = {};
+                    }
+
                     indicators[index].params[param.name] = param.value;
                 }
             });
