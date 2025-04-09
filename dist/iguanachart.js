@@ -19477,7 +19477,7 @@ IguanaChart = function (options) {
             _this.viewData.chart.chartOptions.showVolume = state ? "inside" : "hidden";
         } else {
             _this.viewData.chart.chartOptions.showVolume = (state == "inside" || state == "outside") ? state :
-                _this.viewData.chart.chartOptions.showVolume === "inside" || _this.viewData.chart.chartOptions.showVolume === "outside" ? "hidden" : "inside";
+            _this.viewData.chart.chartOptions.showVolume === "inside" || _this.viewData.chart.chartOptions.showVolume === "outside" ? "hidden" : "inside";
         }
 
         if (_this.viewData.chart && _this.viewData.chart.areas)
@@ -19715,19 +19715,19 @@ IguanaChart = function (options) {
             }
 
             var indForm =
-                '<div style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)" class="js-chart-indiacator-block tm-pad-large js-chartTADialog-i' + id + '-settings" id="iChart-i' + id + '-settings">' +
+            '<div style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)" class="js-chart-indiacator-block tm-pad-large js-chartTADialog-i' + id + '-settings" id="iChart-i' + id + '-settings">' +
                 '<div class="uk-panel">' +
-                '<div class="uk-flex uk-flex-middle uk-flex-space-between uk-margin-small-bottom">' +
-                '<div class="uk-h4">' + _t('12834','Индикатор') + ' ' + (id+1) + '</div>' +
-                '<div class="js-indicator-remove uk-icon-close uk-panel-hover uk-badge uk-button uk-button-mini"></div>' +
+                    '<div class="uk-flex uk-flex-middle uk-flex-space-between uk-margin-small-bottom">' +
+                        '<div class="uk-h4">' + _t('12834','Индикатор') + ' ' + (id+1) + '</div>' +
+                        '<div class="js-indicator-remove uk-icon-close uk-panel-hover uk-badge uk-button uk-button-mini"></div>' +
+                    '</div>' +
+                    '<div class="uk-form">' +
+                        '<select name="i' + id + '" class="indicatorsSelect">' +
+                        indicatorOptions +
+                        '</select>' +
+                    '</div>' +
                 '</div>' +
-                '<div class="uk-form">' +
-                '<select name="i' + id + '" class="indicatorsSelect">' +
-                indicatorOptions +
-                '</select>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
+            '</div>';
 
             this.uiGraphIndicatorsWindow2.element.find(".js-chartTADialogContainer").append(indForm);
             $root = this.uiGraphIndicatorsWindow2.element.find(".js-chartTADialog-i" + id + "-settings");
