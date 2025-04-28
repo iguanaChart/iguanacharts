@@ -19071,8 +19071,7 @@ var iChartDataSource = {
                     _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
                     _chart.updateUnlocked = true
                     _chart.fixViewport();
-                    _chart.errorMessages();
-
+                    _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
                 }
             }, url: iChartDataSource.getUrl(params)
         })
@@ -20427,14 +20426,6 @@ IguanaChart = function (options) {
                 }
             }
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
-        }
-    };
-    this.errorMessages = function () {
-        var text = _t('18104', 'Нет данных');
-        if (typeof $.jGrowl != 'function') {
-            alert(text);
-        } else {
-            $.jGrowl(text, {theme: '_red'});
         }
     };
     this.setDatePeriod = function (interval, start, end){
