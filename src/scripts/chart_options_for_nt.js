@@ -122,8 +122,7 @@ var iChartDataSource = {
                     _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
                     _chart.updateUnlocked = true
                     _chart.fixViewport();
-                    _chart.errorMessages();
-
+                    _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
                 }
             }, url: iChartDataSource.getUrl(params)
         })
