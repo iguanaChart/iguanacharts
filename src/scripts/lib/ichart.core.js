@@ -1031,7 +1031,7 @@ function intervalShortNames(interval) {
 
         dateTo.setDate(dateTo.getDate() + 1);
 
-        dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
+        dateFrom = period === 'MAX' ? null : this.formatDateTime(dateFrom, "dd.MM.yyyy");
         dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
 
         return [dateFrom, dateTo];

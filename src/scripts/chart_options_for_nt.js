@@ -38,7 +38,10 @@ var iChartDataSource = {
         };
 
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
-        cachedParams['hash'] = cachedParams.id.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
+        cachedParams['hash'] = cachedParams.id.toString()
+            + (cachedParams.date_from ? Date.parse(cachedParams.date_from).toString() : '')
+            + Date.parse(cachedParams.date_to).toString()
+            + JSON.stringify(cachedParams).hashCode();
 
         return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
     },

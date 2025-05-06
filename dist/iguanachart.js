@@ -1896,7 +1896,7 @@ function intervalShortNames(interval) {
 
         dateTo.setDate(dateTo.getDate() + 1);
 
-        dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
+        dateFrom = period === 'MAX' ? null : this.formatDateTime(dateFrom, "dd.MM.yyyy");
         dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
 
         return [dateFrom, dateTo];
@@ -13784,49 +13784,69 @@ function getTradeLabelText(trade, price) {
             request.start = request.end;
 
             var date_to = iChart.parseDateTime(request.date_to);
-            var date_from = iChart.parseDateTime(request.date_from);
+            var date_from = request.date_from
+                ? iChart.parseDateTime(request.date_from)
+                : null;
 
-            if(request.timeframe == 1440) {
-                date_to.setFullYear(date_to.getFullYear() - 5);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setMonth(0);
-                date_from.setDate(0);
+            if([10080, 1440].indexOf(request.timeframe) !== -1) {
                 request.count = -1;
+
+                if (date_from) {
+                    date_to.setFullYear(date_to.getFullYear() - 5);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setMonth(0);
+                    date_from.setDate(0);
+                }
             } else if(request.timeframe == 60) {
-                date_to.setMonth(date_to.getMonth() - 3);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setMonth(date_from.getMonth() - 1);
-                date_from.setDate(0);
                 request.count = -10;
+
+                if (date_from) {
+                    date_to.setMonth(date_to.getMonth() - 3);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setMonth(date_from.getMonth() - 1);
+                    date_from.setDate(0);
+                }
             } else if(request.timeframe == 15) {
-                date_to.setMonth(date_to.getMonth() - 1);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setDate(0);
                 request.count = -10;
+
+                if (date_from) {
+                    date_to.setMonth(date_to.getMonth() - 1);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setDate(0);
+                }
             } else if(request.timeframe == 5) {
-                date_to.setDate(date_to.getDate() - 14);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setHours(0);
-                date_from.setMinutes(0);
-                date_from.setSeconds(0);
-                date_from.setDate(date_from.getDate() - date_from.getDay());
                 request.count = -100;
+
+                if (date_from) {
+                    date_to.setDate(date_to.getDate() - 14);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setHours(0);
+                    date_from.setMinutes(0);
+                    date_from.setSeconds(0);
+                    date_from.setDate(date_from.getDate() - date_from.getDay());
+                }
             } else if(request.timeframe == 1) {
-                date_to.setDate(date_to.getDate() - 5);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setHours(0);
-                date_from.setMinutes(0);
-                date_from.setSeconds(0);
-                date_from.setDate(date_from.getDate() - 1);
                 request.count = -200;
+
+                if (date_from) {
+                    date_to.setDate(date_to.getDate() - 5);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setHours(0);
+                    date_from.setMinutes(0);
+                    date_from.setSeconds(0);
+                    date_from.setDate(date_from.getDate() - 1);
+                }
             }
 
-            date_from.setHours(0);
-            date_from.setMinutes(0);
-            date_from.setSeconds(0);
+            if (date_from) {
+                date_from.setHours(0);
+                date_from.setMinutes(0);
+                date_from.setSeconds(0);
 
-            if (!force) {
-                request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+
+                if (!force) {
+                    request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+                }
             }
         }
 
@@ -18990,7 +19010,10 @@ var iChartDataSource = {
         };
 
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
-        cachedParams['hash'] = cachedParams.id.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
+        cachedParams['hash'] = cachedParams.id.toString()
+            + (cachedParams.date_from ? Date.parse(cachedParams.date_from).toString() : '')
+            + Date.parse(cachedParams.date_to).toString()
+            + JSON.stringify(cachedParams).hashCode();
 
         return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
     },
@@ -20910,8 +20933,8 @@ IguanaChart = function (options) {
 
     /**
      *
-     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
-     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'|'MAX'} period
+     * @param {'I1'|'I5'|'H1'|'D1'|'D7'} interval
      */
     this.setDateRange = function (period, interval) {
         var range = iChart.periodToDateRange(period);
