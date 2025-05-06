@@ -21,7 +21,7 @@ var iChartDataSource = {
     host: "",
     url: "/api/get-hloc?",
 
-    getUrl: function (params) {
+    getUrl: function (params, callback) {
         var cachedParams = {
             'id': params.id,
             'compareIds': params.compareIds,
@@ -43,7 +43,14 @@ var iChartDataSource = {
             + Date.parse(cachedParams.date_to).toString()
             + JSON.stringify(cachedParams).hashCode();
 
-        return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
+        if (typeof iChartDataSource.url === 'function') {
+            return iChartDataSource.url({
+                host: iChartDataSource.host,
+                params: cachedParams
+            }, callback);
+        }
+
+        callback(iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams));
     },
 
     onRequestCallback: function (callback, params) {
@@ -54,78 +61,85 @@ var iChartDataSource = {
         var $params = params;
         var _this = this;
         var _chart = this.chart;
-        this.chart.wrapper.trigger("iguanaChartEvents", ["chartDataRequest", iChartDataSource.getUrl(params)]);
-        this.chart.ajaxDataRequest = $.ajax({
-            dataType: "text json", error: function (xhr, textStatus, errorThrown) {
-                clearTimeout(_chart.timers.loading);
-                _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
-                _chart.viewData.chart.setSelectionMode("pan");
-                console.log("Error: " + textStatus);
-                callback({success: false})
-            }, success: function (data, textStatus, xhr) {
-                _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReceived", data]);
-                if (data.info && data.info[_chart.dataSource.dataSettings.id]) {
-                    var stockInfo = data.info[_chart.dataSource.dataSettings.id];
-                    _chart.userSettings.currentSecurity = {
-                        id: stockInfo.nt_ticker,
-                        short_name: stockInfo.short_name,
-                        default_ticker: stockInfo.default_ticker,
-                        nt_ticker: stockInfo.nt_ticker,
-                        firstDate: stockInfo.firstDate,
-                        currency: stockInfo.currency,
-                        min_step: stockInfo.min_step
-                    };
-                    _chart.viewData.chart.chartOptions.watermarkText = stockInfo.nt_ticker;
-                    _chart.viewData.chart.chartOptions.watermarkSubText = stockInfo.short_name;
-                    data = _this.dataAdapter(data, $params);
+
+        iChartDataSource.getUrl(params, fetchData);
+        
+        function fetchData(url) {
+            _chart.wrapper.trigger("iguanaChartEvents", ["chartDataRequest", url]);
+            _chart.ajaxDataRequest = $.ajax({
+                dataType: "text json", error: function (xhr, textStatus, errorThrown) {
                     clearTimeout(_chart.timers.loading);
                     _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
                     _chart.viewData.chart.setSelectionMode("pan");
-                    if (data.success == false) {
-                        console.log("ERROR:", data.d.Message)
-                    }
-                    if (data) {
-                        callback(data)
+                    console.log("Error: " + textStatus);
+                    callback({success: false})
+                },
+                success: function (data, textStatus, xhr) {
+                    _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReceived", data]);
+                    if (data.info && data.info[_chart.dataSource.dataSettings.id]) {
+                        var stockInfo = data.info[_chart.dataSource.dataSettings.id];
+                        _chart.userSettings.currentSecurity = {
+                            id: stockInfo.nt_ticker,
+                            short_name: stockInfo.short_name,
+                            default_ticker: stockInfo.default_ticker,
+                            nt_ticker: stockInfo.nt_ticker,
+                            firstDate: stockInfo.firstDate,
+                            currency: stockInfo.currency,
+                            min_step: stockInfo.min_step
+                        };
+                        _chart.viewData.chart.chartOptions.watermarkText = stockInfo.nt_ticker;
+                        _chart.viewData.chart.chartOptions.watermarkSubText = stockInfo.short_name;
+                        data = _this.dataAdapter(data, $params);
+                        clearTimeout(_chart.timers.loading);
+                        _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
+                        _chart.viewData.chart.setSelectionMode("pan");
+                        if (data.success == false) {
+                            console.log("ERROR:", data.d.Message)
+                        }
+                        if (data) {
+                            callback(data)
+                        } else {
+                            callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
+                        }
+                        _chart.response = data.d;
+                        _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReady", data]);
+                        _chart.dataRequestCounter++;
+                        _chart.fixViewport();
+                        _chart.updateUnlocked = true
                     } else {
-                        callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
-                    }
-                    _chart.response = data.d;
-                    _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReady", data]);
-                    _chart.dataRequestCounter++;
-                    _chart.fixViewport();
-                    _chart.updateUnlocked = true
-                } else {
-                    data.hloc = {};
-                    data = _this.dataAdapter(data, $params);
-                    clearTimeout(_chart.timers.loading);
-                    _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
-                    _chart.viewData.chart.setSelectionMode("pan");
-                    if (data.success == false) {
-                        console.log("ERROR:", data.d.Message)
-                    }
-                    if (data) {
-                        callback(data)
-                    } else {
-                        callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
-                    }
-                    _chart.response = data.d;
-                    _chart.dataRequestCounter++;
+                        data.hloc = {};
+                        data = _this.dataAdapter(data, $params);
+                        clearTimeout(_chart.timers.loading);
+                        _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
+                        _chart.viewData.chart.setSelectionMode("pan");
+                        if (data.success == false) {
+                            console.log("ERROR:", data.d.Message)
+                        }
+                        if (data) {
+                            callback(data)
+                        } else {
+                            callback({warnings: [_t("2125", "Ошибка: пустой ответ.")], success: false})
+                        }
+                        _chart.response = data.d;
+                        _chart.dataRequestCounter++;
 
-                    _chart.userSettings.currentSecurity.firstDate = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, false);
-                    _chart.viewData.chart._dataSettings.date_from = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, true);
+                        _chart.userSettings.currentSecurity.firstDate = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, false);
+                        _chart.viewData.chart._dataSettings.date_from = _chart.getDefaultDateFrom(_chart.viewData.chart._dataSettings.interval, true);
 
-                    _chart.setDatePeriod(_chart.viewData.chart._dataSettings.interval,
-                        _chart.viewData.chart._dataSettings.date_from,
-                        _chart.viewData.chart._dataSettings.date_to);
+                        _chart.setDatePeriod(_chart.viewData.chart._dataSettings.interval,
+                            _chart.viewData.chart._dataSettings.date_from,
+                            _chart.viewData.chart._dataSettings.date_to);
 
-                    _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
-                    _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
-                    _chart.updateUnlocked = true
-                    _chart.fixViewport();
-                    _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
-                }
-            }, url: iChartDataSource.getUrl(params)
-        })
+                        _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
+                        _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
+                        _chart.updateUnlocked = true
+                        _chart.fixViewport();
+                        _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
+                    }
+                },
+                url: url
+            });
+        }
     },
     preInitCallback: function(initReadyCallback, params) {
         var _this = this;
