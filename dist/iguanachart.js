@@ -18991,7 +18991,7 @@ var iChartDataSource = {
     },
 
     host: "",
-    url: "/api/get-hloc?",
+    url: "/api",
 
     getUrl: function (params) {
         var cachedParams = {
@@ -19015,7 +19015,17 @@ var iChartDataSource = {
             + Date.parse(cachedParams.date_to).toString()
             + JSON.stringify(cachedParams).hashCode();
 
-        return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
+        var queryParams = {
+            q: JSON.stringify({
+                cmd: 'getHloc',
+                params: cachedParams
+            })
+        };
+
+        return iChartDataSource.host +
+            iChartDataSource.url +
+            '?' +
+            iChart.toQueryString(queryParams);
     },
 
     onRequestCallback: function (callback, params) {
@@ -19028,13 +19038,16 @@ var iChartDataSource = {
         var _chart = this.chart;
         this.chart.wrapper.trigger("iguanaChartEvents", ["chartDataRequest", iChartDataSource.getUrl(params)]);
         this.chart.ajaxDataRequest = $.ajax({
-            dataType: "text json", error: function (xhr, textStatus, errorThrown) {
+            url: iChartDataSource.getUrl(params),
+            dataType: "text json",
+            error: function (xhr, textStatus, errorThrown) {
                 clearTimeout(_chart.timers.loading);
                 _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
                 _chart.viewData.chart.setSelectionMode("pan");
                 console.log("Error: " + textStatus);
                 callback({success: false})
-            }, success: function (data, textStatus, xhr) {
+            },
+            success: function (data, textStatus, xhr) {
                 _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReceived", data]);
                 if (data.info && data.info[_chart.dataSource.dataSettings.id]) {
                     var stockInfo = data.info[_chart.dataSource.dataSettings.id];
@@ -19096,7 +19109,7 @@ var iChartDataSource = {
                     _chart.fixViewport();
                     _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
                 }
-            }, url: iChartDataSource.getUrl(params)
+            }
         })
     },
     preInitCallback: function(initReadyCallback, params) {
