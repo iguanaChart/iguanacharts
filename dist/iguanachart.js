@@ -18266,13 +18266,13 @@ $.templates("iChart_mainTmpl", '' +
                 '<div class="uk-modal-header">' + _t('3101', "Индикаторы") + '</div>' +
                 '<div class="js-chartTADialogContainer"></div>' +
                 '<div class="uk-modal-footer">' +
-                    '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
-                        '<div class="js-indicator-add md-btn md-btn-small md-btn-success">' +
+                    '<div class="uk-flex uk-flex-middle uk-flex-space-between">' +
+                        '<div class="js-indicator-add uk-button uk-button-small uk-button-success">' +
                             _t('15460', 'Добавить индикатор') +
                         '</div>' +
-                    '<div class="md-btn-group"><a class="md-btn md-btn-small md-btn-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
-                        '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
-                        '<a class="md-btn md-btn-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
+                    '<div class="uk-button-group"><a class="uk-button uk-button-small uk-button-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
+                        '<a class="uk-button uk-button-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
+                        '<a class="uk-button uk-button-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
@@ -19751,14 +19751,14 @@ IguanaChart = function (options) {
             }
 
             var indForm =
-            '<div style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)" class="js-chart-indiacator-block tm-pad-large js-chartTADialog-i' + id + '-settings" id="iChart-i' + id + '-settings">' +
-                '<div class="uk-panel">' +
+            '<div class="js-chart-indiacator-block js-chartTADialog-i' + id + '-settings" id="iChart-i' + id + '-settings">' +
+                '<div class="uk-panel uk-margin-top">' +
                     '<div class="uk-flex uk-flex-middle uk-flex-space-between uk-margin-small-bottom">' +
                         '<div class="uk-h4">' + _t('12834','Индикатор') + ' ' + (id+1) + '</div>' +
-                        '<div class="js-indicator-remove uk-icon-close uk-panel-hover uk-badge uk-button uk-button-mini"></div>' +
+                        '<div class="js-indicator-remove uk-icon-close uk-panel-hover uk-button uk-button-danger uk-button-small uk-flex uk-flex-center uk-flex-middle"></div>' +
                     '</div>' +
                     '<div class="uk-form">' +
-                        '<select name="i' + id + '" class="indicatorsSelect">' +
+                        '<select name="i' + id + '" class="indicatorsSelect uk-width-1-1">' +
                         indicatorOptions +
                         '</select>' +
                     '</div>' +
@@ -22155,13 +22155,13 @@ IguanaChart = function (options) {
                                 '<div class="uk-modal-header">' + _t('3101', "Индикаторы") + '</div>' +
                                 '<div class="js-chartTADialogContainer"></div>' +
                                 '<div class="uk-modal-footer">' +
-                                '<div class="uk-flex uk-flex-middle uk-flex-space-between tm-pad-large">' +
-                                    '<div class="js-indicator-add md-btn md-btn-small md-btn-success">' +
+                                '<div class="uk-flex uk-flex-middle uk-flex-space-between">' +
+                                    '<div class="js-indicator-add uk-button uk-button-small uk-button-success">' +
                                         _t('15460', 'Добавить индикатор') +
                                     '</div>' +
-                                '<div class="md-btn-group"><a class="md-btn md-btn-small md-btn-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
-                                '<a class="md-btn md-btn-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
-                                '<a class="md-btn md-btn-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
+                                '<div class="uk-button-group"><a class="uk-button uk-button-small uk-button-primary indicators-set" href="#">' + _t('532', 'Применить') + '</a>' +
+                                '<a class="uk-button uk-button-small indicators-default" href="#">' + _t('15461', 'Для всех') + '</a>' +
+                                '<a class="uk-button uk-button-small indicators-close" href="#">' + _t('1403', "Отмена") + '</a></div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
