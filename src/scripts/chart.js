@@ -10,7 +10,7 @@
 
     this.wrapper = options.wrapper;
 
-    this.lib_path = options.lib_path || "/iguanachart/";
+    this.lib_path = options.lib_path || "/dist/iguanacharts/";
 
     this.toQueryString = function (params)
     {
@@ -750,8 +750,9 @@
                     validParams = false;
                 }
                 else {
+                    // Не все индикаторы имеют настройки и в этом случае не будет существовать свойство params
                     if (!indicators[index].params) {
-                      indicators[index].params = {};
+                        indicators[index].params = {};
                     }
 
                     indicators[index].params[param.name] = param.value;
@@ -811,20 +812,20 @@
 
     this.iconsLoad = function () {
         $(["/i/admin/add.png",
-            "/iguanachart/images/buy.png",
-            "/iguanachart/images/down.png",
-            "/iguanachart/images/icon-exclamation.png",
-            "/iguanachart/images/icon-left.png",
-            "/iguanachart/images/icon-leftDown.png",
-            "/iguanachart/images/icon-leftUp.png",
-            "/iguanachart/images/icon-question.png",
-            "/iguanachart/images/icon-right.png",
-            "/iguanachart/images/icon-rightDown.png",
-            "/iguanachart/images/icon-rightUp.png",
-            "/iguanachart/images/icon-sell.png",
-            "/iguanachart/images/icon-smileDown.png",
-            "/iguanachart/images/icon-smileUp.png",
-            "/iguanachart/images/icon-up.png",
+            this.lib_path + "/images/buy.png",
+            this.lib_path + "/images/down.png",
+            this.lib_path + "/images/icon-exclamation.png",
+            this.lib_path + "/images/icon-left.png",
+            this.lib_path + "/images/icon-leftDown.png",
+            this.lib_path + "/images/icon-leftUp.png",
+            this.lib_path + "/images/icon-question.png",
+            this.lib_path + "/images/icon-right.png",
+            this.lib_path + "/images/icon-rightDown.png",
+            this.lib_path + "/images/icon-rightUp.png",
+            this.lib_path + "/images/icon-sell.png",
+            this.lib_path + "/images/icon-smileDown.png",
+            this.lib_path + "/images/icon-smileUp.png",
+            this.lib_path + "/images/icon-up.png",
             "/i/logo_tradernet_min.png"]).preload();
     };
     this.drawLables = function (legend, context, x, y) {
@@ -1285,14 +1286,6 @@
                 }
             }
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
-        }
-    };
-    this.errorMessages = function () {
-        var text = _t('18104', 'Нет данных');
-        if (typeof $.jGrowl != 'function') {
-            alert(text);
-        } else {
-            $.jGrowl(text, {theme: '_red'});
         }
     };
     this.setDatePeriod = function (interval, start, end){
@@ -1777,8 +1770,8 @@
 
     /**
      *
-     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
-     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'|'MAX'} period
+     * @param {'I1'|'I5'|'H1'|'D1'|'D7'} interval
      */
     this.setDateRange = function (period, interval) {
         var range = iChart.periodToDateRange(period);

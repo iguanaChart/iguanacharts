@@ -43,8 +43,8 @@ Or
 
  
 ```html
-    <link rel="stylesheet" href="/iguanachart/iguanachart.min.css" media="all">
-    <script type="text/javascript" src="/iguanachart/iguanachart.min.js"></script>
+    <link rel="stylesheet" href="/dist/iguanacharts/iguanachart.min.css" media="all">
+    <script type="text/javascript" src="/dist/iguanacharts/iguanachart.min.js"></script>
 ```
 
 ### Dependencies

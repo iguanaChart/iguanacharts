@@ -1896,7 +1896,7 @@ function intervalShortNames(interval) {
 
         dateTo.setDate(dateTo.getDate() + 1);
 
-        dateFrom = this.formatDateTime(dateFrom, "dd.MM.yyyy");
+        dateFrom = period === 'MAX' ? null : this.formatDateTime(dateFrom, "dd.MM.yyyy");
         dateTo = this.formatDateTime(dateTo, "dd.MM.yyyy");
 
         return [dateFrom, dateTo];
@@ -13784,49 +13784,69 @@ function getTradeLabelText(trade, price) {
             request.start = request.end;
 
             var date_to = iChart.parseDateTime(request.date_to);
-            var date_from = iChart.parseDateTime(request.date_from);
+            var date_from = request.date_from
+                ? iChart.parseDateTime(request.date_from)
+                : null;
 
-            if(request.timeframe == 1440) {
-                date_to.setFullYear(date_to.getFullYear() - 5);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setMonth(0);
-                date_from.setDate(0);
+            if([10080, 1440].indexOf(request.timeframe) !== -1) {
                 request.count = -1;
+
+                if (date_from) {
+                    date_to.setFullYear(date_to.getFullYear() - 5);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setMonth(0);
+                    date_from.setDate(0);
+                }
             } else if(request.timeframe == 60) {
-                date_to.setMonth(date_to.getMonth() - 3);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setMonth(date_from.getMonth() - 1);
-                date_from.setDate(0);
                 request.count = -10;
+
+                if (date_from) {
+                    date_to.setMonth(date_to.getMonth() - 3);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setMonth(date_from.getMonth() - 1);
+                    date_from.setDate(0);
+                }
             } else if(request.timeframe == 15) {
-                date_to.setMonth(date_to.getMonth() - 1);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setDate(0);
                 request.count = -10;
+
+                if (date_from) {
+                    date_to.setMonth(date_to.getMonth() - 1);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setDate(0);
+                }
             } else if(request.timeframe == 5) {
-                date_to.setDate(date_to.getDate() - 14);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setHours(0);
-                date_from.setMinutes(0);
-                date_from.setSeconds(0);
-                date_from.setDate(date_from.getDate() - date_from.getDay());
                 request.count = -100;
+
+                if (date_from) {
+                    date_to.setDate(date_to.getDate() - 14);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setHours(0);
+                    date_from.setMinutes(0);
+                    date_from.setSeconds(0);
+                    date_from.setDate(date_from.getDate() - date_from.getDay());
+                }
             } else if(request.timeframe == 1) {
-                date_to.setDate(date_to.getDate() - 5);
-                date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
-                date_from.setHours(0);
-                date_from.setMinutes(0);
-                date_from.setSeconds(0);
-                date_from.setDate(date_from.getDate() - 1);
                 request.count = -200;
+
+                if (date_from) {
+                    date_to.setDate(date_to.getDate() - 5);
+                    date_from = new Date(Math.max(date_from.getTime(), date_to.getTime()));
+                    date_from.setHours(0);
+                    date_from.setMinutes(0);
+                    date_from.setSeconds(0);
+                    date_from.setDate(date_from.getDate() - 1);
+                }
             }
 
-            date_from.setHours(0);
-            date_from.setMinutes(0);
-            date_from.setSeconds(0);
+            if (date_from) {
+                date_from.setHours(0);
+                date_from.setMinutes(0);
+                date_from.setSeconds(0);
 
-            if (!force) {
-                request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+
+                if (!force) {
+                    request.date_from = iChart.formatDateTime(date_from, "dd.MM.yyyy HH:mm");
+                }
             }
         }
 
@@ -18971,7 +18991,7 @@ var iChartDataSource = {
     },
 
     host: "",
-    url: "/api/get-hloc?",
+    url: "/api",
 
     getUrl: function (params) {
         var cachedParams = {
@@ -18990,9 +19010,22 @@ var iChartDataSource = {
         };
 
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
-        cachedParams['hash'] = cachedParams.id.toString() + Date.parse(cachedParams.date_from).toString() + Date.parse(cachedParams.date_to).toString() + JSON.stringify(cachedParams).hashCode();
+        cachedParams['hash'] = cachedParams.id.toString()
+            + (cachedParams.date_from ? Date.parse(cachedParams.date_from).toString() : '')
+            + Date.parse(cachedParams.date_to).toString()
+            + JSON.stringify(cachedParams).hashCode();
 
-        return iChartDataSource.host + iChartDataSource.url + iChart.toQueryString(cachedParams);
+        var queryParams = {
+            q: JSON.stringify({
+                cmd: 'getHloc',
+                params: cachedParams
+            })
+        };
+
+        return iChartDataSource.host +
+            iChartDataSource.url +
+            '?' +
+            iChart.toQueryString(queryParams);
     },
 
     onRequestCallback: function (callback, params) {
@@ -19005,13 +19038,16 @@ var iChartDataSource = {
         var _chart = this.chart;
         this.chart.wrapper.trigger("iguanaChartEvents", ["chartDataRequest", iChartDataSource.getUrl(params)]);
         this.chart.ajaxDataRequest = $.ajax({
-            dataType: "text json", error: function (xhr, textStatus, errorThrown) {
+            url: iChartDataSource.getUrl(params),
+            dataType: "text json",
+            error: function (xhr, textStatus, errorThrown) {
                 clearTimeout(_chart.timers.loading);
                 _chart.wrapper.trigger("iguanaChartEvents", ["clearLoader"]);
                 _chart.viewData.chart.setSelectionMode("pan");
                 console.log("Error: " + textStatus);
                 callback({success: false})
-            }, success: function (data, textStatus, xhr) {
+            },
+            success: function (data, textStatus, xhr) {
                 _chart.wrapper.trigger("iguanaChartEvents", ["chartDataReceived", data]);
                 if (data.info && data.info[_chart.dataSource.dataSettings.id]) {
                     var stockInfo = data.info[_chart.dataSource.dataSettings.id];
@@ -19071,10 +19107,9 @@ var iChartDataSource = {
                     _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
                     _chart.updateUnlocked = true
                     _chart.fixViewport();
-                    _chart.errorMessages();
-
+                    _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
                 }
-            }, url: iChartDataSource.getUrl(params)
+            }
         })
     },
     preInitCallback: function(initReadyCallback, params) {
@@ -19151,7 +19186,7 @@ IguanaChart = function (options) {
 
     this.wrapper = options.wrapper;
 
-    this.lib_path = options.lib_path || "/iguanachart/";
+    this.lib_path = options.lib_path || "/dist/iguanacharts/";
 
     this.toQueryString = function (params)
     {
@@ -19891,8 +19926,9 @@ IguanaChart = function (options) {
                     validParams = false;
                 }
                 else {
+                    // Не все индикаторы имеют настройки и в этом случае не будет существовать свойство params
                     if (!indicators[index].params) {
-                      indicators[index].params = {};
+                        indicators[index].params = {};
                     }
 
                     indicators[index].params[param.name] = param.value;
@@ -19952,20 +19988,20 @@ IguanaChart = function (options) {
 
     this.iconsLoad = function () {
         $(["/i/admin/add.png",
-            "/iguanachart/images/buy.png",
-            "/iguanachart/images/down.png",
-            "/iguanachart/images/icon-exclamation.png",
-            "/iguanachart/images/icon-left.png",
-            "/iguanachart/images/icon-leftDown.png",
-            "/iguanachart/images/icon-leftUp.png",
-            "/iguanachart/images/icon-question.png",
-            "/iguanachart/images/icon-right.png",
-            "/iguanachart/images/icon-rightDown.png",
-            "/iguanachart/images/icon-rightUp.png",
-            "/iguanachart/images/icon-sell.png",
-            "/iguanachart/images/icon-smileDown.png",
-            "/iguanachart/images/icon-smileUp.png",
-            "/iguanachart/images/icon-up.png",
+            this.lib_path + "/images/buy.png",
+            this.lib_path + "/images/down.png",
+            this.lib_path + "/images/icon-exclamation.png",
+            this.lib_path + "/images/icon-left.png",
+            this.lib_path + "/images/icon-leftDown.png",
+            this.lib_path + "/images/icon-leftUp.png",
+            this.lib_path + "/images/icon-question.png",
+            this.lib_path + "/images/icon-right.png",
+            this.lib_path + "/images/icon-rightDown.png",
+            this.lib_path + "/images/icon-rightUp.png",
+            this.lib_path + "/images/icon-sell.png",
+            this.lib_path + "/images/icon-smileDown.png",
+            this.lib_path + "/images/icon-smileUp.png",
+            this.lib_path + "/images/icon-up.png",
             "/i/logo_tradernet_min.png"]).preload();
     };
     this.drawLables = function (legend, context, x, y) {
@@ -20426,14 +20462,6 @@ IguanaChart = function (options) {
                 }
             }
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
-        }
-    };
-    this.errorMessages = function () {
-        var text = _t('18104', 'Нет данных');
-        if (typeof $.jGrowl != 'function') {
-            alert(text);
-        } else {
-            $.jGrowl(text, {theme: '_red'});
         }
     };
     this.setDatePeriod = function (interval, start, end){
@@ -20918,8 +20946,8 @@ IguanaChart = function (options) {
 
     /**
      *
-     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'} period
-     * @param {'I1'|'I5'|'H1'|'D1'} interval
+     * @param {'D2'|'D3'|'M3'|'YTD'|'Y1'|'Y5'|'MAX'} period
+     * @param {'I1'|'I5'|'H1'|'D1'|'D7'} interval
      */
     this.setDateRange = function (period, interval) {
         var range = iChart.periodToDateRange(period);
