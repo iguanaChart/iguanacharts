@@ -1129,7 +1129,7 @@ function intervalNames(interval) {
         case "I15":
             return _t('2075', "15 минутный");
         case "H1":
-            return _t('', "Часовой");
+            return _t('12819', "Часовой");
         case "D1":
             return _t('2077', "Дневной");
         case "D7":
