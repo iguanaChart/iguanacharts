@@ -19755,7 +19755,7 @@ IguanaChart = function (options) {
                 '<div class="uk-panel uk-margin-top">' +
                     '<div class="uk-flex uk-flex-middle uk-flex-space-between uk-margin-small-bottom">' +
                         '<div class="uk-h4">' + _t('12834','Индикатор') + ' ' + (id+1) + '</div>' +
-                        '<div class="js-indicator-remove uk-icon-close uk-panel-hover uk-button uk-button-danger uk-button-small uk-flex uk-flex-center uk-flex-middle"></div>' +
+                        '<div class="js-indicator-remove uk-button uk-button-danger uk-button-small uk-button-fit"><i class="uk-icon-close"></i></div>' +
                     '</div>' +
                     '<div class="uk-form">' +
                         '<select name="i' + id + '" class="indicatorsSelect uk-width-1-1">' +
@@ -19779,7 +19779,7 @@ IguanaChart = function (options) {
         for (var j = 0; j < indicatorParameters.length; ++j) {
             var parameterKey = "i" + id + "_" + indicatorParameters[j].Code;
             var $container = $("<div/>", { "class":"iChart-indicator-parameters uk-form", "text":indicatorParameters[j].Name + ": " }).appendTo($root);
-            $("<input/>", { "name":parameterKey, "type":"text", "value":indicatorParameters[j].Value }).css({ "width":"50px" }).appendTo($container);
+            $("<input/>", { "name":parameterKey, "type":"text", "value":indicatorParameters[j].Value, class: "uk-form-small" }).css({ "width":"50px" }).appendTo($container);
         }
 
         var $colorContainer = $("<div/>", {"class":"iChart-indicator-colors", "id":"iChart-indicator-colors"}).appendTo($root);
