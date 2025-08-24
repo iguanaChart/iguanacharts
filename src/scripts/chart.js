@@ -1372,7 +1372,24 @@
 
         this.dataSource.dataSettings.interval = interval_tmp;
 
-        var result = {restriction: restriction, dataSource: dataSource, value: interval_tmp, text: intervalNames(interval_tmp)};
+        var result = {
+          restriction: restriction,
+          dataSource: dataSource,
+          value: interval_tmp,
+          text: intervalNames(interval_tmp),
+          selectedChartType: '',
+          charTypes: [
+            {
+              text: _t('18372', 'Стандартный'),
+              value: '',
+            },
+            {
+              text: _t('112565', 'Теоретический'),
+              value: 'theoretical',
+            }
+          ],
+        };
+
         if(JSON.stringify(this.dataSource.dataSettings.intervalRestriction) != JSON.stringify(restriction) && interval_tmp == this.dataSource.dataSettings.interval) {
             this.dataSource.dataSettings.intervalRestriction = restriction;
             $(this.container).trigger('iguanaChartEvents', ['intervalRestriction', result]);
@@ -1921,6 +1938,10 @@
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
+    });
+
+    $(_this.wrapper).on('iguanaChangeChartType', function(event, name, data) {
+      console.log({ event, name, data });
     });
 
     //$(window).on("hashchange", this.window_onHashChange);
