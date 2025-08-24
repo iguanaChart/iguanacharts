@@ -1377,8 +1377,11 @@
           dataSource: dataSource,
           value: interval_tmp,
           text: intervalNames(interval_tmp),
-          selectedChartType: '',
-          charTypes: [
+          selectedChartType: {
+            text: _t('18372', 'Стандартный'),
+            value: '',
+          },
+          chartTypes: [
             {
               text: _t('18372', 'Стандартный'),
               value: '',
