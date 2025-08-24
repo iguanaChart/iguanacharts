@@ -19009,6 +19009,10 @@ var iChartDataSource = {
             'demo': params.demo
         };
 
+        if (params.isTheoreticalData) {
+          cachedParams.isTheoreticalData = params.isTheoreticalData;
+        }
+
         //Спецальная метка для nginx по которой он будет пытаться взять hloc из файла а не с сервера
         cachedParams['hash'] = cachedParams.id.toString()
             + (cachedParams.date_from ? Date.parse(cachedParams.date_from).toString() : '')
@@ -20548,7 +20552,24 @@ IguanaChart = function (options) {
 
         this.dataSource.dataSettings.interval = interval_tmp;
 
-        var result = {restriction: restriction, dataSource: dataSource, value: interval_tmp, text: intervalNames(interval_tmp)};
+        var result = {
+          restriction: restriction,
+          dataSource: dataSource,
+          value: interval_tmp,
+          text: intervalNames(interval_tmp),
+          selectedChartType: '',
+          charTypes: [
+            {
+              text: _t('18372', 'Стандартный'),
+              value: '',
+            },
+            {
+              text: _t('112565', 'Теоретический'),
+              value: 'theoretical',
+            }
+          ],
+        };
+
         if(JSON.stringify(this.dataSource.dataSettings.intervalRestriction) != JSON.stringify(restriction) && interval_tmp == this.dataSource.dataSettings.interval) {
             this.dataSource.dataSettings.intervalRestriction = restriction;
             $(this.container).trigger('iguanaChartEvents', ['intervalRestriction', result]);
@@ -21097,6 +21118,10 @@ IguanaChart = function (options) {
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
+    });
+
+    $(_this.wrapper).on('iguanaChangeChartType', function(event, name, data) {
+      console.log({ event, name, data });
     });
 
     //$(window).on("hashchange", this.window_onHashChange);
