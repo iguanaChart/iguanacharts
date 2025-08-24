@@ -19192,6 +19192,17 @@ IguanaChart = function (options) {
 
     this.lib_path = options.lib_path || "/dist/iguanacharts/";
 
+    this.candleModes = {
+      standard: {
+        text: _t('18372', 'Стандартный'),
+        value: 'standard',
+      },
+      theoretical: {
+        text: _t('112565', 'Теоретический'),
+        value: 'theoretical',
+      }
+    }
+
     this.toQueryString = function (params)
     {
         ///	<summary>
@@ -20500,7 +20511,7 @@ IguanaChart = function (options) {
 
         this.checkPeriod(period);
     };
-    this.checkDateInterval = function (new_date_from, new_date_to) {
+    this.checkDateInterval = function (new_date_from, new_date_to, candleMode) {
 
         var date_from = iChart.formatDateTime(new Date(new_date_from), "dd.MM.yyyy HH:mm");
         var date_to = iChart.formatDateTime(new Date(new_date_to), "dd.MM.yyyy HH:mm");
@@ -20549,28 +20560,16 @@ IguanaChart = function (options) {
             dataSource.push({ text: text, value: Allow1[i], restriction: restriction[Allow1[i]] });
         }
 
-
         this.dataSource.dataSettings.interval = interval_tmp;
+        this.dataSource.dataSettings.candleMode = candleMode || this.candleModes.standard;
 
         var result = {
           restriction: restriction,
           dataSource: dataSource,
           value: interval_tmp,
           text: intervalNames(interval_tmp),
-          selectedChartType: {
-            text: _t('18372', 'Стандартный'),
-            value: '',
-          },
-          chartTypes: [
-            {
-              text: _t('18372', 'Стандартный'),
-              value: '',
-            },
-            {
-              text: _t('112565', 'Теоретический'),
-              value: 'theoretical',
-            }
-          ],
+          selectedCandleMode: this.dataSource.dataSettings.candleMode,
+          candleModes: this.candleModes,
         };
 
         if(JSON.stringify(this.dataSource.dataSettings.intervalRestriction) != JSON.stringify(restriction) && interval_tmp == this.dataSource.dataSettings.interval) {
