@@ -19597,8 +19597,6 @@ IguanaChart = function (options) {
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;
         params["compareStocks"] = this.dataSource.dataSettings.compareStocks;
 
-        console.log("DATA_SETTINGS: ", this.dataSource.dataSettings);
-
         if (this.dataSource.dataSettings.candleMode) {
           params.isTheoreticalData = this.dataSource.dataSettings.candleMode.value === "theoretical";
         }
