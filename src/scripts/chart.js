@@ -1632,7 +1632,7 @@
     this.initIndicatorWidthMenu = function (element, menu) {
         $(element).qtip({
             style: {
-                classes: 'qtip-light'
+                classes: 'qtip-light uk-tooltip-custom'
             },
             position: {
                 at: 'left bottom',
