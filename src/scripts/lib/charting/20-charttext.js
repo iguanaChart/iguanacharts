@@ -290,7 +290,7 @@
 
             $this.qtip({
                 style: {
-                    classes: 'qtip-light'
+                    classes: 'qtip-light uk-tooltip-custom'
                 },
                 position: {
                     at: 'center right',
