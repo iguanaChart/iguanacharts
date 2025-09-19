@@ -18552,9 +18552,12 @@ $.templates("indicatorsDropdownTmpl",
 $.templates("indicatorDialogTmpl", '' +
     '<div class="iChartDialog" style="display: none; width: 300px;">' +
         '<div> {{:name}} </div>' +
-        '<div class="js-iChartTools-indicators-params">' +
+        '<div class="js-iChartTools-indicators-params uk-form">' +
             '{{for parameters}}' +
-                '<div>{{:Name}} <input type="text" name="{{:Code}}" value="{{:Value}}" /></div>' +
+                '<div>' +
+                    '{{:Name}}' +
+                    '<input type="text" name="{{:Code}}" value="{{:Value}}" />' +
+                '</div>' +
             '{{/for}}' +
         '</div>' +
         '<div class="js-iChartTools-indicators-colorContainer"></div>' +
