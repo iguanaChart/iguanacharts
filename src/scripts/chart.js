@@ -1343,7 +1343,7 @@
         }
 
         if (params.customIntervals) {
-            this.dataSource.dataSettings.customInterval = params.customIntervals
+            this.dataSource.dataSettings.customIntervals = params.customIntervals;
         }
     }
 
@@ -1390,14 +1390,26 @@
 
                 return acc;
             }, {});
+            // set first custom interval for selection
+            interval_tmp = Allow1[0];
         }
 
-        var dataSource = new Array();
+        const dataSource = [];
 
-        for (var i = 0; i < Allow1.length; i++) {
-            var text = intervalNames(Allow1[i]) + ((typeof restriction[Allow1[i]] != "undefined") ? (" > " + intervalShortNames(restriction[Allow1[i]])) : "");
-            dataSource.push({ text: text, value: Allow1[i], restriction: restriction[Allow1[i]] });
-        }
+        Allow1.forEach((interval) => {
+            let intervalName = intervalNames(interval);
+            const intervalShortName = intervalShortNames(restriction[interval]);
+
+            if (intervalShortName) {
+                intervalName = `${intervalName} > ${intervalShortName}`;
+            }
+
+            dataSource.push({
+                text: intervalName,
+                value: interval,
+                restriction: restriction[interval],
+            });
+        });
 
         this.dataSource.dataSettings.interval = interval_tmp;
         this.dataSource.dataSettings.candleMode = this.dataSource.dataSettings.candleMode || this.candleModes.standard;
