@@ -20487,6 +20487,24 @@ IguanaChart = function (options) {
             this.viewData.chart.render({ "forceRecalc": true, "resetViewport": false, "testForIntervalChange": false });
         }
     };
+
+    this.getPeriodByInterval = function(interval) {
+        switch (interval) {
+            case "I1":
+                return "D1";
+            case "I5":
+                return "D3";
+            case "I15":
+                return "D7";
+            case "H1":
+                return "D14";
+            case "D1":
+                return "M6";
+            case "D7":
+                return "Y1";
+        }
+    }
+
     this.setDatePeriod = function (interval, start, end){
         this.dataSource.dataSettings.interval = interval;
         this.dataSource.dataSettings.period = period;
@@ -20495,31 +20513,24 @@ IguanaChart = function (options) {
         this.dataSource.dataSettings.date_to = end;
         this.dataSource.dataSettings.timeframe = iChart.getChartTimeframe(interval);
 
-        var period = "M1";
-        switch (interval) {
-            case"I1":
-                period = "D1";
-                break;
-            case"I5":
-                period = "D3";
-                break;
-            case"I15":
-                period = "D7";
-                break;
-            case"H1":
-                period = "D14";
-                break;
-            case"D1":
-                period = "M6";
-                break;
-            case"D7":
-                period = "Y1";
-                break
-        }
+        var period = interval
+            ? this.getPeriodByInterval(interval)
+            : "M1";
 
         this.checkPeriod(period);
     };
-    this.checkDateInterval = function (new_date_from, new_date_to, candleMode) {
+
+    this.applyChartOptions = function (params) {
+        if (params.candleMode) {
+            this.dataSource.dataSettings.candleMode = params.candleMode;
+        }
+
+        if (params.customIntervals) {
+            this.dataSource.dataSettings.customInterval = params.customIntervals
+        }
+    }
+
+    this.checkDateInterval = function (new_date_from, new_date_to) {
 
         var date_from = iChart.formatDateTime(new Date(new_date_from), "dd.MM.yyyy HH:mm");
         var date_to = iChart.formatDateTime(new Date(new_date_to), "dd.MM.yyyy HH:mm");
@@ -20539,14 +20550,8 @@ IguanaChart = function (options) {
         var interval = (new_date_to - new_date_from) / 86400000;
         var fromNow = (new Date().getTime() - new_date_from) / 86400000;
 
-        var Allow1 = new Array;
-
-        Allow1.push("I1");
-        Allow1.push("I5");
-        Allow1.push("I15");
-        Allow1.push("H1");
-        Allow1.push("D1");
-        Allow1.push("D7"); //TODO: нету данных в mChartAnalysisJSON, нужна доработка сервера
+        // //TODO: D7 нету данных в mChartAnalysisJSON, нужна доработка сервера
+        var Allow1 = ["I1", "I5", "I15", "H1", "D1", "D7"];
 
         var restriction = {};
 
@@ -20561,6 +20566,15 @@ IguanaChart = function (options) {
         } else if (fromNow < 3 && fromNow >= 0) { // от дня
         }
 
+        if (this.dataSource.dataSettings.customIntervals) {
+            Allow1 = this.dataSource.dataSettings.customIntervals;
+            restriction = Allow1.reduce((acc, interval) => {
+                acc[interval] = this.getPeriodByInterval(interval);
+
+                return acc;
+            }, {});
+        }
+
         var dataSource = new Array();
 
         for (var i = 0; i < Allow1.length; i++) {
@@ -20569,7 +20583,7 @@ IguanaChart = function (options) {
         }
 
         this.dataSource.dataSettings.interval = interval_tmp;
-        this.dataSource.dataSettings.candleMode = candleMode || this.candleModes.standard;
+        this.dataSource.dataSettings.candleMode = this.dataSource.dataSettings.candleMode || this.candleModes.standard;
 
         var result = {
           restriction: restriction,
