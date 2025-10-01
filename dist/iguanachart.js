@@ -19110,8 +19110,11 @@ var iChartDataSource = {
                         _chart.viewData.chart._dataSettings.date_from,
                         _chart.viewData.chart._dataSettings.date_to);
 
+                    const parsedDateFrom = iChart.parseDateTime(_chart.viewData.chart._dataSettings.date_from);
+                    const parsedDateTo = iChart.parseDateTime(_chart.viewData.chart._dataSettings.date_to);
+
                     _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
-                    _chart.checkDateInterval(_chart.viewData.chart._dataSettings.date_from, _chart.viewData.chart._dataSettings.date_to);
+                    _chart.checkDateInterval(parsedDateFrom, parsedDateTo);
                     _chart.updateUnlocked = true
                     _chart.fixViewport();
                     _chart.wrapper.trigger("iguanaChartEvents", ["noDataInRequestResponse"]);
