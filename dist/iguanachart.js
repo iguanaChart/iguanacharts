@@ -19113,6 +19113,8 @@ var iChartDataSource = {
                     const parsedDateFrom = iChart.parseDateTime(_chart.viewData.chart._dataSettings.date_from);
                     const parsedDateTo = iChart.parseDateTime(_chart.viewData.chart._dataSettings.date_to);
 
+                    console.log("onRequestCallback", { parsedDateFrom, parsedDateTo });
+
                     _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
                     _chart.checkDateInterval(parsedDateFrom, parsedDateTo);
                     _chart.updateUnlocked = true

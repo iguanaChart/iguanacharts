@@ -1347,7 +1347,7 @@
         }
     }
 
-    this.checkDateInterval = function (new_date_from, new_date_to) {
+    this.checkDateInterval = function (new_date_from, new_date_to, forceUpdates = false) {
 
         var date_from = iChart.formatDateTime(new Date(new_date_from), "dd.MM.yyyy HH:mm");
         var date_to = iChart.formatDateTime(new Date(new_date_to), "dd.MM.yyyy HH:mm");
@@ -1423,7 +1423,13 @@
           candleModes: this.candleModes,
         };
 
-        if(JSON.stringify(this.dataSource.dataSettings.intervalRestriction) != JSON.stringify(restriction) && interval_tmp == this.dataSource.dataSettings.interval) {
+        if (
+            forceUpdates ||
+            (
+                JSON.stringify(this.dataSource.dataSettings.intervalRestriction) !== JSON.stringify(restriction)
+                && interval_tmp === this.dataSource.dataSettings.interval
+            )
+        ) {
             this.dataSource.dataSettings.intervalRestriction = restriction;
             $(this.container).trigger('iguanaChartEvents', ['intervalRestriction', result]);
         }
