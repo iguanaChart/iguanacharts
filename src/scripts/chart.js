@@ -12,17 +12,6 @@
 
     this.lib_path = options.lib_path || "/dist/iguanacharts/";
 
-    this.candleModes = {
-      standard: {
-        text: _t('18372', 'Стандартный'),
-        value: 'standard',
-      },
-      theoretical: {
-        text: _t('112565', 'Теоретический'),
-        value: 'theoretical',
-      }
-    }
-
     this.toQueryString = function (params)
     {
         ///	<summary>
@@ -1338,13 +1327,9 @@
     };
 
     this.applyChartOptions = function (params) {
-        if (params.candleMode) {
-            this.dataSource.dataSettings.candleMode = params.candleMode;
-        }
+        this.dataSource.dataSettings.candleMode = params.candleMode || iChart.candleModes.standard;
 
-        if (params.customIntervals) {
-            this.dataSource.dataSettings.customIntervals = params.customIntervals;
-        }
+        this.dataSource.dataSettings.customIntervals = params.customIntervals;
     }
 
     this.checkDateInterval = function (new_date_from, new_date_to, forceUpdates = false) {
@@ -1412,7 +1397,6 @@
         });
 
         this.dataSource.dataSettings.interval = interval_tmp;
-        this.dataSource.dataSettings.candleMode = this.dataSource.dataSettings.candleMode || this.candleModes.standard;
 
         var result = {
           restriction: restriction,
@@ -1420,7 +1404,7 @@
           value: interval_tmp,
           text: intervalNames(interval_tmp),
           selectedCandleMode: this.dataSource.dataSettings.candleMode,
-          candleModes: this.candleModes,
+          candleModes: iChart.candleModes,
         };
 
         if (
