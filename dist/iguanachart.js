@@ -1272,6 +1272,17 @@ function intervalShortNames(interval) {
     w.iChart.monthRNames = [_t('1889', "января"), _t('1890', "февраля"), _t('1891', "марта"), _t('1892', "апреля"), _t('1893', "мая"), _t('1894', "июня"), _t('1895', "июля"), _t('1896', "августа"), _t('1897', "сентября"), _t('1898', "октября"), _t('1899', "ноября"), _t('1900', "декабря")];
     w.iChart.monthShortNames = [_t('3502', 'янв'), _t('3503', 'фев'), _t('3504', 'мар'), _t('3505', 'апр'), _t('4939', "май"), _t('3507', 'июн'), _t('3508', 'июл'), _t('3509', 'авг'), _t('3510', 'сен'), _t('3511', 'окт'), _t('3512', 'ноя'), _t('3513', 'дек')];
 
+    w.iChart.candleModes = {
+      standard: {
+        text: _t('18372', 'Стандартный'),
+        value: 'standard',
+      },
+      theoretical: {
+        text: _t('112565', 'Теоретический'),
+        value: 'theoretical',
+      }
+    };
+
     w.iChart.declineNoun = function (n, singular, dual, plural)
     {
         /// <summary>
@@ -13689,6 +13700,8 @@ function getTradeLabelText(trade, price) {
         this._dataSettings = this.parseDataSettings(settings);
         var request = $.extend(true, {}, this._dataSettings);
 
+        console.log("setDataSettings", request, oldSettings);
+
         if(typeof oldSettings != "undefined") {
             var changes = {};
             if(oldSettings.interval != this._dataSettings.interval) {
@@ -19113,8 +19126,6 @@ var iChartDataSource = {
                     const parsedDateFrom = iChart.parseDateTime(_chart.viewData.chart._dataSettings.date_from);
                     const parsedDateTo = iChart.parseDateTime(_chart.viewData.chart._dataSettings.date_to);
 
-                    console.log("onRequestCallback", { parsedDateFrom, parsedDateTo });
-
                     _chart.checkPeriodInterval(_chart.viewData.chart._dataSettings.interval);
                     _chart.checkDateInterval(parsedDateFrom, parsedDateTo);
                     _chart.updateUnlocked = true
@@ -19199,17 +19210,6 @@ IguanaChart = function (options) {
     this.wrapper = options.wrapper;
 
     this.lib_path = options.lib_path || "/dist/iguanacharts/";
-
-    this.candleModes = {
-      standard: {
-        text: _t('18372', 'Стандартный'),
-        value: 'standard',
-      },
-      theoretical: {
-        text: _t('112565', 'Теоретический'),
-        value: 'theoretical',
-      }
-    }
 
     this.toQueryString = function (params)
     {
@@ -19605,6 +19605,8 @@ IguanaChart = function (options) {
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;
         params["compareStocks"] = this.dataSource.dataSettings.compareStocks;
 
+        console.log("getChartDataUserSettings");
+
         if (this.dataSource.dataSettings.candleMode) {
           params.isTheoreticalData = this.dataSource.dataSettings.candleMode.value === "theoretical";
         }
@@ -19615,6 +19617,12 @@ IguanaChart = function (options) {
         //}
         //$.extend(params, iChart.parseQueryString(localStorage.userSettingsGraphicIndicators));
         $.extend(params, iChart.parseQueryString(this.dataSource.dataSettings.graphicIndicators));
+
+        console.group("getChartDataUserSettings");
+        console.log(params);
+        console.trace();
+        console.groupEnd();
+
         return params;
     };
 
@@ -20526,16 +20534,12 @@ IguanaChart = function (options) {
     };
 
     this.applyChartOptions = function (params) {
-        if (params.candleMode) {
-            this.dataSource.dataSettings.candleMode = params.candleMode;
-        }
+        this.dataSource.dataSettings.candleMode = params.candleMode || iChart.candleModes.standard;
 
-        if (params.customIntervals) {
-            this.dataSource.dataSettings.customIntervals = params.customIntervals;
-        }
+        this.dataSource.dataSettings.customIntervals = params.customIntervals;
     }
 
-    this.checkDateInterval = function (new_date_from, new_date_to) {
+    this.checkDateInterval = function (new_date_from, new_date_to, forceUpdates = false) {
 
         var date_from = iChart.formatDateTime(new Date(new_date_from), "dd.MM.yyyy HH:mm");
         var date_to = iChart.formatDateTime(new Date(new_date_to), "dd.MM.yyyy HH:mm");
@@ -20600,7 +20604,6 @@ IguanaChart = function (options) {
         });
 
         this.dataSource.dataSettings.interval = interval_tmp;
-        this.dataSource.dataSettings.candleMode = this.dataSource.dataSettings.candleMode || this.candleModes.standard;
 
         var result = {
           restriction: restriction,
@@ -20608,10 +20611,17 @@ IguanaChart = function (options) {
           value: interval_tmp,
           text: intervalNames(interval_tmp),
           selectedCandleMode: this.dataSource.dataSettings.candleMode,
-          candleModes: this.candleModes,
+          candleModes: iChart.candleModes,
         };
 
-        if(JSON.stringify(this.dataSource.dataSettings.intervalRestriction) != JSON.stringify(restriction) && interval_tmp == this.dataSource.dataSettings.interval) {
+        if (
+            forceUpdates ||
+            (
+                JSON.stringify(this.dataSource.dataSettings.intervalRestriction) !== JSON.stringify(restriction)
+                && interval_tmp === this.dataSource.dataSettings.interval
+            )
+        ) {
+            console.log('update interval', result);
             this.dataSource.dataSettings.intervalRestriction = restriction;
             $(this.container).trigger('iguanaChartEvents', ['intervalRestriction', result]);
         }
