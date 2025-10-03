@@ -13700,8 +13700,6 @@ function getTradeLabelText(trade, price) {
         this._dataSettings = this.parseDataSettings(settings);
         var request = $.extend(true, {}, this._dataSettings);
 
-        console.log("setDataSettings", request, oldSettings);
-
         if(typeof oldSettings != "undefined") {
             var changes = {};
             if(oldSettings.interval != this._dataSettings.interval) {
@@ -19605,8 +19603,6 @@ IguanaChart = function (options) {
         params["compareTickets"] = this.dataSource.dataSettings.compareTickets;
         params["compareStocks"] = this.dataSource.dataSettings.compareStocks;
 
-        console.log("getChartDataUserSettings");
-
         if (this.dataSource.dataSettings.candleMode) {
           params.isTheoreticalData = this.dataSource.dataSettings.candleMode.value === "theoretical";
         }
@@ -19617,12 +19613,6 @@ IguanaChart = function (options) {
         //}
         //$.extend(params, iChart.parseQueryString(localStorage.userSettingsGraphicIndicators));
         $.extend(params, iChart.parseQueryString(this.dataSource.dataSettings.graphicIndicators));
-
-        console.group("getChartDataUserSettings");
-        console.log(params);
-        console.trace();
-        console.groupEnd();
-
         return params;
     };
 
@@ -20621,7 +20611,6 @@ IguanaChart = function (options) {
                 && interval_tmp === this.dataSource.dataSettings.interval
             )
         ) {
-            console.log('update interval', result);
             this.dataSource.dataSettings.intervalRestriction = restriction;
             $(this.container).trigger('iguanaChartEvents', ['intervalRestriction', result]);
         }
