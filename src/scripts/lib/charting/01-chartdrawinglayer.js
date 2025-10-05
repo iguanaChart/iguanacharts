@@ -31,6 +31,7 @@
         this.prevY = null;
         this.selected = null;
         this.unfinished = null;
+        this.isRenderAfterInitCanvas = false;
 
         $(chart.container).off('mousedown.overlay').unbind('mouseup.overlay').unbind('mousemove.overlay');
         $(chart.container).on('mousedown.overlay', $.proxy(this.onMouseDown, this)).
@@ -643,9 +644,9 @@
 
         if (!context)
         {
-            if(!this.context) {
-                console.log("ERROR: No context for render");
-                return 0;
+            if (!this.context) {
+                this.isRenderAfterInitCanvas = true;
+                return;
             }
             context = this.context;
             var canvasSize = getElementSize(context.canvas);
@@ -927,6 +928,11 @@
         {
             this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
+
+            if (this.isRenderAfterInitCanvas) {
+                this.isRenderAfterInitCanvas = false;
+                this.render();
+            }
         }
     };
 })();
