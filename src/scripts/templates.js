@@ -337,7 +337,7 @@ $.templates("captureDialogTmpl", '' +
 
 $.templates("themeConfigSelectorTmpl", '' +
     '<div class="uk-button-dropdown" data-uk-dropdown="{mode:\'click\'}" aria-haspopup="true" aria-expanded="false">' +
-        '<button class="uk-button uk-button-success">' + _t('13663', 'Темы') + ' <i class="uk-icon-caret-down"></i></button>' +
+        '<button class="uk-button uk-button-small uk-button-success">' + _t('13663', 'Темы') + ' <i class="uk-icon-caret-down uk-margin-small-left"></i></button>' +
         '<div class="uk-dropdown uk-dropdown-up uk-dropdown-small uk-dropdown-scrollable">' +
             '<ul class="uk-nav uk-nav-dropdown">' +
                 '{{for themes}}' +
@@ -358,7 +358,7 @@ $.templates("themeConfigSelectorTmpl", '' +
 $.templates("themeConfigTmpl", '' +
     '<div class="js-themeConfig" style="display: none">' +
         '<div class="js-themeConfigOptions"></div>' +
-        '<div class="uk-grid uk-grid-small">' +
+        '<div class="uk-grid uk-grid-small uk-margin-top">' +
             '<div class="uk-width-1-1">' +
                 '<div class="js-themeConfigSelector"></div>' +
             '</div>' +
@@ -368,8 +368,8 @@ $.templates("themeConfigTmpl", '' +
             '<div class="uk-width-7-10 js-themeAdditionButtons">' +
             '</div>' +
             '<div class="uk-width-3-10 uk-text-right">' +
-                '<button class="uk-button js-chartOptions" data-value="cancel">' + _t('1403', 'Отмена') + '</button> ' +
-                '<button class="uk-button  uk-button-primary js-chartOptions" data-value="ok">' + _t('3920', "OK") + '</button>' +
+                '<button class="uk-button uk-button-fit js-chartOptions" data-value="cancel">' + _t('1403', 'Отмена') + '</button> ' +
+                '<button class="uk-button uk-button-fit uk-button-primary js-chartOptions" data-value="ok">' + _t('3920', "OK") + '</button>' +
             '</div>' +
         '</div>' +
     '</div>'
