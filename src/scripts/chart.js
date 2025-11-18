@@ -1375,8 +1375,6 @@
 
                 return acc;
             }, {});
-            // set first custom interval for selection
-            interval_tmp = Allow1[0];
         }
 
         const dataSource = [];
@@ -1395,6 +1393,11 @@
                 restriction: restriction[interval],
             });
         });
+
+        // set first interval for selection if it's not in set
+        if (!Allow1.includes(interval_tmp)) {
+          interval_tmp = Allow1[0];
+        }
 
         this.dataSource.dataSettings.interval = interval_tmp;
 
