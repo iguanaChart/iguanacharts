@@ -2580,6 +2580,7 @@ iChart.indicators = {
         this.xIndex = null;
         this.xPoint = null;
         this.yPoint = null;
+        this.isRenderAfterInitCanvas = false;
 
         if(typeof settings != "undefined") {
             for (var widget in settings) {
@@ -2597,9 +2598,8 @@ iChart.indicators = {
 
     iChart.Charting.ChartWidgetLayer.prototype.clear = function ()
     {
-        if(!this.context) {
-            console.log("ERROR: No context for render");
-            return 0;
+        if (!this.context) {
+            return;
         }
 
         var context = this.context;
@@ -2617,9 +2617,9 @@ iChart.indicators = {
 
         if (!context)
         {
-            if(!this.context) {
-                console.log("ERROR: No context for render");
-                return 0;
+            if (!this.context) {
+                this.isRenderAfterInitCanvas = true;
+                return;
             }
             context = this.context;
             var canvasSize = getElementSize(context.canvas);
@@ -2668,6 +2668,11 @@ iChart.indicators = {
         {
             this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
+
+            if (this.isRenderAfterInitCanvas) {
+                this.isRenderAfterInitCanvas = false;
+                this.render();
+            }
         }
     };
 
@@ -3329,6 +3334,7 @@ iChart.indicators = {
         this.prevY = null;
         this.selected = null;
         this.unfinished = null;
+        this.isRenderAfterInitCanvas = false;
 
         /*
         $(chart.container).off('mousedown.overlay').unbind('mouseup.overlay').unbind('mousemove.overlay');
@@ -3939,9 +3945,9 @@ iChart.indicators = {
 
         if (!context)
         {
-            if(!this.context) {
-                console.log("ERROR: No context for render");
-                return 0;
+            if (!this.context) {
+                this.isRenderAfterInitCanvas = true;
+                return;
             }
             context = this.context;
             var canvasSize = getElementSize(context.canvas);
@@ -4233,6 +4239,11 @@ iChart.indicators = {
         {
             this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
+
+            if (this.isRenderAfterInitCanvas) {
+                this.isRenderAfterInitCanvas = false;
+                this.render();
+            }
         }
     };
 })();
