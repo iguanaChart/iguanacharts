@@ -30,6 +30,7 @@
         this.xIndex = null;
         this.xPoint = null;
         this.yPoint = null;
+        this.isRenderAfterInitCanvas = false;
 
         if(typeof settings != "undefined") {
             for (var widget in settings) {
@@ -47,9 +48,8 @@
 
     iChart.Charting.ChartWidgetLayer.prototype.clear = function ()
     {
-        if(!this.context) {
-            console.log("ERROR: No context for render");
-            return 0;
+        if (!this.context) {
+            return;
         }
 
         var context = this.context;
@@ -67,9 +67,9 @@
 
         if (!context)
         {
-            if(!this.context) {
-                console.log("ERROR: No context for render");
-                return 0;
+            if (!this.context) {
+                this.isRenderAfterInitCanvas = true;
+                return;
             }
             context = this.context;
             var canvasSize = getElementSize(context.canvas);
@@ -118,6 +118,11 @@
         {
             this.context = iChart.getContext(this.canvas);
             this.offset = this.chart._containerSize.offset;
+
+            if (this.isRenderAfterInitCanvas) {
+                this.isRenderAfterInitCanvas = false;
+                this.render();
+            }
         }
     };
 
